@@ -7,6 +7,7 @@ export const LAYERS = [
       ["progress", "Progress", "progress", false],
       ["sfzoom", "SFMSF aerial", "sfzoom", true],
       ["view_default", "Full image", "view_default", false],
+      ["horizontal", "Horizontal", "horizontal", false],
       ["drawing", "SFMSF drawing", "drawing", false],
     ],
   ],
@@ -64,26 +65,17 @@ LAYERS.forEach((g) =>
     normalDefaults[l[0]] = l[3];
   }),
 );
-// Opening view: Drawing mode as it is entered from the panel (every layer on except the aerial photo, the Clayton Clipper labels,
-// the support beams, progress-chart mode and SFMSF zoom), with the old railway line also off
-export const defaults = Object.fromEntries(
-  Object.keys(normalDefaults).map((k) => [k, true]),
-);
-Object.assign(defaults, {
-  aerial: false,
-  cclabels: false,
-  beams: false,
-  progress: false,
-  sfzoom: false,
-  view_default: false,
-  railway: false,
-});
 // "Full" is the earlier default: the whole canvas with roads and the SFMSF labels off
 export const fullDefaults = Object.assign({}, normalDefaults, {
   sfzoom: false,
   roads: false,
   labels: false,
   view_default: true,
+});
+// Opening view: Progress, as it is picked from the panel (the Full image switches with progress-chart mode on)
+export const defaults = Object.assign({}, fullDefaults, {
+  progress: true,
+  view_default: false,
 });
 // Rows that stay at full strength in progress-chart mode
 export const PROGRESS_ROWS = [
@@ -96,6 +88,7 @@ export const PROGRESS_ROWS = [
   "drawing",
   "sfzoom",
   "view_default",
+  "horizontal",
 ];
 export const PROGRESS_PINK = "#FF2E93";
 // Progress-chart mode: only the aerial photo, the Clayton Clipper finished spans (concrete and steel; bright pink up to the span
@@ -116,9 +109,18 @@ export const FULL_VB = "-6840.7 -5402.04 12387.4 8699.48",
   DRAW_VB = "-38.4 -126.95 2188.4 1888.55",
   ZOOM_VB = "-38.4 -126.95 2188.4 1888.55"; // drawing mode and zoom view: the right edge cuts through span A
 // Progress-chart mode zooms to the span the gantry is on: a view three gantry lengths wide (the gantry's trusses are 401.56
-// canvas units long), centred on the span
+// canvas units long), with the span 35% of the way across and down
 export const GANTRY_LENGTH = 401.56,
-  PROGRESS_VIEW_WIDTH = 3 * GANTRY_LENGTH;
+  PROGRESS_VIEW_WIDTH = 3 * GANTRY_LENGTH,
+  // where the span sits in the view, as fractions of the view's width (from the left) and height (from the top)
+  PROGRESS_SPAN_AT = { x: 0.35, y: 0.35 };
+// Horizontal's canvas is what is drawn with a margin on every side of this fraction of the straight-line distance between its
+// two ends
+export const HORIZONTAL_MARGIN = 0.05;
+// The drawing's scale: 3 units per metre, shown 1.11 times larger around SFMSF, so a span (about 134 units) is about 40 m
+export const UNITS_PER_METRE = 3 * 1.11;
+// Horizontal starts zoomed to show this many metres before and after the gantry's span, with the span in the middle
+export const HORIZONTAL_VIEW_METRES = 350;
 
 // the span-label options need Clayton Clipper spans on screen: Clayton Clipper on and at least one type of span on
 export const labelsAvailable = (state) =>
@@ -143,6 +145,7 @@ export function layerCss(state) {
         k === "drawing" ||
         k === "sfzoom" ||
         k === "view_default" ||
+        k === "horizontal" ||
         (state.progress && !["aerial", "hires", "cc", "ll", "ff"].includes(k))
       )
         return;

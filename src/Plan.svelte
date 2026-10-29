@@ -13,6 +13,7 @@
     setZoom,
     fitZoom,
     isFit,
+    progressView,
   } from "./lib/state.svelte.js";
   import ProgressCard from "./ProgressCard.svelte";
 
@@ -26,10 +27,35 @@
     tagLaunchers(svg);
     els.gantrySpan = placeGantry(svg);
     ui.gantry = gantrySpan(svg);
+    // the turn that levels the Clayton Clipper route: the line from span 105's label to span 1's, turned flat
+    const toRoot = DOMMatrix.fromMatrix(svg.getScreenCTM()).inverse(),
+      label = (n) => {
+        const t = [...svg.querySelectorAll("text.cclabel")].find(
+          (t) => t.textContent.trim() === String(n),
+        );
+        return (
+          t &&
+          new DOMPoint(+t.getAttribute("x"), +t.getAttribute("y"))
+            .matrixTransform(DOMMatrix.fromMatrix(t.getScreenCTM()))
+            .matrixTransform(toRoot)
+        );
+      },
+      first = label(1),
+      last = label(ui.gantry ? ui.gantry.total : 105);
+    if (first && last)
+      els.routeAngle =
+        (-Math.atan2(first.y - last.y, first.x - last.x) * 180) / Math.PI;
+    // everything in the drawing goes in one group, so Horizontal can turn it all
+    const turn = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    turn.id = "plan-turn";
+    turn.append(...svg.childNodes);
+    svg.append(turn);
+    els.turn = turn;
     ui.ready = true;
-    if (layers.drawing) setView(DRAW_VB);
-    else if (layers.sfzoom) setView(ZOOM_VB);
     svg.style.width = ui.zoom + "%";
+    if (layers.progress) progressView();
+    else if (layers.drawing) setView(DRAW_VB);
+    else if (layers.sfzoom) setView(ZOOM_VB);
 
     // touchpad pinch: Chrome, Edge and Firefox send it as ctrl+wheel; Safari sends gesture events
     const wheel = (e) => {
@@ -90,6 +116,7 @@
   <main
     class="stage"
     class:drag
+    class:horizontal={layers.horizontal}
     bind:this={stage}
     onpointerdown={pointerdown}
     onpointermove={pointermove}
@@ -117,6 +144,16 @@
   }
   .stage.drag {
     cursor: grabbing;
+  }
+  /* white, with the canvas centred top to bottom while it is smaller than the stage (the auto margins drop to 0 once it is
+     bigger, so it still scrolls) */
+  .stage.horizontal {
+    background: #fff;
+    display: flex;
+  }
+  .stage.horizontal :global(svg) {
+    margin: auto;
+    flex: none;
   }
   .stage,
   .stage :global(*) {
