@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>SFMSF (OMC5) plan view</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style id="layer-rules"></style>
+  </head>
+  <body>
+    <div class="app">
+      <aside class="side">
+        <div class="hd">
+          <h1>SFMSF (OMC5) plan view</h1>
+          <button
+            id="collapse"
+            title="Hide the layer panel"
+            aria-label="Hide the layer panel"
+          >
+            Hide
+          </button>
+        </div>
+        <p>Tick a layer to show it. Drag the plan to pan.</p>
+        <div id="layers"></div>
+        <div class="btns">
+          <button id="all">Show all</button><button id="reset">Reset</button>
+        </div>
+        <div class="grp">Zoom</div>
+        <div class="btns" id="zoombtns"></div>
+      </aside>
+      <main class="stage" id="stage"></main>
+    </div>
+    <button id="expand" class="expand" hidden aria-label="Show the layer panel">
+      Layers
+    </button>
+    <script type="module" src="scripts.js"></script>
+  </body>
+</html>
