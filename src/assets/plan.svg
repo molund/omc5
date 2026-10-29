@@ -9,43 +9,37 @@
     /* Aerial photo base layer: change display:none to display:inline to show it; hide the background layer to see it */
     .aerial {
       display: inline;
-    } /* Oct 26: aerial photo off, then on again late afternoon (display:none to hide it) */
-    /* Oct 22: all layers shown except the aerial photo (titles, span labels, background, walking paths, yard, greenbelt, unfinished spans) */
-    /* Oct 22: aerial photo off */
+    }
     .titles {
       display: inline;
     } /* Span letters and numbers (not arrows): change display:none to display:inline to show them */
     .spanlabel {
       display: none;
-    } /* Oct 26: span letters and numbers hidden at Mike's request (was display:inline) */
+    }
     /* Gantry layer (the whole Clayton Clipper, separate from the background): change display:none to display:inline to show it */
     .gantry {
       display: none;
-    } /* Oct 26: gantry layer shown at Mike's request (was display:none); hidden again at Mike's request 22:06 */
-    /* Oct 26: gantry shown again, then hidden (display:inline to show it) */
-    /* Oct 24: gantry (whole Clayton Clipper) hidden; change display:none back to display:inline to show it */
+    }
     /* Background layer (everything except spans, bents, the Clipper, span labels/arrows, Fraser Hwy and Pacific Hwy 15 north of the slip lane, with the slip lanes): change visibility:visible to visibility:hidden to hide it (uses visibility so it works alongside the walking-path switch) */
     .bg {
       visibility: visible;
-    } /* Oct 26: background layer shown again (visibility:hidden to hide it) */
+    }
     /* Pink walking paths layer: change display:inline to display:none to hide them */
     .walk-paths {
       display: none;
-    } /* Oct 26: walking paths layer hidden at Mike's request (was display:inline) */
+    }
     /* Roads (Fraser Hwy curbs, centre line and label; the rest of Pacific Hwy 15 and its slip lanes): change display:none to display:inline to show them; use with the background switch */
     .roads {
       display: inline;
     } /* Works yard (hatched area and dashed outline): change display:inline to display:none to hide it; shows even when the background is hidden */
-    /* Oct 22: works yard hidden */
     .yard {
       display: none;
       visibility: visible;
-    } /* Oct 26: works yard layer hidden at Mike's request (was display:inline) */
-    /* Oct 26: works yard shown (display:none to hide it) */
+    }
     /* Future 72 Ave (road, shoulders and label; also hidden by the background switch): change display:none to display:inline to show it */
     .ave72 {
       display: none;
-    } /* Oct 26: Future 72 Ave hidden (display:inline to show it) */
+    }
     .ts {
       font-family: "DejaVu Sans", sans-serif;
       font-size: 38px;
@@ -93,7 +87,7 @@
       font-weight: bold;
       fill: #eeeeee;
       letter-spacing: 6px;
-    } /* Oct 22: SFMSF / (OMC5) label fill #B4B2A9 to #EEE */
+    }
     .areasub {
       font-family: "DejaVu Sans", sans-serif;
       font-size: 32px;
@@ -108,14 +102,14 @@
       fill: #b6ad99;
       stroke: #2c2c2a;
       stroke-width: 1.5;
-    } /* Oct 22: pillar dots (the little circles on the bents, hammers and tulips) changed from #FFFFFF to #D7D7D7 (tried #EEEEEE and #E3E3E3 first); white arrows (text fill) changed to #D7D7D7, then #EEEEEE; span labels back to white */ /* Oct 22: unfinished white spans fill opacity 0.75 (also the white cores of the unfinished H and L exit ramps) */
+    }
     .p {
       fill: #ffffff;
       fill-opacity: 0.75;
       stroke: #888780;
       stroke-width: 0.825;
       stroke-dasharray: 8 5;
-    } /* Oct 24: unfinished border 1.1 to 0.825 to match the unfinished ramp borders */
+    }
     .gi {
       fill: #888780;
       stroke: #5f5e5a;
@@ -126,13 +120,11 @@
     } /* Greenbelt fill (dot pattern): change display:none to display:inline to show it. Never show it together with the aerial photo: turn one off when the other is on */
     .greenbelt {
       display: none;
-    } /* Oct 26: greenbelt off again when the aerial went on (never both) */
-    /* Oct 22: creeks (North Creek and the ditch/creek by the Fraser Hwy walking path): change display:none to display:inline to show them */
+    }
+    /* Creeks (North Creek and the ditch/creek by the Fraser Hwy walking path): change display:none to display:inline to show them */
     .creeks {
       display: none;
-    } /* Oct 26: creeks layer hidden at Mike's request (was display:inline) */
-    /* Oct 25: creeks turned on (display:none to hide them) */
-    /* Oct 22: greenbelt hidden again */
+    }
     /* Guideway (spans, beams, ramps, direction arrows; not bents/hammers/tulips): change display:none to display:inline to show it */
     .guideway {
       display: inline;
@@ -144,23 +136,21 @@
     } /* Gantry body (trusses, cross beams, walkways, tips, trolley; not the supports, their walkways or pads): change display:none to display:inline to show it */
     .gantry-body {
       display: inline;
-    } /* Oct 22: unfinished spans (dashed westbound boxes, dashed eastbound precast, dashed exit ramps): change display:none to display:inline to show them */
+    } /* Unfinished spans (dashed westbound boxes, dashed eastbound precast, dashed exit ramps): change display:inline to display:none to hide them */
     .guideway.unfinished {
       display: inline;
-    } /* Oct 23: unfinished spans and exit ramps hidden earlier today, shown again the same afternoon (fill opacity unchanged at 0.75); change display:inline to display:none to hide them */
-    /* Oct 22: roads shown (.roads inline, .fraser visible) */
-    /* Oct 22: show Future 72 Ave even while the background layer is hidden; delete to make it follow the background switch again */
+    }
+    /* Show Future 72 Ave even while the background layer is hidden; delete to make it follow the background switch again */
     .bg.ave72 {
       visibility: visible;
-    } /* Oct 22: show Hwy 15 (road surface, west and east edges, centre line, Pacific Hwy label) even while the background layer is hidden; delete to make it follow the background switch again */
+    } /* Show Hwy 15 (road surface, west and east edges, centre line, Pacific Hwy label) even while the background layer is hidden; delete to make it follow the background switch again */
     .bg.hwy15 {
       visibility: visible;
-    } /* Oct 23: old New Westminster Southern Railway line (blue dashed): change display:inline to display:none to hide it */
+    } /* Old New Westminster Southern Railway line: change display:none to display:inline to show it */
     .railway {
       display: none;
-    } /* Oct 26: railway shown, then hidden again in the afternoon (display:inline to show it) */
+    }
   </style>
-  <!-- Oct 22: canvas widened east to the right edge of the base aerial (was 0 -140 2153 1839) --><!-- Oct 24: white canvas backing widened to 2937 with the canvas --><!-- Oct 25: canvas cropped back to 0 -140 2153 1839 (was 2937 wide); backing rect to 2153 --><!-- Oct 26: canvas expanded to the visible aerial photo: viewBox -51 -115 2988 1874 (photo spans about x -51.5 to 2937.2, y -115.6 to 1759.5 after the 1.11 zoom and clip frame); was 0 -140 2153 1839 -->
   <rect
     x="-6840.7"
     y="-5402.04"
@@ -171,7 +161,6 @@
   <!-- Aerial photo base layer (summer imagery, before most guideway work): unstretched, north-up, uniform scale 1.0785 units per photo pixel. The photo is the reference; the drawing is to be adjusted to it -->
   <!-- View zoom: photo and drawing enlarged 1.11x about the left edge at y 1200, so the tulip at the east end of A falls just past the right edge -->
   <!-- Canvas 0 -140 2153 1839; everything is clipped to the aerial photo outline, so drawing that runs past the photo stays in the file but is never shown -->
-  <!-- Oct 24: canvas widened on the right from 2860 to 2937 so it reaches the right edge of the new aerial; photo clip frame extended right to the same edge (width 2778.20 to 2848.56) -->
   <clipPath id="base-photo-frame">
     <rect x="-202.41" y="-116.73" width="2848.56" height="1822.66" />
     <polygon
@@ -179,7 +168,7 @@
     />
   </clipPath>
   <g id="baseoverview" class="aerial">
-    <!-- Oct 28: the 12 embedded JPEGs moved out to the images/ folder (bytes unchanged); href data URIs replaced with relative paths --><!-- the wide overview aerial: the lowest layer, registered to the low-res screenshots -->
+    <!-- the wide overview aerial: the lowest layer, registered to the low-res screenshots -->
     <image
       width="2271"
       height="1595"
@@ -190,7 +179,6 @@
   </g>
   <g id="landmarks" class="aerial">
     <!-- the wide overview aerial (lowest layer, registered to the low-res screenshots) and the four low-resolution aerial screenshots the user uploaded (the first one, nearest the Hwy 15 / Fraser Hwy corner, is on top), each registered to the first photo and kept whole so landmarks can be matched against drone video -->
-
     <image
       width="753"
       height="489"
@@ -198,7 +186,6 @@
       transform="matrix(1.959423 0.000035 -0.000035 1.959423 -6842.648 -5402.843)"
       href="images/aerial-zoom-5.jpg"
     />
-
     <image
       width="558"
       height="458"
@@ -220,7 +207,6 @@
       transform="matrix(1.959431 0.000034 -0.000034 1.959431 -6343.648 -4511.293)"
       href="images/aerial-zoom-7.jpg"
     />
-
     <image
       width="940"
       height="124"
@@ -242,7 +228,6 @@
       transform="matrix(1.959440 0.000045 -0.000045 1.959440 -2129.990 -2277.352)"
       href="images/aerial-zoom-10.jpg"
     />
-
     <image
       width="1049"
       height="744"
@@ -250,7 +235,6 @@
       transform="matrix(1.959440 0.000045 -0.000045 1.959440 -2008.525 -1415.196)"
       href="images/aerial-zoom-4.jpg"
     />
-
     <image
       width="503"
       height="556"
@@ -287,7 +271,6 @@
     clip-path="url(#base-photo-frame)"
     transform="translate(0 1200) scale(1.11) translate(0 -1200)"
   >
-    <!-- Oct 22: aerial photo opacity 0.5 to 1 --><!-- Oct 24: aerial replaced with a new 3194x2016 crop of the same photo (JPEG q90), registered to the old one by SIFT feature matching (3,792 matched points, pure scale 0.7817, rotation 0.003 deg, mean error 0.2 old px); placed at x -46.43 y 4.55, 2692.58 x 1699.51 (0.8430 units/px); clip frame left unchanged -->
     <g class="aerial" opacity="1">
       <image
         x="-46.43"
@@ -338,10 +321,9 @@
         />
       </pattern>
     </defs>
-
     <g transform="translate(2160 1074)">
       <g class="bg yard" transform="rotate(124)">
-        <!-- works yard (hatched area and its dashed outline) --><!-- Oct 26: yard moved slightly (turned 0.87 deg and shifted about 6 units north) so its whole top border runs under the eastbound main line (within 2.9 of its centreline); was 381.3,595.4 299.0,552.0 332.5,1685.0 414.8,1641.6 -->
+        <!-- works yard (hatched area and its dashed outline) -->
         <polygon
           points="383.2,596.5 301.5,551.8 317.9,1685.2 400.9,1643.0"
           fill="url(#yard)"
@@ -385,7 +367,6 @@
             stroke-linejoin="round"
           />
         </g>
-        <!-- Oct 26: north-of-Fraser 72 Ave cut-out removed; 72 Ave there now has a white underlay (hidden with 72 Ave), so the greenbelt shows through when 72 Ave is hidden -->
         <polygon
           points="-2009.7,-1186.1 -2010.9,-1179.0 -2007.4,-1157.6 -2000.3,-1132.8 -1986.8,-1102.3 -1968.3,-1080.1 -1917.7,-1037.8 -1860.2,-1002.1 -1869.9,-984.7 -1876.7,-990.8 -1884.5,-997.2 -1892.8,-1002.8 -1901.1,-1008.3 -1909.3,-1013.9 -1917.6,-1019.5 -1925.9,-1025.1 -1934.2,-1030.7 -1942.5,-1036.3 -1950.8,-1041.9 -1959.1,-1047.5 -1967.4,-1053.1 -1975.7,-1058.7 -1984.0,-1064.3 -1992.2,-1069.9 -2000.5,-1075.4 -2008.8,-1081.0 -2017.1,-1086.6 -2022.0,-1089.9 -2022.0,-1186.1"
           fill="#000000"
@@ -411,7 +392,7 @@
         fill="url(#trees)"
       />
       <!-- greenbelt edge (no dashes where the south greenbelt joins the fence strip) -->
-      <!-- Oct 22: dashed fence lines follow the greenbelt switch (shown with the greenbelt, not in aerial view) -->
+      <!-- Dashed fence lines follow the greenbelt switch (shown with the greenbelt, not in aerial view) -->
       <polyline
         class="bg greenbelt"
         points="-344.6,214.7 -682.8,516.3 -2022.0,516.3 -2022.0,660.0"
@@ -447,7 +428,7 @@
         stroke-dasharray="8 6"
         stroke-linejoin="round"
       />
-      <!-- Oct 22: remaining dashed fence/edge lines (west edge of the yard greenbelt and the strip beside Hwy 15) also follow the greenbelt switch -->
+      <!-- Dashed fence/edge lines (west edge of the yard greenbelt and the strip beside Hwy 15) follow the greenbelt switch -->
       <polyline
         class="bg greenbelt"
         points="-1872.8,516.3 -1872.8,436.8 -1868.7,285.9 -1862.5,135.0 -1852.2,-16.0 -1839.9,-166.9 -1806.9,-468.7 -1740.0,-727.0 -1727.7,-774.5"
@@ -459,7 +440,6 @@
         stroke-linejoin="round"
       />
       <!-- West of 176 St texture (strip at the left edge), with faint dashed edge -->
-      <!-- Oct 26: greenbelt strip west of Hwy 15 no longer has the 72 Ave cut-out, so the road bed there becomes greenbelt when 72 Ave is hidden; 72 Ave now covers it with a white underlay (below) when shown -->
       <rect
         class="bg greenbelt"
         x="-2200"
@@ -501,7 +481,6 @@
       />
       <!-- Greenbelt edge west of Hwy 15 broken across 72 Ave -->
       <!-- North of Fraser Hwy texture (east of Harvie Rd; Honeybee Centre and Harvie Rd left white) -->
-      <!-- Oct 26: eastOfHarvie clip extended south (bottom edge y 600 to 700, left corner continued along the same line) so the north-east greenbelt reaches the bottom of the expanded canvas -->
       <clipPath id="eastOfHarvie">
         <polygon points="-2781.0,700 -1490.3,-1600 800,-1600 800,700" />
       </clipPath>
@@ -562,7 +541,7 @@
           transform="rotate(124)"
         />
       </clipPath>
-      <!-- Oct 22: 72 Ave north of Fraser Hwy moved 12.3 units perpendicular to the road (8.28 east, 9.15 south) so it lines up with the south side; south side unchanged --><!-- 72 Ave ends at the yard fence line near B/C -->
+      <!-- 72 Ave ends at the yard fence line near B/C -->
       <mask
         id="ave72-outline-mask"
         maskUnits="userSpaceOnUse"
@@ -586,7 +565,7 @@
           stroke-linejoin="round"
         />
       </mask>
-      <!-- Oct 22: 72 Ave dashed edge lines follow the greenbelt switch (dotted shoulder lines unchanged) --><!-- Oct 26: 72 Ave dashed edge lines now need both the 72 Ave and greenbelt switches on (nested groups; the .greenbelt rule used to override a hidden .ave72) -->
+      <!-- 72 Ave dashed edge lines need both the 72 Ave and greenbelt switches on (nested groups) -->
       <g class="ave72">
         <g class="bg greenbelt" clip-path="url(#eastOfHarvie)">
           <g clip-path="url(#northOfFraser)">
@@ -610,7 +589,7 @@
         fill="url(#trees)"
       />
       <!-- Honeybee Centre lot (parking/buildings) left white; greenery strips ~13 m along Fraser Hwy (so the walking path sits on green) and ~4 m along Harvie Rd -->
-      <!-- Oct 22: 72 Ave road surface drawn as a filled band (67.2 wide) instead of a wide stroke, so Safari draws all of it; Oct 22: opacity 0.25 to 0.18, then back to 0.25, then 0.75 with the other roads, then 0.3 --><!-- Oct 26: white underlay for 72 Ave west of Hwy 15 (hides the greenbelt under the road when 72 Ave is shown; hidden with 72 Ave) -->
+      <!-- White underlay for 72 Ave west of Hwy 15 (hides the greenbelt under the road when 72 Ave is shown; hidden with 72 Ave) -->
       <clipPath id="ave72-west-of-hwy15">
         <rect x="-3500" y="-2000" width="1378" height="4000" />
       </clipPath>
@@ -623,7 +602,7 @@
           />
         </g>
       </g>
-      <!-- Oct 26: white underlay for 72 Ave north of Fraser Hwy (same treatment as west of Hwy 15) -->
+      <!-- White underlay for 72 Ave north of Fraser Hwy (same treatment as west of Hwy 15) -->
       <g clip-path="url(#ave72-fence-clip)">
         <g clip-path="url(#northOfFraser)">
           <polygon
@@ -666,7 +645,7 @@
       </g>
       <!-- 72 Ave road surface is the 50% white below; the dotted edge lines are masked -->
       <g clip-path="url(#ave72-fence-clip)">
-        <!-- Oct 22: 72 Ave dashed centre line deleted --><!-- Oct 22: label on the 72 Ave arch north of Fraser Hwy (2015 West Clayton NCP long-term alignment), set along the arch centre line -->
+        <!-- Label on the 72 Ave arch north of Fraser Hwy (2015 West Clayton NCP long-term alignment), set along the arch centre line -->
         <path
           id="ave72-arch-label-path"
           d="M-265.12 77.15 L-243.52 60.95 L-220.52 46.95 L-196.22 34.95 L-168.42 23.55 L-152.02 18.45 L-126.62 12.75 L-109.32 10.55 L-80.42 8.75 L-55.62 9.75 L-31.32 13.55 L-7.32 20.35 L9.48 26.25 L24.78 32.65 L46.98 44.05 L67.98 57.65 L98.58 81.35 L125.08 105.25 L143.68 124.55 L162.98 146.45 L185.48 175.25 L200.98 197.75"
@@ -688,7 +667,6 @@
         </text>
       </g>
       <!-- Road-side greenbelt between Fraser Hwy and the SFMSF fence (fence just south of the walking path at C; east of the B/C jog it runs straight, parallel to the Fraser Hwy south shoulder; yard ends at the fence); drawn over Future 72 Ave so the road ends at the fence -->
-      <!-- Oct 22: road backgrounds (Hwy 15, Harvie Rd, Fraser Hwy) base colour white to silver #C0C0C0; 72 Ave also silver #C0C0C0 with its opacity kept at 0.3 --><!-- Oct 22: Hwy 15 background removed where it overlaps the Fraser Hwy background (the two white layers doubled up there) -->
       <mask
         id="hwy15-bg-no-fraser"
         maskUnits="userSpaceOnUse"
@@ -721,7 +699,7 @@
         fill="#C0C0C0"
         fill-opacity="0.75"
       />
-      <!-- Hwy 15 road surface (Oct 22: white opacity 0.25 to 0.4 to 1, then 0.75 with all road backgrounds (72 Ave, Hwy 15, Fraser Hwy)) -->
+      <!-- Hwy 15 road surface -->
       <polygon
         class="bg hwy15"
         points="-1847.2,-963.9 -1651.5,-1312.7 -1677.7,-1327.3 -1870.0,-984.7"
@@ -768,7 +746,6 @@
       />
       <!-- Hwy 15 south of the slip lane: hidden with the background -->
       <!-- 176 St east edge: solid, except dashed (centre-line style) where the slip lane runs beside the travel lane -->
-
       <path
         class="roads"
         d="M-2022.0 -675.4 L-2022.0 -1005.3"
@@ -892,11 +869,10 @@
           fill="none"
           stroke="#C9C7C0"
           stroke-width="2"
-          data-note="centre line Oct 20: through the A east tulip, A/B tulip and the north pillars of the B/C, C/D and D/E bents; straight from the D/E pillar west"
+          data-note="centre line: through the A east tulip, A/B tulip and the north pillars of the B/C, C/D and D/E bents; straight from the D/E pillar west"
           stroke-dasharray="14 10"
         />
         <!-- Mike's daily walking route (out and back from the east end). Inner frame. Starts on the south shoulder just west of the second tulip east of A; beside B; outside the B/C pillar; along the yard fence to span E (D end); across under E to the road; along the open eastbound lanes just south of the centre line to the crosswalk at span G; north side of Fraser Hwy, straight across the mouth of Harvie Rd, then along the path in front of the Honeybee Centre, ending near the 176 St corner -->
-        <!-- Oct 22: walking route extended east along the south shoulder of Fraser Hwy to the east edge of the drawing, keeping the same 10.3 unit offset from the south curb as its previous east end -->
         <path
           id="walking-route"
           class="walk-paths bg"
@@ -919,9 +895,7 @@
           stroke-linecap="round"
           stroke-linejoin="round"
         />
-
-        <!-- Oct 23: New Westminster Southern Railway as completed (Feb 14, 1891), the green "NWSR - Liverpool to Blaine" line from the Surrey KML map, placed by shifting the KML (north up, 3 units per metre) so the diagonal sits on the Harvie Rd centre line and the straight south part sits on the Hwy 15 centre line. Outer-frame coordinates. Layer switch .railway in the style block -->
-        <!-- Oct 23: railway redrawn in the traditional map style: solid line 50% thinner (4 to 2) with perpendicular cross ties in the same colour (wide short dashes on the same path) --><!-- Oct 23: railway line and ties colour changed from #1F5FBF to #B27700 -->
+        <!-- New Westminster Southern Railway as completed (Feb 14, 1891): the "NWSR - Liverpool to Blaine" line from the Surrey KML map, placed by shifting the KML (north up, 3 units per metre) so the diagonal sits on the Harvie Rd centre line and the straight south part sits on the Hwy 15 centre line. Outer-frame coordinates. Layer switch .railway in the style block -->
         <path
           id="nwsr-railway"
           class="railway"
@@ -943,9 +917,7 @@
           stroke-dasharray="2 14"
           stroke-dashoffset="1"
         />
-        <!-- Oct 23: "NWSR (historic)" label in the same brown gold as the railway, same vertical orientation, size and x as the Pacific Hwy (15) label, placed south of it on the same side of the line. Outer-frame coordinates -->
         <g class="railway" transform="rotate(-124)">
-          <!-- Oct 23: railway label renamed "Historic NWSR" (to match "Future 72 Ave") and moved south so its north end sits where the old label's south end was (centre y -60 to 150.3) --><!-- Oct 23: Historic NWSR label 80% of the Pacific Hwy (15) label size (28 to 22.4); baseline x moved to -2070.1 so the letter tops stay level with the Hwy label tops, and centred at y 130.2 so the north end stays put -->
           <text
             class="road"
             x="-2070.1"
@@ -957,8 +929,6 @@
             Historic NWSR
           </text>
         </g>
-
-        <!-- Oct 24: span D track restyled to match E/F/M/N/O: polygon 9.64 wide, fill #888780, 1.5 #5F5E5A border (was a 10.40 stroke over a 12.05 border) --><!-- Oct 24: north track of D: west end (at D/E) nudged out 1.04 so its north edge lines up with the north edge of gantry span 1 (E); east end unchanged, width kept -->
         <polygon
           class="guideway"
           fill="#888780"
@@ -966,8 +936,6 @@
           stroke-width="1.5"
           points="263.81,406.00 273.45,406.00 273.60,530.00 263.96,530.00"
         />
-
-        <!-- Oct 24: span D track restyled to match E/F/M/N/O: polygon 9.64 wide, fill #888780, 1.5 #5F5E5A border (was a 10.40 stroke over a 12.05 border) -->
         <polygon
           class="guideway"
           fill="#888780"
@@ -975,7 +943,6 @@
           stroke-width="1.5"
           points="274.97,406.00 284.61,406.00 296.76,530.00 287.13,530.00"
         />
-        <!-- Oct 24: exit ramp span beside F installed this morning: the F piece (E/F cap centre to F/G cap centre) drawn complete like the other precast (border 12.05 + fill 10.40); the rest of the ramp stays unfinished --><!-- Oct 24: exit ramp F piece restyled to match E/F/M/N/O: polygon 9.64 wide, fill #888780, 1.5 #5F5E5A border (was a 10.40 stroke over a 12.05 border) -->
         <polygon
           class="guideway"
           fill="#888780"
@@ -983,7 +950,6 @@
           stroke-width="1.5"
           points="312.28,650.70 321.92,650.70 324.96,771.45 315.32,771.45"
         />
-        <!-- Oct 24: all unfinished-piece borders now 0.825 thick (dashed boxes and eastbound precast were 1.1; ramp border bands are 0.825) --><!-- Oct 24: ramp-h-edge mask: the dashed border is a 10.40 stroke under the 0.75-opacity white core, so its dashes showed through the core as a checker pattern; the mask keeps only the edge bands outside the 8.20 core --><!-- Oct 24: ramp-h-edge border moved out to match the finished guideway border (band between 10.40 and 12.05, outside the track instead of inside it); white core widened from 8.20 to the full 10.40 -->
         <clipPath id="ramp-h-trim">
           <polygon
             points="308.45,650.70 312.35,771.45 312.38,771.45 313.84,893.45 314.23,893.45 315.23,1014.30 314.82,1014.30 316.24,1136.20 5000.00,1136.20 5000.00,650.70"
@@ -1012,7 +978,6 @@
             stroke-linejoin="round"
           />
         </mask>
-        <!-- Oct 24: ramp-h-edge resized to the 9.64 precast width: core 9.64, 0.825 dashed border centred on the edge, like the unfinished precast boxes -->
         <path
           clip-path="url(#ramp-h-trim)"
           mask="url(#ramp-h-edge)"
@@ -1055,7 +1020,6 @@
           clip-path="url(#ramp-h-trim)"
         />
         <!-- H off-ramp ends on the centre of the I eastbound track at mid-span I, like the L on-ramp in K --><!-- Span L: yard on-ramp joining eastbound (mirror of the Span H off-ramp) -->
-        <!-- Oct 24: ramp-l-edge mask: the dashed border is a 10.40 stroke under the 0.75-opacity white core, so its dashes showed through the core as a checker pattern; the mask keeps only the edge bands outside the 8.20 core --><!-- Oct 24: ramp-l-edge border moved out to match the finished guideway border (band between 10.40 and 12.05, outside the track instead of inside it); white core widened from 8.20 to the full 10.40 -->
         <clipPath id="ramp-l-trim">
           <polygon
             points="317.12,1238.00 316.17,1358.80 316.21,1358.80 316.75,1480.20 316.90,1480.20 322.00,1601.80 5000.00,1601.80 5000.00,1238.00"
@@ -1084,7 +1048,6 @@
             stroke-linejoin="round"
           />
         </mask>
-        <!-- Oct 24: ramp-l-edge resized to the 9.64 precast width: core 9.64, 0.825 dashed border centred on the edge, like the unfinished precast boxes -->
         <path
           clip-path="url(#ramp-l-trim)"
           mask="url(#ramp-l-edge)"
@@ -1127,8 +1090,6 @@
           clip-path="url(#ramp-l-trim)"
         />
         <!-- Precast spans and steel girders: 10.40 wide (borders 12.05, ramp white cores 8.20) --><!-- Border for spans P and Q (darker stroke under the fill, as on D) -->
-
-        <!-- Oct 24: spans P and Q restyled to match E/F/M/N/O: polygon 9.64 wide, fill #888780, 1.5 #5F5E5A border (was a 10.40 stroke over a 12.05 border) -->
         <polygon
           class="guideway"
           fill="#888780"
@@ -1202,7 +1163,6 @@
           points="318.46,2361.36 318.38,2381.34 318.31,2401.40 318.26,2421.45 318.22,2441.51 318.19,2461.57 318.18,2481.62 318.18,2501.75 327.82,2501.75 327.82,2481.30 327.83,2461.25 327.85,2441.19 327.89,2421.13 327.95,2401.08 328.02,2381.02 328.10,2361.36"
         />
         <!-- Span ends follow the bents (any four-sided shape with parallel sides); B: east end unchanged, west end cut to the B/C bent edge -->
-        <!-- Oct 25: all gantry spans (gi guideway and unfinished gantry boxes) narrowed to 22.2 wide (perpendicular), taken evenly from both sides; ends stay on their bent lines; ends already under 22.2 unchanged. Backup /tmp/pre_narrow.svg -->
         <polygon
           class="gi guideway"
           points="288.49,138.11 309.65,146.29 290.95,285.41 270.46,283.97"
@@ -1212,8 +1172,6 @@
           points="270.46,283.97 290.95,285.41 285.35,406.00 263.35,406.00"
         />
         <!-- Walking route where it crosses under span E: drawn under span 1 (gantry box) and the eastbound precast -->
-        <!-- Oct 22: walking route branch along the middle of the historic old Yale Road, leaving the Fraser Hwy walking route and running south to the edge of the drawing; smoothed curve, not an exact trace; Oct 22 start moved up-road to the squiggle point, on the route centreline -->
-        <!-- Oct 26: Old Yale Rd walking route extended to the bottom edge of the canvas/aerial as one smooth curve tracing the middle of the road in the aerial (original curve kept down to 80% of its length); was ending at 586.92 -163.40 -->
         <path
           id="walking-route-old-yale-road"
           class="walk-paths bg"
@@ -1239,7 +1197,6 @@
           points="264.07,530.00 286.25,530.00 296.11,650.70 273.82,650.70"
         />
         <!-- Span 1 (gantry, span E): all segments hung, not yet glued or post-tensioned -->
-        <!-- Oct 24: eastbound D (west end) and E (east end) nudged in 0.73 at D/E so the gap from span 1 to E is about 18 in there (was about 28 in at 3 units/m); E/F end unchanged, so E now forks away from span 1 going west -->
         <polygon
           class="guideway"
           points="287.13,530.00 296.76,530.00 309.11,650.70 299.47,650.70"
@@ -1248,12 +1205,10 @@
           stroke-width="1.5"
         />
         <!-- E eastbound precast: east end slid 4.4 north along the D/E bent (~14 in gap to gantry span 1 there, ~5 ft at the E/F end) -->
-        <!-- Oct 23: span 2 (gantry) marked complete: all segments hung and glued (was the dashed unfinished box); class p guideway unfinished to gi guideway, like span 1. Revert by restoring the old class -->
         <polygon
           class="gi guideway"
           points="273.30,650.70 295.52,650.70 299.42,771.45 277.20,771.45"
         />
-        <!-- Oct 24: span F eastbound precast installed this morning, marked complete (was dashed white, class guideway unfinished) -->
         <polygon
           class="guideway"
           fill="#888780"
@@ -1262,7 +1217,6 @@
           points="298.81,650.70 308.45,650.70 312.35,771.45 302.71,771.45"
         />
         <!-- Span F eastbound precast: not lifted yet; to mark complete use fill="#888780" stroke="#5F5E5A" stroke-width="1.5", no dasharray -->
-        <!-- Oct 26: span 3 (gantry box) marked complete: all segments hung and glued (was the dashed unfinished box); class p guideway unfinished to gi guideway, like span 2. Revert by restoring the old class -->
         <polygon
           class="gi guideway"
           points="277.23,771.45 299.43,771.45 300.89,893.45 278.69,893.45"
@@ -1519,7 +1473,6 @@
           height="10"
           rx="2"
         />
-        <!-- Oct 24: F/G tulip nudged 0.97 away from the hammer (column centre x 319.17 to 320.14) so the exit ramp runs straight from the E/F tulip to the G/H bent; ramp vertex moved with it; hammer unchanged -->
         <rect
           class="g"
           x="315.66"
@@ -1576,7 +1529,6 @@
           height="10"
           rx="2"
         />
-
         <rect
           class="g"
           x="290.50"
@@ -1633,7 +1585,6 @@
           height="10"
           rx="2"
         />
-
         <rect
           class="g steel-hwy15"
           x="305.19"
@@ -1650,7 +1601,6 @@
           height="10"
           rx="2"
         />
-
         <!-- Bent / hammerhead / tulip column dots (bent layer, under the Clipper) -->
         <circle cx="266.98" cy="283.72" r="2.5" fill="#D7D7D7" />
         <circle cx="317.97" cy="287.31" r="2.5" fill="#D7D7D7" />
@@ -1725,7 +1675,7 @@
             transform="translate(-40.29 40.00)"
           >
             <!-- Layers (bottom to top): supports + their walkways; trusses, cross beams and side walkways; blue tips; trolley. Labels are drawn later, above everything. -->
-            <!-- Oct 26: Clipper advanced one full position (body and short front support moved forward one span, short support F/G to G/H: translate +2.65 +122.0 in this frame); long supports: rear (support 2) left at the west tip of span 1, support 3 moved to the west end of span 2 (front long), support 1 turned lengthwise along the guideway on span 2, just behind the front long one. Backup /tmp/pre_gantry_move.svg --><!-- Oct 26: turned middle support (support 1) moved back along the guideway by half its own length (20.63) to leave a gap behind the front long support; front long support unchanged --><!-- Oct 26: front long support on the F/G (2/3) hammer moved 6 units forward so it is centred on the gap between the ends of boxes 2 and 3 (hammer centre y 771.45); across the guideway it was already centred --><!-- Oct 26: gantry body re-aligned (small shear about the G/H support, matrix() at the front of the gantry-body transforms) so the trusses are centred on the guideway at the F/G and G/H supports --><!-- Clipper supports: move along the guideway by changing y (bents: B/C ~204, C/D ~344, D/E ~484, E/F ~604). A support sitting on a bent or hammerhead has no rotate(), so it is parallel to the bent, but it stays centred on the Clipper centreline (x = 300.5 + 0.0732*(y - 400)), not on the bent cap; supports between bents keep the Clipper rotate(-4.2). -->
+            <!-- Clipper supports: move along the guideway by changing y (bents: B/C ~204, C/D ~344, D/E ~484, E/F ~604). A support sitting on a bent or hammerhead has no rotate(), so it is parallel to the bent, but it stays centred on the Clipper centreline (x = 300.5 + 0.0732*(y - 400)), not on the bent cap; supports between bents keep the Clipper rotate(-4.2). -->
             <!-- Clipper centreline over span 1: x = 300.5 + 0.0732*(y - 400) -->
             <g transform="translate(-1.21 -20.63)">
               <rect
@@ -1829,7 +1779,6 @@
               />
             </g>
             <!-- Gantry (walkways, trusses, cross beams, tips, trolley) rotated 1.74 deg in the guideway frame about the D/E support centre (271.92, 524.00) so its centreline runs through supports 2 and 4; the matrix() groups are that rotation expressed inside the narrowed frame -->
-            <!-- Oct 22: gantry body re-centred end to end and across on the two forward supports (E/F and F/G) --><!-- Oct 22: support 1 moved to mid-span 1 (over the 1 label), centred on span 1 and perpendicular to it --><!-- Oct 22: Clipper advanced one bent: supports C/D->D/E, D/E->E/F, E/F->F/G (same offsets from each bent, centred on the gantry spans), body moved with them; was centred on the D/E and E/F supports -->
             <g
               class="gantry-body"
               transform="matrix(1.000000 0.000000 -0.027667 1.000000 24.0975 0.0000) translate(2.65 122.00) matrix(0.999995 0.001766 -0.005838 0.999995 25.8164 120.2096)"
@@ -2199,8 +2148,6 @@
           </g>
         </g>
       </g>
-      <!-- 2026-10-23: Pacific Hwy (15) label fill set to #777777 to match the Future 72 Ave label -->
-      <!-- Oct 23: Pacific Hwy (15) label moved west from x -2032.5 to -2066.0 to clear the railway line --><!-- Oct 26: road labels hidden at Mike's request (inline display:none; Historic NWSR label left as is) -->
       <text
         class="road bg hwy15"
         x="-2066.0"
@@ -2211,9 +2158,6 @@
       >
         Pacific Hwy (15)
       </text>
-
-      <!-- Oct 22: title line deleted --><!-- Oct 22: date/timestamp line ("As of Oct 19, 2026, 8:45 am") deleted -->
-
       <!-- Yard ramp direction arrows (eastbound train direction), same style as the other arrows -->
       <text
         class="n guideway"
@@ -2246,9 +2190,6 @@
       >
         E
       </text>
-      <!-- Oct 23: white outline on unfinished letters F-L reduced by 2/3 (stroke 2.55 to 0.85); same outline added to unfinished numbers 2-11 -->
-
-      <!-- Oct 24: F letter marked complete: white like E (grey unfinished text and halo removed) -->
       <text
         class="n spanlabel"
         x="-760.20"
@@ -2420,7 +2361,6 @@
       >
         1
       </text>
-      <!-- Oct 23: span 2 number marked complete: white like span 1 (grey unfinished text and white halo removed) -->
       <text
         class="n spanlabel"
         x="-750.06"
@@ -2430,7 +2370,6 @@
       >
         2
       </text>
-      <!-- Oct 26: span 3 number marked complete: white like span 2 (grey unfinished text and white halo removed) -->
       <text
         class="n spanlabel"
         x="-852.19"
@@ -2671,7 +2610,6 @@
       >
         S
       </text>
-      <!-- 2026-10-23: Fraser Hwy (1A) label fill set to #777777 to match the Future 72 Ave label -->
       <text
         class="road roads fraser"
         x="-1246.7"
@@ -2682,9 +2620,6 @@
       >
         Fraser Hwy (1A)
       </text>
-
-      <!-- Oct 26: SFMSF label hidden at Mike's request (inline display:none; other titles unchanged) -->
-      <!-- Oct 26: OMC5 label hidden at Mike's request (inline display:none; other titles unchanged) -->
       <text
         class="n spanlabel steel-hwy15"
         x="-1943.83"
@@ -2853,7 +2788,7 @@
       >
         &#x2192;
       </text>
-      <!-- westbound --><!-- Oct 23: span 2 (gantry) westbound arrow, same placement as span 1 (28.8 from the east end, same fraction across), rotated to the span direction -->
+      <!-- westbound -->
       <text
         class="n guideway"
         x="-718.51"
@@ -2901,7 +2836,6 @@
       </text>
       <!-- eastbound -->
       <!-- Span F direction arrow (eastbound precast) -->
-      <!-- Oct 24: span F arrow added (the old commented-out arrow was from earlier geometry and fell outside the span); placed like E: 27.9 from the east end, same position across the span, rotated to F (32.2 deg) -->
       <text
         class="n guideway"
         x="-736.51"
@@ -3077,7 +3011,6 @@
         &#x2192;
       </text>
       <!-- eastbound -->
-      <!-- Oct 22: source sub-labels removed from both 72 Ave labels (south label back to y 489.3) --><!-- Oct 22: arrows re-centred across the width of their track (between the two side edges of the span; the two arrows in a gantry span A-E take the middle of each half), position along the span unchanged; the unfinished H and L ramp arrows left alone --><!-- Oct 23: the two arrows on span D reduced from 19.8 to 17.6 px so their heads clear the track edges, and re-centred on the D track centre lines --><!-- Oct 23: all span arrows reduced to 17.6 px (from 19.8), each kept on the same centre point --><!-- Oct 22: this Future 72 Ave label colour #ADABA3 to #555555, then #777777; text now "Future 72 Ave (per surrey.ca project page)"; north arch label "as per" changed to "per"; both labels then stacked: "Future 72 Ave" on top, the "(per ...)" part below at 60 percent font size; south pair moved up 13 units to sit between the road edge lines -->
       <text
         class="road72 bg ave72"
         x="-1250"
@@ -3087,10 +3020,8 @@
       >
         Future 72 Ave
       </text>
-      <!-- Oct 22: Cosmos road centreline layer deleted -->
     </g>
   </g>
-  <!-- Oct 22: thin grey line along the long outer and inner edges of the two yellow truss beams only (none across the ends); hidden under the trolley crane. Stroke 0.47 -->
   <g id="railway-extension" class="railway">
     <path
       class="railway"
@@ -4695,7 +4626,6 @@
       <circle cx="26.47" cy="0" r="2.78" fill="#D7D7D7" />
     </g>
   </g>
-
   <mask
     id="gantry-line-mask"
     maskUnits="userSpaceOnUse"
@@ -4710,7 +4640,6 @@
       fill="#000"
     />
   </mask>
-  <!-- Oct 24: the four grey truss border lines given the gantry class so they hide and show with the Clipper --><!-- Oct 26: four grey gantry truss border lines (gantry-outline, #777775) deleted at Mike's request: they were not pinned to the gantry and were left behind when it moved. gantry-line-mask is now unused -->
   <g class="ave72-west">
     <!-- Future 72 Ave: the straight road continued west past the first-photo frame to the left edge of the drawing -->
     <g transform="translate(0 1200) scale(1.11) translate(0 -1200)">
@@ -4742,7 +4671,6 @@
       </g>
     </g>
   </g>
-  <!-- Oct 28: nw-begin / nw-end markers (left over from the tracing tool) removed; drawing unchanged -->
   <g id="nw-spans">
     <polygon
       class="p guideway unfinished cc"
