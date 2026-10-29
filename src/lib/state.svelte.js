@@ -20,6 +20,8 @@ export const layers = $state({ ...defaults });
 // zoom is a percentage of the stage width, and fit the zoom at which the whole canvas fits the stage; ready turns on the layer
 // rules once plan.svg is tagged; gantry is the Clayton Clipper's span number out of the total
 export const ui = $state({
+  // the view last picked (a View group key), which stays put while layers are switched on and off
+  view: defaults.progress ? "progress" : defaults.drawing ? "drawing" : "sfzoom",
   zoom: 187.31,
   fit: 100,
   collapsed: false,
@@ -197,9 +199,12 @@ function applyFull() {
   Object.assign(layers, fullDefaults);
 }
 
+const VIEWS = ["progress", "sfzoom", "view_default", "horizontal", "drawing"];
+
 // A layer checkbox was ticked or unticked
 export function toggle(k, checked) {
   layers[k] = checked;
+  if (checked && VIEWS.includes(k)) ui.view = k;
   if (k === "greenbelt" && checked) layers.aerial = false;
   if (k === "aerial" && checked) layers.greenbelt = false;
   if (k === "gantry" && checked) layers.beams = false;
@@ -274,6 +279,7 @@ export function showAll() {
 
 export function reset() {
   drawingSnap = startSnap();
+  ui.view = defaults.progress ? "progress" : defaults.drawing ? "drawing" : "sfzoom";
   Object.assign(layers, defaults);
   refresh();
   if (defaults.progress) progressView();

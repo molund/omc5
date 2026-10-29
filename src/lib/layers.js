@@ -127,6 +127,14 @@ export const UNITS_PER_METRE = 3 * 1.11;
 // Horizontal starts zoomed to show this many metres before and after the gantry's span, with the span in the middle
 export const HORIZONTAL_VIEW_METRES = 350;
 
+// Full image view draws the old railway line about 50% heavier: the line itself, and its cross ties (dash) thicker on the same
+// spacing. The original line is inside the 1.11x zoomed frame; its two extensions are in canvas units, 1.11 times larger.
+export const FULL_VIEW_CSS =
+  "#nwsr-railway{stroke-width:3 !important}" +
+  "#nwsr-railway-ties{stroke-dasharray:3 13 !important}" +
+  "#railway-extension path:first-of-type,#railway-extension-north path:first-of-type{stroke-width:3.33 !important}" +
+  "#railway-extension path:last-of-type,#railway-extension-north path:last-of-type{stroke-dasharray:3.33 14.43 !important}";
+
 // the span-label options need Clayton Clipper spans on screen: Clayton Clipper on and at least one type of span on
 export const labelsAvailable = (state) =>
   state.progress ||
