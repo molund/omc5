@@ -1,11 +1,15 @@
 <script>
   import LayerPanel from "./LayerPanel.svelte";
   import Plan from "./Plan.svelte";
-  import { layerCss } from "./lib/layers.js";
+  import { layerCss, FULL_VIEW_CSS } from "./lib/layers.js";
   import { layers, ui } from "./lib/state.svelte.js";
 
   // the layer rules wait until Plan has tagged the drawing, which needs it laid out as plan.svg draws it on its own
-  const css = $derived(ui.ready ? layerCss(layers) : "");
+  const css = $derived(
+    ui.ready
+      ? layerCss(layers) + (ui.view === "view_default" ? FULL_VIEW_CSS : "")
+      : "",
+  );
 </script>
 
 <svelte:head>
