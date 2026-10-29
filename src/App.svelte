@@ -1,5 +1,6 @@
 <script>
   import LayerPanel from "./LayerPanel.svelte";
+  import PanelIcon from "./PanelIcon.svelte";
   import Plan from "./Plan.svelte";
   import { layerCss, FULL_VIEW_CSS } from "./lib/layers.js";
   import { layers, ui } from "./lib/state.svelte.js";
@@ -25,8 +26,9 @@
 {#if ui.collapsed}
   <button
     class="expand"
+    title="Show the layer panel"
     aria-label="Show the layer panel"
-    onclick={() => (ui.collapsed = false)}>Layers</button
+    onclick={() => (ui.collapsed = false)}><PanelIcon /></button
   >
 {/if}
 
@@ -47,6 +49,7 @@
     }
   }
   .expand {
+    padding: 6px;
     position: fixed;
     top: calc(env(safe-area-inset-top, 0px) + 10px);
     left: 10px;
