@@ -5,10 +5,10 @@ export const LAYERS = [
     "View",
     [
       ["progress", "Progress", "progress", false],
-      ["view_default", "Full image", "view_default", false],
+      ["view_default", "Full aerial", "view_default", false],
       ["sfzoom", "SFMSF aerial", "sfzoom", true],
       ["drawing", "SFMSF drawing", "drawing", false],
-      ["horizontal", "Horizontal", "horizontal", false],
+      ["horizontal", "Horizontal aerial", "horizontal", false],
     ],
   ],
   [
