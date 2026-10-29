@@ -6,9 +6,9 @@ export const LAYERS = [
     [
       ["progress", "Progress", "progress", false],
       ["view_default", "Full aerial", "view_default", false],
+      ["horizontal", "Horizontal aerial", "horizontal", false],
       ["sfzoom", "SFMSF aerial", "sfzoom", true],
       ["drawing", "SFMSF drawing", "drawing", false],
-      ["horizontal", "Horizontal aerial", "horizontal", false],
     ],
   ],
   [
