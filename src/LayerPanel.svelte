@@ -36,10 +36,11 @@
   const disabled = (k) =>
     ((k === "labels" || k === "cclabels") && !avail) ||
     (layers.progress && (!PROGRESS_ROWS.includes(k) || PROGRESS_LOCKED.includes(k)));
-  // greenbelt and creeks only in drawing mode, roads in drawing mode or SFMSF zoom, aerial photo everywhere but drawing mode
+  // greenbelt and creeks only in drawing mode, roads and walking paths in the two SFMSF views (drawing mode and SFMSF zoom),
+  // aerial photo everywhere but drawing mode
   function hidden(k) {
     if (k === "greenbelt" || k === "creeks") return !layers.drawing;
-    if (k === "roads") return !(layers.drawing || layers.sfzoom);
+    if (k === "roads" || k === "walk") return !(layers.drawing || layers.sfzoom);
     if (k === "aerial") return layers.drawing;
     return false;
   }
