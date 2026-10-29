@@ -1,5 +1,5 @@
-// Where the Clayton Clipper gantry is on its journey: the numbered span (the cclabel span numbers, 1-105) whose label is nearest
-// the centre of the gantry body. Moving the #clayton-clipper group in plan.svg moves this along with it.
+// Where the Clayton Clipper gantry is on its journey: the numbered span (the cclabel span numbers, 1-105) it is working on, from
+// data-span on the #clayton-clipper group in plan.svg.
 // Every Clayton Clipper guideway span is also given the number of its nearest label, and the ones the gantry has reached (that
 // number or lower) are tagged "reached" so progress-chart mode can colour just those.
 export function gantrySpan(root) {
@@ -30,12 +30,16 @@ export function gantrySpan(root) {
     });
     return n;
   };
-  // the drawing's own styles hide the gantry, and a hidden element has no box to measure
-  const display = gantry.style.display;
-  gantry.style.display = "inline";
-  const b = body.getBBox(),
+  // the span the gantry is anchored to (see gantryAnchor.js); without one, the label nearest the gantry body
+  let span = +gantry.dataset.span || null;
+  if (span == null) {
+    // the drawing's own styles hide the gantry, and a hidden element has no box to measure
+    const display = gantry.style.display;
+    gantry.style.display = "inline";
+    const b = body.getBBox();
     span = nearest(toCanvas(body, b.x + b.width / 2, b.y + b.height / 2));
-  gantry.style.display = display;
+    gantry.style.display = display;
+  }
   root.querySelectorAll("polygon.guideway.cc").forEach((el) => {
     const L = el.points,
       k = L.numberOfItems;

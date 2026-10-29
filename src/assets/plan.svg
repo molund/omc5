@@ -1672,32 +1672,34 @@
           <g
             id="clayton-clipper"
             class="gantry"
+            data-span="34"
+            data-drawn-at="34"
             transform="translate(-40.29 40.00)"
           >
             <!-- Layers (bottom to top): supports + their walkways; trusses, cross beams and side walkways; blue tips; trolley. Labels are drawn later, above everything. -->
-            <!-- Clipper supports: move along the guideway by changing y (bents: B/C ~204, C/D ~344, D/E ~484, E/F ~604). A support sitting on a bent or hammerhead has no rotate(), so it is parallel to the bent, but it stays centred on the Clipper centreline (x = 300.5 + 0.0732*(y - 400)), not on the bent cap; supports between bents keep the Clipper rotate(-4.2). -->
+            <!-- Anchoring: the gantry works on span data-span (the Clayton Clipper span numbers, 1-105); to move it, change data-span. Everything below is drawn for span data-drawn-at, and src/lib/gantryAnchor.js moves each data-anchor group from there to data-span when the page loads. front: the short support, just ahead of the span on the S/S+1 bent; second: just behind it on the S-1/S bent; rear: the back of the span behind, on the S-2/S-1 bent; fourth: the lengthwise support on the span behind, at the same fraction of the way along it; body: the trusses, walkways and trolley, centred on the span midpoint between its outer edges and parallel to them. The supports keep the along and across offsets they are drawn with. -->
             <!-- Clipper centreline over span 1: x = 300.5 + 0.0732*(y - 400) -->
-            <g transform="translate(-1.21 -20.63)">
+            <g data-anchor="fourth" transform="translate(-0.24 -4.16)">
               <rect
                 opacity="0.65"
                 id="clipper-support-1"
                 x="329.73"
-                y="681.38"
+                y="677.255"
                 width="10.91"
-                height="41.25"
+                height="49.5"
                 fill="#F5B400"
                 stroke="#9A6E00"
                 stroke-width="2"
-                transform="rotate(-3.37 335.18 702.00)"
+                transform="rotate(176.63 335.18 702.00)"
               />
             </g>
-            <g transform="translate(22.99 120.70)">
+            <g data-anchor="rear" transform="translate(22.99 120.70)">
               <rect
                 opacity="0.65"
                 id="clipper-support-2"
-                x="269.6"
+                x="262.1"
                 y="481.0"
-                width="75"
+                width="90"
                 height="6"
                 fill="#F5B400"
                 stroke="#9A6E00"
@@ -1705,20 +1707,20 @@
                 transform="rotate(-1.504 307.1 484)"
               />
             </g>
-            <g transform="translate(31.65 381.45)">
+            <g data-anchor="second" transform="translate(31.65 381.45)">
               <rect
                 opacity="0.65"
                 id="clipper-support-3"
-                x="267.5"
+                x="260.0"
                 y="347.0"
-                width="75"
+                width="90"
                 height="6"
                 fill="#F5B400"
                 stroke="#9A6E00"
                 stroke-width="2"
               />
             </g>
-            <g transform="translate(24.87 242.75)">
+            <g data-anchor="front" transform="translate(24.87 242.75)">
               <rect
                 opacity="0.65"
                 id="clipper-support-4-short"
@@ -1732,42 +1734,42 @@
               />
             </g>
             <!-- Support walkways (blue, 2/3 the side-walkway thickness, full length of their support beam, same x and width as the beam): east side of the long supports, west side of the short one; move with their support -->
-            <g transform="translate(-1.21 -20.63)">
+            <g data-anchor="fourth" transform="translate(-0.24 -4.16)">
               <rect
                 opacity="0.65"
                 class="clipper-support-walkway"
                 x="323.67"
-                y="681.38"
+                y="677.255"
                 width="6.06"
-                height="41.25"
+                height="49.5"
                 fill="#2F6DB5"
-                transform="rotate(-3.37 335.18 702.00)"
+                transform="rotate(176.63 335.18 702.00)"
               />
             </g>
-            <g transform="translate(22.99 120.70)">
+            <g data-anchor="rear" transform="translate(22.99 120.70)">
               <rect
                 opacity="0.65"
                 class="clipper-support-walkway"
-                x="269.6"
+                x="262.1"
                 y="477.67"
-                width="75"
+                width="90"
                 height="3.33"
                 fill="#2F6DB5"
                 transform="rotate(-1.504 307.1 484)"
               />
             </g>
-            <g transform="translate(31.65 381.45)">
+            <g data-anchor="second" transform="translate(31.65 381.45)">
               <rect
                 opacity="0.65"
                 class="clipper-support-walkway"
-                x="267.5"
+                x="260.0"
                 y="343.67"
-                width="75"
+                width="90"
                 height="3.33"
                 fill="#2F6DB5"
               />
             </g>
-            <g transform="translate(24.87 242.75)">
+            <g data-anchor="front" transform="translate(24.87 242.75)">
               <rect
                 opacity="0.65"
                 class="clipper-support-walkway"
@@ -1781,6 +1783,7 @@
             <!-- Gantry (walkways, trusses, cross beams, tips, trolley) rotated 1.74 deg in the guideway frame about the D/E support centre (271.92, 524.00) so its centreline runs through supports 2 and 4; the matrix() groups are that rotation expressed inside the narrowed frame -->
             <g
               class="gantry-body"
+              data-anchor="body"
               transform="matrix(1.000000 0.000000 -0.027667 1.000000 24.0975 0.0000) translate(2.65 122.00) matrix(0.999995 0.001766 -0.005838 0.999995 25.8164 120.2096)"
             >
               <g
@@ -2040,7 +2043,7 @@
               </g>
             </g>
             <!-- Support pads (solid #4D76A3 = the deck blue as it renders over the grey track, no opacity): two per support beam, 8.4 wide x 12.6 long along the guideway, centred on the beam, evenly spaced (equal gaps: end, pad, gap, pad, end); move with their support; drawn above the ladder (below the trolley) so they stay solid -->
-            <g transform="translate(-1.21 -20.63)">
+            <g data-anchor="fourth" transform="translate(-0.24 -4.16)">
               <rect
                 class="clipper-support-pad"
                 x="327.50"
@@ -2048,10 +2051,10 @@
                 width="15.35"
                 height="3.10"
                 fill="#4D76A3"
-                transform="rotate(-3.37 335.18 702.00)"
+                transform="rotate(176.63 335.18 702.00)"
               />
             </g>
-            <g transform="translate(-1.21 -20.63)">
+            <g data-anchor="fourth" transform="translate(-0.24 -4.16)">
               <rect
                 class="clipper-support-pad"
                 x="327.50"
@@ -2059,10 +2062,10 @@
                 width="15.35"
                 height="3.10"
                 fill="#4D76A3"
-                transform="rotate(-3.37 335.18 702.00)"
+                transform="rotate(176.63 335.18 702.00)"
               />
             </g>
-            <g transform="translate(22.99 120.70)">
+            <g data-anchor="rear" transform="translate(22.99 120.70)">
               <rect
                 class="clipper-support-pad"
                 x="287.786"
@@ -2073,7 +2076,7 @@
                 transform="rotate(-1.504 307.1 484)"
               />
             </g>
-            <g transform="translate(22.99 120.70)">
+            <g data-anchor="rear" transform="translate(22.99 120.70)">
               <rect
                 class="clipper-support-pad"
                 x="320.786"
@@ -2084,7 +2087,7 @@
                 transform="rotate(-1.504 307.1 484)"
               />
             </g>
-            <g transform="translate(31.65 381.45)">
+            <g data-anchor="second" transform="translate(31.65 381.45)">
               <rect
                 class="clipper-support-pad"
                 x="288.636"
@@ -2094,7 +2097,7 @@
                 fill="#4D76A3"
               />
             </g>
-            <g transform="translate(31.65 381.45)">
+            <g data-anchor="second" transform="translate(31.65 381.45)">
               <rect
                 class="clipper-support-pad"
                 x="315.736"
@@ -2104,7 +2107,7 @@
                 fill="#4D76A3"
               />
             </g>
-            <g transform="translate(24.87 242.75)">
+            <g data-anchor="front" transform="translate(24.87 242.75)">
               <rect
                 class="clipper-support-pad"
                 x="289.581"
@@ -2114,7 +2117,7 @@
                 fill="#4D76A3"
               />
             </g>
-            <g transform="translate(24.87 242.75)">
+            <g data-anchor="front" transform="translate(24.87 242.75)">
               <rect
                 class="clipper-support-pad"
                 x="333.451"
@@ -2127,6 +2130,7 @@
             <!-- Clipper trolley crane (blue): centred on the trusses, height 22.95 -->
             <g
               class="gantry-body"
+              data-anchor="body"
               transform="matrix(1.000000 0.000000 -0.027667 1.000000 24.0975 0.0000) translate(2.65 122.00) matrix(0.999995 0.001766 -0.005838 0.999995 25.8164 120.2096)"
             >
               <g

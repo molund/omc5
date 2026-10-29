@@ -4,6 +4,7 @@
   import { DRAW_VB, ZOOM_VB } from "./lib/layers.js";
   import { tagLaunchers } from "./lib/tagLaunchers.js";
   import { gantrySpan } from "./lib/gantrySpan.js";
+  import { placeGantry } from "./lib/gantryAnchor.js";
   import {
     layers,
     ui,
@@ -23,6 +24,7 @@
     els.stage = stage;
     els.svg = svg;
     tagLaunchers(svg);
+    placeGantry(svg);
     ui.gantry = gantrySpan(svg);
     ui.ready = true;
     if (layers.drawing) setView(DRAW_VB);
