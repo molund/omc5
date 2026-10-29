@@ -1,7 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import planSvg from "./assets/plan.svg?raw";
-  import { ZOOM_VB } from "./lib/layers.js";
+  import { DRAW_VB, ZOOM_VB } from "./lib/layers.js";
   import { tagLaunchers } from "./lib/tagLaunchers.js";
   import { layers, ui, els, setView, setZoom } from "./lib/state.svelte.js";
 
@@ -14,7 +14,8 @@
     els.svg = svg;
     tagLaunchers(svg);
     ui.ready = true;
-    if (layers.sfzoom) setView(ZOOM_VB);
+    if (layers.drawing) setView(DRAW_VB);
+    else if (layers.sfzoom) setView(ZOOM_VB);
     svg.style.width = ui.zoom + "%";
 
     // touchpad pinch: Chrome, Edge and Firefox send it as ctrl+wheel; Safari sends gesture events

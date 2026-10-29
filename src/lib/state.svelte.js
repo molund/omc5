@@ -1,4 +1,10 @@
-import { defaults, fullDefaults, FULL_VB, DRAW_VB, ZOOM_VB } from "./layers.js";
+import {
+  defaults,
+  fullDefaults,
+  FULL_VB,
+  DRAW_VB,
+  ZOOM_VB,
+} from "./layers.js";
 
 // Layer switches, keyed as in LAYERS
 export const layers = $state({ ...defaults });
@@ -37,7 +43,10 @@ export function setZoom(p, cx, cy) {
 
 // Drawing mode: shrink the canvas to the first-photo frame, switch the aerial photo off, put the SFMSF labels and every other
 // layer on, and put everything back as it was when the mode is switched off.
-let drawingSnap = null;
+// opening in Drawing mode, so switching it off goes to the Full view (the normal view with SFMSF zoom ended, as when Drawing
+// mode is entered from it)
+const startSnap = () => (defaults.drawing ? { ...fullDefaults } : null);
+let drawingSnap = startSnap();
 function enterDrawing() {
   drawingSnap = $state.snapshot(layers);
   Object.keys(layers).forEach((k) => {
@@ -126,8 +135,8 @@ export function showAll() {
 }
 
 export function reset() {
-  drawingSnap = null;
-  setView(defaults.sfzoom ? ZOOM_VB : FULL_VB);
+  drawingSnap = startSnap();
+  setView(defaults.drawing ? DRAW_VB : defaults.sfzoom ? ZOOM_VB : FULL_VB);
   Object.assign(layers, defaults);
   refresh();
 }

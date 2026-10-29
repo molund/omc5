@@ -56,14 +56,29 @@ export const LAYERS = [
     ],
   ],
 ];
-export const defaults = {};
+// The normal view (the on-by-default column above), which Drawing mode returns to when it is switched off
+export const normalDefaults = {};
 LAYERS.forEach((g) =>
   g[1].forEach((l) => {
-    defaults[l[0]] = l[3];
+    normalDefaults[l[0]] = l[3];
   }),
 );
-// "Full" is the previous default: the whole canvas with roads and the SFMSF labels off
-export const fullDefaults = Object.assign({}, defaults, {
+// Opening view: Drawing mode as it is entered from the panel (every layer on except the aerial photo, the Clayton Clipper labels,
+// the support beams, progress-chart mode and SFMSF zoom), with the old railway line also off
+export const defaults = Object.fromEntries(
+  Object.keys(normalDefaults).map((k) => [k, true]),
+);
+Object.assign(defaults, {
+  aerial: false,
+  cclabels: false,
+  beams: false,
+  progress: false,
+  sfzoom: false,
+  view_default: false,
+  railway: false,
+});
+// "Full" is the earlier default: the whole canvas with roads and the SFMSF labels off
+export const fullDefaults = Object.assign({}, normalDefaults, {
   sfzoom: false,
   roads: false,
   labels: false,

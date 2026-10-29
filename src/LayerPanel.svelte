@@ -40,7 +40,7 @@
 
 <aside class="side">
   <div class="hd">
-    <h1>SFMSF (OMC5) plan view</h1>
+    <h1>Clayton Clipper Tracker</h1>
     <button
       title="Hide the layer panel"
       aria-label="Hide the layer panel"
