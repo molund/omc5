@@ -1,13 +1,20 @@
-// Launcher layers: tag every span, arrow, label, exit-track piece and support as Clayton Clipper (cc, everything west of the
-// Hillcrest 184 station) or Langley Launcher (ll, the station itself and everything east). The dividing line is the centre line of
-// the first station bent; an element is east of it when its centre is on that line or past it.
+// Launcher layers: tag every span, arrow, label, exit-track piece and support as Clayton Clipper (cc), Langley Launcher (ll, the
+// Hillcrest 184 station and everything east of it) or Fleetwood Flyer (ff, everything north-west of the end of span 105). Each
+// launcher has a dividing line through the centre of its first bent (P0), at angle th; an element is past it, and so belongs to
+// that launcher, when its centre is on that line or beyond it (its normal, (sin th, -cos th), points away from the Clipper).
+// Elements already drawn as ff stay ff.
+const LAUNCHERS = [
+  // the first station bent
+  { cls: "ll", th: 122.7, P0x: 5108.7, P0y: 3022.6 },
+  // the bent at the end of span 105, the Clipper's last, square to the line there
+  { cls: "ff", th: 306.73, P0x: -6235.86, P0y: -4746.69 },
+].map((l) => {
+  const th = (l.th * Math.PI) / 180;
+  return { ...l, nx: Math.sin(th), ny: -Math.cos(th) };
+});
+
 export function tagLaunchers(root) {
   const inv = root.getScreenCTM().inverse();
-  const th = (122.7 * Math.PI) / 180,
-    nx = Math.sin(th),
-    ny = -Math.cos(th),
-    P0x = 5108.7,
-    P0y = 3022.6;
   function toCanvas(el, x, y) {
     const m = el.getScreenCTM();
     if (!m) return null;
@@ -20,7 +27,10 @@ export function tagLaunchers(root) {
     if (el.classList.contains("ff")) return;
     const q = toCanvas(el, x, y);
     if (!q) return;
-    el.classList.add((q.x - P0x) * nx + (q.y - P0y) * ny >= -0.5 ? "ll" : "cc");
+    const past = LAUNCHERS.find(
+      (l) => (q.x - l.P0x) * l.nx + (q.y - l.P0y) * l.ny >= -0.5,
+    );
+    el.classList.add(past ? past.cls : "cc");
   }
   const has = (el, re) => re.test(el.getAttribute("class") || "");
   root.querySelectorAll("polygon").forEach((el) => {
