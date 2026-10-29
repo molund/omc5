@@ -272,7 +272,8 @@ export function showAll() {
       layers[k] = true;
   });
   layers.greenbelt = false;
-  layers.cclabels = false;
+  // the two span-label sets are one or the other: Show all uses the Clayton Clipper's
+  layers.labels = false;
   refresh();
 }
 
