@@ -29,7 +29,7 @@ export function asOf(date) {
     d = new Date(Math.round(date.getTime() / q) * q);
   const parts = Object.fromEntries(
     new Intl.DateTimeFormat("en-US", {
-      timeZone: "America/Vancouver",
+      timeZone: "America/Yukon",
       hour: "numeric",
       minute: "2-digit",
       hour12: true,
