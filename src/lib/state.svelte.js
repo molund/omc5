@@ -8,8 +8,14 @@ import {
 
 // Layer switches, keyed as in LAYERS
 export const layers = $state({ ...defaults });
-// zoom is a percentage of the stage width; ready turns on the layer rules once plan.svg is tagged
-export const ui = $state({ zoom: 187.31, collapsed: false, ready: false });
+// zoom is a percentage of the stage width; ready turns on the layer rules once plan.svg is tagged; gantry is the Clayton Clipper's
+// span number out of the total
+export const ui = $state({
+  zoom: 187.31,
+  collapsed: false,
+  ready: false,
+  gantry: null,
+});
 // The stage and the <svg>, set by Plan.svelte when it mounts
 export const els = { stage: null, svg: null };
 export const PCTS = [100, 150, 200, 300];

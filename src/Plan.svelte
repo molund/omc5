@@ -3,7 +3,9 @@
   import planSvg from "./assets/plan.svg?raw";
   import { DRAW_VB, ZOOM_VB } from "./lib/layers.js";
   import { tagLaunchers } from "./lib/tagLaunchers.js";
+  import { gantrySpan } from "./lib/gantrySpan.js";
   import { layers, ui, els, setView, setZoom } from "./lib/state.svelte.js";
+  import ProgressCard from "./ProgressCard.svelte";
 
   let stage;
   let drag = $state(null);
@@ -13,6 +15,7 @@
     els.stage = stage;
     els.svg = svg;
     tagLaunchers(svg);
+    ui.gantry = gantrySpan(svg);
     ui.ready = true;
     if (layers.drawing) setView(DRAW_VB);
     else if (layers.sfzoom) setView(ZOOM_VB);
@@ -65,22 +68,31 @@
   const end = () => (drag = null);
 </script>
 
-<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-<main
-  class="stage"
-  class:drag
-  bind:this={stage}
-  onpointerdown={pointerdown}
-  onpointermove={pointermove}
-  onpointerup={end}
-  onpointercancel={end}
->
-  {@html planSvg}
-</main>
+<div class="wrap">
+  <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+  <main
+    class="stage"
+    class:drag
+    bind:this={stage}
+    onpointerdown={pointerdown}
+    onpointermove={pointermove}
+    onpointerup={end}
+    onpointercancel={end}
+  >
+    {@html planSvg}
+  </main>
+  <ProgressCard />
+</div>
 
 <style>
+  .wrap {
+    position: relative;
+    min-width: 0;
+    min-height: 0;
+  }
   .stage {
     position: relative;
+    height: 100%;
     overflow: auto;
     min-width: 0;
     cursor: grab;

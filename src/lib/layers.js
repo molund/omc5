@@ -96,13 +96,18 @@ export const PROGRESS_ROWS = [
   "sfzoom",
   "view_default",
 ];
-// Progress-chart mode: only the aerial photo, the Clayton Clipper finished spans (concrete and steel, in bright pink), the unfinished
-// sections (still white) and the Clayton Clipper span labels (black) stay visible. Everything else is hidden with visibility, which
-// leaves the masks and clip paths that the drawing relies on untouched.
+export const PROGRESS_PINK = "#FF2E93";
+// Progress-chart mode: only the aerial photo, the Clayton Clipper finished spans (concrete and steel; bright pink up to the span
+// the gantry has reached, their usual colour past it), the unfinished sections (still white) and the Clayton Clipper span labels
+// (black) stay visible. Everything else is hidden with visibility, which leaves the masks and clip paths that the drawing relies on
+// untouched.
 const PROGRESS_CSS =
   "#plan polygon,#plan path,#plan line,#plan polyline,#plan rect,#plan circle,#plan ellipse,#plan text{visibility:hidden !important}" +
   "#plan mask *,#plan clipPath *,#plan defs *{visibility:visible !important}" +
-  "#plan polygon.guideway.cc:not(.unfinished){visibility:visible !important;fill:#FF2E93 !important}" +
+  "#plan polygon.guideway.cc:not(.unfinished){visibility:visible !important}" +
+  "#plan polygon.guideway.cc.reached:not(.unfinished){fill:" +
+  PROGRESS_PINK +
+  " !important}" +
   "#plan polygon.guideway.unfinished,#plan path.guideway.unfinished{visibility:visible !important}" +
   "#plan text.cclabel.cc{visibility:visible !important;fill:#000000 !important}";
 // Drawing mode shrinks the canvas to the first-photo frame (the area the greenbelt drawing fills)
