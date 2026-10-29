@@ -46,7 +46,7 @@ export const LAYERS = [
       ["labels", "SFMSF span labels", "spanlabel", true],
       ["cclabels", "Clayton Clipper span labels", "cclabel", false],
       ["roadlabels", "Highway labels", "road-labels", false],
-      ["arrows", "Direction arrows", "arrows", false],
+      ["arrows", "SkyTrain direction arrows", "arrows", false],
     ],
   ],
   [
