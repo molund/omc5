@@ -72,45 +72,63 @@ export const fullDefaults = Object.assign({}, normalDefaults, {
   labels: false,
   view_default: true,
 });
-// Switches that progress-chart mode sets: the full gantry on, and only the Clayton Clipper's spans (the Langley Launcher and
-// Fleetwood Flyer switches are off and can't be changed while it is on)
-export const PROGRESS_ONLY = { gantry: true, beams: false, cc: true, ll: false, ff: false };
-export const PROGRESS_LOCKED = ["ll", "ff"];
-// Opening view: Progress, as it is picked from the panel (the Full image switches with progress-chart mode on)
-export const defaults = Object.assign({}, fullDefaults, PROGRESS_ONLY, {
+// Switches that progress-chart mode starts with, which match what it shows: the Clayton Clipper's spans (finished, steel and
+// unfinished) with their span numbers, the aerial photo and the full gantry. Every switch works in it, as in Full image.
+export const PROGRESS_DEFAULTS = {
+  guideway: true,
+  steel: true,
+  unfinished: true,
+  supports: false,
+  aerial: true,
+  yard: false,
+  ave72: false,
+  railway: false,
+  labels: false,
+  cclabels: true,
+  roadlabels: false,
+  arrows: false,
+  gantry: true,
+  beams: false,
+  cc: true,
+  ll: false,
+  ff: false,
+};
+// Opening view: Progress, as it is picked from the panel
+export const defaults = Object.assign({}, fullDefaults, PROGRESS_DEFAULTS, {
   progress: true,
   view_default: false,
 });
-// Rows that stay at full strength in progress-chart mode
-export const PROGRESS_ROWS = [
-  "aerial",
-  "hires",
-  "cc",
-  "progress",
-  "drawing",
-  "sfzoom",
-  "view_default",
-  "horizontal",
-  "gantry",
-  "beams",
-];
 // violet: opposite the gantry's yellow on the colour wheel, so it stands out and goes with it
 export const PROGRESS_COLOUR = "#6D28D9";
-// Progress-chart mode: only the aerial photo, the gantry (when its layer is on), the Clayton Clipper finished spans (concrete and steel; violet up to the span
-// the gantry has reached, their usual colour past it), the unfinished sections (still white) and the Clayton Clipper span labels
-// (black, or white on the progress colour) stay visible. Everything else is hidden with visibility, which leaves the masks and clip paths that the drawing relies on
-// untouched.
+// Progress-chart mode hides everything (with visibility, which leaves the masks and clip paths the drawing relies on untouched)
+// and then lets through what its switched-on layers show (PROGRESS_SHOWS), so the base drawing, which has no switch, stays hidden.
+// The Clayton Clipper's finished spans are violet up to the span the gantry has reached, their usual colour past it, and its
+// span numbers are black, or white on violet.
 const PROGRESS_CSS =
   "#plan polygon,#plan path,#plan line,#plan polyline,#plan rect,#plan circle,#plan ellipse,#plan text{visibility:hidden !important}" +
   "#plan mask *,#plan clipPath *,#plan defs *{visibility:visible !important}" +
-  "#plan polygon.guideway.cc:not(.unfinished){visibility:visible !important}" +
   "#plan polygon.guideway.cc.reached:not(.unfinished){fill:" +
   PROGRESS_COLOUR +
   " !important}" +
-  "#plan polygon.guideway.unfinished,#plan path.guideway.unfinished{visibility:visible !important}" +
-  "#plan text.cclabel.cc{visibility:visible !important;fill:#000000 !important}" +
+  "#plan text.cclabel.cc{fill:#000000 !important}" +
   // white where the number sits on a span in the progress colour
   "#plan text.cclabel.cc.on-reached{fill:#ffffff !important}";
+// what each switch shows in progress-chart mode (whether it shows is still up to the layer's own display rule)
+const PROGRESS_SHOWS = {
+  guideway: [".guideway"],
+  steel: [".steel-hwy15"],
+  unfinished: [".guideway.unfinished"],
+  supports: ["rect.g", 'circle[fill="#D7D7D7"]'],
+  yard: [".yard"],
+  ave72: [".ave72"],
+  railway: [".railway"],
+  labels: [".spanlabel"],
+  cclabels: [".cclabel"],
+  roadlabels: [".road.hwy15", ".road.fraser"],
+  arrows: ["text.n.guideway"],
+  gantry: [".gantry"],
+  beams: [".gantry"],
+};
 // Drawing mode shrinks the canvas to the first-photo frame (the area the greenbelt drawing fills)
 export const FULL_VB = "-6840.7 -5402.04 12387.4 8699.48",
   DRAW_VB = "-38.4 -126.95 2188.4 1888.55",
@@ -160,8 +178,7 @@ export function layerCss(state) {
         k === "drawing" ||
         k === "sfzoom" ||
         k === "view_default" ||
-        k === "horizontal" ||
-        (state.progress && !["aerial", "hires", "cc", "ll", "ff"].includes(k))
+        k === "horizontal"
       )
         return;
       if (k === "bg")
@@ -229,9 +246,11 @@ export function layerCss(state) {
       : ".gantry-body{display:none !important}");
   if (state.progress) {
     r += PROGRESS_CSS;
-    // the gantry stays visible in progress-chart mode when its layer is on (which parts show is up to the rules above)
-    if (state.gantry || state.beams)
-      r += "#plan .gantry,#plan .gantry *{visibility:visible !important}";
+    const shows = Object.keys(PROGRESS_SHOWS)
+      .filter((k) => state[k])
+      .flatMap((k) => PROGRESS_SHOWS[k])
+      .flatMap((sel) => [`#plan ${sel}`, `#plan ${sel} *`]);
+    if (shows.length) r += `${shows.join(",")}{visibility:visible !important}`;
   }
   r +=
     'polygon.ave72[fill="#FFFFFF"]{opacity:' +

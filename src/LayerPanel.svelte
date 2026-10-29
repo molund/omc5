@@ -1,10 +1,5 @@
 <script>
-  import {
-    LAYERS,
-    PROGRESS_ROWS,
-    PROGRESS_LOCKED,
-    labelsAvailable,
-  } from "./lib/layers.js";
+  import { LAYERS, labelsAvailable } from "./lib/layers.js";
   import {
     layers,
     ui,
@@ -25,17 +20,9 @@
   ];
   const avail = $derived(labelsAvailable(layers));
 
-  // rows fade in progress-chart mode, and the span-label rows also fade while there are no Clayton Clipper spans to label
-  function opacity(k) {
-    if (layers.progress) return PROGRESS_ROWS.includes(k) ? "" : "0.4";
-    if (k === "labels" || k === "cclabels") return avail ? "" : "0.4";
-    return "";
-  }
-  // the span-label switches need Clayton Clipper spans on screen; progress-chart mode ignores every switch but its own rows
-  // (PROGRESS_ROWS) and locks the other launchers off, so those can't be changed while it is on
-  const disabled = (k) =>
-    ((k === "labels" || k === "cclabels") && !avail) ||
-    (layers.progress && (!PROGRESS_ROWS.includes(k) || PROGRESS_LOCKED.includes(k)));
+  // the span-label switches need Clayton Clipper spans on screen, so they fade and can't be changed without them
+  const disabled = (k) => (k === "labels" || k === "cclabels") && !avail;
+  const opacity = (k) => (disabled(k) ? "0.4" : "");
   // greenbelt and creeks only in drawing mode, roads and walking paths in the two SFMSF views (drawing mode and SFMSF zoom),
   // aerial photo everywhere but drawing mode
   function hidden(k) {
