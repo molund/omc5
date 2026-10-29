@@ -112,7 +112,9 @@ const PROGRESS_CSS =
   " !important}" +
   "#plan text.cclabel.cc{fill:#000000 !important}" +
   // white where the number sits on a span in the progress colour
-  "#plan text.cclabel.cc.on-reached{fill:#ffffff !important}";
+  "#plan text.cclabel.cc.on-reached{fill:#ffffff !important}" +
+  // the SFMSF span labels' grey (unfinished spans) and default dark grey (the steel spans) in the same black
+  '#plan text.spanlabel[style*="#767676"],#plan text.spanlabel:not([style*="fill"]){fill:#000000 !important}';
 // what each switch shows in progress-chart mode (whether it shows is still up to the layer's own display rule)
 const PROGRESS_SHOWS = {
   guideway: [".guideway"],
