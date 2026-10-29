@@ -11,6 +11,8 @@ import {
   ZOOM_VB,
   PROGRESS_VIEW_WIDTH,
   PROGRESS_SPAN_AT,
+  PROGRESS_ONLY,
+  PROGRESS_LOCKED,
 } from "./layers.js";
 
 // Layer switches, keyed as in LAYERS
@@ -227,10 +229,13 @@ export function toggle(k, checked) {
     if (layers.drawing) exitDrawing();
     if (layers.sfzoom) exitZoom();
     layers.progress = true;
+    Object.assign(layers, PROGRESS_ONLY);
     progressView();
   } else if (k === "sfzoom") {
     if (checked) {
       if (layers.drawing) exitDrawing();
+      // leaving Progress brings back the launchers it hides
+      if (layers.progress) PROGRESS_LOCKED.forEach((key) => (layers[key] = true));
       layers.sfzoom = true;
       layers.progress = false;
       setView(ZOOM_VB);
@@ -262,6 +267,8 @@ export function showAll() {
   });
   layers.greenbelt = false;
   layers.cclabels = false;
+  // Progress keeps the launchers it hides switched off
+  if (layers.progress) PROGRESS_LOCKED.forEach((key) => (layers[key] = false));
   refresh();
 }
 

@@ -1,5 +1,5 @@
 <script>
-  import { PROGRESS_PINK } from "./lib/layers.js";
+  import { PROGRESS_COLOUR } from "./lib/layers.js";
   import { layers, ui } from "./lib/state.svelte.js";
   import { status, asOf } from "./lib/status.js";
 
@@ -58,7 +58,7 @@
       <div
         class="fill"
         style:width="{(span / total) * 100}%"
-        style:background={PROGRESS_PINK}
+        style:background={PROGRESS_COLOUR}
       ></div>
     </div>
     {#if when}<div class="asof">As of {when}</div>{/if}
