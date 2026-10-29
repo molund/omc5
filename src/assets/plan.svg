@@ -1680,7 +1680,7 @@
             <!-- Clipper centreline over span 1: x = 300.5 + 0.0732*(y - 400) -->
             <g data-anchor="fourth" transform="translate(-0.24 -4.16)">
               <rect
-                opacity="0.65"
+                opacity="1"
                 id="clipper-support-1"
                 x="329.73"
                 y="677.255"
@@ -1694,7 +1694,7 @@
             </g>
             <g data-anchor="rear" transform="translate(22.99 120.70)">
               <rect
-                opacity="0.65"
+                opacity="1"
                 id="clipper-support-2"
                 x="262.1"
                 y="481.0"
@@ -1708,7 +1708,7 @@
             </g>
             <g data-anchor="second" transform="translate(31.65 381.45)">
               <rect
-                opacity="0.65"
+                opacity="1"
                 id="clipper-support-3"
                 x="260.0"
                 y="347.0"
@@ -1721,7 +1721,7 @@
             </g>
             <g data-anchor="front" transform="translate(24.87 242.75)">
               <rect
-                opacity="0.65"
+                opacity="1"
                 id="clipper-support-4-short"
                 x="282.895"
                 y="613"
