@@ -75,6 +75,23 @@ export function gantrySpan(root, complete) {
   pieces.forEach((p) => {
     if (p.n <= count) p.el.classList.add("reached");
   });
+  // a span number sitting on a reached, finished piece (the one with its centre nearest the number) is tagged "on-reached", so
+  // progress-chart mode can draw it white on the progress colour
+  labels.forEach((t, i) => {
+    const { n, q } = anchors[i];
+    let under = null,
+      best = Infinity;
+    pieces.forEach((p) => {
+      if (p.n !== n) return;
+      const d = Math.hypot(p.c.x - q.x, p.c.y - q.y);
+      if (d < best) {
+        best = d;
+        under = p.el;
+      }
+    });
+    if (under && under.classList.contains("reached") && !under.classList.contains("unfinished"))
+      t.classList.add("on-reached");
+  });
   return { span: count, ahead: westboundAhead(root, pieces, anchors, span, toCanvas), total: labels.length };
 }
 

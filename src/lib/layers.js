@@ -98,7 +98,7 @@ export const PROGRESS_ROWS = [
 export const PROGRESS_COLOUR = "#6D28D9";
 // Progress-chart mode: only the aerial photo, the gantry (when its layer is on), the Clayton Clipper finished spans (concrete and steel; violet up to the span
 // the gantry has reached, their usual colour past it), the unfinished sections (still white) and the Clayton Clipper span labels
-// (black) stay visible. Everything else is hidden with visibility, which leaves the masks and clip paths that the drawing relies on
+// (black, or white on the progress colour) stay visible. Everything else is hidden with visibility, which leaves the masks and clip paths that the drawing relies on
 // untouched.
 const PROGRESS_CSS =
   "#plan polygon,#plan path,#plan line,#plan polyline,#plan rect,#plan circle,#plan ellipse,#plan text{visibility:hidden !important}" +
@@ -108,7 +108,9 @@ const PROGRESS_CSS =
   PROGRESS_COLOUR +
   " !important}" +
   "#plan polygon.guideway.unfinished,#plan path.guideway.unfinished{visibility:visible !important}" +
-  "#plan text.cclabel.cc{visibility:visible !important;fill:#000000 !important}";
+  "#plan text.cclabel.cc{visibility:visible !important;fill:#000000 !important}" +
+  // white where the number sits on a span in the progress colour
+  "#plan text.cclabel.cc.on-reached{fill:#ffffff !important}";
 // Drawing mode shrinks the canvas to the first-photo frame (the area the greenbelt drawing fills)
 export const FULL_VB = "-6840.7 -5402.04 12387.4 8699.48",
   DRAW_VB = "-38.4 -126.95 2188.4 1888.55",
