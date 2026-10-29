@@ -1,9 +1,19 @@
 name: Deploy to GitHub Pages
 
+# Runs on every push to main. It can also be run by hand (Actions > Deploy to GitHub Pages > Run workflow) or through the API
+# (a repository_dispatch "set-span" event) with a span number: the Clayton Clipper gantry is moved to that span (data-span on
+# #clayton-clipper in src/assets/plan.svg), the change is committed to main, and the site is rebuilt and deployed.
 on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      span:
+        description: "Move the Clayton Clipper gantry to this span (3-104); leave empty to just redeploy"
+        required: false
+        type: string
+  repository_dispatch:
+    types: [set-span]
 
 permissions:
   contents: read
@@ -17,8 +27,30 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
+      - name: Set the gantry span
+        env:
+          SPAN: ${{ inputs.span || github.event.client_payload.span }}
+        if: inputs.span || github.event.client_payload.span
+        run: |
+          # the gantry needs two spans behind it and one ahead (see src/lib/gantryAnchor.js)
+          if ! [[ "$SPAN" =~ ^[0-9]+$ ]] || (( SPAN < 3 || SPAN > 104 )); then
+            echo "::error::span must be a whole number from 3 to 104, got '$SPAN'"
+            exit 1
+          fi
+          sed -i -E "s/data-span=\"[0-9]+\"/data-span=\"$SPAN\"/" src/assets/plan.svg
+          grep -q "data-span=\"$SPAN\"" src/assets/plan.svg
+          if git diff --quiet; then
+            echo "The gantry is already at span $SPAN"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -am "Move the Clayton Clipper gantry to span $SPAN"
+            git push
+          fi
       - uses: actions/setup-node@v4
         with:
           node-version: 22
