@@ -24,7 +24,7 @@
     els.stage = stage;
     els.svg = svg;
     tagLaunchers(svg);
-    placeGantry(svg);
+    els.gantrySpan = placeGantry(svg);
     ui.gantry = gantrySpan(svg);
     ui.ready = true;
     if (layers.drawing) setView(DRAW_VB);

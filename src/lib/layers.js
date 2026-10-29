@@ -4,10 +4,10 @@ export const LAYERS = [
   [
     "View",
     [
-      ["sfzoom", "SFMSF zoom", "sfzoom", true],
-      ["view_default", "Full", "view_default", false],
-      ["progress", "Progress-chart mode", "progress", false],
-      ["drawing", "Drawing mode", "drawing", false],
+      ["progress", "Progress", "progress", false],
+      ["sfzoom", "SFMSF aerial", "sfzoom", true],
+      ["view_default", "Full image", "view_default", false],
+      ["drawing", "SFMSF drawing", "drawing", false],
     ],
   ],
   [
@@ -115,6 +115,10 @@ const PROGRESS_CSS =
 export const FULL_VB = "-6840.7 -5402.04 12387.4 8699.48",
   DRAW_VB = "-38.4 -126.95 2188.4 1888.55",
   ZOOM_VB = "-38.4 -126.95 2188.4 1888.55"; // drawing mode and zoom view: the right edge cuts through span A
+// Progress-chart mode zooms to the span the gantry is on: a view three gantry lengths wide (the gantry's trusses are 401.56
+// canvas units long), centred on the span
+export const GANTRY_LENGTH = 401.56,
+  PROGRESS_VIEW_WIDTH = 3 * GANTRY_LENGTH;
 
 // the span-label options need Clayton Clipper spans on screen: Clayton Clipper on and at least one type of span on
 export const labelsAvailable = (state) =>

@@ -1,5 +1,6 @@
-// Where the Clayton Clipper gantry is on its journey: the numbered span (the cclabel span numbers, 1-105) it is working on, from
-// data-span on the #clayton-clipper group in plan.svg.
+// How far the Clayton Clipper gantry has got on its journey: the numbered span (the cclabel span numbers, 1-105) it is working on,
+// from data-span on the #clayton-clipper group in plan.svg, counted only once that span is complete (or at least hung); until
+// then the count is the span behind it.
 // Every Clayton Clipper guideway span is also given the number of its nearest label, and the ones the gantry has reached (that
 // number or lower) are tagged "reached" so progress-chart mode can colour just those.
 export function gantrySpan(root) {
@@ -40,7 +41,7 @@ export function gantrySpan(root) {
     span = nearest(toCanvas(body, b.x + b.width / 2, b.y + b.height / 2));
     gantry.style.display = display;
   }
-  root.querySelectorAll("polygon.guideway.cc").forEach((el) => {
+  const pieces = [...root.querySelectorAll("polygon.guideway.cc")].map((el) => {
     const L = el.points,
       k = L.numberOfItems;
     let x = 0,
@@ -49,7 +50,17 @@ export function gantrySpan(root) {
       x += L.getItem(i).x;
       y += L.getItem(i).y;
     }
-    if (nearest(toCanvas(el, x / k, y / k)) <= span) el.classList.add("reached");
+    return { el, n: nearest(toCanvas(el, x / k, y / k)) };
   });
-  return { span, total: labels.length };
+  // the span the gantry is on only counts once it is complete (or at least hung): its gantry box (gi, or p while unfinished)
+  // if it has one, otherwise its precast or steel pieces
+  const on = pieces.filter((p) => p.n === span),
+    boxes = on.filter((p) => p.el.matches(".gi, .p")),
+    decide = boxes.length ? boxes : on;
+  const done = !decide.length || decide.some((p) => !p.el.classList.contains("unfinished"));
+  const count = done ? span : span - 1;
+  pieces.forEach((p) => {
+    if (p.n <= count) p.el.classList.add("reached");
+  });
+  return { span: count, total: labels.length };
 }

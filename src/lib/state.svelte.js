@@ -4,6 +4,7 @@ import {
   FULL_VB,
   DRAW_VB,
   ZOOM_VB,
+  PROGRESS_VIEW_WIDTH,
 } from "./layers.js";
 
 // Layer switches, keyed as in LAYERS
@@ -17,8 +18,8 @@ export const ui = $state({
   ready: false,
   gantry: null,
 });
-// The stage and the <svg>, set by Plan.svelte when it mounts
-export const els = { stage: null, svg: null };
+// The stage and the <svg>, set by Plan.svelte when it mounts, with the middle of the span the gantry is on (canvas units)
+export const els = { stage: null, svg: null, gantrySpan: null };
 
 // "Full" stays ticked exactly while every switch matches the old default view
 function refresh() {
@@ -43,6 +44,17 @@ export function setView(vb) {
   if (wasFit) setZoom(ui.fit);
   els.stage.scrollLeft = 0;
   els.stage.scrollTop = 0;
+}
+
+// Progress-chart mode: PROGRESS_VIEW_WIDTH wide, as tall as the stage's shape allows, centred on the gantry's span, and fitted
+function progressView() {
+  const c = els.gantrySpan;
+  if (!c) return;
+  const r = els.stage.getBoundingClientRect(),
+    w = PROGRESS_VIEW_WIDTH,
+    h = (w * r.height) / r.width;
+  setView(`${c.x - w / 2} ${c.y - h / 2} ${w} ${h}`);
+  setZoom(fitZoom());
 }
 
 export function setZoom(p, cx, cy) {
@@ -118,6 +130,7 @@ export function toggle(k, checked) {
     if (layers.drawing) exitDrawing();
     if (layers.sfzoom) exitZoom();
     layers.progress = true;
+    progressView();
   } else if (k === "sfzoom") {
     if (checked) {
       if (layers.drawing) exitDrawing();
