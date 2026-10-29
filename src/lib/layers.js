@@ -72,8 +72,12 @@ export const fullDefaults = Object.assign({}, normalDefaults, {
   labels: false,
   view_default: true,
 });
+// Switches that progress-chart mode sets: the full gantry on, and only the Clayton Clipper's spans (the Langley Launcher and
+// Fleetwood Flyer switches are off and can't be changed while it is on)
+export const PROGRESS_ONLY = { gantry: true, beams: false, cc: true, ll: false, ff: false };
+export const PROGRESS_LOCKED = ["ll", "ff"];
 // Opening view: Progress, as it is picked from the panel (the Full image switches with progress-chart mode on)
-export const defaults = Object.assign({}, fullDefaults, {
+export const defaults = Object.assign({}, fullDefaults, PROGRESS_ONLY, {
   progress: true,
   view_default: false,
 });
@@ -82,16 +86,17 @@ export const PROGRESS_ROWS = [
   "aerial",
   "hires",
   "cc",
-  "ll",
-  "ff",
   "progress",
   "drawing",
   "sfzoom",
   "view_default",
   "horizontal",
+  "gantry",
+  "beams",
 ];
-export const PROGRESS_PINK = "#FF2E93";
-// Progress-chart mode: only the aerial photo, the Clayton Clipper finished spans (concrete and steel; bright pink up to the span
+// violet: opposite the gantry's yellow on the colour wheel, so it stands out and goes with it
+export const PROGRESS_COLOUR = "#6D28D9";
+// Progress-chart mode: only the aerial photo, the gantry (when its layer is on), the Clayton Clipper finished spans (concrete and steel; violet up to the span
 // the gantry has reached, their usual colour past it), the unfinished sections (still white) and the Clayton Clipper span labels
 // (black) stay visible. Everything else is hidden with visibility, which leaves the masks and clip paths that the drawing relies on
 // untouched.
@@ -100,7 +105,7 @@ const PROGRESS_CSS =
   "#plan mask *,#plan clipPath *,#plan defs *{visibility:visible !important}" +
   "#plan polygon.guideway.cc:not(.unfinished){visibility:visible !important}" +
   "#plan polygon.guideway.cc.reached:not(.unfinished){fill:" +
-  PROGRESS_PINK +
+  PROGRESS_COLOUR +
   " !important}" +
   "#plan polygon.guideway.unfinished,#plan path.guideway.unfinished{visibility:visible !important}" +
   "#plan text.cclabel.cc{visibility:visible !important;fill:#000000 !important}";
@@ -212,7 +217,12 @@ export function layerCss(state) {
     (state.gantry || !state.beams
       ? ""
       : ".gantry-body{display:none !important}");
-  if (state.progress) r += PROGRESS_CSS;
+  if (state.progress) {
+    r += PROGRESS_CSS;
+    // the gantry stays visible in progress-chart mode when its layer is on (which parts show is up to the rules above)
+    if (state.gantry || state.beams)
+      r += "#plan .gantry,#plan .gantry *{visibility:visible !important}";
+  }
   r +=
     'polygon.ave72[fill="#FFFFFF"]{opacity:' +
     (state.greenbelt && state.drawing ? 1 : 0) +

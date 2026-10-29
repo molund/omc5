@@ -1,5 +1,10 @@
 <script>
-  import { LAYERS, PROGRESS_ROWS, labelsAvailable } from "./lib/layers.js";
+  import {
+    LAYERS,
+    PROGRESS_ROWS,
+    PROGRESS_LOCKED,
+    labelsAvailable,
+  } from "./lib/layers.js";
   import {
     layers,
     ui,
@@ -26,6 +31,11 @@
     if (k === "labels" || k === "cclabels") return avail ? "" : "0.4";
     return "";
   }
+  // the span-label switches need Clayton Clipper spans on screen; progress-chart mode ignores every switch but its own rows
+  // (PROGRESS_ROWS) and locks the other launchers off, so those can't be changed while it is on
+  const disabled = (k) =>
+    ((k === "labels" || k === "cclabels") && !avail) ||
+    (layers.progress && (!PROGRESS_ROWS.includes(k) || PROGRESS_LOCKED.includes(k)));
   // greenbelt and creeks only in drawing mode, roads in drawing mode or SFMSF zoom, aerial photo everywhere but drawing mode
   function hidden(k) {
     if (k === "greenbelt" || k === "creeks") return !layers.drawing;
@@ -55,6 +65,7 @@
     {#each rows as [k, label]}
       <label
         class="row"
+        class:disabled={disabled(k)}
         style:opacity={opacity(k)}
         style:display={hidden(k) ? "none" : ""}
       >
@@ -62,7 +73,7 @@
           type={group === "View" ? "radio" : "checkbox"}
           name={group === "View" ? "view" : undefined}
           checked={layers[k]}
-          disabled={(k === "labels" || k === "cclabels") && !avail}
+          disabled={disabled(k)}
           onchange={(e) => change(e, k)}
         />{label}
       </label>
@@ -123,6 +134,13 @@
   }
   .row:hover {
     background: var(--bg);
+  }
+  /* a switch that can't be changed doesn't look clickable */
+  .row.disabled {
+    cursor: default;
+  }
+  .row.disabled:hover {
+    background: none;
   }
   .row input {
     width: 18px;
