@@ -75,6 +75,25 @@ export function gantrySpan(root, complete) {
   pieces.forEach((p) => {
     if (p.n <= count) p.el.classList.add("reached");
   });
+  // the SFMSF span labels (span letters and the old gantry span numbers) are drawn grey with a white halo on unfinished spans and
+  // plain white on finished ones; one sitting on a piece that is finished (now perhaps because of status.yaml) gets the finished
+  // look: its text white, its halo (the white-stroked copy under it) gone
+  root.querySelectorAll("text.spanlabel").forEach((t) => {
+    const q = toCanvas(t, +t.getAttribute("x"), +t.getAttribute("y"));
+    let under = null,
+      best = Infinity;
+    pieces.forEach((p) => {
+      const d = Math.hypot(p.c.x - q.x, p.c.y - q.y);
+      if (d < best) {
+        best = d;
+        under = p.el;
+      }
+    });
+    if (!under || under.classList.contains("unfinished")) return;
+    if (t.getAttribute("stroke") === "#FFFFFF") t.remove();
+    else if (t.style.fill && t.style.fill !== "rgb(255, 255, 255)" && t.style.fill !== "#ffffff")
+      t.style.fill = "#ffffff";
+  });
   // a span number sitting on a reached, finished piece (the one with its centre nearest the number) is tagged "on-reached", so
   // progress-chart mode can draw it white on the progress colour
   labels.forEach((t, i) => {
