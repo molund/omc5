@@ -6,4 +6,4 @@ span: 35
 # whether that span is complete (or at least hung)
 complete: true
 # optional, shown under the date on the progress card
-note: "All segments are hung. A new precast beam arrived at the construction yard overnight. It will likely be installed in span 34, along with the beam that was already on site."
+note: "All segments for span 35 are hung. A new precast beam arrived at the construction yard overnight. It will likely be installed in span 34, along with the beam that was already on site."
