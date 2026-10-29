@@ -1,9 +1,10 @@
 // How far the Clayton Clipper gantry has got on its journey: the numbered span (the cclabel span numbers, 1-105) it is working on,
-// from data-span on the #clayton-clipper group in plan.svg, counted only once that span is complete (or at least hung); until
-// then the count is the span behind it.
-// Every Clayton Clipper guideway span is also given the number of its nearest label, and the ones the gantry has reached (that
-// number or lower) are tagged "reached" so progress-chart mode can colour just those.
-export function gantrySpan(root) {
+// from data-span on the #clayton-clipper group (set from status.yaml), counted only once that span is complete (or at least
+// hung); until then the count is the span behind it.
+// Every Clayton Clipper guideway span is also given the number of its nearest label. With `complete` given (status.yaml), the
+// gantry boxes behind the gantry, and the one it is on when complete, are drawn finished; the ones the gantry has reached (the
+// count or lower) are tagged "reached" so progress-chart mode can colour just those.
+export function gantrySpan(root, complete) {
   const gantry = root.querySelector("#clayton-clipper"),
     body = gantry && gantry.querySelector(".gantry-body"),
     labels = [...root.querySelectorAll("text.cclabel")];
@@ -52,12 +53,24 @@ export function gantrySpan(root) {
     }
     return { el, n: nearest(toCanvas(el, x / k, y / k)) };
   });
-  // the span the gantry is on only counts once it is complete (or at least hung): its gantry box (gi, or p while unfinished)
-  // if it has one, otherwise its precast or steel pieces
-  const on = pieces.filter((p) => p.n === span),
-    boxes = on.filter((p) => p.el.matches(".gi, .p")),
-    decide = boxes.length ? boxes : on;
-  const done = !decide.length || decide.some((p) => !p.el.classList.contains("unfinished"));
+  let done;
+  if (complete != null) {
+    // the gantry never moves on until its span is finished, so every gantry box behind it is finished too
+    done = complete;
+    pieces.forEach(({ el, n }) => {
+      if (el.matches(".p") && (n < span || (done && n === span))) {
+        el.classList.remove("p", "unfinished");
+        el.classList.add("gi");
+      }
+    });
+  } else {
+    // from the drawing: the span the gantry is on only counts once it is complete (or at least hung): its gantry box (gi, or p
+    // while unfinished) if it has one, otherwise its precast or steel pieces
+    const on = pieces.filter((p) => p.n === span),
+      boxes = on.filter((p) => p.el.matches(".gi, .p")),
+      decide = boxes.length ? boxes : on;
+    done = !decide.length || decide.some((p) => !p.el.classList.contains("unfinished"));
+  }
   const count = done ? span : span - 1;
   pieces.forEach((p) => {
     if (p.n <= count) p.el.classList.add("reached");

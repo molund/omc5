@@ -5,6 +5,7 @@
   import { tagLaunchers } from "./lib/tagLaunchers.js";
   import { gantrySpan } from "./lib/gantrySpan.js";
   import { placeGantry } from "./lib/gantryAnchor.js";
+  import { status } from "./lib/status.js";
   import {
     layers,
     ui,
@@ -25,8 +26,11 @@
     els.stage = stage;
     els.svg = svg;
     tagLaunchers(svg);
+    // the gantry's span and whether it is complete come from status.yaml
+    const gantry = svg.querySelector("#clayton-clipper");
+    if (gantry && status.span) gantry.dataset.span = status.span;
     els.gantrySpan = placeGantry(svg);
-    ui.gantry = gantrySpan(svg);
+    ui.gantry = gantrySpan(svg, status.span ? status.complete : null);
     // the turn that levels the Clayton Clipper route: the line from span 105's label to span 1's, turned flat
     const toRoot = DOMMatrix.fromMatrix(svg.getScreenCTM()).inverse(),
       label = (n) => {

@@ -1,0 +1,9 @@
+# Clayton Clipper status. The site reads it (src/lib/status.js); running the deploy workflow by hand or through the API updates
+# it (see .github/workflows/deploy.yml). Times are Pacific, rounded to the nearest quarter hour.
+updated: 2026-10-29T06:45-07:00
+# the span the gantry is working on (Clayton Clipper span numbers, 3-104)
+span: 35
+# whether that span is complete (or at least hung)
+complete: true
+# optional, shown under the date on the progress card
+note: ""

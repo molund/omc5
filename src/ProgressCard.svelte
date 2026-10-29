@@ -1,6 +1,9 @@
 <script>
   import { PROGRESS_PINK } from "./lib/layers.js";
   import { layers, ui } from "./lib/state.svelte.js";
+  import { status, asOf } from "./lib/status.js";
+
+  const when = asOf(status.updated);
 </script>
 
 {#if layers.progress && ui.gantry}
@@ -22,6 +25,8 @@
         style:background={PROGRESS_PINK}
       ></div>
     </div>
+    {#if when}<div class="asof">As of {when}</div>{/if}
+    {#if status.note}<div class="note">{status.note}</div>{/if}
   </div>
 {/if}
 
@@ -63,5 +68,14 @@
   .fill {
     height: 100%;
     border-radius: 5px;
+  }
+  .asof {
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--mute);
+  }
+  .note {
+    margin-top: 4px;
+    font-size: 13px;
   }
 </style>

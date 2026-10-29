@@ -1672,12 +1672,11 @@
           <g
             id="clayton-clipper"
             class="gantry"
-            data-span="35"
             data-drawn-at="34"
             transform="translate(-40.29 40.00)"
           >
             <!-- Layers (bottom to top): supports + their walkways; trusses, cross beams and side walkways; blue tips; trolley. Labels are drawn later, above everything. -->
-            <!-- Anchoring: the gantry works on span data-span (the Clayton Clipper span numbers, 1-105); to move it, change data-span. Everything below is drawn for span data-drawn-at, and src/lib/gantryAnchor.js moves each data-anchor group from there to data-span when the page loads. front: the short support, just ahead of the span, its rear edge flush with the span's front end; second: just behind the span, its front edge flush with the span's back end; rear: fully on the span behind, its rear edge (beam and walkway) a third of its width in from that span's back end; fourth: the lengthwise support on the span behind, at the same fraction of the way along it; body: the trusses, walkways and trolley, centred on the span midpoint between its outer edges and parallel to them. The supports keep the along and across offsets they are drawn with. -->
+            <!-- Anchoring: the gantry works on the span set in status.yaml (the Clayton Clipper span numbers, 1-105), which the page puts in data-span here; to move it, change status.yaml. Everything below is drawn for span data-drawn-at, and src/lib/gantryAnchor.js moves each data-anchor group from there to data-span when the page loads. front: the short support, just ahead of the span, its rear edge flush with the span's front end; second: just behind the span, its front edge flush with the span's back end; rear: fully on the span behind, its rear edge (beam and walkway) a third of its width in from that span's back end; fourth: the lengthwise support on the span behind, at the same fraction of the way along it; body: the trusses, walkways and trolley, centred on the span midpoint between its outer edges and parallel to them. The supports keep the along and across offsets they are drawn with. -->
             <!-- Clipper centreline over span 1: x = 300.5 + 0.0732*(y - 400) -->
             <g data-anchor="fourth" transform="translate(-0.24 -4.16)">
               <rect
@@ -5253,7 +5252,7 @@
       stroke="#5F5E5A"
       stroke-width="1.67"
       stroke-linejoin="round"
-      points="-6777.92,-5100.89 -7341.00,-5457.51 -7354.22,-5436.64 -6791.13,-5080.02"
+      points="-6777.92,-5100.89 -6859.44,-5152.52 -6872.65,-5131.65 -6791.13,-5080.02"
     />
     <text
       class="n guideway ff"
