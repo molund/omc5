@@ -59,7 +59,8 @@
         style:display={hidden(k) ? "none" : ""}
       >
         <input
-          type="checkbox"
+          type={group === "View" ? "radio" : "checkbox"}
+          name={group === "View" ? "view" : undefined}
           checked={layers[k]}
           disabled={(k === "labels" || k === "cclabels") && !avail}
           onchange={(e) => change(e, k)}

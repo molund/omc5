@@ -1,5 +1,15 @@
-// Layer switches: [key, label, class in plan.svg, on by default], in panel groups
+// Layer switches: [key, label, class in plan.svg, on by default], in panel groups. The View group comes first and
+// is shown as radio buttons: picking one switches the others off (see toggle in state.svelte.js)
 export const LAYERS = [
+  [
+    "View",
+    [
+      ["sfzoom", "SFMSF zoom", "sfzoom", true],
+      ["view_default", "Full", "view_default", false],
+      ["progress", "Progress-chart mode", "progress", false],
+      ["drawing", "Drawing mode", "drawing", false],
+    ],
+  ],
   [
     "Guideway",
     [
@@ -27,15 +37,6 @@ export const LAYERS = [
     [
       ["gantry", "Full gantry", "gantry", false],
       ["beams", "Support beams only", "gantry-beams", false],
-    ],
-  ],
-  [
-    "View",
-    [
-      ["sfzoom", "SFMSF zoom", "sfzoom", true],
-      ["view_default", "Full", "view_default", false],
-      ["progress", "Progress-chart mode", "progress", false],
-      ["drawing", "Drawing mode", "drawing", false],
     ],
   ],
   [
