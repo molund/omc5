@@ -3,15 +3,17 @@
   import {
     layers,
     ui,
-    PCTS,
     toggle,
     showAll,
     reset,
     setZoom,
+    fitZoom,
+    isFit,
   } from "./lib/state.svelte.js";
 
+  // Fit's zoom depends on the stage and canvas shape, so it is worked out when pressed
   const ZOOMS = [
-    ["Fit", 100],
+    ["Fit", null],
     ["150%", 150],
     ["200%", 200],
     ["300%", 300],
@@ -72,10 +74,10 @@
   </div>
   <div class="grp">Zoom</div>
   <div class="btns">
-    {#each ZOOMS as [text, p], i}
+    {#each ZOOMS as [text, p]}
       <button
-        class:on={Math.abs(PCTS[i] - ui.zoom) < 0.5}
-        onclick={() => setZoom(p)}>{text}</button
+        class:on={p == null ? isFit() : Math.abs(p - ui.zoom) < 0.5}
+        onclick={() => setZoom(p ?? fitZoom())}>{text}</button
       >
     {/each}
   </div>

@@ -4,7 +4,15 @@
   import { DRAW_VB, ZOOM_VB } from "./lib/layers.js";
   import { tagLaunchers } from "./lib/tagLaunchers.js";
   import { gantrySpan } from "./lib/gantrySpan.js";
-  import { layers, ui, els, setView, setZoom } from "./lib/state.svelte.js";
+  import {
+    layers,
+    ui,
+    els,
+    setView,
+    setZoom,
+    fitZoom,
+    isFit,
+  } from "./lib/state.svelte.js";
   import ProgressCard from "./ProgressCard.svelte";
 
   let stage;
@@ -42,7 +50,14 @@
     stage.addEventListener("wheel", wheel, { passive: false });
     stage.addEventListener("gesturestart", gesturestart);
     stage.addEventListener("gesturechange", gesturechange);
+    // a fitted plan stays fitted when the window or the layer panel changes the stage size
+    const resize = new ResizeObserver(() => {
+      if (isFit()) setZoom(fitZoom());
+      else ui.fit = fitZoom();
+    });
+    resize.observe(stage);
     return () => {
+      resize.disconnect();
       stage.removeEventListener("wheel", wheel);
       stage.removeEventListener("gesturestart", gesturestart);
       stage.removeEventListener("gesturechange", gesturechange);
@@ -109,6 +124,7 @@
   }
   .stage :global(svg) {
     display: block;
+    margin: 0 auto;
     width: 100%;
     height: auto;
     max-width: none;

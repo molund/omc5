@@ -8,17 +8,17 @@ import {
 
 // Layer switches, keyed as in LAYERS
 export const layers = $state({ ...defaults });
-// zoom is a percentage of the stage width; ready turns on the layer rules once plan.svg is tagged; gantry is the Clayton Clipper's
-// span number out of the total
+// zoom is a percentage of the stage width, and fit the zoom at which the whole canvas fits the stage; ready turns on the layer
+// rules once plan.svg is tagged; gantry is the Clayton Clipper's span number out of the total
 export const ui = $state({
   zoom: 187.31,
+  fit: 100,
   collapsed: false,
   ready: false,
   gantry: null,
 });
 // The stage and the <svg>, set by Plan.svelte when it mounts
 export const els = { stage: null, svg: null };
-export const PCTS = [100, 150, 200, 300];
 
 // "Full" stays ticked exactly while every switch matches the old default view
 function refresh() {
@@ -27,15 +27,28 @@ function refresh() {
   );
 }
 
+// The zoom that fits the whole canvas in the stage: the full width, or less when the canvas is taller than the stage allows
+export function fitZoom() {
+  const r = els.stage.getBoundingClientRect(),
+    vb = els.svg.viewBox.baseVal;
+  return Math.min(100, (100 * r.height * vb.width) / (r.width * vb.height));
+}
+export const isFit = () => Math.abs(ui.zoom - ui.fit) < 0.5;
+
 export function setView(vb) {
+  const wasFit = isFit();
   els.svg.setAttribute("viewBox", vb);
+  ui.fit = fitZoom();
+  // a different canvas shape needs a different fit
+  if (wasFit) setZoom(ui.fit);
   els.stage.scrollLeft = 0;
   els.stage.scrollTop = 0;
 }
 
 export function setZoom(p, cx, cy) {
   const stage = els.stage;
-  p = Math.max(100, Math.min(16000, p));
+  ui.fit = fitZoom();
+  p = Math.max(ui.fit, Math.min(16000, p));
   const r = stage.getBoundingClientRect();
   const x = (cx == null ? r.left + r.width / 2 : cx) - r.left,
     y = (cy == null ? r.top + r.height / 2 : cy) - r.top;
