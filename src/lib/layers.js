@@ -171,7 +171,11 @@ export function layerCss(state) {
       const on =
         state[k] &&
         !((k === "greenbelt" || k === "creeks") && !state.drawing) &&
-        !(["roads", "walk", "roadlabels"].includes(k) && !state.drawing && !state.sfzoom) &&
+        !(
+          ["roads", "walk", "roadlabels"].includes(k) &&
+          !state.drawing &&
+          !state.sfzoom
+        ) &&
         !(k === "aerial" && state.drawing) &&
         !((k === "labels" || k === "cclabels") && !avail) &&
         !(k === "hires" && !state.aerial);
