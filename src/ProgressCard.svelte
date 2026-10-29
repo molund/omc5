@@ -4,13 +4,49 @@
   import { status, asOf } from "./lib/status.js";
 
   const when = asOf(status.updated);
+
+  // what each number counts, shown when it is hovered or clicked with a mouse, tapped (tap again to hide) or pressed with
+  // Enter/Space
+  const TIPS = {
+    span: "The Clayton Clipper is this many spans along its route (the span it's on counts once all its segments are hung)",
+    ahead: "Finished spans ahead, built by cranes, which the Clayton Clipper must crawl over",
+    total: "Total spans on the Clayton Clipper's route",
+  };
+  let tip = $state(null);
+  const toggle = (k) => (tip = tip === k ? null : k);
+  // a tap anywhere else, or Escape, closes the tip
+  function outside(e) {
+    if (!e.target.closest(".num")) tip = null;
+  }
 </script>
 
+<svelte:window
+  onpointerdown={outside}
+  onkeydown={(e) => e.key === "Escape" && (tip = null)}
+/>
+
+{#snippet num(k, value, big)}
+  <button
+    class="num"
+    class:big
+    class:open={tip === k}
+    aria-describedby={tip === k ? "progress-tip" : undefined}
+    aria-label="{value}: {TIPS[k]}"
+    onclick={(e) => (e.pointerType === "mouse" ? (tip = k) : toggle(k))}
+    onpointerenter={(e) => e.pointerType === "mouse" && (tip = k)}
+    onpointerleave={(e) => e.pointerType === "mouse" && tip === k && (tip = null)}
+    onblur={() => tip === k && (tip = null)}>{value}</button
+  >
+{/snippet}
+
 {#if layers.progress && ui.gantry}
-  {@const { span, total } = ui.gantry}
+  {@const { span, ahead, total } = ui.gantry}
   <div class="card">
     <div class="title">Clayton Clipper</div>
-    <div class="figure"><b>{span}</b> / {total} spans</div>
+    <div class="figure">
+      ({@render num("span", span, true)}+{@render num("ahead", ahead)})/{@render num("total", total)}
+    </div>
+    {#if tip}<div class="tip" id="progress-tip" role="tooltip">{TIPS[tip]}</div>{/if}
     <div
       class="track"
       role="progressbar"
@@ -55,9 +91,56 @@
     font-size: 15px;
     color: var(--mute);
   }
-  .figure b {
-    font-size: 28px;
+  .figure {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+  }
+  /* the numbers are buttons, with room to tap, that look like plain figures with a dotted underline hinting at the tip */
+  .num {
+    font: inherit;
+    font-weight: 600;
     color: var(--ink);
+    background: none;
+    border: 0;
+    border-radius: 4px;
+    padding: 2px 3px;
+    min-height: 36px;
+    position: relative;
+    cursor: help;
+    text-decoration: underline dotted;
+    text-underline-offset: 4px;
+    text-decoration-color: var(--mute);
+  }
+  /* an invisible extension of the tap area over the brackets and signs, so even the "8" is a comfortable target while the
+     figure stays tight */
+  .num::after {
+    content: "";
+    position: absolute;
+    inset: 0 -7px;
+  }
+  .num.big {
+    font-size: 28px;
+  }
+  .num:hover,
+  .num.open {
+    background: var(--bg);
+  }
+  /* floats over the progress bar (no top: it sits where it would have started, just under the figure), in the card's
+     colours reversed so it stands out from the card in light and dark mode */
+  .tip {
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    z-index: 1;
+    margin-top: -2px;
+    padding: 7px 9px;
+    font-size: 12px;
+    line-height: 1.35;
+    color: var(--panel);
+    background: var(--ink);
+    border-radius: 6px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
   }
   .track {
     height: 10px;

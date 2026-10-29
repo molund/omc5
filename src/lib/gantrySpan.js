@@ -51,7 +51,7 @@ export function gantrySpan(root, complete) {
       x += L.getItem(i).x;
       y += L.getItem(i).y;
     }
-    return { el, n: nearest(toCanvas(el, x / k, y / k)) };
+    return { el, n: nearest(toCanvas(el, x / k, y / k)), c: toCanvas(el, x / k, y / k) };
   });
   let done;
   if (complete != null) {
@@ -75,5 +75,43 @@ export function gantrySpan(root, complete) {
   pieces.forEach((p) => {
     if (p.n <= count) p.el.classList.add("reached");
   });
-  return { span: count, total: labels.length };
+  return { span: count, ahead: westboundAhead(root, pieces, anchors, span, toCanvas), total: labels.length };
+}
+
+// Completed westbound spans ahead of the gantry: the spans numbered past it whose westbound track is already finished (crane
+// spans the Clayton Clipper will crawl over). A piece is westbound when it lies on the westbound side of its span's centre line,
+// the line between the bents at either end (the bent cap, rect.g, nearest the midpoint of each pair of labels). Westbound is
+// the side of positive cross product with the direction of increasing span numbers: where the gantry's own boxes are at
+// spans 31-42.
+function westboundAhead(root, pieces, anchors, span, toCanvas) {
+  const at = Object.fromEntries(anchors.map(({ n, q }) => [n, q]));
+  const caps = [...root.querySelectorAll("rect.g")]
+    .filter((el) => !el.closest("#clayton-clipper"))
+    .map((el) =>
+      toCanvas(
+        el,
+        +el.getAttribute("x") + +el.getAttribute("width") / 2,
+        +el.getAttribute("y") + +el.getAttribute("height") / 2,
+      ),
+    );
+  const bent = (n) => {
+    if (!at[n] || !at[n + 1]) return null;
+    const m = { x: (at[n].x + at[n + 1].x) / 2, y: (at[n].y + at[n + 1].y) / 2 };
+    return caps.reduce((a, k) =>
+      Math.hypot(k.x - m.x, k.y - m.y) < Math.hypot(a.x - m.x, a.y - m.y) ? k : a,
+    );
+  };
+  const counted = new Set();
+  pieces.forEach(({ el, n, c }) => {
+    if (n <= span || counted.has(n) || el.classList.contains("unfinished")) return;
+    const a = bent(n - 1),
+      b = bent(n);
+    if (!a || !b) return;
+    const ux = b.x - a.x,
+      uy = b.y - a.y,
+      side = (ux * (c.y - (a.y + b.y) / 2) - uy * (c.x - (a.x + b.x) / 2)) / Math.hypot(ux, uy);
+    // more than a couple of units off the centre line, so a full-width box doesn't count as one track
+    if (side > 2) counted.add(n);
+  });
+  return counted.size;
 }
