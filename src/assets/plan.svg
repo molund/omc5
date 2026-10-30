@@ -1425,26 +1425,26 @@
         <!-- B/C, C/D and D/E bent caps follow the cap shapes traced on the aerial; south column dots 9.10 from the south end -->
         <rect
           class="g"
-          x="261.39"
+          x="266.42"
           y="278.00"
-          width="64.48"
+          width="59.45"
           height="10"
           rx="2"
           transform="rotate(4.02 256.69 283.0)"
         />
         <rect
           class="g"
-          x="243.78"
+          x="251.63"
           y="401.00"
-          width="69.71"
+          width="61.86"
           height="10"
           rx="2"
         />
         <rect
           class="g"
-          x="241.75"
+          x="246.13"
           y="525.00"
-          width="74.07"
+          width="69.69"
           height="10"
           rx="2"
         />
@@ -1602,11 +1602,11 @@
           rx="2"
         />
         <!-- Bent / hammerhead / tulip column dots (bent layer, under the Clipper) -->
-        <circle cx="266.98" cy="283.72" r="2.5" fill="#D7D7D7" />
+        <circle cx="274.13" cy="284.22" r="2.5" fill="#D7D7D7" />
         <circle cx="317.97" cy="287.31" r="2.5" fill="#D7D7D7" />
-        <circle cx="249.75" cy="406.00" r="2.5" fill="#D7D7D7" />
+        <circle cx="259.86" cy="406.00" r="2.5" fill="#D7D7D7" />
         <circle cx="305.26" cy="406.00" r="2.5" fill="#D7D7D7" />
-        <circle cx="247.80" cy="530.00" r="2.5" fill="#D7D7D7" />
+        <circle cx="254.48" cy="530.00" r="2.5" fill="#D7D7D7" />
         <circle cx="307.47" cy="530.00" r="2.5" fill="#D7D7D7" />
         <circle cx="289.55" cy="893.45" r="2.5" fill="#D7D7D7" />
         <circle cx="320.22" cy="893.45" r="2.5" fill="#D7D7D7" />
