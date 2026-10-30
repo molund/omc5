@@ -33,7 +33,9 @@ historic railway line, which came from these sources:
   imagery was more up to date at the time. Roads, paths and other background features were traced on it unless listed
   below.
 - **Future 72 Avenue:** north of Fraser Highway, the City of Surrey's West Clayton NCP Stage 2 Land Use Concept; south of
-  it, the City of Surrey's 72 Avenue Improvements & Extensions project website. The road classification layers in Surrey
+  it, the City of Surrey's
+  [72 Avenue Improvements & Extensions](https://www.surrey.ca/about-surrey/capital-projects/72-avenue-improvements-extensions)
+  project website. The road classification layers in Surrey
   COSMOS (the City's web map) were a secondary check: slightly off, but within tolerance. The alignment used is the one
   most likely to meet span B, which is the project website and NCP one.
 - **Creek along Fraser Highway:** the small creek beside the multi-use path on the south side of Fraser Highway, between
