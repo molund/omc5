@@ -160,7 +160,7 @@
     </div>
   {/if}
   <div class="grp">Zoom</div>
-  <div class="btns">
+  <div class="btns zoom">
     <button
       title="Zoom in"
       aria-label="Zoom in"
@@ -295,6 +295,10 @@
     gap: 6px;
     flex-wrap: wrap;
     margin-top: 10px;
+  }
+  /* the four zoom buttons share the panel's width equally, lining up with the full-width buttons above */
+  .zoom button {
+    flex: 1;
   }
   /* zoom out can't go past Fit, Center has nothing to move at Fit, and Reset has nothing to do until a layer is changed */
   .btns button:disabled {
