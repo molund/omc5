@@ -82,7 +82,7 @@
     Pick a view to start from, then switch layers on or off. Drag the plan to
     pan.
   </p>
-  <div class="grp">View</div>
+  <div class="grp top">View</div>
   <!-- the views are presets, picked like the zoom buttons; picking the one already on does nothing to the view, as a radio button did -->
   <div class="views">
     {#each LAYERS[0][1] as [k, label]}
@@ -261,7 +261,12 @@
     width: 100%;
     min-height: calc(44rem / 17);
     margin-top: 14px;
-    font-weight: 600;
+  }
+  /* the panel's two sections, View and Layers, are headed a little larger than the rest of its text, and bold */
+  .top,
+  .fold {
+    font-size: calc(16rem / 17);
+    font-weight: 700;
   }
   /* a pair's Off and two styles, side by side; they wrap at a large text size */
   .seg-name {
