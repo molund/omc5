@@ -43,7 +43,7 @@
     gantry: [
       null,
       [
-        ["gantry", "Full"],
+        ["gantry", "On"],
         ["beams", "Beams only"],
       ],
     ],
