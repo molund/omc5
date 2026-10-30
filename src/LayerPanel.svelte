@@ -1,6 +1,7 @@
 <script>
   import { LAYERS, labelsAvailable } from "./lib/layers.js";
   import PanelIcon from "./PanelIcon.svelte";
+  import { fly } from "svelte/transition";
   import {
     layers,
     ui,
@@ -37,14 +38,19 @@
   }
 </script>
 
-<aside class="side">
+<!-- on a phone it slides in from the left -->
+<aside
+  class="side"
+  transition:fly={{ x: -320, opacity: 1, duration: ui.phone ? 200 : 0 }}
+>
   <div class="hd">
     <h1>Clayton Clipper Tracker</h1>
     <button
-      title="Hide the layer panel"
-      aria-label="Hide the layer panel"
+      title={ui.phone ? "Close the menu" : "Hide the layer panel"}
+      aria-label={ui.phone ? "Close the menu" : "Hide the layer panel"}
       class="hide"
-      onclick={() => (ui.collapsed = true)}><PanelIcon /></button
+      onclick={() => (ui.collapsed = true)}
+      ><PanelIcon kind={ui.phone ? "close" : "panel"} /></button
     >
   </div>
   <p>
@@ -54,13 +60,17 @@
   {#each LAYERS as [group, rows]}
     <div class="grp">{group}</div>
     {#if group === "View"}
-      <!-- the views are presets, picked like the zoom buttons; picking the one already on does nothing, as a radio button did -->
+      <!-- the views are presets, picked like the zoom buttons; picking the one already on does nothing to the view, as a radio button did -->
       <div class="views">
         {#each rows as [k, label]}
           <button
             class:on={layers[k]}
             aria-pressed={layers[k]}
-            onclick={() => layers[k] || toggle(k, true)}>{label}</button
+            onclick={() => {
+              if (!layers[k]) toggle(k, true);
+              // on a phone, picking a view closes the menu to show it
+              if (ui.phone) ui.collapsed = true;
+            }}>{label}</button
           >
         {/each}
       </div>
@@ -187,9 +197,15 @@
   }
   @media (max-width: 760px) {
     .side {
-      max-height: 42vh;
-      border-right: 0;
-      border-bottom: 1px solid var(--line);
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 30;
+      width: min(300px, 85vw);
+      padding-top: calc(env(safe-area-inset-top, 0px) + 16px);
+      padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 24px);
+      box-shadow: 2px 0 12px rgba(0, 0, 0, 0.3);
     }
   }
 </style>

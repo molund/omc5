@@ -3,7 +3,8 @@
   import PanelIcon from "./PanelIcon.svelte";
   import Plan from "./Plan.svelte";
   import { layerCss, FULL_VIEW_CSS } from "./lib/layers.js";
-  import { layers, ui } from "./lib/state.svelte.js";
+  import { fade } from "svelte/transition";
+  import { layers, ui, PHONE } from "./lib/state.svelte.js";
 
   // the layer rules wait until Plan has tagged the drawing, which needs it laid out as plan.svg draws it on its own
   const css = $derived(
@@ -11,7 +12,23 @@
       ? layerCss(layers) + (ui.view === "view_default" ? FULL_VIEW_CSS : "")
       : "",
   );
+  // turning a tablet or resizing the window across the phone width: the panel opens beside the plan, or the menu closes
+  $effect(() => {
+    const changed = (e) => {
+      ui.phone = e.matches;
+      ui.collapsed = e.matches;
+    };
+    PHONE.addEventListener("change", changed);
+    return () => PHONE.removeEventListener("change", changed);
+  });
+  const closeMenu = () => (ui.collapsed = true);
 </script>
+
+<svelte:window
+  onkeydown={(e) => {
+    if (e.key === "Escape" && ui.phone && !ui.collapsed) closeMenu();
+  }}
+/>
 
 <svelte:head>
   {@html `<style>${css}</style>`}
@@ -23,12 +40,23 @@
   {/if}
   <Plan />
 </div>
+<!-- on a phone the open menu dims the plan; tapping the plan closes it -->
+{#if ui.phone && !ui.collapsed}
+  <div
+    class="backdrop"
+    role="presentation"
+    transition:fade={{ duration: 150 }}
+    onclick={closeMenu}
+  ></div>
+{/if}
 {#if ui.collapsed}
   <button
     class="expand"
-    title="Show the layer panel"
-    aria-label="Show the layer panel"
-    onclick={() => (ui.collapsed = false)}><PanelIcon /></button
+    title={ui.phone ? "Open the menu" : "Show the layer panel"}
+    aria-label={ui.phone ? "Open the menu" : "Show the layer panel"}
+    aria-expanded="false"
+    onclick={() => (ui.collapsed = false)}
+    ><PanelIcon kind={ui.phone ? "menu" : "panel"} /></button
   >
 {/if}
 
@@ -42,11 +70,18 @@
     grid-template-columns: 1fr;
     grid-template-rows: 1fr;
   }
+  /* on a phone the panel slides in over the plan, so the plan always has the whole screen */
   @media (max-width: 760px) {
-    .app:not(.collapsed) {
+    .app {
       grid-template-columns: 1fr;
-      grid-template-rows: auto 1fr;
+      grid-template-rows: 1fr;
     }
+  }
+  .backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 25;
+    background: rgba(0, 0, 0, 0.35);
   }
   .expand {
     padding: 6px;
