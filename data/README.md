@@ -40,8 +40,6 @@ historic railway line, which came from these sources:
   [COSMOS](https://www.surrey.ca/services-payments/online-services/maps-cosmos) (the City's web map) were a secondary
   check: slightly off, but within tolerance. The alignment used is the one most likely to meet span B, which is the
   project website and NCP one.
-- **Creek along Fraser Highway:** the small creek beside the multi-use path on the south side of Fraser Highway, between
-  Old Yale Road and 72 Avenue, is from Surrey COSMOS. Its exact position is uncertain.
 - **Historic New Westminster Southern Railway (NWSR):** a Google My Maps KML of the railway's route,
   [NWSR GoogleMap](https://www.google.com/maps/d/edit?mid=ziHfaf3WSF4E.kWI_IGEKmEeI&usp=sharing), found through
   [New Westminster Southern Railway Survey](https://oppositethecity.wordpress.com/2014/02/12/new-westminster-southern-railway-survey/)
