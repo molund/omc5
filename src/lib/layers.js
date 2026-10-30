@@ -18,7 +18,7 @@ export const LAYERS = [
       ["unfinished", "Unfinished spans", "unfinished", true],
       ["supports", "Supports", "supports", true],
       ["labels", "OMC5 span labels", "spanlabel", true],
-      ["cclabels", "E2E span labels", "cclabel", false],
+      ["cclabels", "Span labels", "cclabel", false],
       ["arrows", "Direction arrows", "arrows", false],
     ],
   ],
