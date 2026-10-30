@@ -165,6 +165,13 @@ function turnedFullView() {
   setZoom(fitZoom());
 }
 
+// Scroll so the middle of the canvas is in the middle of the stage, keeping the zoom
+export function centreView() {
+  const stage = els.stage;
+  stage.scrollLeft = (stage.scrollWidth - stage.clientWidth) / 2;
+  stage.scrollTop = (stage.scrollHeight - stage.clientHeight) / 2;
+}
+
 export function setZoom(p, cx, cy) {
   const stage = els.stage;
   ui.fit = fitZoom();
