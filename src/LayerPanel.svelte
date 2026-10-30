@@ -50,7 +50,7 @@
       "Span identifiers",
       [
         ["cclabels", "All spans"],
-        ["labels", "OMC5 only"],
+        ["labels", "OMC5 mode"],
       ],
     ],
     arrows: ["Direction arrows", [["arrows", "On"]]],
