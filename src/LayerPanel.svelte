@@ -49,7 +49,10 @@
       onclick={() => (ui.collapsed = true)}>Hide</button
     >
   </div>
-  <p>Tick a layer to show it. Drag the plan to pan.</p>
+  <p>
+    Pick a view to start from, then switch layers on or off. Drag the plan to
+    pan.
+  </p>
   {#each LAYERS as [group, rows]}
     <div class="grp">{group}</div>
     {#each rows as [k, label]}
