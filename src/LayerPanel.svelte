@@ -32,6 +32,9 @@
     if (k === "aerial") return layers.drawing;
     return false;
   }
+  // the Built by group is left out of the two SFMSF views
+  const groupHidden = (group) =>
+    group === "Built by" && (layers.drawing || layers.sfzoom);
   // the two pairs of switches that are one layer drawn one way or the other, picked as Off or a style: keyed by the pair's first
   // row in LAYERS, where its buttons go, with its label (none for the gantry, which has the Gantry heading) and its styles
   const PAIRS = {
@@ -105,7 +108,7 @@
   >
   {#if ui.layersOpen}
     <div id="layer-list" transition:slide={{ duration: 150 }}>
-      {#each LAYERS.slice(1) as [group, rows]}
+      {#each LAYERS.slice(1).filter(([g]) => !groupHidden(g)) as [group, rows]}
         <div class="grp">{group}</div>
         {#each rows as [k, label]}
           {#if PAIRS[k]}
