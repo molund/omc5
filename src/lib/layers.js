@@ -17,6 +17,9 @@ export const LAYERS = [
       ["guideway", "Finished spans", "guideway", true],
       ["unfinished", "Unfinished spans", "unfinished", true],
       ["supports", "Supports", "supports", true],
+      ["labels", "OMC5 span labels", "spanlabel", true],
+      ["cclabels", "E2E span labels", "cclabel", false],
+      ["arrows", "Direction arrows", "arrows", false],
     ],
   ],
   [
@@ -38,14 +41,6 @@ export const LAYERS = [
       ["creeks", "Creeks", "creeks", false],
       ["railway", "Old railway line", "railway", false],
       ["walk", "Walking paths", "walk-paths", false],
-    ],
-  ],
-  [
-    "Labels",
-    [
-      ["labels", "SFMSF span labels", "spanlabel", true],
-      ["cclabels", "Clayton Clipper span labels", "cclabel", false],
-      ["arrows", "SkyTrain direction arrows", "arrows", false],
     ],
   ],
   [

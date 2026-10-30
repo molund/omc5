@@ -35,9 +35,8 @@
   // the Built by group is left out of the two SFMSF views
   const groupHidden = (group) =>
     group === "Built by" && (layers.drawing || layers.sfzoom);
-  // the switches picked from a row of buttons, Off or a style: the two pairs that are one layer drawn one way or the other, and
-  // the direction arrows (Off or On); keyed by the first row in LAYERS, where the buttons go, with its label (none for the
-  // gantry, which has the Gantry heading) and its styles
+  // the switches picked from a row of buttons, Off or a style: the gantry, one layer drawn one way or the other; keyed by its
+  // first row in LAYERS, where the buttons go, with its label (none for the gantry, which has the Gantry heading) and its styles
   const PAIRS = {
     gantry: [
       null,
@@ -46,16 +45,8 @@
         ["beams", "Beams only"],
       ],
     ],
-    labels: [
-      "Span identifiers",
-      [
-        ["cclabels", "All spans"],
-        ["labels", "OMC5 mode"],
-      ],
-    ],
-    arrows: ["Direction arrows", [["arrows", "On"]]],
   };
-  const PAIRED = ["beams", "cclabels"];
+  const PAIRED = ["beams"];
   // the style showing (null for Off): the first if both are on (Show all turns on both gantry switches, and the drawing shows the full gantry)
   const picked = (opts) => opts.find(([k]) => layers[k])?.[0] ?? null;
   function change(e, k) {
@@ -111,8 +102,7 @@
   {#if ui.layersOpen}
     <div id="layer-list" transition:slide={{ duration: 150 }}>
       {#each LAYERS.slice(1).filter(([g]) => !groupHidden(g)) as [group, rows]}
-        <!-- the label rows have their own names, so the Labels group has no heading -->
-        {#if group !== "Labels"}<div class="grp">{group}</div>{/if}
+        <div class="grp">{group}</div>
         {#each rows as [k, label]}
           {#if PAIRS[k]}
             {@const [name, opts] = PAIRS[k]}
@@ -121,7 +111,6 @@
               </div>{/if}
             <div
               class="seg"
-              class:plain={k === "arrows"}
               role="group"
               aria-label={name ?? group}
               style:opacity={opacity(k)}
@@ -287,13 +276,6 @@
   }
   .seg button {
     flex: 1 1 auto;
-  }
-  /* the direction arrows' Off and On keep their own widths, side by side */
-  .seg.plain {
-    display: block;
-  }
-  .seg.plain button + button {
-    margin-left: 4px;
   }
   .seg button:disabled {
     cursor: default;
