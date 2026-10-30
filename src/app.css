@@ -74,8 +74,10 @@ button {
   /* quick taps (zoom in, zoom in) mustn't double-tap zoom the page */
   touch-action: manipulation;
   font: inherit;
-  font-size: 13px;
-  padding: 6px 10px;
+  /* in rem, so buttons follow the iPhone's Text Size setting: 32px tall at the default text size (13px text, 1.4 line
+     height, 6px padding and a 1px border, top and bottom); icon buttons match, with their 18px icon and 6px padding */
+  font-size: calc(13rem / 17);
+  padding: calc(6rem / 17) calc(10rem / 17);
   border: 1px solid var(--line);
   border-radius: 6px;
   background: var(--panel);

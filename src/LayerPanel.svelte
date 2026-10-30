@@ -191,9 +191,6 @@
        the old 15px rows, 13px buttons and notes, and 17px heading at the default text size */
     font-size: calc(15rem / 17);
   }
-  .side button {
-    font-size: calc(13rem / 17);
-  }
   .side h1 {
     font-size: 1rem;
     margin: 0;
@@ -211,7 +208,7 @@
     margin-bottom: 2px;
   }
   .hide {
-    padding: 6px;
+    padding: calc(6rem / 17);
   }
   .grp {
     margin: 14px 0 4px;
@@ -256,17 +253,16 @@
   .views button {
     text-align: left;
   }
-  /* a full-width row, tall enough to tap on a phone, with its chevron pointing down when the switches are folded out */
+  /* a full-width row, with its chevron pointing down when the switches are folded out */
   .fold {
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    min-height: 44px;
     margin-top: 14px;
     font-weight: 600;
   }
-  /* a pair's Off and two styles, side by side and tall enough to tap; they wrap at a large text size */
+  /* a pair's Off and two styles, side by side; they wrap at a large text size */
   .seg-name {
     padding: 6px 4px 0;
   }
@@ -278,7 +274,6 @@
   }
   .seg button {
     flex: 1 1 auto;
-    min-height: 33px;
   }
   .seg button:disabled {
     cursor: default;
