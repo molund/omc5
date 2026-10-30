@@ -42,7 +42,8 @@ historic railway line, which came from these sources:
   project website and NCP one.
 - **Creek along Fraser Highway:** the small creek beside the multi-use path on the south side of Fraser Highway, between
   Old Yale Road and 72 Avenue, is from Surrey COSMOS. Its exact position is uncertain.
-- **Historic New Westminster Southern Railway (NWSR):** a Google My Maps KML of the railway's route, found through
+- **Historic New Westminster Southern Railway (NWSR):** a Google My Maps KML of the railway's route,
+  [NWSR GoogleMap](https://www.google.com/maps/d/edit?mid=ziHfaf3WSF4E.kWI_IGEKmEeI&usp=sharing), found through
   [New Westminster Southern Railway Survey](https://oppositethecity.wordpress.com/2014/02/12/new-westminster-southern-railway-survey/)
   on the blog _opposite the city_ (2014). The line was fitted to Harvie Road and Highway 15. A chain of park and
   greenbelt parcels in Surrey COSMOS follows the old route and agrees with it.
