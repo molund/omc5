@@ -55,22 +55,34 @@
   </p>
   {#each LAYERS as [group, rows]}
     <div class="grp">{group}</div>
-    {#each rows as [k, label]}
-      <label
-        class="row"
-        class:disabled={disabled(k)}
-        style:opacity={opacity(k)}
-        style:display={hidden(k) ? "none" : ""}
-      >
-        <input
-          type={group === "View" ? "radio" : "checkbox"}
-          name={group === "View" ? "view" : undefined}
-          checked={layers[k]}
-          disabled={disabled(k)}
-          onchange={(e) => change(e, k)}
-        />{label}
-      </label>
-    {/each}
+    {#if group === "View"}
+      <!-- the views are presets, picked like the zoom buttons; picking the one already on does nothing, as a radio button did -->
+      <div class="views">
+        {#each rows as [k, label]}
+          <button
+            class:on={layers[k]}
+            aria-pressed={layers[k]}
+            onclick={() => layers[k] || toggle(k, true)}>{label}</button
+          >
+        {/each}
+      </div>
+    {:else}
+      {#each rows as [k, label]}
+        <label
+          class="row"
+          class:disabled={disabled(k)}
+          style:opacity={opacity(k)}
+          style:display={hidden(k) ? "none" : ""}
+        >
+          <input
+            type="checkbox"
+            checked={layers[k]}
+            disabled={disabled(k)}
+            onchange={(e) => change(e, k)}
+          />{label}
+        </label>
+      {/each}
+    {/if}
   {/each}
   <div class="btns">
     <button onclick={showAll}>Show all</button><button onclick={reset}
@@ -144,6 +156,15 @@
   .row input:focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 2px;
+  }
+  .views {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 6px;
+  }
+  .views button {
+    text-align: left;
   }
   .btns {
     display: flex;
