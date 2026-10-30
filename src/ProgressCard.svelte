@@ -18,9 +18,15 @@
   // the update history dialog
   let historyDialog;
   const toggle = (k) => (tip = tip === k ? null : k);
-  // a tap anywhere else, or Escape, closes the tip
+  // a tap anywhere else, or Escape, closes the tip; a tap anywhere off the card (and off the update history) closes the card
   function outside(e) {
     if (!e.target.closest(".num")) tip = null;
+    if (
+      layers.progress &&
+      !ui.cardHidden &&
+      !e.target.closest(".card, .history")
+    )
+      ui.cardHidden = true;
   }
 </script>
 
