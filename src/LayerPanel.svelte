@@ -35,8 +35,9 @@
   // the Built by group is left out of the two SFMSF views
   const groupHidden = (group) =>
     group === "Built by" && (layers.drawing || layers.sfzoom);
-  // the two pairs of switches that are one layer drawn one way or the other, picked as Off or a style: keyed by the pair's first
-  // row in LAYERS, where its buttons go, with its label (none for the gantry, which has the Gantry heading) and its styles
+  // the switches picked from a row of buttons, Off or a style: the two pairs that are one layer drawn one way or the other, and
+  // the direction arrows (Off or On); keyed by the first row in LAYERS, where the buttons go, with its label (none for the
+  // gantry, which has the Gantry heading) and its styles
   const PAIRS = {
     gantry: [
       null,
@@ -46,12 +47,13 @@
       ],
     ],
     labels: [
-      "Span labels",
+      "Span identifiers",
       [
-        ["cclabels", "Full"],
+        ["cclabels", "All spans"],
         ["labels", "OMC5 only"],
       ],
     ],
+    arrows: ["Direction arrows", [["arrows", "On"]]],
   };
   const PAIRED = ["beams", "cclabels"];
   // the style showing (null for Off): the first if both are on (Show all turns on both gantry switches, and the drawing shows the full gantry)
@@ -109,7 +111,8 @@
   {#if ui.layersOpen}
     <div id="layer-list" transition:slide={{ duration: 150 }}>
       {#each LAYERS.slice(1).filter(([g]) => !groupHidden(g)) as [group, rows]}
-        <div class="grp">{group}</div>
+        <!-- the label rows have their own names, so the Labels group has no heading -->
+        {#if group !== "Labels"}<div class="grp">{group}</div>{/if}
         {#each rows as [k, label]}
           {#if PAIRS[k]}
             {@const [name, opts] = PAIRS[k]}
