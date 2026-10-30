@@ -19,7 +19,7 @@ on:
         type: choice
         options: ["", "true", "false"]
       note:
-        description: "Optional note for the progress card; leave empty to keep status.yaml's, '-' to clear it"
+        description: "Optional note for the progress card, added to status.yaml's notes (the card shows the newest); leave empty to add none, '-' to show none"
         required: false
         type: string
   repository_dispatch:

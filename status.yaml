@@ -5,5 +5,7 @@ updated: 2026-10-29T06:45-07:00
 span: 35
 # whether that span is complete (or at least hung)
 complete: true
-# optional, shown under the date on the progress card
-note: "All segments for span 35 are hung. A new precast beam arrived at the construction yard overnight. It will likely be installed in span 34, along with the beam that was already on site."
+# every note, newest first, each stamped with the time of the update that added it; the progress card shows only the newest,
+# under the date (an empty note shows none)
+notes:
+  - 2026-10-29T06:45-07:00: "All segments for span 35 are hung. A new precast beam arrived at the construction yard overnight. It will likely be installed in span 34, along with the beam that was already on site."
