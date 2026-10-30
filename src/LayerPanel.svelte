@@ -39,6 +39,8 @@
   const groupHidden = (group) =>
     (group === "Reference" && !sfmsf) ||
     (group === "Built by" && (!isMike || sfmsf));
+  // the layer groups showing in the panel
+  const shown = $derived(LAYERS.slice(1).filter(([g]) => !groupHidden(g)));
   // switches picked from a row of buttons, Off or a style, instead of checkboxes (none at the moment): keyed by the first row
   // in LAYERS, where the buttons go, with its label (or none) and its styles; PAIRED lists the other rows they cover
   const PAIRS = {};
@@ -97,7 +99,6 @@
   >
   {#if ui.layersOpen}
     <div id="layer-list" transition:slide={{ duration: 150 }}>
-      {@const shown = LAYERS.slice(1).filter(([g]) => !groupHidden(g))}
       {#each shown as [group, rows]}
         <!-- no heading when Guideway is the only group showing (Progress, Full aerial and Horizontal aerial) -->
         {#if !(group === "Guideway" && shown.length === 1)}<div class="grp">
