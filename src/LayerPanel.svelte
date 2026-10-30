@@ -34,9 +34,11 @@
     if (k === "aerial") return layers.drawing;
     return false;
   }
-  // the Built by group is left out of the two SFMSF views
+  // the Reference group shows only in the two SFMSF views; the Built by group only for Mike, and not in the two SFMSF views
+  const sfmsf = $derived(layers.drawing || layers.sfzoom);
   const groupHidden = (group) =>
-    group === "Built by" && (layers.drawing || layers.sfzoom);
+    (group === "Reference" && !sfmsf) ||
+    (group === "Built by" && (!isMike || sfmsf));
   // the switches picked from a row of buttons, Off or a style: the gantry, one layer drawn one way or the other; keyed by its
   // first row in LAYERS, where the buttons go, with its label (none for the gantry, which has the Gantry heading) and its styles
   const PAIRS = {
