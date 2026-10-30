@@ -103,7 +103,7 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
     z-index: 5;
   }
-  /* the card's close button, in its top right corner, and the progress bar button that takes the card's place once it is closed */
+  /* the card's close button, in its top right corner, and the progress ring button that takes the card's place once it is closed */
   .close {
     position: absolute;
     top: 6px;
