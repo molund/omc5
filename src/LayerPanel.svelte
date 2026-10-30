@@ -35,9 +35,8 @@
   // the Built by group is left out of the two SFMSF views
   const groupHidden = (group) =>
     group === "Built by" && (layers.drawing || layers.sfzoom);
-  // the switches picked from a row of buttons, Off or a style: the two pairs that are one layer drawn one way or the other, and
-  // the direction arrows (Off or On); keyed by the first row in LAYERS, where the buttons go, with its label (none for the
-  // gantry, which has the Gantry heading) and its styles
+  // the switches picked from a row of buttons, Off or a style: the gantry, one layer drawn one way or the other; keyed by its
+  // first row in LAYERS, where the buttons go, with its label (none for the gantry, which has the Gantry heading) and its styles
   const PAIRS = {
     gantry: [
       null,
@@ -46,16 +45,8 @@
         ["beams", "Beams only"],
       ],
     ],
-    labels: [
-      "Span identifiers",
-      [
-        ["cclabels", "All spans"],
-        ["labels", "OMC5 only"],
-      ],
-    ],
-    arrows: ["Direction arrows", [["arrows", "On"]]],
   };
-  const PAIRED = ["beams", "cclabels"];
+  const PAIRED = ["beams"];
   // the style showing (null for Off): the first if both are on (Show all turns on both gantry switches, and the drawing shows the full gantry)
   const picked = (opts) => opts.find(([k]) => layers[k])?.[0] ?? null;
   function change(e, k) {
@@ -111,17 +102,15 @@
   {#if ui.layersOpen}
     <div id="layer-list" transition:slide={{ duration: 150 }}>
       {#each LAYERS.slice(1).filter(([g]) => !groupHidden(g)) as [group, rows]}
-        <!-- the label rows have their own names, so the Labels group has no heading -->
-        {#if group !== "Labels"}<div class="grp">{group}</div>{/if}
+        <div class="grp">{group}</div>
         {#each rows as [k, label]}
           {#if PAIRS[k]}
             {@const [name, opts] = PAIRS[k]}
-            {#if name}<div class="seg-name" style:opacity={opacity(k)}>
+            {#if name}<div class="grp" style:opacity={opacity(k)}>
                 {name}
               </div>{/if}
             <div
               class="seg"
-              class:plain={k === "arrows"}
               role="group"
               aria-label={name ?? group}
               style:opacity={opacity(k)}
@@ -278,10 +267,7 @@
     font-size: calc(16rem / 17);
     font-weight: 700;
   }
-  /* a pair's Off and two styles, side by side; they wrap at a large text size */
-  .seg-name {
-    padding: 6px 4px 0;
-  }
+  /* a pair's Off and two styles, side by side, under a heading like the groups'; they wrap at a large text size */
   .seg {
     display: flex;
     flex-wrap: wrap;
@@ -290,13 +276,6 @@
   }
   .seg button {
     flex: 1 1 auto;
-  }
-  /* the direction arrows' Off and On keep their own widths, side by side */
-  .seg.plain {
-    display: block;
-  }
-  .seg.plain button + button {
-    margin-left: 4px;
   }
   .seg button:disabled {
     cursor: default;
