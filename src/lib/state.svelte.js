@@ -32,6 +32,22 @@ export const layers = $state({
     Object.entries(saved?.layers ?? {}).filter(([k]) => k in defaults),
   ),
 });
+// ?isMike=true in the address shows Mike's own options, the SFMSF span labels and the support beams on their own; without it
+// they are never on, and the Clayton Clipper span labels and the full gantry show in their place
+export const isMike =
+  new URLSearchParams(location.search).get("isMike") === "true";
+function guest() {
+  if (isMike) return;
+  if (layers.labels) {
+    layers.labels = false;
+    layers.cclabels = true;
+  }
+  if (layers.beams) {
+    layers.beams = false;
+    layers.gantry = true;
+  }
+}
+guest();
 // Screens this narrow are phones: the layer panel is a menu that slides in over the plan
 export const PHONE = matchMedia("(max-width: 760px)");
 // zoom is a percentage of the stage width, and fit the zoom at which the whole canvas fits the stage; ready turns on the layer
@@ -339,6 +355,7 @@ export function toggle(k, checked) {
       layers.labels = false;
     }
   }
+  guest();
   refresh();
 }
 
@@ -359,6 +376,7 @@ export function showAll() {
   // the two span-label sets are one or the other: Show all uses the Clayton Clipper's
   layers.labels = false;
   ui.changed = true;
+  guest();
   refresh();
 }
 
@@ -376,6 +394,7 @@ function viewSwitches(view) {
 export function reset() {
   Object.assign(layers, viewSwitches(ui.view));
   ui.changed = false;
+  guest();
   refresh();
 }
 
