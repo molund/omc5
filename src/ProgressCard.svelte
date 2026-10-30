@@ -234,9 +234,10 @@
     font-size: 12px;
     color: var(--mute);
   }
+  /* 13px at the default text size, scaled by the iPhone's Text Size setting (see app.css) */
   .note {
     margin-top: 4px;
-    font-size: 13px;
+    font-size: calc(13rem / 17);
   }
   /* a plain text link at the foot of the card */
   .history-link {
