@@ -1,5 +1,6 @@
 <script>
   import { LAYERS, labelsAvailable } from "./lib/layers.js";
+  import PanelIcon from "./PanelIcon.svelte";
   import {
     layers,
     ui,
@@ -42,7 +43,8 @@
     <button
       title="Hide the layer panel"
       aria-label="Hide the layer panel"
-      onclick={() => (ui.collapsed = true)}>Hide</button
+      class="hide"
+      onclick={() => (ui.collapsed = true)}><PanelIcon /></button
     >
   </div>
   <p>
@@ -124,6 +126,9 @@
     justify-content: space-between;
     gap: 8px;
     margin-bottom: 2px;
+  }
+  .hide {
+    padding: 6px;
   }
   .grp {
     margin: 14px 0 4px;
