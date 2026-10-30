@@ -330,6 +330,8 @@ export function toggle(k, checked) {
     if (layers.sfzoom) exitZoom();
     layers.progress = true;
     Object.assign(layers, PROGRESS_DEFAULTS);
+    // the progress card opens every time Progress is picked, even if it was closed before
+    ui.cardHidden = false;
     progressView();
   } else if (k === "sfzoom") {
     if (checked) {
