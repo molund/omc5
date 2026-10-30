@@ -97,8 +97,12 @@
   >
   {#if ui.layersOpen}
     <div id="layer-list" transition:slide={{ duration: 150 }}>
-      {#each LAYERS.slice(1).filter(([g]) => !groupHidden(g)) as [group, rows]}
-        <div class="grp">{group}</div>
+      {@const shown = LAYERS.slice(1).filter(([g]) => !groupHidden(g))}
+      {#each shown as [group, rows]}
+        <!-- no heading when Guideway is the only group showing (Progress, Full aerial and Horizontal aerial) -->
+        {#if !(group === "Guideway" && shown.length === 1)}<div class="grp">
+            {group}
+          </div>{/if}
         {#each rows as [k, label]}
           {#if PAIRS[k]}
             {@const [name, all] = PAIRS[k]}
