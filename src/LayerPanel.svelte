@@ -250,7 +250,7 @@
   .views {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 4px;
     margin-top: 6px;
   }
   .views button {
@@ -278,7 +278,7 @@
   .seg {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
+    gap: 4px;
     padding: 6px 4px;
   }
   .seg button {
@@ -295,7 +295,7 @@
   }
   .btns {
     display: flex;
-    gap: 6px;
+    gap: 4px;
     flex-wrap: wrap;
     margin-top: 10px;
   }
