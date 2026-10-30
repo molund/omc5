@@ -52,9 +52,9 @@ export const LAYERS = [
   [
     "Built by",
     [
+      ["ff", "Fleetwood Flyer", "ff", true],
       ["cc", "Clayton Clipper", "cc", true],
       ["ll", "Langley Launcher", "ll", true],
-      ["ff", "Fleetwood Flyer", "ff", true],
     ],
   ],
 ];
