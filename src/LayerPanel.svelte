@@ -256,6 +256,12 @@
   .views button {
     text-align: left;
   }
+  /* buttons in the button groups: the views, the Off / style rows, Show all and Reset, and zoom */
+  .views button,
+  .seg button,
+  .btns button {
+    padding: 0.3rem 0.5rem;
+  }
   /* a full-width row, tall enough to tap on a phone, with its chevron pointing down when the switches are folded out */
   .fold {
     display: flex;
