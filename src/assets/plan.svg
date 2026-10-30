@@ -1668,7 +1668,6 @@
         <g
           transform="translate(278.16 0) scale(0.55 1) translate(-278.16 0)"
         >
-          <!-- Guideway, supports and gantry are drawn at 55% width about the guideway centre (this frame is narrowed across the guideway) -->
           <g
             id="clayton-clipper"
             class="gantry"
