@@ -123,11 +123,12 @@
 </dialog>
 
 <style>
+  /* every size on the card is in rem, so it follows the iPhone's Text Size setting (see app.css) */
   .card {
     position: absolute;
     top: 12px;
     right: 12px;
-    width: 240px;
+    width: calc(240rem / 17); /* grows with the text */
     max-width: calc(100% - 24px);
     padding: 12px 14px 14px;
     background: var(--panel);
@@ -159,13 +160,13 @@
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
   }
   .title {
-    font-size: 13px;
+    font-size: calc(13rem / 17);
     font-weight: 600;
     color: var(--mute);
   }
   .figure {
     margin: 2px 0 8px;
-    font-size: 15px;
+    font-size: calc(15rem / 17);
     color: var(--mute);
   }
   .figure {
@@ -197,7 +198,7 @@
     inset: 0 -7px;
   }
   .num.big {
-    font-size: 28px;
+    font-size: calc(28rem / 17);
   }
   .num:hover,
   .num.open {
@@ -231,7 +232,7 @@
   }
   .asof {
     margin-top: 8px;
-    font-size: 12px;
+    font-size: calc(12rem / 17);
     color: var(--mute);
   }
   /* 13px at the default text size, scaled by the iPhone's Text Size setting (see app.css) */
@@ -246,7 +247,7 @@
     border: 0;
     background: none;
     font: inherit;
-    font-size: 12px;
+    font-size: calc(12rem / 17);
     color: var(--ink);
     text-decoration: underline;
     text-underline-offset: 3px;
@@ -254,7 +255,7 @@
   }
   /* the update history: a centred panel whose list scrolls, newest at the top */
   .history {
-    width: 360px;
+    width: calc(360rem / 17);
     max-width: calc(100% - 24px);
     max-height: calc(100% - 48px);
     padding: 0;
@@ -278,7 +279,7 @@
   }
   .history-head h2 {
     margin: 0;
-    font-size: 15px;
+    font-size: calc(15rem / 17);
     font-weight: 600;
   }
   .history-list {
