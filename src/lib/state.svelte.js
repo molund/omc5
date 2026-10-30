@@ -33,9 +33,10 @@ export const layers = $state({
   ),
 });
 // ?isMike=true in the address shows Mike's own options, the SFMSF span labels and the support beams on their own; without it
-// they are never on, and the Clayton Clipper span labels and the full gantry show in their place
+// they are never on, and the Clayton Clipper span labels and the full gantry show in their place. These are only useful for
+// moving the gantry and manipulating the spans.
 export const isMike =
-  new URLSearchParams(location.search).get("isMike") === "true";
+  new URLSearchParams(location.search.toLowerCase()).get("ismike") === "true";
 function guest() {
   if (isMike) return;
   if (layers.labels) {
