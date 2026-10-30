@@ -149,18 +149,9 @@
   .stage.drag {
     cursor: grabbing;
   }
-  /* the page background, as in the other views, with the canvas centred top to bottom while it is smaller than the stage
-     (the auto margins drop to 0 once it is bigger, so it still scrolls); the white canvas backing would show past the
-     turned photo, so it goes */
-  .stage.horizontal {
-    display: flex;
-  }
+  /* Horizontal: the white canvas backing would show past the turned photo, so it goes */
   .stage.horizontal :global(#canvas-backing) {
     display: none;
-  }
-  .stage.horizontal :global(svg) {
-    margin: auto;
-    flex: none;
   }
   .stage,
   .stage :global(*) {
