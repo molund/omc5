@@ -12,6 +12,7 @@
     fitZoom,
     isFit,
     centreView,
+    isMike,
   } from "./lib/state.svelte.js";
 
   // each press of zoom in or out changes the zoom by this factor, about the middle of the stage; Fit's zoom depends on the
@@ -24,8 +25,9 @@
   const opacity = (k) => (disabled(k) ? "0.4" : "");
   // greenbelt and creeks only in drawing mode, roads, construction yard, walking paths and highway labels in the two SFMSF
   // views (drawing mode and SFMSF zoom),
-  // aerial photo everywhere but drawing mode
+  // aerial photo everywhere but drawing mode, and the SFMSF span labels only for Mike
   function hidden(k) {
+    if (k === "labels") return !isMike;
     if (k === "greenbelt" || k === "creeks") return !layers.drawing;
     if (k === "roads" || k === "yard" || k === "walk" || k === "roadlabels")
       return !(layers.drawing || layers.sfzoom);
@@ -105,7 +107,9 @@
         <div class="grp">{group}</div>
         {#each rows as [k, label]}
           {#if PAIRS[k]}
-            {@const [name, opts] = PAIRS[k]}
+            {@const [name, all] = PAIRS[k]}
+            <!-- the support beams on their own are only for Mike -->
+            {@const opts = all.filter(([o]) => o !== "beams" || isMike)}
             {#if name}<div class="grp" style:opacity={opacity(k)}>
                 {name}
               </div>{/if}
