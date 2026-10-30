@@ -162,15 +162,15 @@
   <div class="grp">Zoom</div>
   <div class="btns zoom">
     <button
-      title="Zoom in"
-      aria-label="Zoom in"
-      onclick={() => setZoom(ui.zoom * ZOOM_STEP)}>+</button
-    >
-    <button
       title="Zoom out"
       aria-label="Zoom out"
       disabled={isFit()}
       onclick={() => setZoom(ui.zoom / ZOOM_STEP)}>−</button
+    >
+    <button
+      title="Zoom in"
+      aria-label="Zoom in"
+      onclick={() => setZoom(ui.zoom * ZOOM_STEP)}>+</button
     >
     <button class:on={isFit()} onclick={() => setZoom(fitZoom())}>Fit</button>
     <button
