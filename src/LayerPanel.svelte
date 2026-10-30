@@ -150,28 +150,31 @@
       </div>
     </div>
   {/if}
-  <div class="grp">Zoom</div>
-  <div class="btns zoom">
-    <button
-      title="Zoom out"
-      aria-label="Zoom out"
-      disabled={isFit()}
-      onclick={() => setZoom(ui.zoom / ZOOM_STEP)}
-      ><PanelIcon kind="zoomout" /></button
-    >
-    <button
-      title="Zoom in"
-      aria-label="Zoom in"
-      onclick={() => setZoom(ui.zoom * ZOOM_STEP)}
-      ><PanelIcon kind="zoomin" /></button
-    >
-    <button class:on={isFit()} onclick={() => setZoom(fitZoom())}>Fit</button>
-    <button
-      title="Center the plan at this zoom"
-      disabled={isFit()}
-      onclick={centreView}>Center</button
-    >
-  </div>
+  <!-- no zoom buttons on a phone: it pinches to zoom -->
+  {#if !ui.phone}
+    <div class="grp">Zoom</div>
+    <div class="btns zoom">
+      <button
+        title="Zoom out"
+        aria-label="Zoom out"
+        disabled={isFit()}
+        onclick={() => setZoom(ui.zoom / ZOOM_STEP)}
+        ><PanelIcon kind="zoomout" /></button
+      >
+      <button
+        title="Zoom in"
+        aria-label="Zoom in"
+        onclick={() => setZoom(ui.zoom * ZOOM_STEP)}
+        ><PanelIcon kind="zoomin" /></button
+      >
+      <button class:on={isFit()} onclick={() => setZoom(fitZoom())}>Fit</button>
+      <button
+        title="Center the plan at this zoom"
+        disabled={isFit()}
+        onclick={centreView}>Center</button
+      >
+    </div>
+  {/if}
 </aside>
 
 <style>
