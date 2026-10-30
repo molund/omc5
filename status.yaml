@@ -1,6 +1,6 @@
 # Clayton Clipper status. The site reads it (src/lib/status.js); running the deploy workflow by hand or through the API updates
 # it (see .github/workflows/deploy.yml). Times are Pacific, rounded to the nearest quarter hour.
-updated: 2026-10-29T18:30-07:00
+updated: 2026-10-30T12:45-07:00
 # the span the gantry is working on (Clayton Clipper span numbers, 3-104)
 span: 35
 # whether that span is complete (or at least hung)
@@ -8,5 +8,6 @@ complete: true
 # every note, newest first, each stamped with the time of the update that added it; the progress card shows only the newest,
 # under the date (an empty note shows none)
 notes:
+  - 2026-10-30T12:45-07:00: "The Clayton Clipper has started moving its supports, getting ready to move from span 35 to span 36."
   - 2026-10-29T18:30-07:00: "Span 35's segments are glued, and Dywidag is post-tensioning now. The night shift should finish it. That makes the Clayton Clipper one-third done: 35 of 105 spans."
   - 2026-10-29T06:45-07:00: "All segments for span 35 are hung. A new precast beam arrived at the construction yard overnight. It will likely be installed in span 34, along with the beam that was already on site."
