@@ -23,7 +23,7 @@ export const PHONE = matchMedia("(max-width: 760px)");
 // rules once plan.svg is tagged; gantry is the Clayton Clipper's span number out of the total; phone is PHONE, kept up to
 // date by App.svelte; collapsed hides the panel (a phone opens on the plan, with the menu closed); changed is whether a layer
 // switch has been changed since the view was picked or reset, which is when Reset has something to do; cardHidden is whether
-// the progress card has been dismissed (a bar chart button brings it back)
+// the progress card has been dismissed (a progress bar button brings it back)
 export const ui = $state({
   // the view last picked (a View group key), which stays put while layers are switched on and off
   view: defaults.progress
