@@ -38,7 +38,7 @@ historic railway line, which came from these sources:
   [72 Avenue Improvements & Extensions](https://www.surrey.ca/about-surrey/capital-projects/72-avenue-improvements-extensions)
   project website. The road classification layers in Surrey
   [COSMOS](https://www.surrey.ca/services-payments/online-services/maps-cosmos) (the City's web map) were a secondary
-  check: slightly off, but within tolerance. The alignment used is the one most likely to meet span B, which is the
+  check: slightly off, but within tolerance. The alignment used is the one most likely to meet span 29, which is the
   project website and NCP one.
 - **Historic New Westminster Southern Railway (NWSR):** a Google My Maps KML of the railway's route,
   [NWSR GoogleMap](https://www.google.com/maps/d/edit?mid=ziHfaf3WSF4E.kWI_IGEKmEeI&usp=sharing), found through
