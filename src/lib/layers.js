@@ -14,8 +14,7 @@ export const LAYERS = [
   [
     "Guideway",
     [
-      ["guideway", "Finished concrete spans", "guideway", true],
-      ["steel", "Finished steel spans", "steel-hwy15", true],
+      ["guideway", "Finished spans", "guideway", true],
       ["unfinished", "Unfinished spans", "unfinished", true],
       ["supports", "Supports", "supports", true],
     ],
@@ -72,11 +71,10 @@ export const fullDefaults = Object.assign({}, normalDefaults, {
   labels: false,
   view_default: true,
 });
-// Switches that progress-chart mode starts with, which match what it shows: the Clayton Clipper's spans (finished, steel and
+// Switches that progress-chart mode starts with, which match what it shows: the Clayton Clipper's spans (finished and
 // unfinished) with their span numbers, the aerial photo and the full gantry. Every switch works in it, as in Full image.
 export const PROGRESS_DEFAULTS = {
   guideway: true,
-  steel: true,
   unfinished: true,
   supports: false,
   aerial: true,
@@ -117,8 +115,8 @@ const PROGRESS_CSS =
   '#plan text.spanlabel[style*="#767676"],#plan text.spanlabel:not([style*="fill"]){fill:#000000 !important}';
 // what each switch shows in progress-chart mode (whether it shows is still up to the layer's own display rule)
 const PROGRESS_SHOWS = {
-  guideway: [".guideway"],
-  steel: [".steel-hwy15"],
+  // finished spans, concrete and steel
+  guideway: [".guideway", ".steel-hwy15"],
   unfinished: [".guideway.unfinished"],
   supports: ["rect.g", 'circle[fill="#D7D7D7"]'],
   yard: [".yard"],
@@ -159,8 +157,7 @@ export const FULL_VIEW_CSS =
 
 // the span-label options need Clayton Clipper spans on screen: Clayton Clipper on and at least one type of span on
 export const labelsAvailable = (state) =>
-  state.progress ||
-  (state.cc && (state.guideway || state.steel || state.unfinished));
+  state.progress || (state.cc && (state.guideway || state.unfinished));
 
 // The CSS rules that show and hide the layers of plan.svg for the given switch state
 export function layerCss(state) {
@@ -231,8 +228,12 @@ export function layerCss(state) {
           ".guideway.unfinished{display:" +
           (on ? "inline" : "none") +
           " !important}";
-      else if (k === "steel")
+      // finished spans: the concrete ones and the steel ones over Hwy 15 (with their labels)
+      else if (k === "guideway")
         r +=
+          ".guideway{display:" +
+          (on ? "inline" : "none") +
+          " !important}" +
           ".steel-hwy15,.guideway.steel-hwy15,.spanlabel.steel-hwy15,.cclabel.steel-hwy15{display:" +
           (on ? "inline" : "none") +
           " !important}";
