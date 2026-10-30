@@ -127,15 +127,21 @@
     border-right: 1px solid var(--line);
     overflow-y: auto;
     padding: 16px 16px 24px;
+    /* all text in the panel is sized in rem, so it follows the iPhone's Text Size setting (see app.css); the sizes match
+       the old 15px rows, 13px buttons and notes, and 17px heading at the default text size */
+    font-size: calc(15rem / 17);
+  }
+  .side button {
+    font-size: calc(13rem / 17);
   }
   .side h1 {
-    font-size: 17px;
+    font-size: 1rem;
     margin: 0;
   }
   .side p {
     margin: 0 0 14px;
     color: var(--mute);
-    font-size: 13px;
+    font-size: calc(13rem / 17);
   }
   .hd {
     display: flex;
@@ -150,7 +156,7 @@
   .grp {
     margin: 14px 0 4px;
     font-weight: 600;
-    font-size: 13px;
+    font-size: calc(13rem / 17);
     color: var(--mute);
   }
   .row {
