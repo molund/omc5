@@ -5,7 +5,8 @@ override the file's values when given:
 - SPAN: the span the gantry is working on, 3-104 (it needs two spans behind it and one ahead). Moving to a new span without
   COMPLETE marks it not complete.
 - COMPLETE: true or false.
-- NOTE: any text; "-" clears the note.
+- NOTE: any text, added to the top of the notes list stamped with this update's time (older notes are kept; the site shows
+  the newest); "-" adds an empty note, so none shows.
 Prints a one-line summary for the commit message.
 """
 
@@ -30,6 +31,7 @@ for line in lines:
     m = re.match(r"^([A-Za-z_]+):\s*(.*?)\s*$", line)
     if m:
         values[m.group(1)] = m.group(2)
+values.pop("notes", None)  # the list header; its lines are left as they are
 
 span = os.environ.get("SPAN", "").strip()
 complete = os.environ.get("COMPLETE", "").strip().lower()
@@ -46,11 +48,6 @@ if complete:
     values["complete"] = complete
 elif span and values["span"] != old_span:
     values["complete"] = "false"
-if note.strip() == "-":
-    values["note"] = '""'
-elif note.strip():
-    values["note"] = json.dumps(note.strip())
-
 # Pacific time is a whole number of hours off UTC, so rounding the timestamp to 15 minutes lands on local quarter hours
 quarter = 15 * 60
 now = round(datetime.now().timestamp() / quarter) * quarter
@@ -61,6 +58,10 @@ out = []
 for line in lines:
     m = re.match(r"^([A-Za-z_]+):", line)
     out.append(f"{m.group(1)}: {values[m.group(1)]}" if m and m.group(1) in values else line)
+    # a new note goes first in the list, under the `notes:` line
+    if m and m.group(1) == "notes" and note.strip():
+        text = "" if note.strip() == "-" else note.strip()
+        out.append(f"  - {stamp}: {json.dumps(text)}")
 open(PATH, "w").write("\n".join(out))
 
 state = "complete" if values.get("complete") == "true" else "in progress"

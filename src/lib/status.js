@@ -1,22 +1,35 @@
 // The Clayton Clipper status from status.yaml: when it was last updated, the span the gantry is on, whether that span is
-// complete, and an optional note. The file is flat `key: value` lines, so a small reader does instead of a YAML library.
+// complete, and the newest of its time-stamped notes. The file is flat `key: value` lines plus the `notes:` list of
+// `  - time: "text"` lines, so a small reader does instead of a YAML library.
 import text from "../../status.yaml?raw";
 
+function unquote(v) {
+  if (/^".*"$/.test(v)) return JSON.parse(v);
+  if (/^'.*'$/.test(v)) return v.slice(1, -1).replace(/''/g, "'");
+  return v;
+}
+
 function parse(src) {
-  const out = {};
+  const out = {},
+    notes = [];
   src.split("\n").forEach((line) => {
+    const n = line.match(/^\s+-\s+(\S+):\s+(.*?)\s*$/);
+    if (n) {
+      notes.push({ time: new Date(n[1]), text: unquote(n[2]) });
+      return;
+    }
     const m = line.match(/^([A-Za-z_]+):\s*(.*?)\s*$/);
-    if (!m) return;
-    let v = m[2];
-    if (/^".*"$/.test(v)) v = JSON.parse(v);
-    else if (/^'.*'$/.test(v)) v = v.slice(1, -1).replace(/''/g, "'");
-    out[m[1]] = v;
+    if (m) out[m[1]] = unquote(m[2]);
   });
+  // the newest note by its time stamp, whatever order the list is in
+  const latest = notes
+    .filter((n) => !isNaN(n.time))
+    .sort((a, b) => b.time - a.time)[0];
   return {
     updated: out.updated ? new Date(out.updated) : null,
     span: out.span ? +out.span : null,
     complete: out.complete === "true",
-    note: out.note || "",
+    note: latest ? latest.text : "",
   };
 }
 
