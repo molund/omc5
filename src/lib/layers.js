@@ -169,7 +169,7 @@ export function layerCss(state) {
         state[k] &&
         !((k === "greenbelt" || k === "creeks") && !state.drawing) &&
         !(
-          ["roads", "walk", "roadlabels"].includes(k) &&
+          ["roads", "yard", "walk", "roadlabels"].includes(k) &&
           !state.drawing &&
           !state.sfzoom
         ) &&
