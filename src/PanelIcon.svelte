@@ -34,7 +34,10 @@
 </svg>
 
 <style>
+  /* 18px at the default text size, scaled by the iPhone's Text Size setting (see app.css) */
   svg {
     display: block;
+    width: calc(18rem / 17);
+    height: calc(18rem / 17);
   }
 </style>
