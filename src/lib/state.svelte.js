@@ -5,6 +5,7 @@ import {
   HORIZONTAL_VIEW_METRES,
   UNITS_PER_METRE,
   defaults,
+  normalDefaults,
   fullDefaults,
   FULL_VB,
   DRAW_VB,
@@ -179,18 +180,21 @@ export function setZoom(p, cx, cy) {
 // mode is entered from it)
 const startSnap = () => (defaults.drawing ? { ...fullDefaults } : null);
 let drawingSnap = startSnap();
+// Drawing mode's switches: everything on but the aerial photo, the Clayton Clipper span labels, the support beams and the
+// other views
+const drawingSwitches = () => ({
+  ...Object.fromEntries(Object.keys(layers).map((k) => [k, true])),
+  aerial: false,
+  cclabels: false,
+  beams: false,
+  progress: false,
+  sfzoom: false,
+  horizontal: false,
+  drawing: true,
+});
 function enterDrawing() {
   drawingSnap = $state.snapshot(layers);
-  Object.keys(layers).forEach((k) => {
-    layers[k] = true;
-  });
-  layers.aerial = false;
-  layers.cclabels = false;
-  layers.beams = false;
-  layers.progress = false;
-  layers.sfzoom = false;
-  layers.horizontal = false;
-  layers.drawing = true;
+  Object.assign(layers, drawingSwitches());
   setView(DRAW_VB);
   setZoom(fitZoom());
 }
@@ -296,16 +300,18 @@ export function showAll() {
   refresh();
 }
 
+// The switches each view starts with, as picking it from the panel sets them up
+function viewSwitches(view) {
+  if (view === "progress") return defaults;
+  if (view === "view_default") return fullDefaults;
+  if (view === "horizontal")
+    return { ...fullDefaults, horizontal: true, progress: false };
+  if (view === "drawing") return drawingSwitches();
+  return normalDefaults; // SFMSF aerial
+}
+
+// Reset: the current view's switches back as it starts with them, staying on the same view, zoom and position
 export function reset() {
-  drawingSnap = startSnap();
-  ui.view = defaults.progress
-    ? "progress"
-    : defaults.drawing
-      ? "drawing"
-      : "sfzoom";
-  Object.assign(layers, defaults);
+  Object.assign(layers, viewSwitches(ui.view));
   refresh();
-  if (defaults.progress) progressView();
-  else
-    setView(defaults.drawing ? DRAW_VB : defaults.sfzoom ? ZOOM_VB : FULL_VB);
 }
