@@ -23,6 +23,29 @@ repository's site shows (`src/assets/plan.svg`). `scripts/export-geojson.js` con
 Scale, rotation and position come from two tulip pillars measured by Mike Olund, one at each end of the line: where
 Clayton Clipper spans 13 and 14 meet (near 182 Street) and where spans 92 and 93 meet (near 168 Street).
 
+## Other sources
+
+The GeoJSON files hold only the supports, pillars and spans. The plan drawing also shows roads, paths, a creek and a
+historic railway line, which came from these sources:
+
+- **Aerial imagery:** Apple Maps satellite screenshots, from a phone and a desktop. The site's background aerial is a
+  desktop screenshot, also used for detailed pillar placement. Apple Maps was used instead of Google Maps because its
+  imagery was more up to date at the time. Roads, paths and other background features were traced on it unless listed
+  below.
+- **Future 72 Avenue:** north of Fraser Highway, the City of Surrey's
+  [West Clayton NCP](https://www.surrey.ca/renovating-building-development/land-planning-development/land-use-planning/cloverdale-land-use-plans/west-clayton-ncp)
+  Stage 2 Land Use Concept; south of it, the City of Surrey's
+  [72 Avenue Improvements & Extensions](https://www.surrey.ca/about-surrey/capital-projects/72-avenue-improvements-extensions)
+  project website. The road classification layers in Surrey
+  [COSMOS](https://www.surrey.ca/services-payments/online-services/maps-cosmos) (the City's web map) were a secondary
+  check: slightly off, but within tolerance. The alignment used is the one most likely to meet span 29, which is the
+  project website and NCP one.
+- **Historic New Westminster Southern Railway (NWSR):** a Google My Maps KML of the railway's route,
+  [NWSR GoogleMap](https://www.google.com/maps/d/edit?mid=ziHfaf3WSF4E.kWI_IGEKmEeI&usp=sharing), found through
+  [New Westminster Southern Railway Survey](https://oppositethecity.wordpress.com/2014/02/12/new-westminster-southern-railway-survey/)
+  on the blog _opposite the city_ (2014). The line was fitted to Harvie Road and Highway 15. A chain of park and
+  greenbelt parcels in Surrey COSMOS follows the old route and agrees with it.
+
 ## Accuracy
 
 Those two pillars are exact. Elsewhere, accuracy depends on how well the drawing matches the imagery it was traced on.
