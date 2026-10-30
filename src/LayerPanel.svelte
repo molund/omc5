@@ -11,6 +11,7 @@
     setZoom,
     fitZoom,
     isFit,
+    centreView,
   } from "./lib/state.svelte.js";
 
   // each press of zoom in or out changes the zoom by this factor, about the middle of the stage; Fit's zoom depends on the
@@ -101,6 +102,11 @@
   <div class="grp">Zoom</div>
   <div class="btns">
     <button
+      title="Zoom in"
+      aria-label="Zoom in"
+      onclick={() => setZoom(ui.zoom * ZOOM_STEP)}>+</button
+    >
+    <button
       title="Zoom out"
       aria-label="Zoom out"
       disabled={isFit()}
@@ -108,9 +114,9 @@
     >
     <button class:on={isFit()} onclick={() => setZoom(fitZoom())}>Fit</button>
     <button
-      title="Zoom in"
-      aria-label="Zoom in"
-      onclick={() => setZoom(ui.zoom * ZOOM_STEP)}>+</button
+      title="Center the plan at this zoom"
+      disabled={isFit()}
+      onclick={centreView}>Center</button
     >
   </div>
 </aside>
@@ -190,7 +196,7 @@
     flex-wrap: wrap;
     margin-top: 10px;
   }
-  /* zoom out can't go past Fit, and Reset has nothing to do until a layer is changed */
+  /* zoom out can't go past Fit, Center has nothing to move at Fit, and Reset has nothing to do until a layer is changed */
   .btns button:disabled {
     opacity: 0.4;
     cursor: default;
