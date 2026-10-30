@@ -121,6 +121,7 @@
               </div>{/if}
             <div
               class="seg"
+              class:plain={k === "arrows"}
               role="group"
               aria-label={name ?? group}
               style:opacity={opacity(k)}
@@ -289,6 +290,13 @@
   }
   .seg button {
     flex: 1 1 auto;
+  }
+  /* the direction arrows' Off and On keep their own widths, side by side */
+  .seg.plain {
+    display: block;
+  }
+  .seg.plain button + button {
+    margin-left: 4px;
   }
   .seg button:disabled {
     cursor: default;
