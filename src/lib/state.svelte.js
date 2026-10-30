@@ -22,7 +22,8 @@ export const PHONE = matchMedia("(max-width: 760px)");
 // zoom is a percentage of the stage width, and fit the zoom at which the whole canvas fits the stage; ready turns on the layer
 // rules once plan.svg is tagged; gantry is the Clayton Clipper's span number out of the total; phone is PHONE, kept up to
 // date by App.svelte; collapsed hides the panel (a phone opens on the plan, with the menu closed); changed is whether a layer
-// switch has been changed since the view was picked or reset, which is when Reset has something to do; cardHidden is whether
+// switch has been changed since the view was picked or reset, which is when Reset has something to do; filled is whether the
+// plan is at a view's opening fill (see fillView); cardHidden is whether
 // the progress card has been dismissed (a progress ring button brings it back)
 export const ui = $state({
   // the view last picked (a View group key), which stays put while layers are switched on and off
@@ -37,6 +38,7 @@ export const ui = $state({
   collapsed: PHONE.matches,
   changed: false,
   cardHidden: false,
+  filled: false,
   ready: false,
   gantry: null,
 });
@@ -64,6 +66,19 @@ export function fitZoom() {
   return Math.min(100, (100 * r.height * vb.width) / (r.width * vb.height));
 }
 export const isFit = () => Math.abs(ui.zoom - ui.fit) < 0.5;
+// The zoom that fills the stage with the canvas, so nothing blank shows: the full width, or more when the canvas is too short
+// to fill the stage's height at that width
+export function fillZoom() {
+  const r = els.stage.getBoundingClientRect(),
+    vb = els.svg.viewBox.baseVal;
+  return Math.max(100, (100 * r.height * vb.width) / (r.width * vb.height));
+}
+// Views open filled and centred; ui.filled keeps them so when the stage changes size (until the plan is zoomed)
+export function fillView() {
+  setZoom(fillZoom());
+  centreView();
+  ui.filled = true;
+}
 
 // The whole drawing turns about the middle of the full canvas
 const [fx0, fy0, fw, fh] = FULL_VB.split(" ").map(Number),
@@ -93,7 +108,8 @@ export function progressView() {
   const c = els.gantrySpan;
   if (!c) return;
   const vb = els.svg.viewBox.baseVal;
-  setZoom((100 * vb.width) / PROGRESS_VIEW_WIDTH);
+  // never less than filling the stage, so nothing blank shows
+  setZoom(Math.max((100 * vb.width) / PROGRESS_VIEW_WIDTH, fillZoom()));
   const stage = els.stage,
     r = els.svg.getBoundingClientRect();
   stage.scrollLeft =
@@ -112,7 +128,12 @@ function horizontalView() {
   const c = els.gantrySpan;
   if (!c) return;
   const vb = els.svg.viewBox.baseVal;
-  setZoom((100 * vb.width) / (2 * HORIZONTAL_VIEW_METRES * UNITS_PER_METRE));
+  setZoom(
+    Math.max(
+      (100 * vb.width) / (2 * HORIZONTAL_VIEW_METRES * UNITS_PER_METRE),
+      fillZoom(),
+    ),
+  );
   // the span's middle, turned with the drawing, then onto the middle of the stage
   const r = (els.routeAngle * Math.PI) / 180,
     x = TURN_X + (c.x - TURN_X) * Math.cos(r) - (c.y - TURN_Y) * Math.sin(r),
@@ -180,6 +201,7 @@ export function centreView() {
 
 export function setZoom(p, cx, cy) {
   const stage = els.stage;
+  ui.filled = false;
   ui.fit = fitZoom();
   p = Math.max(ui.fit, Math.min(16000, p));
   const r = stage.getBoundingClientRect();
@@ -193,7 +215,7 @@ export function setZoom(p, cx, cy) {
   stage.scrollTop = fy * stage.scrollHeight - y;
 }
 
-// Drawing mode (SFMSF drawing): shrink the canvas to the first-photo frame and fit it, switch the aerial photo off, put the SFMSF labels and every other
+// Drawing mode (SFMSF drawing): shrink the canvas to the first-photo frame and fill the stage with it, switch the aerial photo off, put the SFMSF labels and every other
 // layer on, and put everything back as it was when the mode is switched off.
 // opening in Drawing mode, so switching it off goes to the Full view (the normal view with SFMSF zoom ended, as when Drawing
 // mode is entered from it)
@@ -215,7 +237,7 @@ function enterDrawing() {
   drawingSnap = $state.snapshot(layers);
   Object.assign(layers, drawingSwitches());
   setView(DRAW_VB);
-  setZoom(fitZoom());
+  fillView();
 }
 function exitDrawing() {
   if (drawingSnap) Object.assign(layers, drawingSnap);
@@ -230,11 +252,11 @@ function exitZoom() {
   layers.roads = false;
   layers.labels = false;
 }
-// Full image: the whole canvas, fitted, with the Full image switches
+// Full image: the whole canvas, filling the stage, with the Full image switches
 function applyFull() {
   drawingSnap = null;
   setView(FULL_VB);
-  setZoom(fitZoom());
+  fillView();
   Object.assign(layers, fullDefaults);
 }
 
@@ -288,7 +310,7 @@ export function toggle(k, checked) {
       layers.sfzoom = true;
       layers.progress = false;
       setView(ZOOM_VB);
-      setZoom(fitZoom());
+      fillView();
       layers.roads = true;
       layers.labels = true;
       layers.cclabels = false;
