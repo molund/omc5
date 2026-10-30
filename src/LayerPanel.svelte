@@ -114,7 +114,7 @@
                 {name}
               </div>{/if}
             <div
-              class="seg"
+              class="btns"
               role="group"
               aria-label={name ?? group}
               style:opacity={opacity(k)}
@@ -250,9 +250,8 @@
   .views button {
     text-align: left;
   }
-  /* buttons in the button groups: the views, the Off / style rows, Show all and Reset, and zoom */
+  /* buttons in the button groups: the views, the gantry's Off / style row, Show all and Reset, and zoom */
   .views button,
-  .seg button,
   .btns button {
     padding: 0.3rem 0.5rem;
   }
@@ -270,19 +269,6 @@
   .fold {
     font-size: calc(16rem / 17);
     font-weight: 700;
-  }
-  /* a pair's Off and two styles, side by side, under a heading like the groups'; they wrap at a large text size */
-  .seg {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    padding: 6px 4px;
-  }
-  .seg button {
-    flex: 1 1 auto;
-  }
-  .seg button:disabled {
-    cursor: default;
   }
   .fold :global(svg) {
     transition: transform 150ms;
