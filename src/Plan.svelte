@@ -1,7 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import planSvg from "./assets/plan.svg?raw";
-  import { DRAW_VB, ZOOM_VB } from "./lib/layers.js";
+  import { DRAW_VB, ZOOM_VB, FULL_VB } from "./lib/layers.js";
   import { tagLaunchers } from "./lib/tagLaunchers.js";
   import { gantrySpan } from "./lib/gantrySpan.js";
   import { placeGantry } from "./lib/gantryAnchor.js";
@@ -16,6 +16,7 @@
     isFit,
     fillView,
     progressView,
+    horizontalView,
   } from "./lib/state.svelte.js";
   import ProgressCard from "./ProgressCard.svelte";
 
@@ -64,6 +65,11 @@
       fillView();
     } else if (layers.sfzoom) {
       setView(ZOOM_VB);
+      fillView();
+    } else if (layers.horizontal) horizontalView();
+    // the views a reload can come back to (the page itself opens on Progress)
+    else if (ui.view === "view_default") {
+      setView(FULL_VB);
       fillView();
     }
 
