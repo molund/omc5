@@ -40,6 +40,8 @@ export function asOf(date) {
       .formatToParts(d)
       .map((p) => [p.type, p.value]),
   );
-  const period = parts.dayPeriod.toLowerCase().startsWith("a") ? "a.m." : "p.m.";
+  const period = parts.dayPeriod.toLowerCase().startsWith("a")
+    ? "a.m."
+    : "p.m.";
   return `${parts.hour}:${parts.minute} ${period} on ${parts.month} ${parts.day}, ${parts.year}`;
 }
