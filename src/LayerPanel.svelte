@@ -253,12 +253,13 @@
   .views button {
     text-align: left;
   }
-  /* a full-width row, with its chevron pointing down when the switches are folded out */
+  /* a full-width row, tall enough to tap on a phone, with its chevron pointing down when the switches are folded out */
   .fold {
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%;
+    min-height: calc(44rem / 17);
     margin-top: 14px;
     font-weight: 600;
   }
