@@ -14,6 +14,7 @@
     setZoom,
     fitZoom,
     isFit,
+    fillView,
     progressView,
   } from "./lib/state.svelte.js";
   import ProgressCard from "./ProgressCard.svelte";
@@ -58,8 +59,13 @@
     ui.ready = true;
     svg.style.width = ui.zoom + "%";
     if (layers.progress) progressView();
-    else if (layers.drawing) setView(DRAW_VB);
-    else if (layers.sfzoom) setView(ZOOM_VB);
+    else if (layers.drawing) {
+      setView(DRAW_VB);
+      fillView();
+    } else if (layers.sfzoom) {
+      setView(ZOOM_VB);
+      fillView();
+    }
 
     // touchpad pinch: Chrome, Edge and Firefox send it as ctrl+wheel; Safari sends gesture events
     const wheel = (e) => {
@@ -82,9 +88,10 @@
     stage.addEventListener("wheel", wheel, { passive: false });
     stage.addEventListener("gesturestart", gesturestart);
     stage.addEventListener("gesturechange", gesturechange);
-    // a fitted plan stays fitted when the window or the layer panel changes the stage size
+    // a filled or fitted plan stays so when the window or the layer panel changes the stage size
     const resize = new ResizeObserver(() => {
-      if (isFit()) setZoom(fitZoom());
+      if (ui.filled) fillView();
+      else if (isFit()) setZoom(fitZoom());
       else ui.fit = fitZoom();
     });
     resize.observe(stage);
