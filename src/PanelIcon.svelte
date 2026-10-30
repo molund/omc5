@@ -1,6 +1,6 @@
 <script>
   // panel: a window with a sidebar (show or hide the layer panel); menu: three lines (open the menu on a phone); close: a
-  // cross (close it, or the progress card); progress: an information icon (bring the progress card back)
+  // cross (close it, or the progress card); progress: an information icon (bring the progress card back); chevron: a "›" (fold the layer switches out or away)
   let { kind = "panel" } = $props();
 </script>
 
@@ -24,6 +24,8 @@
     <circle cx="9" cy="9" r="7.25" />
     <line x1="9" y1="8" x2="9" y2="12.75" />
     <circle cx="9" cy="5.25" r="0.6" fill="currentColor" />
+  {:else if kind === "chevron"}
+    <polyline points="7,4 12,9 7,14" stroke-linejoin="round" />
   {:else if kind === "close"}
     <line x1="4" y1="4" x2="14" y2="14" />
     <line x1="14" y1="4" x2="4" y2="14" />
