@@ -1,5 +1,5 @@
 import { flushSync } from "svelte";
-import { visibleExtent } from "./visibleExtent.js";
+import { visibleExtent, turnedXRange } from "./visibleExtent.js";
 import {
   HORIZONTAL_MARGIN,
   HORIZONTAL_VIEW_METRES,
@@ -122,7 +122,7 @@ function horizontalView() {
   stage.scrollTop =
     ((y - vb.y) / vb.height) * box.height - stage.clientHeight / 2;
 }
-// Horizontal's canvas, fitted
+// Horizontal's canvas, fitted: what is drawn with a margin, but no wider than the overview aerial
 function canvasHorizontal() {
   // the layer rules for the new switches have to be on the page before measuring what shows
   flushSync();
@@ -130,14 +130,18 @@ function canvasHorizontal() {
   const e = visibleExtent(els.svg, els.routeAngle, TURN_X, TURN_Y);
   if (!e) return turnedFullView();
   const m =
-      HORIZONTAL_MARGIN *
-      Math.hypot(e.right.x - e.left.x, e.right.y - e.left.y),
-    x = e.left.x - m,
-    y = e.top.y - m;
-  setView(
-    `${x} ${y} ${e.right.x + m - x} ${e.bottom.y + m - y}`,
-    els.routeAngle,
-  );
+    HORIZONTAL_MARGIN * Math.hypot(e.right.x - e.left.x, e.right.y - e.left.y);
+  let x = e.left.x - m,
+    x1 = e.right.x + m;
+  // no margin past the ends of the overview aerial, the widest photo
+  const photo = els.svg.querySelector("#baseoverview image");
+  if (photo) {
+    const p = turnedXRange(els.svg, photo, els.routeAngle, TURN_X, TURN_Y);
+    x = Math.max(x, p.x0);
+    x1 = Math.min(x1, p.x1);
+  }
+  const y = e.top.y - m;
+  setView(`${x} ${y} ${x1 - x} ${e.bottom.y + m - y}`, els.routeAngle);
   setZoom(fitZoom());
 }
 // the whole canvas, turned level, all of it in view (when there is nothing drawn to measure)
