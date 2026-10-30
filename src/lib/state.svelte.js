@@ -21,7 +21,8 @@ export const layers = $state({ ...defaults });
 export const PHONE = matchMedia("(max-width: 760px)");
 // zoom is a percentage of the stage width, and fit the zoom at which the whole canvas fits the stage; ready turns on the layer
 // rules once plan.svg is tagged; gantry is the Clayton Clipper's span number out of the total; phone is PHONE, kept up to
-// date by App.svelte; collapsed hides the panel (a phone opens on the plan, with the menu closed)
+// date by App.svelte; collapsed hides the panel (a phone opens on the plan, with the menu closed); changed is whether a layer
+// switch has been changed since the view was picked or reset, which is when Reset has something to do
 export const ui = $state({
   // the view last picked (a View group key), which stays put while layers are switched on and off
   view: defaults.progress
@@ -33,6 +34,7 @@ export const ui = $state({
   fit: 100,
   phone: PHONE.matches,
   collapsed: PHONE.matches,
+  changed: false,
   ready: false,
   gantry: null,
 });
@@ -228,6 +230,7 @@ const VIEWS = ["progress", "sfzoom", "view_default", "horizontal", "drawing"];
 // A layer checkbox was ticked or unticked
 export function toggle(k, checked) {
   layers[k] = checked;
+  ui.changed = !VIEWS.includes(k);
   if (checked && VIEWS.includes(k)) ui.view = k;
   if (k === "greenbelt" && checked) layers.aerial = false;
   if (k === "aerial" && checked) layers.greenbelt = false;
@@ -301,6 +304,7 @@ export function showAll() {
   layers.greenbelt = false;
   // the two span-label sets are one or the other: Show all uses the Clayton Clipper's
   layers.labels = false;
+  ui.changed = true;
   refresh();
 }
 
@@ -317,5 +321,6 @@ function viewSwitches(view) {
 // Reset: the current view's switches back as it starts with them, staying on the same view, zoom and position
 export function reset() {
   Object.assign(layers, viewSwitches(ui.view));
+  ui.changed = false;
   refresh();
 }
