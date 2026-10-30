@@ -2191,6 +2191,7 @@
         y="-79.06"
         text-anchor="middle"
         style="font-size: 11.05px; fill: #ffffff"
+        transform="rotate(28.2 -656.33 -83.04)"
       >
         E
       </text>
@@ -2200,6 +2201,7 @@
         y="-140.50"
         text-anchor="middle"
         style="font-size: 11.05px; fill: #ffffff"
+        transform="rotate(32.2 -760.20 -144.48)"
       >
         F
       </text>
@@ -2212,6 +2214,7 @@
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
+        transform="rotate(33.3 -862.42 -210.05)"
       >
         G
       </text>
@@ -2221,6 +2224,7 @@
         y="-206.07"
         text-anchor="middle"
         style="font-size: 11.05px; fill: #767676"
+        transform="rotate(33.3 -862.42 -210.05)"
       >
         G
       </text>
@@ -2233,6 +2237,7 @@
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
+        transform="rotate(33.7 -963.82 -276.88)"
       >
         H
       </text>
@@ -2242,6 +2247,7 @@
         y="-272.90"
         text-anchor="middle"
         style="font-size: 11.05px; fill: #767676"
+        transform="rotate(33.7 -963.82 -276.88)"
       >
         H
       </text>
@@ -2254,6 +2260,7 @@
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
+        transform="rotate(33.5 -1066.01 -342.44)"
       >
         I
       </text>
@@ -2263,6 +2270,7 @@
         y="-338.46"
         text-anchor="middle"
         style="font-size: 11.05px; fill: #767676"
+        transform="rotate(33.5 -1066.01 -342.44)"
       >
         I
       </text>
@@ -2275,6 +2283,7 @@
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
+        transform="rotate(33.5 -1159.30 -404.20)"
       >
         J
       </text>
@@ -2284,6 +2293,7 @@
         y="-400.22"
         text-anchor="middle"
         style="font-size: 11.05px; fill: #767676"
+        transform="rotate(33.5 -1159.30 -404.20)"
       >
         J
       </text>
@@ -2296,6 +2306,7 @@
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
+        transform="rotate(34.5 -1249.71 -468.57)"
       >
         K
       </text>
@@ -2305,6 +2316,7 @@
         y="-464.59"
         text-anchor="middle"
         style="font-size: 11.05px; fill: #767676"
+        transform="rotate(34.5 -1249.71 -468.57)"
       >
         K
       </text>
@@ -2317,6 +2329,7 @@
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
+        transform="rotate(33.7 -1350.35 -535.80)"
       >
         L
       </text>
@@ -2326,6 +2339,7 @@
         y="-531.82"
         text-anchor="middle"
         style="font-size: 11.05px; fill: #767676"
+        transform="rotate(33.7 -1350.35 -535.80)"
       >
         L
       </text>
@@ -2335,6 +2349,7 @@
         y="-595.98"
         text-anchor="middle"
         style="font-size: 11.05px; fill: #ffffff"
+        transform="rotate(31.5 -1454.36 -599.96)"
       >
         M
       </text>
@@ -2344,6 +2359,7 @@
         y="-659.96"
         text-anchor="middle"
         style="font-size: 11.05px; fill: #ffffff"
+        transform="rotate(31.5 -1558.26 -663.94)"
       >
         N
       </text>
@@ -2353,6 +2369,7 @@
         y="-726.09"
         text-anchor="middle"
         style="font-size: 11.05px; fill: #ffffff"
+        transform="rotate(32.8 -1660.36 -730.07)"
       >
         O
       </text>
@@ -2362,6 +2379,7 @@
         y="-92.53"
         text-anchor="middle"
         style="font-size: 14.3px; fill: #ffffff"
+        transform="rotate(28.2 -646.20 -97.68)"
       >
         1
       </text>
@@ -2371,6 +2389,7 @@
         y="-154.44"
         text-anchor="middle"
         style="font-size: 14.3px; fill: #ffffff"
+        transform="rotate(32.2 -750.06 -159.59)"
       >
         2
       </text>
@@ -2380,6 +2399,7 @@
         y="-219.97"
         text-anchor="middle"
         style="font-size: 14.3px; fill: #ffffff"
+        transform="rotate(33.3 -852.19 -225.12)"
       >
         3
       </text>
@@ -2392,6 +2412,7 @@
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
+        transform="rotate(33.7 -953.61 -291.94)"
       >
         4
       </text>
@@ -2401,6 +2422,7 @@
         y="-286.79"
         text-anchor="middle"
         style="font-size: 14.3px; fill: #767676"
+        transform="rotate(33.7 -953.61 -291.94)"
       >
         4
       </text>
@@ -2413,6 +2435,7 @@
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
+        transform="rotate(33.5 -1055.80 -357.53)"
       >
         5
       </text>
@@ -2422,6 +2445,7 @@
         y="-352.38"
         text-anchor="middle"
         style="font-size: 14.3px; fill: #767676"
+        transform="rotate(33.5 -1055.80 -357.53)"
       >
         5
       </text>
@@ -2434,6 +2458,7 @@
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
+        transform="rotate(33.5 -1149.06 -419.20)"
       >
         6
       </text>
@@ -2443,6 +2468,7 @@
         y="-414.05"
         text-anchor="middle"
         style="font-size: 14.3px; fill: #767676"
+        transform="rotate(33.5 -1149.06 -419.20)"
       >
         6
       </text>
@@ -2455,6 +2481,7 @@
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
+        transform="rotate(34.5 -1239.47 -483.57)"
       >
         7
       </text>
@@ -2464,6 +2491,7 @@
         y="-478.42"
         text-anchor="middle"
         style="font-size: 14.3px; fill: #767676"
+        transform="rotate(34.5 -1239.47 -483.57)"
       >
         7
       </text>
@@ -2476,6 +2504,7 @@
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
+        transform="rotate(33.7 -1340.19 -550.82)"
       >
         8
       </text>
@@ -2485,6 +2514,7 @@
         y="-545.67"
         text-anchor="middle"
         style="font-size: 14.3px; fill: #767676"
+        transform="rotate(33.7 -1340.19 -550.82)"
       >
         8
       </text>
@@ -2497,6 +2527,7 @@
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
+        transform="rotate(31.5 -1442.60 -616.34)"
       >
         9
       </text>
@@ -2506,6 +2537,7 @@
         y="-611.19"
         text-anchor="middle"
         style="font-size: 14.3px; fill: #767676"
+        transform="rotate(31.5 -1442.60 -616.34)"
       >
         9
       </text>
@@ -2518,6 +2550,7 @@
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
+        transform="rotate(31.5 -1547.92 -679.09)"
       >
         10
       </text>
@@ -2527,6 +2560,7 @@
         y="-673.94"
         text-anchor="middle"
         style="font-size: 14.3px; fill: #767676"
+        transform="rotate(31.5 -1547.92 -679.09)"
       >
         10
       </text>
@@ -2539,6 +2573,7 @@
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
+        transform="rotate(32.8 -1649.67 -745.72)"
       >
         11
       </text>
@@ -2548,6 +2583,7 @@
         y="-740.57"
         text-anchor="middle"
         style="font-size: 14.3px; fill: #767676"
+        transform="rotate(32.8 -1649.67 -745.72)"
       >
         11
       </text>
@@ -2557,6 +2593,7 @@
         y="211.29"
         text-anchor="middle"
         style="font-size: 12.16px; fill: #ffffff"
+        transform="rotate(45.3 -244.50 206.91)"
       >
         A
       </text>
@@ -2566,6 +2603,7 @@
         y="124.23"
         text-anchor="middle"
         style="font-size: 12.16px; fill: #ffffff"
+        transform="rotate(41.3 -339.51 119.85)"
       >
         B
       </text>
@@ -2575,6 +2613,7 @@
         y="28.97"
         text-anchor="middle"
         style="font-size: 12.16px; fill: #ffffff"
+        transform="rotate(37.0 -458.02 24.59)"
       >
         C
       </text>
@@ -2584,6 +2623,7 @@
         y="-19.65"
         text-anchor="middle"
         style="font-size: 12.16px; fill: #ffffff"
+        transform="rotate(28.4 -548.22 -24.03)"
       >
         D
       </text>
@@ -2593,6 +2633,7 @@
         y="-784.56"
         text-anchor="middle"
         style="font-size: 12.16px; fill: #ffffff"
+        transform="rotate(34.3 -1748.78 -788.94)"
       >
         P
       </text>
@@ -2602,6 +2643,7 @@
         y="-841.77"
         text-anchor="middle"
         style="font-size: 12.16px; fill: #ffffff"
+        transform="rotate(33.9 -1833.88 -846.15)"
       >
         Q
       </text>
@@ -2611,6 +2653,7 @@
         y="-1000.61"
         text-anchor="middle"
         style="font-size: 12.16px"
+        transform="rotate(34.4 -2069.54 -1004.99)"
       >
         S
       </text>
@@ -2630,6 +2673,7 @@
         y="-915.36"
         text-anchor="middle"
         style="font-size: 12.16px"
+        transform="rotate(33.9 -1943.83 -919.74)"
       >
         R
       </text>
