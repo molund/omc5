@@ -124,3 +124,21 @@ export function visibleExtent(root, turn, cx, cy) {
   });
   return left && { left, right, top, bottom };
 }
+
+// The leftmost and rightmost x of element el's box, in canvas units, after turning the canvas by `turn` degrees about (cx, cy)
+export function turnedXRange(root, el, turn, cx, cy) {
+  const toRoot = DOMMatrix.fromMatrix(root.getScreenCTM()).inverse(),
+    ctm = DOMMatrix.fromMatrix(el.getScreenCTM()),
+    b = el.getBBox(),
+    r = (turn * Math.PI) / 180,
+    xs = [
+      [b.x, b.y],
+      [b.x + b.width, b.y],
+      [b.x + b.width, b.y + b.height],
+      [b.x, b.y + b.height],
+    ].map(([x, y]) => {
+      const p = new DOMPoint(x, y).matrixTransform(ctm).matrixTransform(toRoot);
+      return cx + (p.x - cx) * Math.cos(r) - (p.y - cy) * Math.sin(r);
+    });
+  return { x0: Math.min(...xs), x1: Math.max(...xs) };
+}

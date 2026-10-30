@@ -151,7 +151,9 @@
       display: none;
     }
   </style>
+  <!-- White canvas backing (hidden in Horizontal aerial, where the turned canvas would show it past the photo) -->
   <rect
+    id="canvas-backing"
     x="-6840.7"
     y="-5402.04"
     width="12387.4"
