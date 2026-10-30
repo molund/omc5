@@ -63,6 +63,8 @@ body::before {
   z-index: 10;
 }
 button {
+  /* quick taps (zoom in, zoom in) mustn't double-tap zoom the page */
+  touch-action: manipulation;
   font: inherit;
   font-size: 13px;
   padding: 6px 10px;

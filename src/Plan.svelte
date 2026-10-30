@@ -85,9 +85,14 @@
       e.preventDefault();
       setZoom(gz * e.scale, e.clientX, e.clientY);
     };
+    // Safari's own pinch would zoom the whole page instead; stop it anywhere on the page (a pinch that starts on the
+    // progress card or a button, say), not only on the plan, which zooms itself above
+    const noPageZoom = (e) => e.preventDefault();
     stage.addEventListener("wheel", wheel, { passive: false });
     stage.addEventListener("gesturestart", gesturestart);
     stage.addEventListener("gesturechange", gesturechange);
+    document.addEventListener("gesturestart", noPageZoom, { passive: false });
+    document.addEventListener("gesturechange", noPageZoom, { passive: false });
     // a filled or fitted plan stays so when the window or the layer panel changes the stage size
     const resize = new ResizeObserver(() => {
       if (ui.filled) fillView();
@@ -100,6 +105,8 @@
       stage.removeEventListener("wheel", wheel);
       stage.removeEventListener("gesturestart", gesturestart);
       stage.removeEventListener("gesturechange", gesturechange);
+      document.removeEventListener("gesturestart", noPageZoom);
+      document.removeEventListener("gesturechange", noPageZoom);
     };
   });
 
@@ -120,6 +127,8 @@
     stage.scrollTop = drag.t - (e.clientY - drag.y);
   }
   const end = () => (drag = null);
+  // Safari (iPhone, iPad, Mac) sends pinches as gesture events, which the plan zooms with itself
+  const safariPinch = "GestureEvent" in window;
 </script>
 
 <div class="wrap">
@@ -128,6 +137,7 @@
     class="stage"
     class:drag
     class:horizontal={layers.horizontal}
+    class:safari-pinch={safariPinch}
     bind:this={stage}
     onpointerdown={pointerdown}
     onpointermove={pointermove}
@@ -152,6 +162,10 @@
     min-width: 0;
     cursor: grab;
     touch-action: pan-x pan-y pinch-zoom;
+  }
+  /* where the plan zooms itself on a pinch, the browser mustn't zoom the page with it */
+  .stage.safari-pinch {
+    touch-action: pan-x pan-y;
   }
   .stage.drag {
     cursor: grabbing;
