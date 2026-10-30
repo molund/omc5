@@ -17,6 +17,9 @@ Svelte 5 + Vite site, deployed to GitHub Pages (https://molund.github.io/omc5/) 
   changed on the site (e.g. "Show Highway labels only in the two SFMSF views").
 - Make small, exact edits; change nothing that wasn't asked for, and mention other
   issues instead of fixing them.
+- Format every changed file with Prettier, default options (`prettier --write <file>`),
+  before committing — this matches VS Code's format-on-save. `.svelte` files need
+  `prettier-plugin-svelte`; if it isn't available, match the surrounding style by hand.
 
 ## Local server
 
