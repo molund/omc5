@@ -15,6 +15,8 @@
     total: "Total spans on the Clayton Clipper's route",
   };
   let tip = $state(null);
+  // the update history dialog
+  let historyDialog;
   const toggle = (k) => (tip = tip === k ? null : k);
   // a tap anywhere else, or Escape, closes the tip
   function outside(e) {
@@ -85,8 +87,40 @@
     </div>
     {#if when}<div class="asof">As of {when}</div>{/if}
     {#if status.note}<div class="note">{status.note}</div>{/if}
+    {#if status.history.length}
+      <button class="history-link" onclick={() => historyDialog.showModal()}
+        >Update history</button
+      >
+    {/if}
   </div>
 {/if}
+
+<!-- every status note, newest first; a click on the backdrop closes it (Escape closes it too, natively) -->
+<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_noninteractive_element_interactions -->
+<dialog
+  class="history"
+  aria-labelledby="history-title"
+  bind:this={historyDialog}
+  onclick={(e) => e.target === historyDialog && historyDialog.close()}
+>
+  <div class="history-head">
+    <h2 id="history-title">Update history</h2>
+    <button
+      class="close"
+      title="Close"
+      aria-label="Close the update history"
+      onclick={() => historyDialog.close()}><PanelIcon kind="close" /></button
+    >
+  </div>
+  <ol class="history-list">
+    {#each status.history as n}
+      <li>
+        <div class="asof">{asOf(n.time)}</div>
+        <div class="note">{n.text}</div>
+      </li>
+    {/each}
+  </ol>
+</dialog>
 
 <style>
   .card {
@@ -203,5 +237,60 @@
   .note {
     margin-top: 4px;
     font-size: 13px;
+  }
+  /* a plain text link at the foot of the card */
+  .history-link {
+    margin-top: 8px;
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: 12px;
+    color: var(--ink);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+  }
+  /* the update history: a centred panel whose list scrolls, newest at the top */
+  .history {
+    width: 360px;
+    max-width: calc(100% - 24px);
+    max-height: calc(100% - 48px);
+    padding: 0;
+    background: var(--panel);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  }
+  .history[open] {
+    display: flex;
+    flex-direction: column;
+  }
+  .history::backdrop {
+    background: rgba(0, 0, 0, 0.4);
+  }
+  .history-head {
+    position: relative;
+    padding: 12px 14px 8px;
+    border-bottom: 1px solid var(--line);
+  }
+  .history-head h2 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+  }
+  .history-list {
+    margin: 0;
+    padding: 4px 14px 14px;
+    list-style: none;
+    overflow-y: auto;
+  }
+  .history-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .history-list li:last-child {
+    border-bottom: 0;
   }
 </style>

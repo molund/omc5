@@ -21,15 +21,17 @@ function parse(src) {
     const m = line.match(/^([A-Za-z_]+):\s*(.*?)\s*$/);
     if (m) out[m[1]] = unquote(m[2]);
   });
-  // the newest note by its time stamp, whatever order the list is in
-  const latest = notes
+  // newest first by time stamp, whatever order the list is in
+  const sorted = notes
     .filter((n) => !isNaN(n.time))
-    .sort((a, b) => b.time - a.time)[0];
+    .sort((a, b) => b.time - a.time);
   return {
     updated: out.updated ? new Date(out.updated) : null,
     span: out.span ? +out.span : null,
     complete: out.complete === "true",
-    note: latest ? latest.text : "",
+    note: sorted.length ? sorted[0].text : "",
+    // every note with text, newest first, for the update history
+    history: sorted.filter((n) => n.text),
   };
 }
 
