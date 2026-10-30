@@ -2,6 +2,7 @@
   import { PROGRESS_COLOUR } from "./lib/layers.js";
   import { layers, ui } from "./lib/state.svelte.js";
   import { status, asOf } from "./lib/status.js";
+  import PanelIcon from "./PanelIcon.svelte";
 
   const when = asOf(status.updated);
 
@@ -9,7 +10,8 @@
   // Enter/Space
   const TIPS = {
     span: "The Clayton Clipper is this many spans along its route (the span it's on counts once all its segments are hung)",
-    ahead: "Finished spans ahead, built by cranes, which the Clayton Clipper must crawl over",
+    ahead:
+      "Finished spans ahead, built by cranes, which the Clayton Clipper must crawl over",
     total: "Total spans on the Clayton Clipper's route",
   };
   let tip = $state(null);
@@ -34,19 +36,38 @@
     aria-label="{value}: {TIPS[k]}"
     onclick={(e) => (e.pointerType === "mouse" ? (tip = k) : toggle(k))}
     onpointerenter={(e) => e.pointerType === "mouse" && (tip = k)}
-    onpointerleave={(e) => e.pointerType === "mouse" && tip === k && (tip = null)}
+    onpointerleave={(e) =>
+      e.pointerType === "mouse" && tip === k && (tip = null)}
     onblur={() => tip === k && (tip = null)}>{value}</button
   >
 {/snippet}
 
-{#if layers.progress && ui.gantry}
+{#if layers.progress && ui.gantry && ui.cardHidden}
+  <button
+    class="show"
+    title="Show the progress card"
+    aria-label="Show the progress card"
+    onclick={() => (ui.cardHidden = false)}><PanelIcon kind="chart" /></button
+  >
+{:else if layers.progress && ui.gantry}
   {@const { span, ahead, total } = ui.gantry}
   <div class="card">
     <div class="title">Clayton Clipper</div>
+    <button
+      class="close"
+      title="Hide the progress card"
+      aria-label="Hide the progress card"
+      onclick={() => (ui.cardHidden = true)}><PanelIcon kind="close" /></button
+    >
     <div class="figure">
-      ({@render num("span", span, true)}+{@render num("ahead", ahead)})/{@render num("total", total)}
+      ({@render num("span", span, true)}+{@render num(
+        "ahead",
+        ahead,
+      )})/{@render num("total", total)}
     </div>
-    {#if tip}<div class="tip" id="progress-tip" role="tooltip">{TIPS[tip]}</div>{/if}
+    {#if tip}<div class="tip" id="progress-tip" role="tooltip">
+        {TIPS[tip]}
+      </div>{/if}
     <div
       class="track"
       role="progressbar"
@@ -80,6 +101,27 @@
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
     z-index: 5;
+  }
+  /* the card's close button, in its top right corner, and the bar chart button that takes the card's place once it is closed */
+  .close {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    padding: 4px;
+    border-color: transparent;
+    background: none;
+    color: var(--mute);
+  }
+  .close:hover {
+    color: var(--ink);
+  }
+  .show {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 5;
+    padding: 6px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
   }
   .title {
     font-size: 13px;
