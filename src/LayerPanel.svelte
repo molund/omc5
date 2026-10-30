@@ -156,12 +156,14 @@
       title="Zoom out"
       aria-label="Zoom out"
       disabled={isFit()}
-      onclick={() => setZoom(ui.zoom / ZOOM_STEP)}>−</button
+      onclick={() => setZoom(ui.zoom / ZOOM_STEP)}
+      ><PanelIcon kind="zoomout" /></button
     >
     <button
       title="Zoom in"
       aria-label="Zoom in"
-      onclick={() => setZoom(ui.zoom * ZOOM_STEP)}>+</button
+      onclick={() => setZoom(ui.zoom * ZOOM_STEP)}
+      ><PanelIcon kind="zoomin" /></button
     >
     <button class:on={isFit()} onclick={() => setZoom(fitZoom())}>Fit</button>
     <button
@@ -277,6 +279,10 @@
     margin-top: 10px;
   }
   /* the four zoom buttons share the panel's width equally, lining up with the full-width buttons above */
+  /* the zoom out and in icons sit in the middle of their buttons */
+  .zoom button :global(svg) {
+    margin: 0 auto;
+  }
   .zoom button {
     flex: 1;
   }
