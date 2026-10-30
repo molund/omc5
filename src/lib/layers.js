@@ -25,6 +25,7 @@ export const LAYERS = [
       ["aerial", "Aerial photo", "aerial", true],
       ["greenbelt", "Greenbelt", "greenbelt", false],
       ["roads", "Roads", "roads", true],
+      ["roadlabels", "Highway labels", "road-labels", false],
       ["yard", "Construction yard", "yard", false],
       ["ave72", "Future 72 Ave", "ave72", false],
       ["creeks", "Creeks", "creeks", false],
@@ -44,7 +45,6 @@ export const LAYERS = [
     [
       ["labels", "SFMSF span labels", "spanlabel", true],
       ["cclabels", "Clayton Clipper span labels", "cclabel", false],
-      ["roadlabels", "Highway labels", "road-labels", false],
       ["arrows", "SkyTrain direction arrows", "arrows", false],
     ],
   ],
