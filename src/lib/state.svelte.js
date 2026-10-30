@@ -330,6 +330,9 @@ export function toggle(k, checked) {
       layers.roads = true;
       layers.labels = true;
       layers.cclabels = false;
+      // it is an aerial view, so the photo goes on (and the greenbelt, which never shows with it, off)
+      layers.aerial = true;
+      layers.greenbelt = false;
     } else {
       setView(FULL_VB);
       layers.roads = false;
