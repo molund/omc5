@@ -15,8 +15,23 @@ import {
   PROGRESS_DEFAULTS,
 } from "./layers.js";
 
-// Layer switches, keyed as in LAYERS
-export const layers = $state({ ...defaults });
+// The panel's settings (the layer switches, the view picked, whether Reset has something to do and whether Layers is folded
+// out) are kept in sessionStorage, so they survive reloading the page; a new tab starts afresh
+const SAVED = "panel";
+const saved = (() => {
+  try {
+    return JSON.parse(sessionStorage.getItem(SAVED));
+  } catch {
+    return null;
+  }
+})();
+// Layer switches, keyed as in LAYERS (saved ones only for switches that still exist)
+export const layers = $state({
+  ...defaults,
+  ...Object.fromEntries(
+    Object.entries(saved?.layers ?? {}).filter(([k]) => k in defaults),
+  ),
+});
 // Screens this narrow are phones: the layer panel is a menu that slides in over the plan
 export const PHONE = matchMedia("(max-width: 760px)");
 // zoom is a percentage of the stage width, and fit the zoom at which the whole canvas fits the stage; ready turns on the layer
@@ -25,21 +40,19 @@ export const PHONE = matchMedia("(max-width: 760px)");
 // switch has been changed since the view was picked or reset, which is when Reset has something to do; filled is whether the
 // plan is at a view's opening fill (see fillView); cardHidden is whether
 // the progress card has been dismissed (an information button brings it back); layersOpen is whether the layer switches are
-// folded out under Layers in the panel (folded away when the page opens)
+// folded out under Layers in the panel (folded away when the page opens, unless it is a reload)
 export const ui = $state({
   // the view last picked (a View group key), which stays put while layers are switched on and off
-  view: defaults.progress
-    ? "progress"
-    : defaults.drawing
-      ? "drawing"
-      : "sfzoom",
+  view:
+    saved?.view ??
+    (defaults.progress ? "progress" : defaults.drawing ? "drawing" : "sfzoom"),
   zoom: 187.31,
   fit: 100,
   phone: PHONE.matches,
   collapsed: PHONE.matches,
-  changed: false,
+  changed: saved?.changed ?? false,
   cardHidden: false,
-  layersOpen: false,
+  layersOpen: saved?.layersOpen ?? false,
   filled: false,
   ready: false,
   gantry: null,
@@ -125,7 +138,7 @@ export function progressView() {
 // Horizontal: the drawing turned so both ends of the Clayton Clipper route are level. Its canvas is what is drawn with a margin
 // on every side of HORIZONTAL_MARGIN times the distance between its two ends; it starts zoomed to HORIZONTAL_VIEW_METRES
 // before and after the gantry's span, with the span in the middle
-function horizontalView() {
+export function horizontalView() {
   canvasHorizontal();
   const c = els.gantrySpan;
   if (!c) return;
@@ -222,7 +235,8 @@ export function setZoom(p, cx, cy) {
 // opening in Drawing mode, so switching it off goes to the Full view (the normal view with SFMSF zoom ended, as when Drawing
 // mode is entered from it)
 const startSnap = () => (defaults.drawing ? { ...fullDefaults } : null);
-let drawingSnap = startSnap();
+// (on a reload, the switches saved from before Drawing mode, so switching it off still puts them back)
+let drawingSnap = saved ? (saved.drawingSnap ?? null) : startSnap();
 // Drawing mode's switches: everything on but the aerial photo, the Clayton Clipper span labels, the support beams and the
 // other views
 const drawingSwitches = () => ({
@@ -361,3 +375,21 @@ export function reset() {
   ui.changed = false;
   refresh();
 }
+
+// Save the panel's settings whenever one changes
+$effect.root(() => {
+  $effect(() => {
+    const panel = {
+      layers: $state.snapshot(layers),
+      view: ui.view,
+      changed: ui.changed,
+      layersOpen: ui.layersOpen,
+      drawingSnap,
+    };
+    try {
+      sessionStorage.setItem(SAVED, JSON.stringify(panel));
+    } catch {
+      // storage blocked (a private window, say): settings last until the page is reloaded
+    }
+  });
+});
