@@ -1,7 +1,7 @@
 <script>
   import { LAYERS, labelsAvailable } from "./lib/layers.js";
   import PanelIcon from "./PanelIcon.svelte";
-  import { fly } from "svelte/transition";
+  import { fly, slide } from "svelte/transition";
   import {
     layers,
     ui,
@@ -58,47 +58,58 @@
     Pick a view to start from, then switch layers on or off. Drag the plan to
     pan.
   </p>
-  {#each LAYERS as [group, rows]}
-    <div class="grp">{group}</div>
-    {#if group === "View"}
-      <!-- the views are presets, picked like the zoom buttons; picking the one already on does nothing to the view, as a radio button did -->
-      <div class="views">
-        {#each rows as [k, label]}
-          <button
-            class:on={layers[k]}
-            aria-pressed={layers[k]}
-            onclick={() => {
-              if (!layers[k]) toggle(k, true);
-              // on a phone, picking a view closes the menu to show it
-              if (ui.phone) ui.collapsed = true;
-            }}>{label}</button
-          >
-        {/each}
-      </div>
-    {:else}
-      {#each rows as [k, label]}
-        <label
-          class="row"
-          class:disabled={disabled(k)}
-          style:opacity={opacity(k)}
-          style:display={hidden(k) ? "none" : ""}
-        >
-          <input
-            type="checkbox"
-            checked={layers[k]}
-            disabled={disabled(k)}
-            onchange={(e) => change(e, k)}
-          />{label}
-        </label>
-      {/each}
-    {/if}
-  {/each}
-  <div class="btns">
-    <button onclick={showAll}>Show all</button><button
-      disabled={!ui.changed}
-      onclick={reset}>Reset</button
-    >
+  <div class="grp">View</div>
+  <!-- the views are presets, picked like the zoom buttons; picking the one already on does nothing to the view, as a radio button did -->
+  <div class="views">
+    {#each LAYERS[0][1] as [k, label]}
+      <button
+        class:on={layers[k]}
+        aria-pressed={layers[k]}
+        onclick={() => {
+          if (!layers[k]) toggle(k, true);
+          // on a phone, picking a view closes the menu to show it
+          if (ui.phone) ui.collapsed = true;
+        }}>{label}</button
+      >
+    {/each}
   </div>
+  <!-- the layer switches fold away under Layers, so the panel is short until they are wanted -->
+  <button
+    class="fold"
+    class:open={ui.layersOpen}
+    aria-expanded={ui.layersOpen}
+    aria-controls="layer-list"
+    onclick={() => (ui.layersOpen = !ui.layersOpen)}
+    >Layers<PanelIcon kind="chevron" /></button
+  >
+  {#if ui.layersOpen}
+    <div id="layer-list" transition:slide={{ duration: 150 }}>
+      {#each LAYERS.slice(1) as [group, rows]}
+        <div class="grp">{group}</div>
+        {#each rows as [k, label]}
+          <label
+            class="row"
+            class:disabled={disabled(k)}
+            style:opacity={opacity(k)}
+            style:display={hidden(k) ? "none" : ""}
+          >
+            <input
+              type="checkbox"
+              checked={layers[k]}
+              disabled={disabled(k)}
+              onchange={(e) => change(e, k)}
+            />{label}
+          </label>
+        {/each}
+      {/each}
+      <div class="btns">
+        <button onclick={showAll}>Show all</button><button
+          disabled={!ui.changed}
+          onclick={reset}>Reset</button
+        >
+      </div>
+    </div>
+  {/if}
   <div class="grp">Zoom</div>
   <div class="btns">
     <button
@@ -195,6 +206,22 @@
   }
   .views button {
     text-align: left;
+  }
+  /* a full-width row, tall enough to tap on a phone, with its chevron pointing down when the switches are folded out */
+  .fold {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 44px;
+    margin-top: 14px;
+    font-weight: 600;
+  }
+  .fold :global(svg) {
+    transition: transform 150ms;
+  }
+  .fold.open :global(svg) {
+    transform: rotate(90deg);
   }
   .btns {
     display: flex;
