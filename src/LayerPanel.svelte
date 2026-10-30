@@ -58,7 +58,18 @@
   transition:fly={{ x: -320, opacity: 1, duration: ui.phone ? 200 : 0 }}
 >
   <div class="hd">
-    <h1>Clayton Clipper Tracker</h1>
+    <!-- the title, with a small GitHub mark beside it linking to the site's source -->
+    <div class="ttl">
+      <h1>Clayton Clipper Tracker</h1>
+      <a
+        class="gh"
+        href="https://github.com/molund/omc5"
+        target="_blank"
+        rel="noopener"
+        title="Source on GitHub"
+        aria-label="Source on GitHub"><PanelIcon kind="github" /></a
+      >
+    </div>
     <button
       title={ui.phone ? "Close the menu" : "Hide the layer panel"}
       aria-label={ui.phone ? "Close the menu" : "Hide the layer panel"}
@@ -224,6 +235,23 @@
   }
   .hide {
     padding: calc(6rem / 17);
+  }
+  /* the title and its GitHub mark, side by side; the mark is muted until hovered, so it doesn't compete with the title */
+  .ttl {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .gh {
+    color: var(--mute);
+    border-radius: 4px;
+  }
+  .gh:hover {
+    color: var(--accent);
+  }
+  .gh:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
   }
   .grp {
     margin: 14px 0 4px;
