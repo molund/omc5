@@ -20,6 +20,13 @@ export const LAYERS = [
     ],
   ],
   [
+    "Gantry",
+    [
+      ["gantry", "Full gantry", "gantry", false],
+      ["beams", "Support beams only", "gantry-beams", false],
+    ],
+  ],
+  [
     "Reference",
     [
       ["aerial", "Aerial photo", "aerial", true],
@@ -31,13 +38,6 @@ export const LAYERS = [
       ["creeks", "Creeks", "creeks", false],
       ["railway", "Old railway line", "railway", false],
       ["walk", "Walking paths", "walk-paths", false],
-    ],
-  ],
-  [
-    "Gantry",
-    [
-      ["gantry", "Full gantry", "gantry", false],
-      ["beams", "Support beams only", "gantry-beams", false],
     ],
   ],
   [
