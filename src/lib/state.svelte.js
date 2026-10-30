@@ -24,7 +24,8 @@ export const PHONE = matchMedia("(max-width: 760px)");
 // date by App.svelte; collapsed hides the panel (a phone opens on the plan, with the menu closed); changed is whether a layer
 // switch has been changed since the view was picked or reset, which is when Reset has something to do; filled is whether the
 // plan is at a view's opening fill (see fillView); cardHidden is whether
-// the progress card has been dismissed (an information button brings it back)
+// the progress card has been dismissed (an information button brings it back); layersOpen is whether the layer switches are
+// folded out under Layers in the panel (folded away when the page opens)
 export const ui = $state({
   // the view last picked (a View group key), which stays put while layers are switched on and off
   view: defaults.progress
@@ -38,6 +39,7 @@ export const ui = $state({
   collapsed: PHONE.matches,
   changed: false,
   cardHidden: false,
+  layersOpen: false,
   filled: false,
   ready: false,
   gantry: null,
