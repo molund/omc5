@@ -1,6 +1,6 @@
 <script>
   // panel: a window with a sidebar (show or hide the layer panel); menu: three lines (open the menu on a phone); close: a
-  // cross (close it, or the progress card); progress: a progress ring (bring the progress card back)
+  // cross (close it, or the progress card); progress: an information icon (bring the progress card back)
   let { kind = "panel" } = $props();
 </script>
 
@@ -20,9 +20,10 @@
     <line x1="2.5" y1="9" x2="15.5" y2="9" />
     <line x1="2.5" y1="13.5" x2="15.5" y2="13.5" />
   {:else if kind === "progress"}
-    <!-- a progress ring: the track, and a third of it filled clockwise from the top -->
-    <circle cx="9" cy="9" r="6.25" stroke-width="2.5" stroke-opacity="0.35" />
-    <path d="M9 2.75 A6.25 6.25 0 0 1 14.95 10.93" stroke-width="2.5" />
+    <!-- an information icon: an "i" in a circle -->
+    <circle cx="9" cy="9" r="7.25" />
+    <line x1="9" y1="8" x2="9" y2="12.75" />
+    <circle cx="9" cy="5.25" r="0.6" fill="currentColor" />
   {:else if kind === "close"}
     <line x1="4" y1="4" x2="14" y2="14" />
     <line x1="14" y1="4" x2="4" y2="14" />
