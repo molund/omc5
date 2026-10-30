@@ -8,5 +8,5 @@ complete: true
 # every note, newest first, each stamped with the time of the update that added it; the progress card shows only the newest,
 # under the date (an empty note shows none)
 notes:
-  - 2026-10-29T18:30-07:00: "Span 35's segments are glued, and Dywidag is post-tensioning now. The night shift should finish it. That makes the Clayton Clipper one-third done: 35 of 105 spans. The gantry hasn't moved yet."
+  - 2026-10-29T18:30-07:00: "Span 35's segments are glued, and Dywidag is post-tensioning now. The night shift should finish it. That makes the Clayton Clipper one-third done: 35 of 105 spans."
   - 2026-10-29T06:45-07:00: "All segments for span 35 are hung. A new precast beam arrived at the construction yard overnight. It will likely be installed in span 34, along with the beam that was already on site."

@@ -20,13 +20,13 @@ export const LAYERS = [
     ],
   ],
   [
-    "Base",
+    "Reference",
     [
       ["aerial", "Aerial photo", "aerial", true],
+      ["greenbelt", "Greenbelt", "greenbelt", false],
       ["roads", "Roads", "roads", true],
       ["yard", "Construction yard", "yard", false],
       ["ave72", "Future 72 Ave", "ave72", false],
-      ["greenbelt", "Greenbelt", "greenbelt", false],
       ["creeks", "Creeks", "creeks", false],
       ["railway", "Old railway line", "railway", false],
       ["walk", "Walking paths", "walk-paths", false],
