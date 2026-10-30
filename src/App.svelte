@@ -84,7 +84,7 @@
     background: rgba(0, 0, 0, 0.35);
   }
   .expand {
-    padding: 6px;
+    padding: calc(6rem / 17);
     position: fixed;
     top: calc(env(safe-area-inset-top, 0px) + 10px);
     left: 10px;

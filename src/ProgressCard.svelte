@@ -156,7 +156,7 @@
     top: 12px;
     right: 12px;
     z-index: 5;
-    padding: 6px;
+    padding: calc(6rem / 17);
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
   }
   .title {
