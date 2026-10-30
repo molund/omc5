@@ -25,9 +25,9 @@
   const opacity = (k) => (disabled(k) ? "0.4" : "");
   // greenbelt and creeks only in drawing mode, roads, construction yard, walking paths and highway labels in the two SFMSF
   // views (drawing mode and SFMSF zoom),
-  // aerial photo everywhere but drawing mode, and the SFMSF span labels only for Mike
+  // aerial photo everywhere but drawing mode, and the SFMSF span labels and the support beams on their own only for Mike
   function hidden(k) {
-    if (k === "labels") return !isMike;
+    if (k === "labels" || k === "beams") return !isMike;
     if (k === "greenbelt" || k === "creeks") return !layers.drawing;
     if (k === "roads" || k === "yard" || k === "walk" || k === "roadlabels")
       return !(layers.drawing || layers.sfzoom);
@@ -39,18 +39,10 @@
   const groupHidden = (group) =>
     (group === "Reference" && !sfmsf) ||
     (group === "Built by" && (!isMike || sfmsf));
-  // the switches picked from a row of buttons, Off or a style: the gantry, one layer drawn one way or the other; keyed by its
-  // first row in LAYERS, where the buttons go, with its label (none for the gantry, which has the Gantry heading) and its styles
-  const PAIRS = {
-    gantry: [
-      null,
-      [
-        ["gantry", "On"],
-        ["beams", "Beams only"],
-      ],
-    ],
-  };
-  const PAIRED = ["beams"];
+  // switches picked from a row of buttons, Off or a style, instead of checkboxes (none at the moment): keyed by the first row
+  // in LAYERS, where the buttons go, with its label (or none) and its styles; PAIRED lists the other rows they cover
+  const PAIRS = {};
+  const PAIRED = [];
   // the style showing (null for Off): the first if both are on (Show all turns on both gantry switches, and the drawing shows the full gantry)
   const picked = (opts) => opts.find(([k]) => layers[k])?.[0] ?? null;
   function change(e, k) {
