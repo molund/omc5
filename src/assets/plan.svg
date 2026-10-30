@@ -2187,473 +2187,516 @@
       <!-- E-O: span letters on the eastbound precast track (17 px; white halo on to-do spans), old span numbers 1-11 centred on the gantry boxes -->
       <text
         class="n spanlabel"
-        x="-656.33"
-        y="-79.06"
+        x="-656.32"
+        y="-83.06"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #ffffff"
-        transform="rotate(28.2 -656.33 -82.12)"
+        transform="rotate(28.2 -656.32 -83.06)"
       >
         E
       </text>
       <text
         class="n spanlabel"
-        x="-760.20"
-        y="-140.50"
+        x="-760.33"
+        y="-144.27"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #ffffff"
-        transform="rotate(32.2 -760.20 -143.56)"
+        transform="rotate(32.2 -760.33 -144.27)"
       >
         F
       </text>
       <text
         class="n spanlabel"
-        x="-862.42"
-        y="-206.07"
+        x="-862.50"
+        y="-209.92"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #ffffff"
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
-        transform="rotate(33.3 -862.42 -209.13)"
+        transform="rotate(33.3 -862.50 -209.92)"
       >
         G
       </text>
       <text
         class="n spanlabel"
-        x="-862.42"
-        y="-206.07"
+        x="-862.50"
+        y="-209.92"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #767676"
-        transform="rotate(33.3 -862.42 -209.13)"
+        transform="rotate(33.3 -862.50 -209.92)"
       >
         G
       </text>
       <text
         class="n spanlabel"
-        x="-963.82"
-        y="-272.90"
+        x="-963.99"
+        y="-276.63"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #ffffff"
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
-        transform="rotate(33.7 -963.82 -275.96)"
+        transform="rotate(33.7 -963.99 -276.63)"
       >
         H
       </text>
       <text
         class="n spanlabel"
-        x="-963.82"
-        y="-272.90"
+        x="-963.99"
+        y="-276.63"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #767676"
-        transform="rotate(33.7 -963.82 -275.96)"
+        transform="rotate(33.7 -963.99 -276.63)"
       >
         H
       </text>
       <text
         class="n spanlabel"
-        x="-1066.01"
-        y="-338.46"
+        x="-1065.29"
+        y="-343.52"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #ffffff"
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
-        transform="rotate(33.5 -1066.01 -341.52)"
+        transform="rotate(33.5 -1065.29 -343.52)"
       >
         I
       </text>
       <text
         class="n spanlabel"
-        x="-1066.01"
-        y="-338.46"
+        x="-1065.29"
+        y="-343.52"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #767676"
-        transform="rotate(33.5 -1066.01 -341.52)"
+        transform="rotate(33.5 -1065.29 -343.52)"
       >
         I
       </text>
       <text
         class="n spanlabel"
-        x="-1159.30"
-        y="-400.22"
+        x="-1158.55"
+        y="-405.32"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #ffffff"
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
-        transform="rotate(33.5 -1159.30 -403.28)"
+        transform="rotate(33.5 -1158.55 -405.32)"
       >
         J
       </text>
       <text
         class="n spanlabel"
-        x="-1159.30"
-        y="-400.22"
+        x="-1158.55"
+        y="-405.32"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #767676"
-        transform="rotate(33.5 -1159.30 -403.28)"
+        transform="rotate(33.5 -1158.55 -405.32)"
       >
         J
       </text>
       <text
         class="n spanlabel"
-        x="-1249.71"
-        y="-464.59"
+        x="-1250.53"
+        y="-467.37"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #ffffff"
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
-        transform="rotate(34.5 -1249.71 -467.65)"
+        transform="rotate(34.5 -1250.53 -467.37)"
       >
         K
       </text>
       <text
         class="n spanlabel"
-        x="-1249.71"
-        y="-464.59"
+        x="-1250.53"
+        y="-467.37"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #767676"
-        transform="rotate(34.5 -1249.71 -467.65)"
+        transform="rotate(34.5 -1250.53 -467.37)"
       >
         K
       </text>
       <text
         class="n spanlabel"
-        x="-1350.35"
-        y="-531.82"
+        x="-1350.81"
+        y="-535.11"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #ffffff"
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
-        transform="rotate(33.7 -1350.35 -534.88)"
+        transform="rotate(33.7 -1350.81 -535.11)"
       >
         L
       </text>
       <text
         class="n spanlabel"
-        x="-1350.35"
-        y="-531.82"
+        x="-1350.81"
+        y="-535.11"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #767676"
-        transform="rotate(33.7 -1350.35 -534.88)"
+        transform="rotate(33.7 -1350.81 -535.11)"
       >
         L
       </text>
       <text
         class="n spanlabel"
-        x="-1454.36"
-        y="-595.98"
+        x="-1453.68"
+        y="-601.07"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #ffffff"
-        transform="rotate(31.5 -1454.36 -599.04)"
+        transform="rotate(31.5 -1453.68 -601.07)"
       >
         M
       </text>
       <text
         class="n spanlabel"
-        x="-1558.26"
-        y="-659.96"
+        x="-1557.67"
+        y="-664.90"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #ffffff"
-        transform="rotate(31.5 -1558.26 -663.02)"
+        transform="rotate(31.5 -1557.67 -664.90)"
       >
         N
       </text>
       <text
         class="n spanlabel"
-        x="-1660.36"
-        y="-726.09"
+        x="-1660.44"
+        y="-729.94"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #ffffff"
-        transform="rotate(32.8 -1660.36 -729.15)"
+        transform="rotate(32.8 -1660.44 -729.94)"
       >
         O
       </text>
       <text
         class="n spanlabel"
-        x="-646.20"
-        y="-92.53"
+        x="-646.06"
+        y="-97.94"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #ffffff"
-        transform="rotate(28.2 -646.20 -95.59)"
+        transform="rotate(28.2 -646.06 -97.94)"
       >
         1
       </text>
       <text
         class="n spanlabel"
-        x="-750.06"
-        y="-154.44"
+        x="-749.65"
+        y="-160.24"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #ffffff"
-        transform="rotate(32.2 -750.06 -157.50)"
+        transform="rotate(32.2 -749.65 -160.24)"
       >
         2
       </text>
       <text
         class="n spanlabel"
-        x="-852.19"
-        y="-219.97"
+        x="-851.74"
+        y="-225.81"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #ffffff"
-        transform="rotate(33.3 -852.19 -223.03)"
+        transform="rotate(33.3 -851.74 -225.81)"
       >
         3
       </text>
       <text
         class="n spanlabel"
-        x="-953.61"
-        y="-286.79"
+        x="-953.21"
+        y="-292.54"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #ffffff"
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
-        transform="rotate(33.7 -953.61 -289.85)"
+        transform="rotate(33.7 -953.21 -292.54)"
       >
         4
       </text>
       <text
         class="n spanlabel"
-        x="-953.61"
-        y="-286.79"
+        x="-953.21"
+        y="-292.54"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #767676"
-        transform="rotate(33.7 -953.61 -289.85)"
+        transform="rotate(33.7 -953.21 -292.54)"
       >
         4
       </text>
       <text
         class="n spanlabel"
-        x="-1055.80"
-        y="-352.38"
+        x="-1054.52"
+        y="-359.47"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #ffffff"
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
-        transform="rotate(33.5 -1055.80 -355.44)"
+        transform="rotate(33.5 -1054.52 -359.47)"
       >
         5
       </text>
       <text
         class="n spanlabel"
-        x="-1055.80"
-        y="-352.38"
+        x="-1054.52"
+        y="-359.47"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #767676"
-        transform="rotate(33.5 -1055.80 -355.44)"
+        transform="rotate(33.5 -1054.52 -359.47)"
       >
         5
       </text>
       <text
         class="n spanlabel"
-        x="-1149.06"
-        y="-414.05"
+        x="-1147.75"
+        y="-421.18"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #ffffff"
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
-        transform="rotate(33.5 -1149.06 -417.11)"
+        transform="rotate(33.5 -1147.75 -421.18)"
       >
         6
       </text>
       <text
         class="n spanlabel"
-        x="-1149.06"
-        y="-414.05"
+        x="-1147.75"
+        y="-421.18"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #767676"
-        transform="rotate(33.5 -1149.06 -417.11)"
+        transform="rotate(33.5 -1147.75 -421.18)"
       >
         6
       </text>
       <text
         class="n spanlabel"
-        x="-1239.47"
-        y="-478.42"
+        x="-1239.71"
+        y="-483.22"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #ffffff"
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
-        transform="rotate(34.5 -1239.47 -481.48)"
+        transform="rotate(34.5 -1239.71 -483.22)"
       >
         7
       </text>
       <text
         class="n spanlabel"
-        x="-1239.47"
-        y="-478.42"
+        x="-1239.71"
+        y="-483.22"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #767676"
-        transform="rotate(34.5 -1239.47 -481.48)"
+        transform="rotate(34.5 -1239.71 -483.22)"
       >
         7
       </text>
       <text
         class="n spanlabel"
-        x="-1340.19"
-        y="-545.67"
+        x="-1340.04"
+        y="-551.05"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #ffffff"
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
-        transform="rotate(33.7 -1340.19 -548.73)"
+        transform="rotate(33.7 -1340.04 -551.05)"
       >
         8
       </text>
       <text
         class="n spanlabel"
-        x="-1340.19"
-        y="-545.67"
+        x="-1340.04"
+        y="-551.05"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #767676"
-        transform="rotate(33.7 -1340.19 -548.73)"
+        transform="rotate(33.7 -1340.04 -551.05)"
       >
         8
       </text>
       <text
         class="n spanlabel"
-        x="-1442.60"
-        y="-611.19"
+        x="-1442.25"
+        y="-616.91"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #ffffff"
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
-        transform="rotate(31.5 -1442.60 -614.25)"
+        transform="rotate(31.5 -1442.25 -616.91)"
       >
         9
       </text>
       <text
         class="n spanlabel"
-        x="-1442.60"
-        y="-611.19"
+        x="-1442.25"
+        y="-616.91"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #767676"
-        transform="rotate(31.5 -1442.60 -614.25)"
+        transform="rotate(31.5 -1442.25 -616.91)"
       >
         9
       </text>
       <text
         class="n spanlabel"
-        x="-1547.92"
-        y="-673.94"
+        x="-1546.73"
+        y="-681.03"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #ffffff"
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
-        transform="rotate(31.5 -1547.92 -677.00)"
+        transform="rotate(31.5 -1546.73 -681.03)"
       >
         10
       </text>
       <text
         class="n spanlabel"
-        x="-1547.92"
-        y="-673.94"
+        x="-1546.73"
+        y="-681.03"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #767676"
-        transform="rotate(31.5 -1547.92 -677.00)"
+        transform="rotate(31.5 -1546.73 -681.03)"
       >
         10
       </text>
       <text
         class="n spanlabel"
-        x="-1649.67"
-        y="-740.57"
+        x="-1649.17"
+        y="-746.50"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #ffffff"
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
-        transform="rotate(32.8 -1649.67 -743.63)"
+        transform="rotate(32.8 -1649.17 -746.50)"
       >
         11
       </text>
       <text
         class="n spanlabel"
-        x="-1649.67"
-        y="-740.57"
+        x="-1649.17"
+        y="-746.50"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #767676"
-        transform="rotate(32.8 -1649.67 -743.63)"
+        transform="rotate(32.8 -1649.17 -746.50)"
       >
         11
       </text>
       <text
         class="n spanlabel"
-        x="-244.50"
-        y="211.29"
+        x="-245.74"
+        y="208.14"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #ffffff"
-        transform="rotate(45.3 -244.50 208.23)"
+        transform="rotate(45.3 -245.74 208.14)"
       >
         A
       </text>
       <text
         class="n spanlabel"
-        x="-339.51"
-        y="124.23"
+        x="-339.87"
+        y="120.27"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #ffffff"
-        transform="rotate(41.3 -339.51 121.17)"
+        transform="rotate(41.3 -339.87 120.27)"
       >
         B
       </text>
       <text
         class="n spanlabel"
-        x="-458.02"
-        y="28.97"
+        x="-457.97"
+        y="24.53"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #ffffff"
-        transform="rotate(37.0 -458.02 25.91)"
+        transform="rotate(37.0 -457.97 24.53)"
       >
         C
       </text>
       <text
         class="n spanlabel"
-        x="-548.22"
-        y="-19.65"
+        x="-547.85"
+        y="-24.71"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #ffffff"
-        transform="rotate(28.4 -548.22 -22.71)"
+        transform="rotate(28.4 -547.85 -24.71)"
       >
         D
       </text>
       <text
         class="n spanlabel"
-        x="-1748.78"
-        y="-784.56"
+        x="-1749.06"
+        y="-788.52"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #ffffff"
-        transform="rotate(34.3 -1748.78 -787.62)"
+        transform="rotate(34.3 -1749.06 -788.52)"
       >
         P
       </text>
       <text
         class="n spanlabel"
-        x="-1833.88"
-        y="-841.77"
+        x="-1833.99"
+        y="-845.98"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px; fill: #ffffff"
-        transform="rotate(33.9 -1833.88 -844.83)"
+        transform="rotate(33.9 -1833.99 -845.98)"
       >
         Q
       </text>
       <text
         class="n spanlabel steel-hwy15"
-        x="-2069.54"
-        y="-1000.61"
+        x="-2069.37"
+        y="-1005.24"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px"
-        transform="rotate(34.4 -2069.54 -1003.67)"
+        transform="rotate(34.4 -2069.37 -1005.24)"
       >
         S
       </text>
@@ -2669,11 +2712,12 @@
       </text>
       <text
         class="n spanlabel steel-hwy15"
-        x="-1943.83"
-        y="-915.36"
+        x="-1943.75"
+        y="-919.86"
+        dy=".36em"
         text-anchor="middle"
         style="font-size: 8.50px"
-        transform="rotate(33.9 -1943.83 -918.42)"
+        transform="rotate(33.9 -1943.75 -919.86)"
       >
         R
       </text>
