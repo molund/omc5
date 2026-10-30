@@ -121,6 +121,7 @@
               </div>{/if}
             <div
               class="seg"
+              class:plain={k === "arrows"}
               role="group"
               aria-label={name ?? group}
               style:opacity={opacity(k)}
@@ -250,11 +251,17 @@
   .views {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 4px;
     margin-top: 6px;
   }
   .views button {
     text-align: left;
+  }
+  /* buttons in the button groups: the views, the Off / style rows, Show all and Reset, and zoom */
+  .views button,
+  .seg button,
+  .btns button {
+    padding: 0.3rem 0.5rem;
   }
   /* a full-width row, tall enough to tap on a phone, with its chevron pointing down when the switches are folded out */
   .fold {
@@ -278,11 +285,18 @@
   .seg {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
+    gap: 4px;
     padding: 6px 4px;
   }
   .seg button {
     flex: 1 1 auto;
+  }
+  /* the direction arrows' Off and On keep their own widths, side by side */
+  .seg.plain {
+    display: block;
+  }
+  .seg.plain button + button {
+    margin-left: 4px;
   }
   .seg button:disabled {
     cursor: default;
@@ -295,7 +309,7 @@
   }
   .btns {
     display: flex;
-    gap: 6px;
+    gap: 4px;
     flex-wrap: wrap;
     margin-top: 10px;
   }
