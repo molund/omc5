@@ -116,7 +116,7 @@
         {#each rows as [k, label]}
           {#if PAIRS[k]}
             {@const [name, opts] = PAIRS[k]}
-            {#if name}<div class="seg-name" style:opacity={opacity(k)}>
+            {#if name}<div class="grp" style:opacity={opacity(k)}>
                 {name}
               </div>{/if}
             <div
@@ -278,10 +278,7 @@
     font-size: calc(16rem / 17);
     font-weight: 700;
   }
-  /* a pair's Off and two styles, side by side; they wrap at a large text size */
-  .seg-name {
-    padding: 6px 4px 0;
-  }
+  /* a pair's Off and two styles, side by side, under a heading like the groups'; they wrap at a large text size */
   .seg {
     display: flex;
     flex-wrap: wrap;
