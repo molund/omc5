@@ -32,6 +32,27 @@
     if (k === "aerial") return layers.drawing;
     return false;
   }
+  // the two pairs of switches that are one layer drawn one way or the other, picked as Off or a style: keyed by the pair's first
+  // row in LAYERS, where its buttons go, with its label (none for the gantry, which has the Gantry heading) and its styles
+  const PAIRS = {
+    gantry: [
+      null,
+      [
+        ["gantry", "Full"],
+        ["beams", "Beams only"],
+      ],
+    ],
+    labels: [
+      "Span labels",
+      [
+        ["cclabels", "Full"],
+        ["labels", "OMC5 only"],
+      ],
+    ],
+  };
+  const PAIRED = ["beams", "cclabels"];
+  // the style showing (null for Off): the first if both are on (Show all turns on both gantry switches, and the drawing shows the full gantry)
+  const picked = (opts) => opts.find(([k]) => layers[k])?.[0] ?? null;
   function change(e, k) {
     toggle(k, e.currentTarget.checked);
     // the mode logic can put the switch straight back (e.g. unticking Full), so match the box to the state
@@ -87,19 +108,44 @@
       {#each LAYERS.slice(1) as [group, rows]}
         <div class="grp">{group}</div>
         {#each rows as [k, label]}
-          <label
-            class="row"
-            class:disabled={disabled(k)}
-            style:opacity={opacity(k)}
-            style:display={hidden(k) ? "none" : ""}
-          >
-            <input
-              type="checkbox"
-              checked={layers[k]}
-              disabled={disabled(k)}
-              onchange={(e) => change(e, k)}
-            />{label}
-          </label>
+          {#if PAIRS[k]}
+            {@const [name, opts] = PAIRS[k]}
+            {#if name}<div class="seg-name" style:opacity={opacity(k)}>
+                {name}
+              </div>{/if}
+            <div
+              class="seg"
+              role="group"
+              aria-label={name ?? group}
+              style:opacity={opacity(k)}
+            >
+              {#each [[null, "Off"], ...opts] as [o, text]}
+                <button
+                  class:on={picked(opts) === o}
+                  aria-pressed={picked(opts) === o}
+                  disabled={disabled(k)}
+                  onclick={() =>
+                    o
+                      ? toggle(o, true)
+                      : opts.forEach(([s]) => toggle(s, false))}>{text}</button
+                >
+              {/each}
+            </div>
+          {:else if !PAIRED.includes(k)}
+            <label
+              class="row"
+              class:disabled={disabled(k)}
+              style:opacity={opacity(k)}
+              style:display={hidden(k) ? "none" : ""}
+            >
+              <input
+                type="checkbox"
+                checked={layers[k]}
+                disabled={disabled(k)}
+                onchange={(e) => change(e, k)}
+              />{label}
+            </label>
+          {/if}
         {/each}
       {/each}
       <div class="btns">
@@ -216,6 +262,23 @@
     min-height: 44px;
     margin-top: 14px;
     font-weight: 600;
+  }
+  /* a pair's Off and two styles, side by side and tall enough to tap; they wrap at a large text size */
+  .seg-name {
+    padding: 6px 4px 0;
+  }
+  .seg {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 6px 4px;
+  }
+  .seg button {
+    flex: 1 1 auto;
+    min-height: 44px;
+  }
+  .seg button:disabled {
+    cursor: default;
   }
   .fold :global(svg) {
     transition: transform 150ms;
