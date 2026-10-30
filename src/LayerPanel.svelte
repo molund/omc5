@@ -278,7 +278,7 @@
   }
   .seg button {
     flex: 1 1 auto;
-    min-height: 44px;
+    min-height: 33px;
   }
   .seg button:disabled {
     cursor: default;
