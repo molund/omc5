@@ -32,6 +32,14 @@
 }
 html {
   scroll-padding-top: env(safe-area-inset-top, 0px);
+  /* 1rem is 17px, the iPhone's default body text size; on iPhones it follows the Text Size setting instead, so text sized
+     in rem (the status notes) grows and shrinks with it. Nothing else uses rem, so the rest of the page is unaffected. */
+  font-size: 17px;
+}
+@supports (font: -apple-system-body) and (-webkit-touch-callout: none) {
+  html {
+    font: -apple-system-body;
+  }
 }
 *,
 *::before,
