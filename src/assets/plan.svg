@@ -2190,8 +2190,8 @@
         x="-656.33"
         y="-79.06"
         text-anchor="middle"
-        style="font-size: 11.05px; fill: #ffffff"
-        transform="rotate(28.2 -656.33 -83.04)"
+        style="font-size: 8.50px; fill: #ffffff"
+        transform="rotate(28.2 -656.33 -82.12)"
       >
         E
       </text>
@@ -2200,8 +2200,8 @@
         x="-760.20"
         y="-140.50"
         text-anchor="middle"
-        style="font-size: 11.05px; fill: #ffffff"
-        transform="rotate(32.2 -760.20 -144.48)"
+        style="font-size: 8.50px; fill: #ffffff"
+        transform="rotate(32.2 -760.20 -143.56)"
       >
         F
       </text>
@@ -2210,11 +2210,11 @@
         x="-862.42"
         y="-206.07"
         text-anchor="middle"
-        style="font-size: 11.05px; fill: #ffffff"
+        style="font-size: 8.50px; fill: #ffffff"
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
-        transform="rotate(33.3 -862.42 -210.05)"
+        transform="rotate(33.3 -862.42 -209.13)"
       >
         G
       </text>
@@ -2223,8 +2223,8 @@
         x="-862.42"
         y="-206.07"
         text-anchor="middle"
-        style="font-size: 11.05px; fill: #767676"
-        transform="rotate(33.3 -862.42 -210.05)"
+        style="font-size: 8.50px; fill: #767676"
+        transform="rotate(33.3 -862.42 -209.13)"
       >
         G
       </text>
@@ -2233,11 +2233,11 @@
         x="-963.82"
         y="-272.90"
         text-anchor="middle"
-        style="font-size: 11.05px; fill: #ffffff"
+        style="font-size: 8.50px; fill: #ffffff"
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
-        transform="rotate(33.7 -963.82 -276.88)"
+        transform="rotate(33.7 -963.82 -275.96)"
       >
         H
       </text>
@@ -2246,8 +2246,8 @@
         x="-963.82"
         y="-272.90"
         text-anchor="middle"
-        style="font-size: 11.05px; fill: #767676"
-        transform="rotate(33.7 -963.82 -276.88)"
+        style="font-size: 8.50px; fill: #767676"
+        transform="rotate(33.7 -963.82 -275.96)"
       >
         H
       </text>
@@ -2256,11 +2256,11 @@
         x="-1066.01"
         y="-338.46"
         text-anchor="middle"
-        style="font-size: 11.05px; fill: #ffffff"
+        style="font-size: 8.50px; fill: #ffffff"
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
-        transform="rotate(33.5 -1066.01 -342.44)"
+        transform="rotate(33.5 -1066.01 -341.52)"
       >
         I
       </text>
@@ -2269,8 +2269,8 @@
         x="-1066.01"
         y="-338.46"
         text-anchor="middle"
-        style="font-size: 11.05px; fill: #767676"
-        transform="rotate(33.5 -1066.01 -342.44)"
+        style="font-size: 8.50px; fill: #767676"
+        transform="rotate(33.5 -1066.01 -341.52)"
       >
         I
       </text>
@@ -2279,11 +2279,11 @@
         x="-1159.30"
         y="-400.22"
         text-anchor="middle"
-        style="font-size: 11.05px; fill: #ffffff"
+        style="font-size: 8.50px; fill: #ffffff"
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
-        transform="rotate(33.5 -1159.30 -404.20)"
+        transform="rotate(33.5 -1159.30 -403.28)"
       >
         J
       </text>
@@ -2292,8 +2292,8 @@
         x="-1159.30"
         y="-400.22"
         text-anchor="middle"
-        style="font-size: 11.05px; fill: #767676"
-        transform="rotate(33.5 -1159.30 -404.20)"
+        style="font-size: 8.50px; fill: #767676"
+        transform="rotate(33.5 -1159.30 -403.28)"
       >
         J
       </text>
@@ -2302,11 +2302,11 @@
         x="-1249.71"
         y="-464.59"
         text-anchor="middle"
-        style="font-size: 11.05px; fill: #ffffff"
+        style="font-size: 8.50px; fill: #ffffff"
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
-        transform="rotate(34.5 -1249.71 -468.57)"
+        transform="rotate(34.5 -1249.71 -467.65)"
       >
         K
       </text>
@@ -2315,8 +2315,8 @@
         x="-1249.71"
         y="-464.59"
         text-anchor="middle"
-        style="font-size: 11.05px; fill: #767676"
-        transform="rotate(34.5 -1249.71 -468.57)"
+        style="font-size: 8.50px; fill: #767676"
+        transform="rotate(34.5 -1249.71 -467.65)"
       >
         K
       </text>
@@ -2325,11 +2325,11 @@
         x="-1350.35"
         y="-531.82"
         text-anchor="middle"
-        style="font-size: 11.05px; fill: #ffffff"
+        style="font-size: 8.50px; fill: #ffffff"
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
-        transform="rotate(33.7 -1350.35 -535.80)"
+        transform="rotate(33.7 -1350.35 -534.88)"
       >
         L
       </text>
@@ -2338,8 +2338,8 @@
         x="-1350.35"
         y="-531.82"
         text-anchor="middle"
-        style="font-size: 11.05px; fill: #767676"
-        transform="rotate(33.7 -1350.35 -535.80)"
+        style="font-size: 8.50px; fill: #767676"
+        transform="rotate(33.7 -1350.35 -534.88)"
       >
         L
       </text>
@@ -2348,8 +2348,8 @@
         x="-1454.36"
         y="-595.98"
         text-anchor="middle"
-        style="font-size: 11.05px; fill: #ffffff"
-        transform="rotate(31.5 -1454.36 -599.96)"
+        style="font-size: 8.50px; fill: #ffffff"
+        transform="rotate(31.5 -1454.36 -599.04)"
       >
         M
       </text>
@@ -2358,8 +2358,8 @@
         x="-1558.26"
         y="-659.96"
         text-anchor="middle"
-        style="font-size: 11.05px; fill: #ffffff"
-        transform="rotate(31.5 -1558.26 -663.94)"
+        style="font-size: 8.50px; fill: #ffffff"
+        transform="rotate(31.5 -1558.26 -663.02)"
       >
         N
       </text>
@@ -2368,8 +2368,8 @@
         x="-1660.36"
         y="-726.09"
         text-anchor="middle"
-        style="font-size: 11.05px; fill: #ffffff"
-        transform="rotate(32.8 -1660.36 -730.07)"
+        style="font-size: 8.50px; fill: #ffffff"
+        transform="rotate(32.8 -1660.36 -729.15)"
       >
         O
       </text>
@@ -2378,8 +2378,8 @@
         x="-646.20"
         y="-92.53"
         text-anchor="middle"
-        style="font-size: 14.3px; fill: #ffffff"
-        transform="rotate(28.2 -646.20 -97.68)"
+        style="font-size: 8.50px; fill: #ffffff"
+        transform="rotate(28.2 -646.20 -95.59)"
       >
         1
       </text>
@@ -2388,8 +2388,8 @@
         x="-750.06"
         y="-154.44"
         text-anchor="middle"
-        style="font-size: 14.3px; fill: #ffffff"
-        transform="rotate(32.2 -750.06 -159.59)"
+        style="font-size: 8.50px; fill: #ffffff"
+        transform="rotate(32.2 -750.06 -157.50)"
       >
         2
       </text>
@@ -2398,8 +2398,8 @@
         x="-852.19"
         y="-219.97"
         text-anchor="middle"
-        style="font-size: 14.3px; fill: #ffffff"
-        transform="rotate(33.3 -852.19 -225.12)"
+        style="font-size: 8.50px; fill: #ffffff"
+        transform="rotate(33.3 -852.19 -223.03)"
       >
         3
       </text>
@@ -2408,11 +2408,11 @@
         x="-953.61"
         y="-286.79"
         text-anchor="middle"
-        style="font-size: 14.3px; fill: #ffffff"
+        style="font-size: 8.50px; fill: #ffffff"
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
-        transform="rotate(33.7 -953.61 -291.94)"
+        transform="rotate(33.7 -953.61 -289.85)"
       >
         4
       </text>
@@ -2421,8 +2421,8 @@
         x="-953.61"
         y="-286.79"
         text-anchor="middle"
-        style="font-size: 14.3px; fill: #767676"
-        transform="rotate(33.7 -953.61 -291.94)"
+        style="font-size: 8.50px; fill: #767676"
+        transform="rotate(33.7 -953.61 -289.85)"
       >
         4
       </text>
@@ -2431,11 +2431,11 @@
         x="-1055.80"
         y="-352.38"
         text-anchor="middle"
-        style="font-size: 14.3px; fill: #ffffff"
+        style="font-size: 8.50px; fill: #ffffff"
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
-        transform="rotate(33.5 -1055.80 -357.53)"
+        transform="rotate(33.5 -1055.80 -355.44)"
       >
         5
       </text>
@@ -2444,8 +2444,8 @@
         x="-1055.80"
         y="-352.38"
         text-anchor="middle"
-        style="font-size: 14.3px; fill: #767676"
-        transform="rotate(33.5 -1055.80 -357.53)"
+        style="font-size: 8.50px; fill: #767676"
+        transform="rotate(33.5 -1055.80 -355.44)"
       >
         5
       </text>
@@ -2454,11 +2454,11 @@
         x="-1149.06"
         y="-414.05"
         text-anchor="middle"
-        style="font-size: 14.3px; fill: #ffffff"
+        style="font-size: 8.50px; fill: #ffffff"
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
-        transform="rotate(33.5 -1149.06 -419.20)"
+        transform="rotate(33.5 -1149.06 -417.11)"
       >
         6
       </text>
@@ -2467,8 +2467,8 @@
         x="-1149.06"
         y="-414.05"
         text-anchor="middle"
-        style="font-size: 14.3px; fill: #767676"
-        transform="rotate(33.5 -1149.06 -419.20)"
+        style="font-size: 8.50px; fill: #767676"
+        transform="rotate(33.5 -1149.06 -417.11)"
       >
         6
       </text>
@@ -2477,11 +2477,11 @@
         x="-1239.47"
         y="-478.42"
         text-anchor="middle"
-        style="font-size: 14.3px; fill: #ffffff"
+        style="font-size: 8.50px; fill: #ffffff"
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
-        transform="rotate(34.5 -1239.47 -483.57)"
+        transform="rotate(34.5 -1239.47 -481.48)"
       >
         7
       </text>
@@ -2490,8 +2490,8 @@
         x="-1239.47"
         y="-478.42"
         text-anchor="middle"
-        style="font-size: 14.3px; fill: #767676"
-        transform="rotate(34.5 -1239.47 -483.57)"
+        style="font-size: 8.50px; fill: #767676"
+        transform="rotate(34.5 -1239.47 -481.48)"
       >
         7
       </text>
@@ -2500,11 +2500,11 @@
         x="-1340.19"
         y="-545.67"
         text-anchor="middle"
-        style="font-size: 14.3px; fill: #ffffff"
+        style="font-size: 8.50px; fill: #ffffff"
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
-        transform="rotate(33.7 -1340.19 -550.82)"
+        transform="rotate(33.7 -1340.19 -548.73)"
       >
         8
       </text>
@@ -2513,8 +2513,8 @@
         x="-1340.19"
         y="-545.67"
         text-anchor="middle"
-        style="font-size: 14.3px; fill: #767676"
-        transform="rotate(33.7 -1340.19 -550.82)"
+        style="font-size: 8.50px; fill: #767676"
+        transform="rotate(33.7 -1340.19 -548.73)"
       >
         8
       </text>
@@ -2523,11 +2523,11 @@
         x="-1442.60"
         y="-611.19"
         text-anchor="middle"
-        style="font-size: 14.3px; fill: #ffffff"
+        style="font-size: 8.50px; fill: #ffffff"
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
-        transform="rotate(31.5 -1442.60 -616.34)"
+        transform="rotate(31.5 -1442.60 -614.25)"
       >
         9
       </text>
@@ -2536,8 +2536,8 @@
         x="-1442.60"
         y="-611.19"
         text-anchor="middle"
-        style="font-size: 14.3px; fill: #767676"
-        transform="rotate(31.5 -1442.60 -616.34)"
+        style="font-size: 8.50px; fill: #767676"
+        transform="rotate(31.5 -1442.60 -614.25)"
       >
         9
       </text>
@@ -2546,11 +2546,11 @@
         x="-1547.92"
         y="-673.94"
         text-anchor="middle"
-        style="font-size: 14.3px; fill: #ffffff"
+        style="font-size: 8.50px; fill: #ffffff"
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
-        transform="rotate(31.5 -1547.92 -679.09)"
+        transform="rotate(31.5 -1547.92 -677.00)"
       >
         10
       </text>
@@ -2559,8 +2559,8 @@
         x="-1547.92"
         y="-673.94"
         text-anchor="middle"
-        style="font-size: 14.3px; fill: #767676"
-        transform="rotate(31.5 -1547.92 -679.09)"
+        style="font-size: 8.50px; fill: #767676"
+        transform="rotate(31.5 -1547.92 -677.00)"
       >
         10
       </text>
@@ -2569,11 +2569,11 @@
         x="-1649.67"
         y="-740.57"
         text-anchor="middle"
-        style="font-size: 14.3px; fill: #ffffff"
+        style="font-size: 8.50px; fill: #ffffff"
         stroke="#FFFFFF"
         stroke-width="0.85"
         stroke-linejoin="round"
-        transform="rotate(32.8 -1649.67 -745.72)"
+        transform="rotate(32.8 -1649.67 -743.63)"
       >
         11
       </text>
@@ -2582,8 +2582,8 @@
         x="-1649.67"
         y="-740.57"
         text-anchor="middle"
-        style="font-size: 14.3px; fill: #767676"
-        transform="rotate(32.8 -1649.67 -745.72)"
+        style="font-size: 8.50px; fill: #767676"
+        transform="rotate(32.8 -1649.67 -743.63)"
       >
         11
       </text>
@@ -2592,8 +2592,8 @@
         x="-244.50"
         y="211.29"
         text-anchor="middle"
-        style="font-size: 12.16px; fill: #ffffff"
-        transform="rotate(45.3 -244.50 206.91)"
+        style="font-size: 8.50px; fill: #ffffff"
+        transform="rotate(45.3 -244.50 208.23)"
       >
         A
       </text>
@@ -2602,8 +2602,8 @@
         x="-339.51"
         y="124.23"
         text-anchor="middle"
-        style="font-size: 12.16px; fill: #ffffff"
-        transform="rotate(41.3 -339.51 119.85)"
+        style="font-size: 8.50px; fill: #ffffff"
+        transform="rotate(41.3 -339.51 121.17)"
       >
         B
       </text>
@@ -2612,8 +2612,8 @@
         x="-458.02"
         y="28.97"
         text-anchor="middle"
-        style="font-size: 12.16px; fill: #ffffff"
-        transform="rotate(37.0 -458.02 24.59)"
+        style="font-size: 8.50px; fill: #ffffff"
+        transform="rotate(37.0 -458.02 25.91)"
       >
         C
       </text>
@@ -2622,8 +2622,8 @@
         x="-548.22"
         y="-19.65"
         text-anchor="middle"
-        style="font-size: 12.16px; fill: #ffffff"
-        transform="rotate(28.4 -548.22 -24.03)"
+        style="font-size: 8.50px; fill: #ffffff"
+        transform="rotate(28.4 -548.22 -22.71)"
       >
         D
       </text>
@@ -2632,8 +2632,8 @@
         x="-1748.78"
         y="-784.56"
         text-anchor="middle"
-        style="font-size: 12.16px; fill: #ffffff"
-        transform="rotate(34.3 -1748.78 -788.94)"
+        style="font-size: 8.50px; fill: #ffffff"
+        transform="rotate(34.3 -1748.78 -787.62)"
       >
         P
       </text>
@@ -2642,8 +2642,8 @@
         x="-1833.88"
         y="-841.77"
         text-anchor="middle"
-        style="font-size: 12.16px; fill: #ffffff"
-        transform="rotate(33.9 -1833.88 -846.15)"
+        style="font-size: 8.50px; fill: #ffffff"
+        transform="rotate(33.9 -1833.88 -844.83)"
       >
         Q
       </text>
@@ -2652,8 +2652,8 @@
         x="-2069.54"
         y="-1000.61"
         text-anchor="middle"
-        style="font-size: 12.16px"
-        transform="rotate(34.4 -2069.54 -1004.99)"
+        style="font-size: 8.50px"
+        transform="rotate(34.4 -2069.54 -1003.67)"
       >
         S
       </text>
@@ -2672,8 +2672,8 @@
         x="-1943.83"
         y="-915.36"
         text-anchor="middle"
-        style="font-size: 12.16px"
-        transform="rotate(33.9 -1943.83 -919.74)"
+        style="font-size: 8.50px"
+        transform="rotate(33.9 -1943.83 -918.42)"
       >
         R
       </text>
