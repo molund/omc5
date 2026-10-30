@@ -11,13 +11,9 @@
     isFit,
   } from "./lib/state.svelte.js";
 
-  // Fit's zoom depends on the stage and canvas shape, so it is worked out when pressed
-  const ZOOMS = [
-    ["Fit", null],
-    ["150%", 150],
-    ["200%", 200],
-    ["300%", 300],
-  ];
+  // each press of zoom in or out changes the zoom by this factor, about the middle of the stage; Fit's zoom depends on the
+  // stage and canvas shape, so it is worked out when pressed
+  const ZOOM_STEP = 1.5;
   const avail = $derived(labelsAvailable(layers));
 
   // the span-label switches need Clayton Clipper spans on screen, so they fade and can't be changed without them
@@ -91,12 +87,18 @@
   </div>
   <div class="grp">Zoom</div>
   <div class="btns">
-    {#each ZOOMS as [text, p]}
-      <button
-        class:on={p == null ? isFit() : Math.abs(p - ui.zoom) < 0.5}
-        onclick={() => setZoom(p ?? fitZoom())}>{text}</button
-      >
-    {/each}
+    <button
+      title="Zoom out"
+      aria-label="Zoom out"
+      disabled={isFit()}
+      onclick={() => setZoom(ui.zoom / ZOOM_STEP)}>−</button
+    >
+    <button class:on={isFit()} onclick={() => setZoom(fitZoom())}>Fit</button>
+    <button
+      title="Zoom in"
+      aria-label="Zoom in"
+      onclick={() => setZoom(ui.zoom * ZOOM_STEP)}>+</button
+    >
   </div>
 </aside>
 
@@ -171,6 +173,12 @@
     gap: 6px;
     flex-wrap: wrap;
     margin-top: 10px;
+  }
+  /* zoom out can't go past Fit */
+  .btns button:disabled {
+    opacity: 0.4;
+    cursor: default;
+    border-color: var(--line);
   }
   @media (max-width: 760px) {
     .side {
