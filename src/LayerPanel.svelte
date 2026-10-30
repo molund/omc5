@@ -93,8 +93,9 @@
     {/if}
   {/each}
   <div class="btns">
-    <button onclick={showAll}>Show all</button><button onclick={reset}
-      >Reset</button
+    <button onclick={showAll}>Show all</button><button
+      disabled={!ui.changed}
+      onclick={reset}>Reset</button
     >
   </div>
   <div class="grp">Zoom</div>
@@ -189,7 +190,7 @@
     flex-wrap: wrap;
     margin-top: 10px;
   }
-  /* zoom out can't go past Fit */
+  /* zoom out can't go past Fit, and Reset has nothing to do until a layer is changed */
   .btns button:disabled {
     opacity: 0.4;
     cursor: default;
