@@ -172,10 +172,10 @@
   <g id="baseoverview" class="aerial">
     <!-- the wide overview aerial: the lowest layer, registered to the low-res screenshots -->
     <image
-      width="2788"
-      height="1958"
+      width="2795"
+      height="1968"
       preserveAspectRatio="none"
-      transform="matrix(4.445894 0.000119 -0.000119 4.445894 -6844.585 -5402.635)"
+      transform="matrix(4.445894 0.000119 -0.000119 4.445894 -6875.705 -5447.095)"
       href="images/aerial-base.jpg"
     />
   </g>
