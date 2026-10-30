@@ -18,7 +18,8 @@ function shown(el, root) {
 function paintedOnlyWhite(el) {
   const cs = getComputedStyle(el);
   const fill = cs.fill === "none" || cs.fillOpacity === "0" ? "none" : cs.fill,
-    stroke = cs.stroke === "none" || cs.strokeOpacity === "0" ? "none" : cs.stroke;
+    stroke =
+      cs.stroke === "none" || cs.strokeOpacity === "0" ? "none" : cs.stroke;
   return WHITE.test(fill) && WHITE.test(stroke);
 }
 
@@ -51,7 +52,8 @@ export function visibleExtent(root, turn, cx, cy) {
       const cp = id && root.getElementById(id[1]);
       if (!cp) continue;
       // the clip path's shapes are in the user space of the element it clips
-      const key = cp.id + "|" + (e.parentElement ? e.getAttribute("transform") : "");
+      const key =
+        cp.id + "|" + (e.parentElement ? e.getAttribute("transform") : "");
       if (!clipBox.has(key)) {
         const ctm = DOMMatrix.fromMatrix(e.getScreenCTM());
         const pts = [...cp.children].flatMap((k) => {
@@ -61,7 +63,9 @@ export function visibleExtent(root, turn, cx, cy) {
             [b.x + b.width, b.y],
             [b.x + b.width, b.y + b.height],
             [b.x, b.y + b.height],
-          ].map(([x, y]) => new DOMPoint(x, y).matrixTransform(ctm).matrixTransform(toRoot));
+          ].map(([x, y]) =>
+            new DOMPoint(x, y).matrixTransform(ctm).matrixTransform(toRoot),
+          );
         });
         clipBox.set(key, {
           x0: Math.min(...pts.map((p) => p.x)),
@@ -72,7 +76,12 @@ export function visibleExtent(root, turn, cx, cy) {
       }
       const k = clipBox.get(key);
       box = box
-        ? { x0: Math.max(box.x0, k.x0), x1: Math.min(box.x1, k.x1), y0: Math.max(box.y0, k.y0), y1: Math.min(box.y1, k.y1) }
+        ? {
+            x0: Math.max(box.x0, k.x0),
+            x1: Math.min(box.x1, k.x1),
+            y0: Math.max(box.y0, k.y0),
+            y1: Math.min(box.y1, k.y1),
+          }
         : k;
     }
     return box;
@@ -100,7 +109,11 @@ export function visibleExtent(root, turn, cx, cy) {
       }));
       const xs = pts.map((p) => p.x),
         ys = pts.map((p) => p.y);
-      if (Math.max(...xs) - Math.min(...xs) < 1e-6 && Math.max(...ys) - Math.min(...ys) < 1e-6) return;
+      if (
+        Math.max(...xs) - Math.min(...xs) < 1e-6 &&
+        Math.max(...ys) - Math.min(...ys) < 1e-6
+      )
+        return;
     }
     pts.map(turned).forEach((p) => {
       if (!left || p.x < left.x) left = p;

@@ -95,7 +95,9 @@ export function placeGantry(root) {
     if (box && d < 0.4 * Math.hypot(front.x - back.x, front.y - back.y)) {
       c = box.c;
       // the box's long edges, pointing forward
-      const edges = box.pts.map((p, i) => sub(box.pts[(i + 1) % box.pts.length], p));
+      const edges = box.pts.map((p, i) =>
+        sub(box.pts[(i + 1) % box.pts.length], p),
+      );
       edges.sort((a, b) => Math.hypot(b.x, b.y) - Math.hypot(a.x, a.y));
       const e = edges
         .slice(0, 2)
@@ -120,7 +122,9 @@ export function placeGantry(root) {
   const needed = [S - 1, S, D - 1, D];
   const spans = Object.fromEntries(needed.map((n) => [n, span(n)]));
   if (needed.some((n) => !spans[n])) {
-    console.warn(`gantry: span ${S} or a span next to it has no joints; left where it is drawn`);
+    console.warn(
+      `gantry: span ${S} or a span next to it has no joints; left where it is drawn`,
+    );
     return;
   }
   const angle = (u) => (Math.atan2(u.y, u.x) * 180) / Math.PI;
@@ -142,9 +146,14 @@ export function placeGantry(root) {
       now = spans[S + rule.span];
     let to;
     if (rule.along) {
-      const t = dot(sub(from, was.back), was.u) / dot(sub(was.front, was.back), was.u),
+      const t =
+          dot(sub(from, was.back), was.u) /
+          dot(sub(was.front, was.back), was.u),
         across = dot(sub(from, was.c), was.v);
-      to = add(add(now.back, mul(sub(now.front, now.back), t)), mul(now.v, across));
+      to = add(
+        add(now.back, mul(sub(now.front, now.back), t)),
+        mul(now.v, across),
+      );
     } else {
       const off = sub(from, was[rule.end]);
       to = add(

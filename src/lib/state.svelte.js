@@ -20,7 +20,11 @@ export const layers = $state({ ...defaults });
 // rules once plan.svg is tagged; gantry is the Clayton Clipper's span number out of the total
 export const ui = $state({
   // the view last picked (a View group key), which stays put while layers are switched on and off
-  view: defaults.progress ? "progress" : defaults.drawing ? "drawing" : "sfzoom",
+  view: defaults.progress
+    ? "progress"
+    : defaults.drawing
+      ? "drawing"
+      : "sfzoom",
   zoom: 187.31,
   fit: 100,
   collapsed: false,
@@ -61,7 +65,8 @@ const [fx0, fy0, fw, fh] = FULL_VB.split(" ").map(Number),
 export function setView(vb, turn = 0) {
   const wasFit = isFit();
   if (els.turn) {
-    if (turn) els.turn.setAttribute("transform", `rotate(${turn} ${TURN_X} ${TURN_Y})`);
+    if (turn)
+      els.turn.setAttribute("transform", `rotate(${turn} ${TURN_X} ${TURN_Y})`);
     else els.turn.removeAttribute("transform");
   }
   els.svg.setAttribute("viewBox", vb);
@@ -83,9 +88,11 @@ export function progressView() {
   const stage = els.stage,
     r = els.svg.getBoundingClientRect();
   stage.scrollLeft =
-    ((c.x - vb.x) / vb.width) * r.width - stage.clientWidth * PROGRESS_SPAN_AT.x;
+    ((c.x - vb.x) / vb.width) * r.width -
+    stage.clientWidth * PROGRESS_SPAN_AT.x;
   stage.scrollTop =
-    ((c.y - vb.y) / vb.height) * r.height - stage.clientHeight * PROGRESS_SPAN_AT.y;
+    ((c.y - vb.y) / vb.height) * r.height -
+    stage.clientHeight * PROGRESS_SPAN_AT.y;
 }
 
 // Horizontal: the drawing turned so both ends of the Clayton Clipper route are level. Its canvas is what is drawn with a margin
@@ -103,8 +110,10 @@ function horizontalView() {
     y = TURN_Y + (c.x - TURN_X) * Math.sin(r) + (c.y - TURN_Y) * Math.cos(r);
   const stage = els.stage,
     box = els.svg.getBoundingClientRect();
-  stage.scrollLeft = ((x - vb.x) / vb.width) * box.width - stage.clientWidth / 2;
-  stage.scrollTop = ((y - vb.y) / vb.height) * box.height - stage.clientHeight / 2;
+  stage.scrollLeft =
+    ((x - vb.x) / vb.width) * box.width - stage.clientWidth / 2;
+  stage.scrollTop =
+    ((y - vb.y) / vb.height) * box.height - stage.clientHeight / 2;
 }
 // Horizontal's canvas, fitted
 function canvasHorizontal() {
@@ -113,10 +122,15 @@ function canvasHorizontal() {
   els.turn.removeAttribute("transform");
   const e = visibleExtent(els.svg, els.routeAngle, TURN_X, TURN_Y);
   if (!e) return turnedFullView();
-  const m = HORIZONTAL_MARGIN * Math.hypot(e.right.x - e.left.x, e.right.y - e.left.y),
+  const m =
+      HORIZONTAL_MARGIN *
+      Math.hypot(e.right.x - e.left.x, e.right.y - e.left.y),
     x = e.left.x - m,
     y = e.top.y - m;
-  setView(`${x} ${y} ${e.right.x + m - x} ${e.bottom.y + m - y}`, els.routeAngle);
+  setView(
+    `${x} ${y} ${e.right.x + m - x} ${e.bottom.y + m - y}`,
+    els.routeAngle,
+  );
   setZoom(fitZoom());
 }
 // the whole canvas, turned level, all of it in view (when there is nothing drawn to measure)
@@ -137,7 +151,10 @@ function turnedFullView() {
     ys = pts.map((p) => p[1]),
     x = Math.min(...xs),
     y = Math.min(...ys);
-  setView(`${x} ${y} ${Math.max(...xs) - x} ${Math.max(...ys) - y}`, els.routeAngle);
+  setView(
+    `${x} ${y} ${Math.max(...xs) - x} ${Math.max(...ys) - y}`,
+    els.routeAngle,
+  );
   setZoom(fitZoom());
 }
 
@@ -241,7 +258,9 @@ export function toggle(k, checked) {
       // leaving Progress puts back the switches it starts with as Full image has them (Full image, Horizontal and SFMSF drawing
       // set their own)
       if (layers.progress)
-        Object.keys(PROGRESS_DEFAULTS).forEach((key) => (layers[key] = fullDefaults[key]));
+        Object.keys(PROGRESS_DEFAULTS).forEach(
+          (key) => (layers[key] = fullDefaults[key]),
+        );
       layers.sfzoom = true;
       layers.progress = false;
       setView(ZOOM_VB);
@@ -279,9 +298,14 @@ export function showAll() {
 
 export function reset() {
   drawingSnap = startSnap();
-  ui.view = defaults.progress ? "progress" : defaults.drawing ? "drawing" : "sfzoom";
+  ui.view = defaults.progress
+    ? "progress"
+    : defaults.drawing
+      ? "drawing"
+      : "sfzoom";
   Object.assign(layers, defaults);
   refresh();
   if (defaults.progress) progressView();
-  else setView(defaults.drawing ? DRAW_VB : defaults.sfzoom ? ZOOM_VB : FULL_VB);
+  else
+    setView(defaults.drawing ? DRAW_VB : defaults.sfzoom ? ZOOM_VB : FULL_VB);
 }

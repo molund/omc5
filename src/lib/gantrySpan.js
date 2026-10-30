@@ -51,7 +51,11 @@ export function gantrySpan(root, complete) {
       x += L.getItem(i).x;
       y += L.getItem(i).y;
     }
-    return { el, n: nearest(toCanvas(el, x / k, y / k)), c: toCanvas(el, x / k, y / k) };
+    return {
+      el,
+      n: nearest(toCanvas(el, x / k, y / k)),
+      c: toCanvas(el, x / k, y / k),
+    };
   });
   let done;
   if (complete != null) {
@@ -69,7 +73,9 @@ export function gantrySpan(root, complete) {
     const on = pieces.filter((p) => p.n === span),
       boxes = on.filter((p) => p.el.matches(".gi, .p")),
       decide = boxes.length ? boxes : on;
-    done = !decide.length || decide.some((p) => !p.el.classList.contains("unfinished"));
+    done =
+      !decide.length ||
+      decide.some((p) => !p.el.classList.contains("unfinished"));
   }
   const count = done ? span : span - 1;
   pieces.forEach((p) => {
@@ -91,7 +97,11 @@ export function gantrySpan(root, complete) {
     });
     if (!under || under.classList.contains("unfinished")) return;
     if (t.getAttribute("stroke") === "#FFFFFF") t.remove();
-    else if (t.style.fill && t.style.fill !== "rgb(255, 255, 255)" && t.style.fill !== "#ffffff")
+    else if (
+      t.style.fill &&
+      t.style.fill !== "rgb(255, 255, 255)" &&
+      t.style.fill !== "#ffffff"
+    )
       t.style.fill = "#ffffff";
   });
   // a span number sitting on a reached, finished piece (the one with its centre nearest the number) is tagged "on-reached", so
@@ -108,10 +118,18 @@ export function gantrySpan(root, complete) {
         under = p.el;
       }
     });
-    if (under && under.classList.contains("reached") && !under.classList.contains("unfinished"))
+    if (
+      under &&
+      under.classList.contains("reached") &&
+      !under.classList.contains("unfinished")
+    )
       t.classList.add("on-reached");
   });
-  return { span: count, ahead: westboundAhead(root, pieces, anchors, span, toCanvas), total: labels.length };
+  return {
+    span: count,
+    ahead: westboundAhead(root, pieces, anchors, span, toCanvas),
+    total: labels.length,
+  };
 }
 
 // Completed westbound spans ahead of the gantry: the spans numbered past it whose westbound track is already finished (crane
@@ -132,20 +150,28 @@ function westboundAhead(root, pieces, anchors, span, toCanvas) {
     );
   const bent = (n) => {
     if (!at[n] || !at[n + 1]) return null;
-    const m = { x: (at[n].x + at[n + 1].x) / 2, y: (at[n].y + at[n + 1].y) / 2 };
+    const m = {
+      x: (at[n].x + at[n + 1].x) / 2,
+      y: (at[n].y + at[n + 1].y) / 2,
+    };
     return caps.reduce((a, k) =>
-      Math.hypot(k.x - m.x, k.y - m.y) < Math.hypot(a.x - m.x, a.y - m.y) ? k : a,
+      Math.hypot(k.x - m.x, k.y - m.y) < Math.hypot(a.x - m.x, a.y - m.y)
+        ? k
+        : a,
     );
   };
   const counted = new Set();
   pieces.forEach(({ el, n, c }) => {
-    if (n <= span || counted.has(n) || el.classList.contains("unfinished")) return;
+    if (n <= span || counted.has(n) || el.classList.contains("unfinished"))
+      return;
     const a = bent(n - 1),
       b = bent(n);
     if (!a || !b) return;
     const ux = b.x - a.x,
       uy = b.y - a.y,
-      side = (ux * (c.y - (a.y + b.y) / 2) - uy * (c.x - (a.x + b.x) / 2)) / Math.hypot(ux, uy);
+      side =
+        (ux * (c.y - (a.y + b.y) / 2) - uy * (c.x - (a.x + b.x) / 2)) /
+        Math.hypot(ux, uy);
     // more than a couple of units off the centre line, so a full-width box doesn't count as one track
     if (side > 2) counted.add(n);
   });
