@@ -128,7 +128,7 @@
     /* Guideway (spans, beams, ramps, direction arrows; not bents/hammers/tulips): change display:none to display:inline to show it */
     .guideway {
       display: inline;
-    } /* Steel spans R and S by Hwy 15, with their hammerheads, column dots, letters and arrows (Q/R bent stays): change display:inline to display:none to hide them */
+    } /* Steel spans R and S by Hwy 15, with their letters and arrows (their hammerheads and column dots go with the supports): change display:inline to display:none to hide them */
     .steel-hwy15,
     .guideway.steel-hwy15,
     .spanlabel.steel-hwy15 {
@@ -1572,7 +1572,7 @@
           rx="2"
         />
         <rect
-          class="g steel-hwy15"
+          class="g"
           x="302.69"
           y="2189.50"
           width="25.59"
@@ -1580,7 +1580,7 @@
           rx="2"
         />
         <rect
-          class="g steel-hwy15"
+          class="g"
           x="305.11"
           y="2356.36"
           width="21.87"
@@ -1588,7 +1588,7 @@
           rx="2"
         />
         <rect
-          class="g steel-hwy15"
+          class="g"
           x="305.19"
           y="2496.75"
           width="21.43"
@@ -1596,7 +1596,7 @@
           rx="2"
         />
         <rect
-          class="g steel-hwy15"
+          class="g"
           x="299.19"
           y="2699.00"
           width="28.88"
@@ -1629,28 +1629,24 @@
         <circle cx="310.77" cy="1937.00" r="2.5" fill="#D7D7D7" />
         <circle cx="314.46" cy="2057.97" r="2.5" fill="#D7D7D7" />
         <circle
-          class="steel-hwy15"
           cx="315.49"
           cy="2194.50"
           r="2.5"
           fill="#D7D7D7"
         />
         <circle
-          class="steel-hwy15"
           cx="316.04"
           cy="2361.36"
           r="2.5"
           fill="#D7D7D7"
         />
         <circle
-          class="steel-hwy15"
           cx="315.91"
           cy="2501.75"
           r="2.5"
           fill="#D7D7D7"
         />
         <circle
-          class="steel-hwy15"
           cx="313.63"
           cy="2704.00"
           r="2.5"
@@ -6960,7 +6956,7 @@
   <g id="nw-hammer-b">
     <!-- exact copy of the existing hammer at the west end of the Hwy 15 steel spans (CC 47), drawn on top of wide span 48 -->
     <rect
-      class="g steel-hwy15 cc"
+      class="g cc"
       x="305.19"
       y="2496.75"
       width="21.43"
@@ -6969,7 +6965,7 @@
       transform="matrix(-0.620704 0.920232 -0.920232 -0.620704 2397.600031 1060.140015)"
     />
     <circle
-      class="steel-hwy15 cc"
+      class="cc"
       cx="315.91"
       cy="2501.75"
       r="2.5"
