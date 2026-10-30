@@ -160,17 +160,17 @@
     </div>
   {/if}
   <div class="grp">Zoom</div>
-  <div class="btns">
-    <button
-      title="Zoom in"
-      aria-label="Zoom in"
-      onclick={() => setZoom(ui.zoom * ZOOM_STEP)}>+</button
-    >
+  <div class="btns zoom">
     <button
       title="Zoom out"
       aria-label="Zoom out"
       disabled={isFit()}
       onclick={() => setZoom(ui.zoom / ZOOM_STEP)}>−</button
+    >
+    <button
+      title="Zoom in"
+      aria-label="Zoom in"
+      onclick={() => setZoom(ui.zoom * ZOOM_STEP)}>+</button
     >
     <button class:on={isFit()} onclick={() => setZoom(fitZoom())}>Fit</button>
     <button
@@ -295,6 +295,10 @@
     gap: 6px;
     flex-wrap: wrap;
     margin-top: 10px;
+  }
+  /* the four zoom buttons share the panel's width equally, lining up with the full-width buttons above */
+  .zoom button {
+    flex: 1;
   }
   /* zoom out can't go past Fit, Center has nothing to move at Fit, and Reset has nothing to do until a layer is changed */
   .btns button:disabled {
