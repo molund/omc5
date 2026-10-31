@@ -1,17 +1,13 @@
 <script>
   // The past updates page: every status note, newest first, each with an id from its time stamp (e.g. #2026-10-30T20-45) so
   // a single update can be linked to
+  import { onMount } from "svelte";
   import { status, asOf } from "./lib/status.js";
+  import { anchor, term, fetchCounts } from "./lib/comments.js";
 
   const MAP = import.meta.env.BASE_URL;
-  const anchor = (t) =>
-    t
-      .toISOString()
-      .slice(0, 16)
-      .replace(/:/g, "-");
-
-  // Comments: one GitHub Discussion per update, through giscus, in the "Past Updates page comments" category. Each update's
-  // thread is titled by its Yukon time, e.g. "Update 2026-10-31 09:30" (the title must never change, or the thread is lost).
+  // Comments: one GitHub Discussion per update, through giscus, in the "Past Updates page comments" category, titled by
+  // term() in lib/comments.js
   const GISCUS = {
     "data-repo": "molund/omc5",
     "data-repo-id": "R_kgDOVbOMWA",
@@ -27,55 +23,8 @@
     crossorigin: "anonymous",
     async: "",
   };
-  const term = (t) =>
-    "Update " +
-    new Intl.DateTimeFormat("en-CA", {
-      timeZone: "America/Whitehorse",
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      hourCycle: "h23",
-    })
-      .format(t)
-      .replace(",", "");
-  // Comment and reaction counts for every update's thread, from GitHub's public API (no login; 60 requests an hour per
-  // visitor, and the page makes one), keyed by thread title. Until they arrive, or if GitHub can't be reached, the links
-  // just say "Comments".
-  const EMOJI = {
-    "+1": "👍",
-    "-1": "👎",
-    laugh: "😄",
-    hooray: "🎉",
-    confused: "😕",
-    heart: "❤️",
-    rocket: "🚀",
-    eyes: "👀",
-  };
   let counts = $state({});
-  // One request only: GitHub's first 100 threads. The deploy workflow fails once the category reaches 100 threads, as a
-  // reminder to rethink this before older updates start missing their counts.
-  function countsFor() {
-    fetch("https://api.github.com/repos/molund/omc5/discussions?per_page=100", {
-      headers: { Accept: "application/vnd.github+json" },
-    })
-      .then((r) => (r.ok ? r.json() : []))
-      .then((list) => {
-        const out = {};
-        list.forEach((d) => {
-          out[d.title] = {
-            comments: d.comments,
-            reactions: Object.keys(EMOJI)
-              .filter((k) => d.reactions?.[k] > 0)
-              .map((k) => [EMOJI[k], d.reactions[k]]),
-          };
-        });
-        counts = out;
-      })
-      .catch(() => {});
-  }
-  countsFor();
+  fetchCounts().then((c) => (counts = c));
 
   // Pages of 10 updates, newest first. The page is in the address (?page=2), so the browser's back button and shared links
   // work; a link to one update (#2026-10-31T16-30) opens the page it is on.
@@ -104,8 +53,17 @@
   }
 
   // the anchor of the update whose comments are open (one at a time, so the page stays light); a string, since $state would
-  // wrap an update object in a proxy that never equals the original
-  let open = $state(null);
+  // wrap an update object in a proxy that never equals the original. ?comments#2026-10-31T16-30 (the progress card's Comments
+  // button) opens that update's comments and scrolls to it.
+  let open = $state(
+    new URLSearchParams(location.search).has("comments") && location.hash
+      ? location.hash.slice(1)
+      : null,
+  );
+  onMount(() => {
+    if (location.hash)
+      document.getElementById(location.hash.slice(1))?.scrollIntoView();
+  });
   // load giscus into the element for this update's thread
   function giscus(el, t) {
     const s = document.createElement("script");

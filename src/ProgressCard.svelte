@@ -2,12 +2,22 @@
   import { PROGRESS_COLOUR } from "./lib/layerSwitches.js";
   import { layers, ui } from "./lib/appState.svelte.js";
   import { status, asOf } from "./lib/status.js";
+  import { anchor, term, fetchCounts } from "./lib/comments.js";
   import Icon from "./Icon.svelte";
 
   // "today" or "yesterday" on the card (the past updates list keeps full dates)
   const when = asOf(status.updated, true);
   // the past updates page
   const UPDATES = `${import.meta.env.BASE_URL}updates/`;
+  // the Comments button opens the newest update on that page with its comments open, and shows its comment and reaction
+  // counts once GitHub has sent them
+  const newest = status.history[0];
+  const COMMENTS = newest
+    ? `${UPDATES}?comments#${anchor(newest.time)}`
+    : UPDATES;
+  let activity = $state(null);
+  if (newest)
+    fetchCounts().then((c) => (activity = c[term(newest.time)] ?? null));
 
   // what each number counts, shown when it is hovered or clicked with a mouse, tapped (tap again to hide) or pressed with
   // Enter/Space
@@ -96,8 +106,12 @@
         /></a
       >{/if}
     {#if status.history.length}
-      <a class="history-link" href={UPDATES}
-        >Past updates</a
+      <a class="comment-button" href={COMMENTS}
+        ><Icon kind="comment" /><span
+          >Comments{activity?.comments ? ` (${activity.comments})` : ""}</span
+        >{#if activity?.reactions.length}<span class="reactions"
+            >{#each activity.reactions as [e, c]}<span>{e} {c}</span>{/each}</span
+          >{/if}</a
       >
     {/if}
   </div>
@@ -237,12 +251,30 @@
     border-radius: 6px;
   }
   /* a plain text link at the foot of the card */
-  .history-link {
-    display: inline-block;
-    margin-top: 8px;
-    font-size: calc(12rem / 17);
+  /* the Comments button: a full-width button in the site's button style (it is a link, so the style is spelled out), with a
+     speech bubble and the newest update's comment and reaction counts */
+  .comment-button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+    min-height: calc(32rem / 17);
+    padding: calc(6rem / 17) calc(10rem / 17);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--panel);
     color: var(--ink);
-    text-decoration: underline;
-    text-underline-offset: 3px;
+    font-size: calc(13rem / 17);
+    text-decoration: none;
+  }
+  .comment-button:hover {
+    background: var(--bg);
+  }
+  /* the reactions, at the button's right end */
+  .reactions {
+    display: flex;
+    gap: 8px;
+    margin-left: auto;
+    color: var(--mute);
   }
 </style>
