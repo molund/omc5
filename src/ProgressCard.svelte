@@ -89,7 +89,7 @@
     {#if status.note}<div class="note">{status.note}</div>{/if}
     {#if status.history.length}
       <button class="history-link" onclick={() => historyDialog.showModal()}
-        >Update history</button
+        >Past updates</button
       >
     {/if}
   </div>
@@ -104,11 +104,11 @@
   onclick={(e) => e.target === historyDialog && historyDialog.close()}
 >
   <div class="history-head">
-    <h2 id="history-title">Update history</h2>
+    <h2 id="history-title">Past updates</h2>
     <button
       class="close"
       title="Close"
-      aria-label="Close the update history"
+      aria-label="Close past updates"
       onclick={() => historyDialog.close()}><PanelIcon kind="close" /></button
     >
   </div>
