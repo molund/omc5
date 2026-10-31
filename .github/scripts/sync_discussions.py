@@ -196,5 +196,21 @@ def close_old(keep):
             print(f"locked {t}")
 
 
+def delete_all():
+    """Delete every thread in the category, comments and all (used once, to remake them under Mike's name)."""
+    for t, (tid, *_) in existing().items():
+        graphql(
+            """mutation($id: ID!) { deleteDiscussion(input: {id: $id}) { discussion { id } } }""",
+            id=tid,
+        )
+        print(f"deleted {t}")
+
+
 if __name__ == "__main__":
-    check_count() if "--check-count" in sys.argv else main()
+    if "--check-count" in sys.argv:
+        check_count()
+    elif "--recreate" in sys.argv:
+        delete_all()
+        main()
+    else:
+        main()
