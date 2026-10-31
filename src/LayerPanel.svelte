@@ -68,10 +68,10 @@
     >
   </div>
   <p>
-    Pick a view to start from, then switch layers on or off. Drag the plan to
+    Pick a view preset to start from, then switch layers on or off. Drag the plan to
     pan.
   </p>
-  <div class="grp top">View</div>
+  <div class="grp top">View presets</div>
   <!-- the views are presets, picked like the zoom buttons; picking the one already on does nothing to the view, as a radio button did -->
   <div class="views">
     {#each LAYERS[0][1] as [k, label]}
