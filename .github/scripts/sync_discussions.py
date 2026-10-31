@@ -80,9 +80,8 @@ def minor_time(t, note):
 
 def body(n):
     anchor = n["time"].astimezone(timezone.utc).strftime("%Y-%m-%dT%H-%M")
-    # date first, as the Past updates page's headings: "Oct 31, 2026 at 9:30 a.m."
-    time, date = as_of(n["time"]).split(" on ")
-    parts = [f"**{date} at {time}**", n["text"]]
+    # no date line: the thread's title already has it
+    parts = [n["text"]]
     if n["photo"]:
         caption = n["photo"]["caption"]
         parts.append(f"![{caption or 'Photo for this update'}]({PHOTOS}{n['photo']['file']})")
