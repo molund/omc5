@@ -33,7 +33,7 @@
 
   // Pages of 10 updates, newest first. The page is in the address (?page=2), so the browser's back button and shared links
   // work; a link to one update (#2026-10-31T16-30) opens the page it is on.
-  const PAGE_SIZE = 4; // 4 for now, to see the page buttons; 10 once there are more updates
+  const PAGE_SIZE = 10;
   const pages = Math.max(1, Math.ceil(status.history.length / PAGE_SIZE));
   function pageFromAddress() {
     const id = location.hash.slice(1),
