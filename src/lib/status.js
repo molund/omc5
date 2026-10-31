@@ -37,8 +37,15 @@ function parse(src) {
 
 export const status = parse(text);
 
-// "6:45 a.m. on Oct 29, 2026", Pacific time, rounded to the nearest quarter hour
-export function asOf(date) {
+// the calendar day of a time, in the site's time zone, as "2026-10-29"
+const dayOf = (t) =>
+  new Intl.DateTimeFormat("en-CA", { timeZone: "America/Whitehorse" }).format(
+    t,
+  );
+
+// "6:45 a.m. on Oct 29, 2026", Pacific time, rounded to the nearest quarter hour; with relative, a time today or yesterday
+// reads "6:45 a.m. today" or "6:45 a.m. yesterday" instead, and the day before yesterday "6:45 a.m. on Tuesday"
+export function asOf(date, relative = false) {
   if (!date || isNaN(date)) return "";
   const q = 15 * 60 * 1000,
     d = new Date(Math.round(date.getTime() / q) * q);
@@ -51,6 +58,7 @@ export function asOf(date) {
       month: "short",
       day: "numeric",
       year: "numeric",
+      weekday: "long",
     })
       .formatToParts(d)
       .map((p) => [p.type, p.value]),
@@ -58,5 +66,14 @@ export function asOf(date) {
   const period = parts.dayPeriod.toLowerCase().startsWith("a")
     ? "a.m."
     : "p.m.";
-  return `${parts.hour}:${parts.minute} ${period} on ${parts.month} ${parts.day}, ${parts.year}`;
+  const time = `${parts.hour}:${parts.minute} ${period}`;
+  if (relative) {
+    // Yukon time has no daylight saving changes, so a day back is always 24 hours
+    const now = Date.now(),
+      day = 24 * 60 * 60 * 1000;
+    if (dayOf(d) === dayOf(now)) return `${time} today`;
+    if (dayOf(d) === dayOf(now - day)) return `${time} yesterday`;
+    if (dayOf(d) === dayOf(now - 2 * day)) return `${time} on ${parts.weekday}`;
+  }
+  return `${time} on ${parts.month} ${parts.day}, ${parts.year}`;
 }
