@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2"><Document>
-<name>Clayton Clipper spans</name>
+<name>SLS Hillcrest to Bakerview spans</name>
 <description>Traced on aerial imagery and checked on site visits; see data/README.md. Exported 2026-10-29.</description>
 <Style id="s"><PolyStyle><color>cc848a8b</color></PolyStyle><LineStyle><color>ff444444</color><width>1</width></LineStyle></Style>
 <Placemark><name>Span #1</name><styleUrl>#s</styleUrl><ExtendedData><Data name="id"><value>1</value></Data><Data name="kind"><value>segmental (gantry)</value></Data></ExtendedData><Polygon><outerBoundaryIs><LinearRing><coordinates>-122.7629341,49.1514347 -122.7632687,49.1515734 -122.7633229,49.1515174 -122.7629883,49.1513787 -122.7629341,49.1514347</coordinates></LinearRing></outerBoundaryIs></Polygon></Placemark>
