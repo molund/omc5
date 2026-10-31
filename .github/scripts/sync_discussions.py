@@ -35,28 +35,45 @@ def unquote(v):
 def notes(path="status.yaml"):
     """The notes with text, as dicts of time, text, photo (file, caption) and minor updates [(time, text)], as
     src/lib/status.js reads them."""
-    out = []
+    out, section, photo = [], None, None
     for line in open(path).read().split("\n"):
         # notes are two spaces in; minor updates, further in under "minor:", get no thread of their own
         m = re.match(r"^ {2}-\s+(\S+):\s+(.*?)\s*$", line)
         if m:
-            out.append({"time": datetime.fromisoformat(m.group(1)), "text": unquote(m.group(2)), "photo": None, "minor": []})
+            out.append(
+                {"time": datetime.fromisoformat(m.group(1)), "text": unquote(m.group(2)), "photo": None, "more": [], "minor": []}
+            )
+            section = photo = None
             continue
+        # under "more:", a photo ("- photo:" with its file and caption under it) or a paragraph
+        if section == "more" and re.match(r"^ {3,}-\s+photo:\s*$", line):
+            photo = {"file": None, "caption": ""}
+            if out:
+                out[-1]["more"].append({"photo": photo})
+            continue
+        m = section == "more" and re.match(r"^ {3,}-\s+(.*?)\s*$", line)
+        if m:
+            if out and unquote(m.group(1)):
+                out[-1]["more"].append({"text": unquote(m.group(1))})
+            continue
+        if re.match(r"^\s+(more|minor|photo):\s*$", line):
+            section = line.strip()[:-1]
         # a minor update, further in under "minor:"
         m = re.match(r"^ {3,}-\s+(\S+):\s+(.*?)\s*$", line)
         if m:
             if out and unquote(m.group(2)):
                 out[-1]["minor"].append((datetime.fromisoformat(m.group(1)), unquote(m.group(2))))
             continue
-        if re.match(r"^\s+photo:\s*$", line) and out:
-            out[-1]["photo"] = {"file": None, "caption": ""}
+        if section == "photo" and re.match(r"^\s+photo:\s*$", line) and out:
+            out[-1]["photo"] = photo = {"file": None, "caption": ""}
             continue
         m = re.match(r"^\s+(file|caption):\s*(.*?)\s*$", line)
-        if m and out and out[-1]["photo"] is not None:
-            out[-1]["photo"][m.group(1)] = unquote(m.group(2))
+        if m and photo is not None:
+            photo[m.group(1)] = unquote(m.group(2))
     for n in out:
         if n["photo"] and not n["photo"]["file"]:
             n["photo"] = None
+        n["more"] = [m for m in n["more"] if m.get("text") or (m.get("photo") or {}).get("file")]
         n["minor"].sort(key=lambda m: m[0], reverse=True)
     return [n for n in out if n["text"]]
 
@@ -82,11 +99,20 @@ def body(n):
     anchor = n["time"].astimezone(timezone.utc).strftime("%Y-%m-%dT%H-%M")
     # no date line: the thread's title already has it
     parts = [n["text"]]
+
+    def photo(p):
+        parts.append(f"![{p['caption'] or 'Photo for this update'}]({PHOTOS}{p['file']})")
+        if p["caption"]:
+            parts.append(f"_{p['caption']}_")
+
     if n["photo"]:
-        caption = n["photo"]["caption"]
-        parts.append(f"![{caption or 'Photo for this update'}]({PHOTOS}{n['photo']['file']})")
-        if caption:
-            parts.append(f"_{caption}_")
+        photo(n["photo"])
+    # then the further paragraphs and photos, in order
+    for m in n["more"]:
+        if "photo" in m:
+            photo(m["photo"])
+        else:
+            parts.append(m["text"])
     if n["minor"]:
         # as on the Past updates page: a Minor changes list, each time in code style
         parts.append("### Minor changes")

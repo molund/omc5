@@ -4,6 +4,13 @@
 //     photo:
 //       file: span-36.jpg
 //       caption: "Its own caption, separate from the note"
+// optionally more paragraphs and photos, indented under it (shown after the note and its photo on the Past updates page and
+// in its thread; the card shows only the note, with a link to the rest):
+//     more:
+//       - "A second paragraph"
+//       - photo:
+//           file: span-36-close-up.jpg
+//           caption: "Its caption"
 // and optionally minor updates, also indented under it (no photo, no thread or entry of their own):
 //     minor:
 //       - time: "text"
@@ -22,6 +29,10 @@ function unquote(v) {
 function parse(src) {
   const out = {},
     notes = [];
+  // the list a "      - …" line belongs to: "more" after a "    more:" line, otherwise minor updates
+  let list = null,
+    // the photo a `file:` or `caption:` line belongs to
+    photo = null;
   src.split("\n").forEach((line) => {
     // a note: "  - time: text", two spaces in
     const n = line.match(/^ {2}-\s+(\S+):\s+(.*?)\s*$/);
@@ -30,11 +41,29 @@ function parse(src) {
         time: new Date(n[1]),
         text: unquote(n[2]),
         photo: null,
+        more: [],
         minor: [],
       });
+      list = null;
+      photo = null;
       return;
     }
     const last = notes[notes.length - 1];
+    // under "    more:", a photo, "      - photo:" with its file and caption under it, or a paragraph, "      - text"
+    if (list === "more" && /^ {3,}-\s+photo:\s*$/.test(line)) {
+      photo = { src: null, caption: "" };
+      if (last) last.more.push({ photo });
+      return;
+    }
+    const mo = list === "more" && line.match(/^ {3,}-\s+(.*?)\s*$/);
+    if (mo) {
+      if (last && unquote(mo[1])) last.more.push({ text: unquote(mo[1]) });
+      return;
+    }
+    if (/^\s+more:\s*$/.test(line)) {
+      list = "more";
+      return;
+    }
     // a minor update under the note: "      - time: text", further in, after a "    minor:" line
     const mi = line.match(/^ {3,}-\s+(\S+):\s+(.*?)\s*$/);
     if (mi) {
@@ -42,17 +71,21 @@ function parse(src) {
         last.minor.push({ time: new Date(mi[1]), text: unquote(mi[2]) });
       return;
     }
-    if (/^\s+minor:\s*$/.test(line)) return;
+    if (/^\s+minor:\s*$/.test(line)) {
+      list = "minor";
+      return;
+    }
     // a photo belongs to the note above it: `photo:`, then its `file:` and `caption:` indented under it
     if (/^\s+photo:\s*$/.test(line)) {
-      if (last) last.photo = { src: null, caption: "" };
+      list = null;
+      if (last) photo = last.photo = { src: null, caption: "" };
       return;
     }
     const pf = line.match(/^\s+(file|caption):\s*(.*?)\s*$/);
     if (pf) {
-      if (last && last.photo) {
-        if (pf[1] === "file") last.photo.src = PHOTOS + unquote(pf[2]);
-        else last.photo.caption = unquote(pf[2]);
+      if (photo) {
+        if (pf[1] === "file") photo.src = PHOTOS + unquote(pf[2]);
+        else photo.caption = unquote(pf[2]);
       }
       return;
     }
@@ -61,7 +94,10 @@ function parse(src) {
   });
   // newest first by time stamp, whatever order the list is in
   // a photo without a file doesn't count
-  notes.forEach((n) => n.photo && !n.photo.src && (n.photo = null));
+  notes.forEach((n) => {
+    if (n.photo && !n.photo.src) n.photo = null;
+    n.more = n.more.filter((m) => m.text || m.photo?.src);
+  });
   // minor updates newest first, those with text
   notes.forEach(
     (n) =>
@@ -79,6 +115,8 @@ function parse(src) {
     note: sorted.length ? sorted[0].text : "",
     // the newest note's photo, { src, caption }, or null
     photo: sorted.length ? sorted[0].photo : null,
+    // the newest note's further paragraphs and photos, [{ text } or { photo: { src, caption } }], or []
+    more: sorted.length ? sorted[0].more : [],
     // the newest note's minor updates, [{ time, text }], newest first
     minor: sorted.length ? sorted[0].minor : [],
     // every note with text, newest first, for the update history (each with its photo or null, and its minor updates)

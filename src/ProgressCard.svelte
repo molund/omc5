@@ -106,6 +106,10 @@
          moves on to a minor update -->
     {#if status.note}<div class="note">
         <span class="chip">{postedAt}</span>{status.note}
+        {#if status.more.length}<a
+            class="more"
+            href="{UPDATES}#{anchor(newest.time)}">More</a
+          >{/if}
       </div>{/if}
     {#each status.minor as m}<div class="note later">
         <span class="chip">{minorTime(m.time, status.history[0].time)}</span
@@ -250,6 +254,11 @@
     color: var(--mute);
     font-size: calc(11rem / 17);
     font-weight: 600;
+  }
+  /* the link to the rest of a longer note, on the Past updates page */
+  .more {
+    color: var(--accent);
+    white-space: nowrap;
   }
   .note.later {
     margin-top: 6px;
