@@ -80,17 +80,19 @@ pillars, so use this file for where each column actually stands.
 
 ### Spans
 
-| Property     | Meaning                                                                                    |
-| ------------ | ------------------------------------------------------------------------------------------ |
-| `id`         | Sequential number from west to east                                                        |
-| `kind`       | `segmental (gantry)`, `precast girder` or `steel girder`                                   |
-| `cc_span`    | Clayton Clipper span number (1–105, counted in the order the launching gantry builds them) |
-| `sfmsf_span` | Span label used near the SFMSF (letters A–S, numbers 1–11), where there is one             |
+| Property     | Meaning                                                                                                  |
+| ------------ | -------------------------------------------------------------------------------------------------------- |
+| `id`         | Sequential number from west to east                                                                      |
+| `kind`       | `segmental (gantry)`, `precast girder` or `steel girder`                                                 |
+| `cc_span`    | Clayton Clipper span number (1–105, counted in the order the launching gantry builds them)               |
+| `sfmsf_span` | Span label used near the SFMSF (letters A–S, numbers 1–11), where there is one                           |
+| `finished`   | Whether the span is built, as of the export (in the KML, finished spans are solid, unfinished ones pale) |
 
 Some spans have more than one feature. Where the eastbound and westbound tracks are separate structures, each is its
 own polygon with the same `cc_span`. Each steel span is drawn as its two girder lines.
 
-Construction progress is not included, because it changes daily. The site built from this repository shows it.
+`finished` is only current as of the export. The copies published with the site, at https://molund.github.io/omc5/data/,
+are regenerated on every update; the copies in this folder only when the export is run by hand.
 
 ## Updating
 

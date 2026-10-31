@@ -4,9 +4,11 @@ import fs from "node:fs";
 
 // KML colours are aabbggrr hex
 const STYLES = {
-  // spans: the guideway grey of the site, mostly opaque, with a darker outline
-  Polygon:
-    "<PolyStyle><color>cc848a8b</color></PolyStyle><LineStyle><color>ff444444</color><width>1</width></LineStyle>",
+  // spans: finished ones solid dark grey, unfinished ones a pale outline, so they read on aerial imagery without relying on hue
+  finished:
+    "<PolyStyle><color>ff4a4a4a</color></PolyStyle><LineStyle><color>ff222222</color><width>1</width></LineStyle>",
+  unfinished:
+    "<PolyStyle><color>66ffffff</color></PolyStyle><LineStyle><color>ff4a4a4a</color><width>1.5</width></LineStyle>",
   // supports and pillars: small dark circles
   Point:
     "<IconStyle><scale>0.6</scale><color>ff333333</color><Icon><href>https://maps.google.com/mapfiles/kml/shapes/placemark_circle.png</href></Icon></IconStyle><LabelStyle><scale>0</scale></LabelStyle>",
@@ -50,6 +52,14 @@ function nameOf(p) {
   return `Pillar #${p.id}`;
 }
 
+// spans by whether they are finished (spans exported without it count as finished); points all alike
+const styleOf = (p) =>
+  "finished" in p || "cc_span" in p
+    ? p.finished === false
+      ? "unfinished"
+      : "finished"
+    : "Point";
+
 // one Placemark per line, so diffs show which features changed
 export function writeKml(file, title, features, meta) {
   const type = features[0]?.geometry.type ?? "Point";
@@ -58,7 +68,7 @@ export function writeKml(file, title, features, meta) {
       .filter(([, v]) => v !== null && v !== undefined)
       .map(([k, v]) => `<Data name="${esc(k)}"><value>${esc(v)}</value></Data>`)
       .join("");
-    return `<Placemark><name>${esc(nameOf(f.properties))}</name><styleUrl>#s</styleUrl><ExtendedData>${data}</ExtendedData>${geometry(f.geometry)}</Placemark>`;
+    return `<Placemark><name>${esc(nameOf(f.properties))}</name><styleUrl>#${styleOf(f.properties)}</styleUrl><ExtendedData>${data}</ExtendedData>${geometry(f.geometry)}</Placemark>`;
   });
   fs.writeFileSync(
     file,
@@ -66,7 +76,7 @@ export function writeKml(file, title, features, meta) {
 <kml xmlns="http://www.opengis.net/kml/2.2"><Document>
 <name>${esc(title)}</name>
 <description>${esc(`${meta.source}. Exported ${meta.exported}.`)}</description>
-<Style id="s">${STYLES[type] ?? ""}</Style>
+${(type === "Polygon" ? ["finished", "unfinished"] : ["Point"]).map((id) => `<Style id="${id}">${STYLES[id]}</Style>`).join("\n")}
 ${placemarks.join("\n")}
 </Document></kml>
 `,
