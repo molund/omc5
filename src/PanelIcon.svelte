@@ -1,6 +1,6 @@
 <script>
   // panel: a window with a sidebar (show or hide the layer panel); menu: three lines (open the menu on a phone); close: a
-  // cross (close it, or the progress card); progress: an information icon (bring the progress card back); chevron: a "›" (fold the layer switches out or away)
+  // cross (close it, or the progress card); progress: an information icon (bring the progress card back); chevron: a "›" (fold the layer switches out or away); zoomout, zoomin: a magnifying glass with a − or +
   let { kind = "panel" } = $props();
 </script>
 
@@ -24,6 +24,11 @@
     <circle cx="9" cy="9" r="7.25" />
     <line x1="9" y1="8" x2="9" y2="12.75" />
     <circle cx="9" cy="5.25" r="0.6" fill="currentColor" />
+  {:else if kind === "zoomout" || kind === "zoomin"}
+    <circle cx="7.5" cy="7.5" r="5.25" />
+    <line x1="11.4" y1="11.4" x2="15.75" y2="15.75" />
+    <line x1="5" y1="7.5" x2="10" y2="7.5" />
+    {#if kind === "zoomin"}<line x1="7.5" y1="5" x2="7.5" y2="10" />{/if}
   {:else if kind === "chevron"}
     <polyline points="7,4 12,9 7,14" stroke-linejoin="round" />
   {:else if kind === "close"}
