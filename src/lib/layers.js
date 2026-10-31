@@ -14,19 +14,14 @@ export const LAYERS = [
   [
     "Guideway",
     [
+      ["gantry", "Full gantry", "gantry", false],
+      ["beams", "Support beams only", "gantry-beams", false],
       ["guideway", "Finished spans", "guideway", true],
       ["unfinished", "Unfinished spans", "unfinished", true],
       ["supports", "Supports", "supports", true],
       ["labels", "OMC5 span labels", "spanlabel", true],
       ["cclabels", "Span labels", "cclabel", false],
       ["arrows", "Direction arrows", "arrows", false],
-    ],
-  ],
-  [
-    "Gantry",
-    [
-      ["gantry", "Full gantry", "gantry", false],
-      ["beams", "Support beams only", "gantry-beams", false],
     ],
   ],
   [
