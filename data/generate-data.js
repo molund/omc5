@@ -15,7 +15,8 @@ const SVG = "src/assets/map.svg",
   CONTROL = "data/control-points.json",
   STATUS = "status.yaml",
   OUT = "data/sls-hillcrest-to-bakerview-",
-  R = 6378137; // Web Mercator sphere radius
+  R = 6378137, // Web Mercator sphere radius
+  DECK_HEIGHT = 4.5; // metres above the ground the spans float at in the KML, so Google Earth's 3D trees don't cover them
 
 // 2D affine matrices as [a, b, c, d, e, f] (x' = a x + c y + e, y' = b x + d y + f), as in SVG
 const mul = ([a1, b1, c1, d1, e1, f1], [a2, b2, c2, d2, e2, f2]) => [
@@ -361,6 +362,7 @@ function exportGeojson() {
     "SLS Hillcrest to Bakerview spans (progress)",
     spans,
     meta,
+    DECK_HEIGHT,
   );
   writeKml(
     "data/kml/sls-hillcrest-to-bakerview-spans-full.kml",
@@ -370,6 +372,7 @@ function exportGeojson() {
       return { ...f, properties };
     }),
     meta,
+    DECK_HEIGHT,
   );
   console.log(
     `${supports.length} supports, ${pillarFeatures.length} pillars, ${spans.length} spans`,
