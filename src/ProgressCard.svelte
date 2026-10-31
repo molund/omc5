@@ -89,7 +89,7 @@
     </div>
     {#if when}<div class="asof">As of {when}</div>{/if}
     {#if status.note}<div class="note">{status.note}</div>{/if}
-    {#if status.photo}<a class="thumb" href={status.photo.src}
+    {#if status.photo}<a class="thumb" href={UPDATES}
         ><img
           src={status.photo.src}
           alt={status.photo.caption || "Photo for this update"}
@@ -224,7 +224,7 @@
     margin-top: 4px;
     font-size: calc(13rem / 17);
   }
-  /* the newest update's photo, a short strip across the card, opening full size when tapped */
+  /* the newest update's photo, a short strip across the card, opening the past updates page (the newest is at its top) */
   .thumb {
     display: block;
     margin-top: 8px;
