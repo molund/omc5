@@ -1,10 +1,10 @@
 <script>
   import { onMount } from "svelte";
   import planSvg from "./assets/plan.svg?raw";
-  import { DRAW_VB, ZOOM_VB, FULL_VB } from "./lib/layers.js";
-  import { tagLaunchers } from "./lib/tagLaunchers.js";
-  import { gantrySpan } from "./lib/gantrySpan.js";
-  import { placeGantry } from "./lib/gantryAnchor.js";
+  import { DRAW_VB, ZOOM_VB, FULL_VB } from "./lib/layerSwitches.js";
+  import { tagLaunchers } from "./lib/builtBy.js";
+  import { gantrySpan } from "./lib/gantryProgress.js";
+  import { placeGantry } from "./lib/placeGantry.js";
   import { status } from "./lib/status.js";
   import {
     layers,
@@ -17,7 +17,7 @@
     fillView,
     progressView,
     horizontalView,
-  } from "./lib/state.svelte.js";
+  } from "./lib/appState.svelte.js";
   import ProgressCard from "./ProgressCard.svelte";
 
   let stage;

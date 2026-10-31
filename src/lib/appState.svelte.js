@@ -1,5 +1,5 @@
 import { flushSync } from "svelte";
-import { visibleExtent, turnedXRange } from "./visibleExtent.js";
+import { visibleExtent, turnedXRange } from "./drawingBounds.js";
 import {
   HORIZONTAL_MARGIN,
   HORIZONTAL_VIEW_METRES,
@@ -14,7 +14,7 @@ import {
   PROGRESS_SPAN_AT,
   PROGRESS_DEFAULTS,
   LAYERS,
-} from "./layers.js";
+} from "./layerSwitches.js";
 
 // The panel's settings (the layer switches, the view picked, whether Reset has something to do and whether Layers is folded
 // out) are kept in sessionStorage, so they survive reloading the page; a new tab starts afresh

@@ -1,8 +1,8 @@
 <script>
-  import { PROGRESS_COLOUR } from "./lib/layers.js";
-  import { layers, ui } from "./lib/state.svelte.js";
+  import { PROGRESS_COLOUR } from "./lib/layerSwitches.js";
+  import { layers, ui } from "./lib/appState.svelte.js";
   import { status, asOf } from "./lib/status.js";
-  import PanelIcon from "./PanelIcon.svelte";
+  import Icon from "./Icon.svelte";
 
   // "today" or "yesterday" on the card (the past updates list keeps full dates)
   const when = asOf(status.updated, true);
@@ -51,7 +51,7 @@
     title="Show the progress card"
     aria-label="Show the progress card"
     onclick={() => (ui.cardHidden = false)}
-    ><PanelIcon kind="progress" /></button
+    ><Icon kind="progress" /></button
   >
 {:else if layers.progress && ui.gantry}
   {@const { span, ahead, total } = ui.gantry}
@@ -61,7 +61,7 @@
       class="close"
       title="Hide the progress card"
       aria-label="Hide the progress card"
-      onclick={() => (ui.cardHidden = true)}><PanelIcon kind="close" /></button
+      onclick={() => (ui.cardHidden = true)}><Icon kind="close" /></button
     >
     <div class="figure">
       ({@render num("span", span, true)}+{@render num(
@@ -110,7 +110,7 @@
       class="close"
       title="Close"
       aria-label="Close past updates"
-      onclick={() => historyDialog.close()}><PanelIcon kind="close" /></button
+      onclick={() => historyDialog.close()}><Icon kind="close" /></button
     >
   </div>
   <ol class="history-list">

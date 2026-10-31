@@ -32,7 +32,7 @@ export function gantrySpan(root, complete) {
     });
     return n;
   };
-  // the span the gantry is anchored to (see gantryAnchor.js); without one, the label nearest the gantry body
+  // the span the gantry is anchored to (see placeGantry.js); without one, the label nearest the gantry body
   let span = +gantry.dataset.span || null;
   if (span == null) {
     // the drawing's own styles hide the gantry, and a hidden element has no box to measure

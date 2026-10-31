@@ -1,6 +1,6 @@
 <script>
-  import { LAYERS, labelsAvailable } from "./lib/layers.js";
-  import PanelIcon from "./PanelIcon.svelte";
+  import { LAYERS, labelsAvailable } from "./lib/layerSwitches.js";
+  import Icon from "./Icon.svelte";
   import { fly, slide } from "svelte/transition";
   import {
     layers,
@@ -13,7 +13,7 @@
     isFit,
     centreView,
     isMike,
-  } from "./lib/state.svelte.js";
+  } from "./lib/appState.svelte.js";
 
   // each press of zoom in or out changes the zoom by this factor, about the middle of the stage; Fit's zoom depends on the
   // stage and canvas shape, so it is worked out when pressed
@@ -72,7 +72,7 @@
           target="_blank"
           rel="noopener"
           title="Source on GitHub"
-          aria-label="Source on GitHub"><PanelIcon kind="github" /></a
+          aria-label="Source on GitHub"><Icon kind="github" /></a
         >
       </div>
       <button
@@ -80,7 +80,7 @@
         aria-label={ui.phone ? "Close the menu" : "Hide the layer panel"}
         class="hide"
         onclick={() => (ui.collapsed = true)}
-        ><PanelIcon kind={ui.phone ? "close" : "panel"} /></button
+        ><Icon kind={ui.phone ? "close" : "panel"} /></button
       >
     </div>
     <!-- the source code, with GitHub's mark -->
@@ -116,7 +116,7 @@
       aria-expanded={ui.layersOpen}
       aria-controls="layer-list"
       onclick={() => (ui.layersOpen = !ui.layersOpen)}
-      >Layers<PanelIcon kind="chevron" /></button
+      >Layers<Icon kind="chevron" /></button
     >
     {#if ui.layersOpen}
       <div id="layer-list" transition:slide={{ duration: 150 }}>
@@ -185,14 +185,14 @@
           aria-label="Zoom out"
           disabled={isFit()}
           onclick={() => setZoom(ui.zoom / ZOOM_STEP)}
-          ><PanelIcon kind="minus" /></button
+          ><Icon kind="minus" /></button
         >
         <output aria-live="polite">{(ui.zoom / ui.fit).toFixed(1)}×</output>
         <button
           title="Zoom in"
           aria-label="Zoom in"
           onclick={() => setZoom(ui.zoom * ZOOM_STEP)}
-          ><PanelIcon kind="plus" /></button
+          ><Icon kind="plus" /></button
         >
       </div>
       <button
@@ -201,14 +201,14 @@
         title="Fit the whole plan"
         aria-label="Fit the whole plan"
         aria-pressed={isFit()}
-        onclick={() => setZoom(fitZoom())}><PanelIcon kind="fit" /></button
+        onclick={() => setZoom(fitZoom())}><Icon kind="fit" /></button
       >
       <button
         class="ico"
         title="Center the plan at this zoom"
         aria-label="Center the plan at this zoom"
         disabled={isFit()}
-        onclick={centreView}><PanelIcon kind="centre" /></button
+        onclick={centreView}><Icon kind="centre" /></button
       >
     </footer>
   {/if}
