@@ -4,7 +4,8 @@
   import { status, asOf } from "./lib/status.js";
   import PanelIcon from "./PanelIcon.svelte";
 
-  const when = asOf(status.updated);
+  // "today" or "yesterday" on the card (the past updates list keeps full dates)
+  const when = asOf(status.updated, true);
 
   // what each number counts, shown when it is hovered or clicked with a mouse, tapped (tap again to hide) or pressed with
   // Enter/Space
