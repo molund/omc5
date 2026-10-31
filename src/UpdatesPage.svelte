@@ -101,6 +101,7 @@
       /></a
     >
     {#if p.caption}<figcaption>{p.caption}</figcaption>{/if}
+    <hr />
   </figure>
 {/snippet}
 
@@ -227,6 +228,12 @@
     font-size: calc(13rem / 17);
     font-style: italic;
     color: var(--mute);
+  }
+  /* a thin rule closing off the photo and its caption */
+  .photo hr {
+    margin: 10px 0 0;
+    border: 0;
+    border-top: 1px solid var(--line);
   }
   /* the minor changes, a bullet list, each time in GitHub's inline-code style */
   .minor {
