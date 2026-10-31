@@ -10,10 +10,11 @@
   // what each number counts, shown when it is hovered or clicked with a mouse, tapped (tap again to hide) or pressed with
   // Enter/Space
   const TIPS = {
-    span: "The Clayton Clipper is this many spans along its route (the span it's on counts once all its segments are hung)",
+    span: "Completed span positions at or behind the Clayton Clipper. The current span counts after all its segments are hung. Previously completed spans count after the gantry crawls over them.",
     ahead:
-      "Finished spans ahead, built by cranes, which the Clayton Clipper must crawl over",
-    total: "Total spans on the Clayton Clipper's route",
+      "Completed span positions ahead, built by cranes, which the Clayton Clipper must crawl over.",
+    total:
+      "Total span positions on the Clayton Clipper's route. Parallel spans at the same location count as one.",
   };
   let tip = $state(null);
   // the update history dialog
