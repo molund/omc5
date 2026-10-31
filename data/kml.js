@@ -9,6 +9,9 @@ const STYLES = {
     "<PolyStyle><color>ff4a4a4a</color></PolyStyle><LineStyle><color>ff222222</color><width>1</width></LineStyle>",
   unfinished:
     "<PolyStyle><color>66ffffff</color></PolyStyle><LineStyle><color>ff4a4a4a</color><width>1.5</width></LineStyle>",
+  // finished steel spans: the drawing's tan (#E3D3B2) with its dark grey outline (#5F5E5A)
+  steel:
+    "<PolyStyle><color>ffb2d3e3</color></PolyStyle><LineStyle><color>ff5a5e5f</color><width>1</width></LineStyle>",
   // supports: the pier caps, solid mid grey with a dark outline
   support:
     "<PolyStyle><color>ff8a8a8a</color></PolyStyle><LineStyle><color>ff222222</color><width>1</width></LineStyle>",
@@ -55,24 +58,27 @@ function nameOf(p) {
   return `Pillar #${p.id}`;
 }
 
-// spans by whether they are finished (spans exported without it count as finished); supports alike; points all alike
+// spans by whether they are finished (spans exported without it count as finished), finished steel ones in their own colour;
+// supports alike; points all alike
 const styleOf = (p) =>
   "finished" in p || "cc_span" in p
     ? p.finished === false
       ? "unfinished"
-      : "finished"
+      : p.kind === "steel girder"
+        ? "steel"
+        : "finished"
     : "cc_joint" in p
       ? "support"
       : "Point";
 
 // one Placemark per line, so diffs show which features changed
 export function writeKml(file, title, features, meta) {
-  // the styles the layer's features use (the spans layer always has both span styles)
+  // the styles the layer's features use (the spans layer always has both finished and unfinished)
   const styles = [
     ...new Set(
       features.flatMap((f) =>
         "cc_span" in f.properties
-          ? ["finished", "unfinished"]
+          ? ["finished", "unfinished", styleOf(f.properties)]
           : [styleOf(f.properties)],
       ),
     ),
