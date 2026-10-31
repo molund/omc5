@@ -35,7 +35,8 @@ def notes(path="status.yaml"):
     """The notes with text, as dicts of time, text and photo (file, caption), as src/lib/status.js reads them."""
     out = []
     for line in open(path).read().split("\n"):
-        m = re.match(r"^\s+-\s+(\S+):\s+(.*?)\s*$", line)
+        # notes are two spaces in; minor updates, further in under "minor:", get no thread of their own
+        m = re.match(r"^ {2}-\s+(\S+):\s+(.*?)\s*$", line)
         if m:
             out.append({"time": datetime.fromisoformat(m.group(1)), "text": unquote(m.group(2)), "photo": None})
             continue

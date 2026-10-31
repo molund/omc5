@@ -1,7 +1,7 @@
 <script>
   import { PROGRESS_COLOUR } from "./lib/layerSwitches.js";
   import { layers, ui } from "./lib/appState.svelte.js";
-  import { status, asOf } from "./lib/status.js";
+  import { status, asOf, minorTime } from "./lib/status.js";
   import { anchor, term, fetchCounts } from "./lib/comments.js";
   import Icon from "./Icon.svelte";
 
@@ -99,6 +99,10 @@
     </div>
     {#if when}<div class="asof">As of {when}</div>{/if}
     {#if status.note}<div class="note">{status.note}</div>{/if}
+    {#each status.minor as m}<div class="minor">
+        <span class="minor-time">{minorTime(m.time, status.history[0].time)}</span>
+        {m.text}
+      </div>{/each}
     {#if status.photo}<a class="thumb" href={UPDATES}
         ><img
           src={status.photo.src}
@@ -227,6 +231,16 @@
   .fill {
     height: 100%;
     border-radius: 5px;
+  }
+  /* a minor update under the note: its time, then its text, smaller and set in */
+  .minor {
+    margin-top: 6px;
+    padding-left: 8px;
+    border-left: 2px solid var(--line);
+    font-size: calc(12rem / 17);
+  }
+  .minor-time {
+    color: var(--mute);
   }
   .asof {
     margin-top: 8px;
