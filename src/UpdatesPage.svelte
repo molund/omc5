@@ -40,6 +40,38 @@
     })
       .format(t)
       .replace(",", "");
+  // Comment and reaction counts for every update's thread, from GitHub's public API (no login; 60 requests an hour per
+  // visitor, and the page makes one), keyed by thread title. Until they arrive, or if GitHub can't be reached, the links
+  // just say "Comments".
+  const EMOJI = {
+    "+1": "👍",
+    "-1": "👎",
+    laugh: "😄",
+    hooray: "🎉",
+    confused: "😕",
+    heart: "❤️",
+    rocket: "🚀",
+    eyes: "👀",
+  };
+  let counts = $state({});
+  fetch("https://api.github.com/repos/molund/omc5/discussions?per_page=100", {
+    headers: { Accept: "application/vnd.github+json" },
+  })
+    .then((r) => (r.ok ? r.json() : []))
+    .then((list) => {
+      const out = {};
+      list.forEach((d) => {
+        out[d.title] = {
+          comments: d.comments,
+          reactions: Object.keys(EMOJI)
+            .filter((k) => d.reactions?.[k] > 0)
+            .map((k) => [EMOJI[k], d.reactions[k]]),
+        };
+      });
+      counts = out;
+    })
+    .catch(() => {});
+
   // the anchor of the update whose comments are open (one at a time, so the page stays light); a string, since $state would
   // wrap an update object in a proxy that never equals the original
   let open = $state(null);
@@ -78,8 +110,24 @@
           aria-expanded={open === anchor(n.time)}
           onclick={() =>
             (open = open === anchor(n.time) ? null : anchor(n.time))}
-          >{open === anchor(n.time) ? "Hide comments" : "Comments"}</button
+          >{open === anchor(n.time)
+            ? "Hide comments"
+            : counts[term(n.time)]?.comments
+              ? `Comments (${counts[term(n.time)].comments})`
+              : "Comments"}</button
         >
+        {#if counts[term(n.time)]?.reactions.length}
+          <span
+            class="reactions"
+            aria-label="Reactions: {counts[term(n.time)].reactions
+              .map(([e, c]) => `${e} ${c}`)
+              .join(', ')}"
+          >
+            {#each counts[term(n.time)].reactions as [e, c]}<span
+                >{e} {c}</span
+              >{/each}
+          </span>
+        {/if}
         {#if open === anchor(n.time)}<div class="comments" use:giscus={n.time}></div>{/if}
       </li>
     {/each}
@@ -123,7 +171,7 @@
   }
   /* the comments toggle, a plain text link, and the giscus thread it opens */
   .comments-link {
-    display: block;
+    display: inline-block;
     margin-top: 8px;
     padding: 0;
     border: 0;
@@ -137,6 +185,14 @@
   }
   .comments {
     margin-top: 8px;
+  }
+  /* the thread's reactions, beside the Comments link */
+  .reactions {
+    display: inline-flex;
+    gap: 10px;
+    margin-left: 12px;
+    font-size: calc(13rem / 17);
+    color: var(--mute);
   }
   /* an update's photo, the page's width, opening full size when tapped */
   .photo {
