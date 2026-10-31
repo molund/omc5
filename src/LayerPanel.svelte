@@ -198,15 +198,15 @@
       <button
         class="ico"
         class:on={isFit()}
-        title="Fit the whole plan"
-        aria-label="Fit the whole plan"
+        title="Zoom to fit"
+        aria-label="Zoom to fit"
         aria-pressed={isFit()}
         onclick={() => setZoom(fitZoom())}><Icon kind="fit" /></button
       >
       <button
         class="ico"
-        title="Center the plan at this zoom"
-        aria-label="Center the plan at this zoom"
+        title="Center without zooming"
+        aria-label="Center without zooming"
         disabled={isFit()}
         onclick={centreView}><Icon kind="centre" /></button
       >
