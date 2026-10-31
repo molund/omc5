@@ -4,7 +4,7 @@
 // Every Clayton Clipper guideway span is also given the number of its nearest label. With `complete` given (status.yaml), the
 // gantry boxes behind the gantry, and the one it is on when complete, are drawn finished; the ones the gantry has reached (the
 // count or lower) are tagged "reached" so progress-chart mode can colour just those.
-export function gantrySpan(root, complete) {
+export function gantryProgress(root, complete) {
   const gantry = root.querySelector("#clayton-clipper"),
     body = gantry && gantry.querySelector(".gantry-body"),
     labels = [...root.querySelectorAll("text.cclabel")];

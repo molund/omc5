@@ -23,7 +23,7 @@ function paintedOnlyWhite(el) {
   return WHITE.test(fill) && WHITE.test(stroke);
 }
 
-export function visibleExtent(root, turn, cx, cy) {
+export function drawingBounds(root, turn, cx, cy) {
   const toRoot = DOMMatrix.fromMatrix(root.getScreenCTM()).inverse(),
     toCanvas = (el, x, y) =>
       new DOMPoint(x, y)

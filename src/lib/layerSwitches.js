@@ -1,5 +1,5 @@
 // Layer switches: [key, label, class in plan.svg, on by default], in panel groups. The View group comes first and
-// is shown as radio buttons: picking one switches the others off (see toggle in appState.svelte.js)
+// is shown as radio buttons: picking one switches the others off (see setSwitch in appState.svelte.js)
 export const LAYERS = [
   [
     "View",

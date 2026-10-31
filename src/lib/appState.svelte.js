@@ -1,5 +1,5 @@
 import { flushSync } from "svelte";
-import { visibleExtent, turnedXRange } from "./drawingBounds.js";
+import { drawingBounds, turnedXRange } from "./drawingBounds.js";
 import {
   HORIZONTAL_MARGIN,
   HORIZONTAL_VIEW_METRES,
@@ -38,7 +38,7 @@ export const layers = $state({
 // moving the gantry and manipulating the spans.
 export const isMike =
   new URLSearchParams(location.search.toLowerCase()).get("ismike") === "true";
-function guest() {
+function hideMikeOnlyOptions() {
   if (isMike) return;
   if (layers.labels) {
     layers.labels = false;
@@ -49,7 +49,7 @@ function guest() {
     layers.gantry = true;
   }
 }
-guest();
+hideMikeOnlyOptions();
 // Screens this narrow are phones: the layer panel is a menu that slides in over the plan
 export const PHONE = matchMedia("(max-width: 760px)");
 // zoom is a percentage of the stage width, and fit the zoom at which the whole canvas fits the stage; ready turns on the layer
@@ -84,7 +84,7 @@ export const ui = $state({
 export const els = {
   stage: null,
   svg: null,
-  gantrySpan: null,
+  gantrySpanCentre: null,
   turn: null,
   routeAngle: 0,
 };
@@ -143,7 +143,7 @@ export function setView(vb, turn = 0) {
 // and pans like any other view, and Fit shows the whole route
 export function progressView() {
   canvasProgress();
-  const c = els.gantrySpan;
+  const c = els.gantrySpanCentre;
   if (!c) return;
   const vb = els.svg.viewBox.baseVal;
   // never less than filling the stage, so nothing blank shows
@@ -164,7 +164,7 @@ function canvasProgress() {
   // the layer rules for Progress's switches have to be on the page before measuring what shows
   flushSync();
   els.turn.removeAttribute("transform");
-  const e = visibleExtent(els.svg, 0, TURN_X, TURN_Y);
+  const e = drawingBounds(els.svg, 0, TURN_X, TURN_Y);
   if (!e) return setView(FULL_VB);
   const m =
     HORIZONTAL_MARGIN * Math.hypot(e.right.x - e.left.x, e.bottom.y - e.top.y);
@@ -185,7 +185,7 @@ function canvasProgress() {
 // before and after the gantry's span, with the span in the middle
 export function horizontalView() {
   canvasHorizontal();
-  const c = els.gantrySpan;
+  const c = els.gantrySpanCentre;
   if (!c) return;
   const vb = els.svg.viewBox.baseVal;
   setZoom(
@@ -210,7 +210,7 @@ function canvasHorizontal() {
   // the layer rules for the new switches have to be on the page before measuring what shows
   flushSync();
   els.turn.removeAttribute("transform");
-  const e = visibleExtent(els.svg, els.routeAngle, TURN_X, TURN_Y);
+  const e = drawingBounds(els.svg, els.routeAngle, TURN_X, TURN_Y);
   if (!e) return turnedFullView();
   const m =
     HORIZONTAL_MARGIN * Math.hypot(e.right.x - e.left.x, e.right.y - e.left.y);
@@ -338,25 +338,22 @@ const VIEWS = [
 ];
 
 // A layer checkbox was ticked or unticked
-export function toggle(k, checked) {
-  layers[k] = checked;
+export function setSwitch(k, on) {
+  layers[k] = on;
   ui.changed = !VIEWS.includes(k);
-  if (checked && VIEWS.includes(k)) ui.view = k;
-  if (k === "greenbelt" && checked) layers.aerial = false;
-  if (k === "aerial" && checked) layers.greenbelt = false;
-  if (k === "gantry" && checked) layers.beams = false;
-  if (k === "beams" && checked) layers.gantry = false;
-  if (k === "labels" && checked) layers.cclabels = false;
-  if (k === "cclabels" && checked) layers.labels = false;
+  if (on && VIEWS.includes(k)) ui.view = k;
+  if (k === "greenbelt" && on) layers.aerial = false;
+  if (k === "aerial" && on) layers.greenbelt = false;
+  if (k === "gantry" && on) layers.beams = false;
+  if (k === "beams" && on) layers.gantry = false;
+  if (k === "labels" && on) layers.cclabels = false;
+  if (k === "cclabels" && on) layers.labels = false;
   // picking any other view leaves Horizontal (Full image does so through fullAerialDefaults)
-  if (
-    checked &&
-    (k === "sfmsfDrawing" || k === "progress" || k === "sfmsfAerial")
-  )
+  if (on && (k === "sfmsfDrawing" || k === "progress" || k === "sfmsfAerial"))
     layers.horizontal = false;
   if (k === "fullAerial") {
     applyFullAerial();
-  } else if (k === "horizontal" && checked) {
+  } else if (k === "horizontal" && on) {
     if (layers.sfmsfDrawing) exitDrawing();
     if (layers.sfmsfAerial) exitSfmsfAerial();
     drawingSnap = null;
@@ -366,7 +363,7 @@ export function toggle(k, checked) {
     });
     horizontalView();
   } else if (k === "sfmsfDrawing") {
-    if (checked && layers.sfmsfAerial) {
+    if (on && layers.sfmsfAerial) {
       // from SFMSF aerial only the aerial photo gives way to the greenbelt; every other switch stays as it is
       drawingSnap = $state.snapshot(layers);
       Object.assign(layers, {
@@ -376,9 +373,9 @@ export function toggle(k, checked) {
       });
       setView(DRAW_VB);
       fillView();
-    } else if (checked) enterDrawing();
+    } else if (on) enterDrawing();
     else exitDrawing();
-  } else if (k === "progress" && checked) {
+  } else if (k === "progress" && on) {
     if (layers.sfmsfDrawing) exitDrawing();
     if (layers.sfmsfAerial) exitSfmsfAerial();
     layers.progress = true;
@@ -387,7 +384,7 @@ export function toggle(k, checked) {
     ui.cardHidden = false;
     progressView();
   } else if (k === "sfmsfAerial") {
-    if (checked && layers.sfmsfDrawing) {
+    if (on && layers.sfmsfDrawing) {
       // from SFMSF drawing only the greenbelt gives way to the aerial photo; every other switch stays as it is
       drawingSnap = null;
       Object.assign(layers, {
@@ -397,7 +394,7 @@ export function toggle(k, checked) {
       });
       setView(SFMSF_AERIAL_VB);
       fillView();
-    } else if (checked) {
+    } else if (on) {
       // leaving Progress puts back the switches it starts with as Full image has them (Full image, Horizontal and SFMSF drawing
       // set their own)
       if (layers.progress)
@@ -418,7 +415,7 @@ export function toggle(k, checked) {
       layers.labels = false;
     }
   }
-  guest();
+  hideMikeOnlyOptions();
   refresh();
 }
 
@@ -439,7 +436,7 @@ export function showAll() {
   // the two span-label sets are one or the other: Show all uses the Clayton Clipper's
   layers.labels = false;
   ui.changed = true;
-  guest();
+  hideMikeOnlyOptions();
   refresh();
 }
 
@@ -457,7 +454,7 @@ function viewSwitches(view) {
 export function reset() {
   Object.assign(layers, viewSwitches(ui.view));
   ui.changed = false;
-  guest();
+  hideMikeOnlyOptions();
   refresh();
 }
 

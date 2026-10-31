@@ -1,6 +1,6 @@
 <script>
   // panel: a window with a sidebar (show or hide the layer panel); menu: three lines (open the menu on a phone); close: a
-  // cross (close it, or the progress card); progress: an information icon (bring the progress card back); chevron: a "›" (fold the layer switches out or away); minus, plus: a − or + (zoom out or in); fit: four corner brackets (fit the whole plan); centre: a crosshair (center the plan); github: the GitHub mark (link to the repo)
+  // cross (close it, or the progress card); info: an information icon (bring the progress card back); chevron: a "›" (fold the layer switches out or away); minus, plus: a − or + (zoom out or in); fit: four corner brackets (fit the whole plan); centre: a crosshair (center the plan); github: the GitHub mark (link to the repo)
   let { kind = "panel" } = $props();
 </script>
 
@@ -19,7 +19,7 @@
     <line x1="2.5" y1="4.5" x2="15.5" y2="4.5" />
     <line x1="2.5" y1="9" x2="15.5" y2="9" />
     <line x1="2.5" y1="13.5" x2="15.5" y2="13.5" />
-  {:else if kind === "progress"}
+  {:else if kind === "info"}
     <!-- an information icon: an "i" in a circle -->
     <circle cx="9" cy="9" r="7.25" />
     <line x1="9" y1="8" x2="9" y2="12.75" />

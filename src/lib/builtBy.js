@@ -13,7 +13,7 @@ const LAUNCHERS = [
   return { ...l, nx: Math.sin(th), ny: -Math.cos(th) };
 });
 
-export function tagLaunchers(root) {
+export function tagBuiltBy(root) {
   const inv = root.getScreenCTM().inverse();
   function toCanvas(el, x, y) {
     const m = el.getScreenCTM();
