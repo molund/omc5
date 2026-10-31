@@ -250,7 +250,7 @@ function exportGeojson() {
     p.cap = caps.find((c) => inside(c.box, p.q)) || nearest(caps, p.q, 60);
     if (p.cap) p.cap.pillars.push(p.q);
   }
-  // the joint between spans n and n+1 is the cap nearest the midpoint of their labels (as in src/lib/gantryAnchor.js)
+  // the joint between spans n and n+1 is the cap nearest the midpoint of their labels (as in src/lib/placeGantry.js)
   for (const a of cc) {
     const b = cc.find((l) => l.n === a.n + 1);
     if (!b) continue;
