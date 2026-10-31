@@ -33,12 +33,12 @@
     if (k === "labels" || k === "beams") return !isMike;
     if (k === "greenbelt" || k === "creeks") return !layers.drawing;
     if (k === "roads" || k === "yard" || k === "walk")
-      return !(layers.drawing || layers.sfzoom);
+      return !(layers.drawing || layers.sfmsfAerial);
     if (k === "aerial") return layers.drawing;
     return false;
   }
   // the Reference group shows only in the two SFMSF views; the Built by group only for Mike, and not in the two SFMSF views
-  const sfmsf = $derived(layers.drawing || layers.sfzoom);
+  const sfmsf = $derived(layers.drawing || layers.sfmsfAerial);
   const groupHidden = (group) =>
     (group === "Reference" && !sfmsf) ||
     (group === "Built by" && (!isMike || sfmsf));

@@ -9,7 +9,7 @@ import {
   fullDefaults,
   FULL_VB,
   DRAW_VB,
-  ZOOM_VB,
+  SFMSF_AERIAL_VB,
   PROGRESS_VIEW_WIDTH,
   PROGRESS_SPAN_AT,
   PROGRESS_DEFAULTS,
@@ -63,7 +63,11 @@ export const ui = $state({
   // the view last picked (a View group key), which stays put while layers are switched on and off
   view:
     saved?.view ??
-    (defaults.progress ? "progress" : defaults.drawing ? "drawing" : "sfzoom"),
+    (defaults.progress
+      ? "progress"
+      : defaults.drawing
+        ? "drawing"
+        : "sfmsfAerial"),
   zoom: 187.31,
   fit: 100,
   phone: PHONE.matches,
@@ -286,7 +290,7 @@ const drawingSwitches = () => ({
   cclabels: false,
   beams: false,
   progress: false,
-  sfzoom: false,
+  sfmsfAerial: false,
   horizontal: false,
   drawing: true,
 });
@@ -305,13 +309,13 @@ function exitDrawing() {
 // SFMSF aerial's Reference switches when it is arrived at from a view other than SFMSF drawing: all on, but the greenbelt
 // (never shown with the aerial photo)
 const REFERENCE = LAYERS.find(([g]) => g === "Reference")[1].map(([k]) => k);
-const zoomReference = () => ({
+const sfmsfAerialReference = () => ({
   ...Object.fromEntries(REFERENCE.map((k) => [k, true])),
   greenbelt: false,
 });
 // SFMSF zoom: same canvas as Drawing mode, nothing else changes except that Roads goes on with it and off again when it ends
-function exitZoom() {
-  layers.sfzoom = false;
+function exitSfmsfAerial() {
+  layers.sfmsfAerial = false;
   setView(FULL_VB);
   layers.roads = false;
   layers.labels = false;
@@ -324,7 +328,13 @@ function applyFull() {
   Object.assign(layers, fullDefaults);
 }
 
-const VIEWS = ["progress", "sfzoom", "view_default", "horizontal", "drawing"];
+const VIEWS = [
+  "progress",
+  "sfmsfAerial",
+  "view_default",
+  "horizontal",
+  "drawing",
+];
 
 // A layer checkbox was ticked or unticked
 export function toggle(k, checked) {
@@ -338,13 +348,13 @@ export function toggle(k, checked) {
   if (k === "labels" && checked) layers.cclabels = false;
   if (k === "cclabels" && checked) layers.labels = false;
   // picking any other view leaves Horizontal (Full image does so through fullDefaults)
-  if (checked && (k === "drawing" || k === "progress" || k === "sfzoom"))
+  if (checked && (k === "drawing" || k === "progress" || k === "sfmsfAerial"))
     layers.horizontal = false;
   if (k === "view_default") {
     applyFull();
   } else if (k === "horizontal" && checked) {
     if (layers.drawing) exitDrawing();
-    if (layers.sfzoom) exitZoom();
+    if (layers.sfmsfAerial) exitSfmsfAerial();
     drawingSnap = null;
     Object.assign(layers, fullDefaults, {
       horizontal: true,
@@ -352,28 +362,32 @@ export function toggle(k, checked) {
     });
     horizontalView();
   } else if (k === "drawing") {
-    if (checked && layers.sfzoom) {
+    if (checked && layers.sfmsfAerial) {
       // from SFMSF aerial only the aerial photo gives way to the greenbelt; every other switch stays as it is
       drawingSnap = $state.snapshot(layers);
-      Object.assign(layers, { sfzoom: false, aerial: false, greenbelt: true });
+      Object.assign(layers, {
+        sfmsfAerial: false,
+        aerial: false,
+        greenbelt: true,
+      });
       setView(DRAW_VB);
       fillView();
     } else if (checked) enterDrawing();
     else exitDrawing();
   } else if (k === "progress" && checked) {
     if (layers.drawing) exitDrawing();
-    if (layers.sfzoom) exitZoom();
+    if (layers.sfmsfAerial) exitSfmsfAerial();
     layers.progress = true;
     Object.assign(layers, PROGRESS_DEFAULTS);
     // the progress card opens every time Progress is picked, even if it was closed before
     ui.cardHidden = false;
     progressView();
-  } else if (k === "sfzoom") {
+  } else if (k === "sfmsfAerial") {
     if (checked && layers.drawing) {
       // from SFMSF drawing only the greenbelt gives way to the aerial photo; every other switch stays as it is
       drawingSnap = null;
       Object.assign(layers, { drawing: false, aerial: true, greenbelt: false });
-      setView(ZOOM_VB);
+      setView(SFMSF_AERIAL_VB);
       fillView();
     } else if (checked) {
       // leaving Progress puts back the switches it starts with as Full image has them (Full image, Horizontal and SFMSF drawing
@@ -382,14 +396,14 @@ export function toggle(k, checked) {
         Object.keys(PROGRESS_DEFAULTS).forEach(
           (key) => (layers[key] = fullDefaults[key]),
         );
-      layers.sfzoom = true;
+      layers.sfmsfAerial = true;
       layers.progress = false;
-      setView(ZOOM_VB);
+      setView(SFMSF_AERIAL_VB);
       fillView();
       layers.labels = true;
       layers.cclabels = false;
       // every Reference switch on, with the aerial photo (it is an aerial view) instead of the greenbelt
-      Object.assign(layers, zoomReference());
+      Object.assign(layers, sfmsfAerialReference());
     } else {
       setView(FULL_VB);
       layers.roads = false;
@@ -408,7 +422,7 @@ export function showAll() {
       k !== "roads" &&
       k !== "progress" &&
       k !== "drawing" &&
-      k !== "sfzoom" &&
+      k !== "sfmsfAerial" &&
       k !== "horizontal"
     )
       layers[k] = true;
@@ -428,7 +442,7 @@ function viewSwitches(view) {
   if (view === "horizontal")
     return { ...fullDefaults, horizontal: true, progress: false };
   if (view === "drawing") return drawingSwitches();
-  return { ...normalDefaults, ...zoomReference() }; // SFMSF aerial
+  return { ...normalDefaults, ...sfmsfAerialReference() }; // SFMSF aerial
 }
 
 // Reset: the current view's switches back as it starts with them, staying on the same view, zoom and position
