@@ -1,6 +1,6 @@
 <script>
   // panel: a window with a sidebar (show or hide the layer panel); menu: three lines (open the menu on a phone); close: a
-  // cross (close it, or the progress card); progress: an information icon (bring the progress card back); chevron: a "›" (fold the layer switches out or away); zoomout, zoomin: a magnifying glass with a − or +; github: the GitHub mark (link to the repo)
+  // cross (close it, or the progress card); progress: an information icon (bring the progress card back); chevron: a "›" (fold the layer switches out or away); minus, plus: a − or + (zoom out or in); fit: four corner brackets (fit the whole plan); centre: a crosshair (center the plan); github: the GitHub mark (link to the repo)
   let { kind = "panel" } = $props();
 </script>
 
@@ -24,11 +24,26 @@
     <circle cx="9" cy="9" r="7.25" />
     <line x1="9" y1="8" x2="9" y2="12.75" />
     <circle cx="9" cy="5.25" r="0.6" fill="currentColor" />
-  {:else if kind === "zoomout" || kind === "zoomin"}
-    <circle cx="7.5" cy="7.5" r="5.25" />
-    <line x1="11.4" y1="11.4" x2="15.75" y2="15.75" />
-    <line x1="5" y1="7.5" x2="10" y2="7.5" />
-    {#if kind === "zoomin"}<line x1="7.5" y1="5" x2="7.5" y2="10" />{/if}
+  {:else if kind === "minus" || kind === "plus"}
+    <line x1="4.5" y1="9" x2="13.5" y2="9" />
+    {#if kind === "plus"}<line x1="9" y1="4.5" x2="9" y2="13.5" />{/if}
+  {:else if kind === "fit"}
+    <!-- four corner brackets -->
+    <polyline points="2.75,6.5 2.75,2.75 6.5,2.75" stroke-linejoin="round" />
+    <polyline points="11.5,2.75 15.25,2.75 15.25,6.5" stroke-linejoin="round" />
+    <polyline
+      points="15.25,11.5 15.25,15.25 11.5,15.25"
+      stroke-linejoin="round"
+    />
+    <polyline points="6.5,15.25 2.75,15.25 2.75,11.5" stroke-linejoin="round" />
+  {:else if kind === "centre"}
+    <!-- a crosshair: a small circle with four ticks -->
+    <circle cx="9" cy="9" r="4.25" />
+    <line x1="9" y1="1.75" x2="9" y2="4.75" />
+    <line x1="9" y1="13.25" x2="9" y2="16.25" />
+    <line x1="1.75" y1="9" x2="4.75" y2="9" />
+    <line x1="13.25" y1="9" x2="16.25" y2="9" />
+    <circle cx="9" cy="9" r="0.6" fill="currentColor" />
   {:else if kind === "chevron"}
     <polyline points="7,4 12,9 7,14" stroke-linejoin="round" />
   {:else if kind === "github"}
