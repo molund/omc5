@@ -4,6 +4,10 @@
 //     photo:
 //       file: span-36.jpg
 //       caption: "Its own caption, separate from the note"
+// optionally more paragraphs, indented under it (shown after the note on the Past updates page and in its thread; the card
+// shows only the note, with a link to the rest):
+//     more:
+//       - "A second paragraph"
 // and optionally minor updates, also indented under it (no photo, no thread or entry of their own):
 //     minor:
 //       - time: "text"
@@ -22,6 +26,8 @@ function unquote(v) {
 function parse(src) {
   const out = {},
     notes = [];
+  // the list a "      - …" line belongs to: "more" after a "    more:" line, otherwise minor updates
+  let list = null;
   src.split("\n").forEach((line) => {
     // a note: "  - time: text", two spaces in
     const n = line.match(/^ {2}-\s+(\S+):\s+(.*?)\s*$/);
@@ -30,11 +36,23 @@ function parse(src) {
         time: new Date(n[1]),
         text: unquote(n[2]),
         photo: null,
+        more: [],
         minor: [],
       });
+      list = null;
       return;
     }
     const last = notes[notes.length - 1];
+    // a paragraph under "    more:": "      - text"
+    const mo = list === "more" && line.match(/^ {3,}-\s+(.*?)\s*$/);
+    if (mo) {
+      if (last && unquote(mo[1])) last.more.push(unquote(mo[1]));
+      return;
+    }
+    if (/^\s+more:\s*$/.test(line)) {
+      list = "more";
+      return;
+    }
     // a minor update under the note: "      - time: text", further in, after a "    minor:" line
     const mi = line.match(/^ {3,}-\s+(\S+):\s+(.*?)\s*$/);
     if (mi) {
@@ -42,9 +60,13 @@ function parse(src) {
         last.minor.push({ time: new Date(mi[1]), text: unquote(mi[2]) });
       return;
     }
-    if (/^\s+minor:\s*$/.test(line)) return;
+    if (/^\s+minor:\s*$/.test(line)) {
+      list = "minor";
+      return;
+    }
     // a photo belongs to the note above it: `photo:`, then its `file:` and `caption:` indented under it
     if (/^\s+photo:\s*$/.test(line)) {
+      list = null;
       if (last) last.photo = { src: null, caption: "" };
       return;
     }
@@ -79,6 +101,8 @@ function parse(src) {
     note: sorted.length ? sorted[0].text : "",
     // the newest note's photo, { src, caption }, or null
     photo: sorted.length ? sorted[0].photo : null,
+    // the newest note's further paragraphs, or []
+    more: sorted.length ? sorted[0].more : [],
     // the newest note's minor updates, [{ time, text }], newest first
     minor: sorted.length ? sorted[0].minor : [],
     // every note with text, newest first, for the update history (each with its photo or null, and its minor updates)

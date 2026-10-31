@@ -35,20 +35,31 @@ def unquote(v):
 def notes(path="status.yaml"):
     """The notes with text, as dicts of time, text, photo (file, caption) and minor updates [(time, text)], as
     src/lib/status.js reads them."""
-    out = []
+    out, section = [], None
     for line in open(path).read().split("\n"):
         # notes are two spaces in; minor updates, further in under "minor:", get no thread of their own
         m = re.match(r"^ {2}-\s+(\S+):\s+(.*?)\s*$", line)
         if m:
-            out.append({"time": datetime.fromisoformat(m.group(1)), "text": unquote(m.group(2)), "photo": None, "minor": []})
+            out.append(
+                {"time": datetime.fromisoformat(m.group(1)), "text": unquote(m.group(2)), "photo": None, "more": [], "minor": []}
+            )
+            section = None
             continue
+        # a further paragraph, under "more:"
+        m = section == "more" and re.match(r"^ {3,}-\s+(.*?)\s*$", line)
+        if m:
+            if out and unquote(m.group(1)):
+                out[-1]["more"].append(unquote(m.group(1)))
+            continue
+        if re.match(r"^\s+(more|minor|photo):\s*$", line):
+            section = line.strip()[:-1]
         # a minor update, further in under "minor:"
         m = re.match(r"^ {3,}-\s+(\S+):\s+(.*?)\s*$", line)
         if m:
             if out and unquote(m.group(2)):
                 out[-1]["minor"].append((datetime.fromisoformat(m.group(1)), unquote(m.group(2))))
             continue
-        if re.match(r"^\s+photo:\s*$", line) and out:
+        if section == "photo" and re.match(r"^\s+photo:\s*$", line) and out:
             out[-1]["photo"] = {"file": None, "caption": ""}
             continue
         m = re.match(r"^\s+(file|caption):\s*(.*?)\s*$", line)
@@ -81,7 +92,7 @@ def minor_time(t, note):
 def body(n):
     anchor = n["time"].astimezone(timezone.utc).strftime("%Y-%m-%dT%H-%M")
     # no date line: the thread's title already has it
-    parts = [n["text"]]
+    parts = [n["text"], *n["more"]]
     if n["photo"]:
         caption = n["photo"]["caption"]
         parts.append(f"![{caption or 'Photo for this update'}]({PHOTOS}{n['photo']['file']})")

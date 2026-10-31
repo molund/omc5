@@ -99,6 +99,7 @@
     <article id={anchor(n.time)}>
       <h2>{heading(n.time)}</h2>
       <p class="note">{n.text}</p>
+      {#each n.more as para}<p class="note">{para}</p>{/each}
       {#if n.photo}
         <figure class="photo">
           <a href={n.photo.src}
