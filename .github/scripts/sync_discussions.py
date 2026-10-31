@@ -3,7 +3,8 @@
 Each update's thread is created here, before anyone comments, so its body can show the update itself (the note, then the
 photo and its caption, as on the Past updates page) instead of giscus's plain link. Threads are titled as the site asks giscus
 for them, "Update 2026-10-31 09:30" (Yukon time), and carry giscus's hidden sha1 marker, so giscus finds them in strict mode.
-A thread whose update has since been edited has its body brought up to date. Needs GITHUB_TOKEN with discussions: write.
+A thread whose update has since been edited has its body brought up to date, and threads older than the newest 30 are
+closed as outdated and locked. Needs GITHUB_TOKEN with discussions: write.
 """
 
 import hashlib
@@ -91,19 +92,19 @@ def graphql(query, soft=False, **variables):
 
 
 def existing():
-    """Threads already in the category, by title: (id, body)."""
+    """Threads already in the category, by title: (id, body, closed, locked, createdAt)."""
     found, after = {}, None
     while True:
         d = graphql(
             """query($id: ID!, $cat: ID!, $after: String) { node(id: $id) { ... on Repository {
                  discussions(first: 100, after: $after, categoryId: $cat) {
-                   nodes { id title body } pageInfo { hasNextPage endCursor } } } } }""",
+                   nodes { id title body closed locked createdAt } pageInfo { hasNextPage endCursor } } } } }""",
             id=REPO_ID,
             cat=CATEGORY_ID,
             after=after,
         )["node"]["discussions"]
         for x in d["nodes"]:
-            found.setdefault(x["title"], (x["id"], x["body"]))
+            found.setdefault(x["title"], (x["id"], x["body"], x["closed"], x["locked"], x["createdAt"]))
         if not d["pageInfo"]["hasNextPage"]:
             return found
         after = d["pageInfo"]["endCursor"]
@@ -145,6 +146,35 @@ def main():
                 body=b,
             )
             print(f"updated {t}" if done else f"left {t} as it is (not ours to edit)")
+    close_old(keep=30)
+
+
+def close_old(keep):
+    """Close as outdated and lock every thread older than the newest `keep`, so the open threads are the recent updates'
+    (the ones the Past updates page counts) and old threads can't collect spam. Newest by the update time in the title,
+    else by when the thread was made."""
+    have = existing()
+
+    def when(t):
+        m = re.fullmatch(r"Update (\d{4}-\d\d-\d\d \d\d:\d\d)", t)
+        return m.group(1) if m else have[t][4][:16].replace("T", " ")
+
+    for t in sorted(have, key=when, reverse=True)[keep:]:
+        tid, _, closed, locked, _ = have[t]
+        if not closed:
+            graphql(
+                """mutation($id: ID!) { closeDiscussion(input: {discussionId: $id, reason: OUTDATED}) { discussion { id } } }""",
+                soft=True,
+                id=tid,
+            )
+            print(f"closed {t} as outdated")
+        if not locked:
+            graphql(
+                """mutation($id: ID!) { lockLockable(input: {lockableId: $id, lockReason: RESOLVED}) { lockedRecord { locked } } }""",
+                soft=True,
+                id=tid,
+            )
+            print(f"locked {t}")
 
 
 if __name__ == "__main__":
