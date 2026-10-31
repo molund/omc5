@@ -33,3 +33,6 @@ Svelte 5 + Vite site, deployed to GitHub Pages (https://molund.github.io/omc5/) 
 - `status.yaml` — gantry span / complete / time-stamped notes (newest shown) on the progress card. Site news
   only: update this file, don't change the drawing unless asked.
 - `public/images/` — aerial photos.
+- `public/images/sorry-im-a-shitty-photographer/` — update photos (see the `photo:` format in `status.yaml`). Resize every
+  uploaded photo to at most 800 pixels wide, save it as JPEG at quality 75, and strip all metadata (especially the GPS
+  location) before committing it.
