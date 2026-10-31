@@ -1,7 +1,7 @@
-// Comments on updates: one GitHub Discussion per update, through giscus. Shared by the progress card and the Past updates
+// Comments on updates: one GitHub Discussion per update, through giscus. Shared by the progress card and the Trackside
 // page: each update's page anchor and thread title, and the comment and reaction counts of every thread.
 
-// an update's id on the Past updates page, from its time stamp in UTC, e.g. "2026-10-31T16-30"
+// an update's id on the Trackside page, from its time stamp in UTC, e.g. "2026-10-31T16-30"
 export const anchor = (t) => t.toISOString().slice(0, 16).replace(/:/g, "-");
 
 // an update's thread title, its Yukon time, e.g. "Update 2026-10-31 09:30" (the title must never change, or the thread is
