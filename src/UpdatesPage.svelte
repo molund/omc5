@@ -19,6 +19,9 @@
       <li id={anchor(n.time)}>
         <div class="asof">{asOf(n.time)}</div>
         <div class="note">{n.text}</div>
+        {#if n.photo}<a class="photo" href={n.photo}
+            ><img src={n.photo} alt="Photo for this update" loading="lazy" /></a
+          >{/if}
       </li>
     {/each}
   </ol>
@@ -58,5 +61,16 @@
   }
   .note {
     margin-top: 4px;
+  }
+  /* an update's photo, the page's width, opening full size when tapped */
+  .photo {
+    display: block;
+    margin-top: 8px;
+  }
+  .photo img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
   }
 </style>
