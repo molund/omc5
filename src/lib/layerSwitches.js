@@ -7,7 +7,7 @@ export const LAYERS = [
       ["progress", "Progress", "progress", false],
       ["view_default", "Full aerial", "view_default", false],
       ["horizontal", "Horizontal aerial", "horizontal", false],
-      ["sfzoom", "SFMSF aerial", "sfzoom", true],
+      ["sfmsfAerial", "SFMSF aerial", "sfmsfAerial", true],
       ["drawing", "SFMSF drawing", "drawing", false],
     ],
   ],
@@ -55,7 +55,7 @@ LAYERS.forEach((g) =>
 );
 // "Full" is the earlier default: the whole canvas with roads and the SFMSF labels off
 export const fullDefaults = Object.assign({}, normalDefaults, {
-  sfzoom: false,
+  sfmsfAerial: false,
   roads: false,
   labels: false,
   view_default: true,
@@ -119,7 +119,7 @@ const PROGRESS_SHOWS = {
 // Drawing mode shrinks the canvas to the first-photo frame (the area the greenbelt drawing fills)
 export const FULL_VB = "-6840.7 -5402.04 12387.4 8699.48",
   DRAW_VB = "-38.4 -126.95 2188.4 1888.55",
-  ZOOM_VB = "-38.4 -126.95 2188.4 1888.55"; // drawing mode and zoom view: the right edge cuts through span A
+  SFMSF_AERIAL_VB = "-38.4 -126.95 2188.4 1888.55"; // drawing mode and zoom view: the right edge cuts through span A
 // Progress-chart mode zooms to the span the gantry is on: a view three gantry lengths wide (the gantry's trusses are 401.56
 // canvas units long), with the span 35% of the way across and down
 export const GANTRY_LENGTH = 401.56,
@@ -158,7 +158,7 @@ export function layerCss(state) {
         !(
           ["roads", "yard", "walk"].includes(k) &&
           !state.drawing &&
-          !state.sfzoom
+          !state.sfmsfAerial
         ) &&
         !(k === "aerial" && state.drawing) &&
         !((k === "labels" || k === "cclabels") && !avail) &&
@@ -166,7 +166,7 @@ export function layerCss(state) {
       if (
         k === "progress" ||
         k === "drawing" ||
-        k === "sfzoom" ||
+        k === "sfmsfAerial" ||
         k === "view_default" ||
         k === "horizontal"
       )
