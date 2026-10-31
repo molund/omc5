@@ -37,7 +37,7 @@ def notes(path="status.yaml"):
     src/lib/status.js reads them."""
     out, section, photo = [], None, None
     for line in open(path).read().split("\n"):
-        # notes are two spaces in; minor updates, further in under "minor:", get no thread of their own
+        # notes are two spaces in; minor updates, further in under "follow-up:", get no thread of their own
         m = re.match(r"^ {2}-\s+(\S+):\s+(.*?)\s*$", line)
         if m:
             out.append(
@@ -56,9 +56,9 @@ def notes(path="status.yaml"):
             if out and unquote(m.group(1)):
                 out[-1]["more"].append({"text": unquote(m.group(1))})
             continue
-        if re.match(r"^\s+(more|minor|photo):\s*$", line):
+        if re.match(r"^\s+(more|follow-up|photo):\s*$", line):
             section = line.strip()[:-1]
-        # a minor update, further in under "minor:"
+        # a minor update, further in under "follow-up:"
         m = re.match(r"^ {3,}-\s+(\S+):\s+(.*?)\s*$", line)
         if m:
             if out and unquote(m.group(2)):

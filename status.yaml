@@ -16,8 +16,8 @@ complete: true
 #       - photo:
 #           file: span-36-close-up.jpg
 #           caption: "What the photo shows"
-# and minor updates, indented under it (no photo, no comments thread or entry of their own; set `updated` to the newest):
-#     minor:
+# and follow-ups, indented under it (no photo, no comments thread or entry of their own; set `updated` to the newest):
+#     follow-up:
 #       - 2026-10-31T11:45-07:00: "What changed"
 notes:
   - 2026-10-31T15:15-07:00: "Reporting from the bike at the other end of the line: the Surrey Sprinter has hung all the rocks for its first span after leaving Green Timbers Station."
@@ -26,7 +26,7 @@ notes:
       caption: "The Surrey Sprinter over 140 St and Fraser Highway, with its first span past Green Timbers Station hung below it."
     more:
       - "From here to the end of the Expo Line is only 12 more spans. The Sprinter is responsible for seven of them. The rest will be built by cranes."
-    minor:
+    follow-up:
       - 2026-10-31T16:15-07:00: "Rode past the Clayton Clipper on the way home: the crews have packed up for the Sunday shutdown, and the gantry is sitting quietly over span 36 until Monday. Nothing moving out there but the ghosts. Happy Halloween!"
       - 2026-10-31T15:45-07:00: "The Fleetwood Flyer has been parked at 152 St since finishing its run a few weeks ago. The walkways are off its trusses, but with no big cranes on site, nobody seems in a hurry to take it apart."
   - 2026-10-31T14:00-07:00: "Check-in from the bike: all the rocks are hung and span 36 is marked as complete. Now pedalling west of 176th St to see what the rest of the line is up to."
@@ -40,7 +40,7 @@ notes:
     photo:
       file: 2026-10-31-piper-and-toby.jpg
       caption: "My two trusty assistants on our way to look at cranes. Piper on the left is a four-year-old Bernedoodle. Toby on the right is an 11-year-old mini Australian Shepherd."
-    minor:
+    follow-up:
       - 2026-10-31T11:45-07:00: "Six segments have been hung. There is a long line of semi trucks carrying the rest of the segments."
   - 2026-10-30T20:45-07:00: "The Clayton Clipper has moved to span 36."
   - 2026-10-30T12:45-07:00: "The Clayton Clipper has started moving its supports, getting ready to move from span 35 to span 36."

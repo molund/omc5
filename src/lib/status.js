@@ -11,8 +11,8 @@
 //       - photo:
 //           file: span-36-close-up.jpg
 //           caption: "Its caption"
-// and optionally minor updates, also indented under it (no photo, no thread or entry of their own):
-//     minor:
+// and optionally follow-ups, also indented under it (no photo, no thread or entry of their own):
+//     follow-up:
 //       - time: "text"
 // so a small reader does instead of a YAML library.
 import text from "../../status.yaml?raw";
@@ -64,14 +64,14 @@ function parse(src) {
       list = "more";
       return;
     }
-    // a minor update under the note: "      - time: text", further in, after a "    minor:" line
+    // a minor update under the note: "      - time: text", further in, after a "    follow-up:" line
     const mi = line.match(/^ {3,}-\s+(\S+):\s+(.*?)\s*$/);
     if (mi) {
       if (last)
         last.minor.push({ time: new Date(mi[1]), text: unquote(mi[2]) });
       return;
     }
-    if (/^\s+minor:\s*$/.test(line)) {
+    if (/^\s+follow-up:\s*$/.test(line)) {
       list = "minor";
       return;
     }
