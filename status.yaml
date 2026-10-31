@@ -1,10 +1,10 @@
 # Clayton Clipper status. The site reads it (src/lib/status.js); running the deploy workflow by hand or through the API updates
 # it (see .github/workflows/deploy.yml). Times are Pacific, rounded to the nearest quarter hour.
-updated: 2026-10-31T11:45-07:00
+updated: 2026-10-31T14:00-07:00
 # the span the gantry is working on (Clayton Clipper span numbers, 3-104)
 span: 36
 # whether that span is complete (or at least hung)
-complete: false
+complete: true
 # every note, newest first, each stamped with the time of the update that added it; the progress card shows only the newest,
 # under the date (an empty note shows none). A note can have a photo, indented under it, with its own caption:
 #     photo:
@@ -14,6 +14,10 @@ complete: false
 #     minor:
 #       - 2026-10-31T11:45-07:00: "What changed"
 notes:
+  - 2026-10-31T14:00-07:00: "Checked in from the bike: all the rocks are hung and span 36 is complete. The long-missing tulip where spans 70 and 71 meet has finally been built too. Now pedalling east of 176th St to see what the rest of the line is up to."
+    photo:
+      file: 2026-10-31-tulip-70-71.jpg
+      caption: "The new tulip where spans 70 and 71 meet, wrapped in an orange tarp: propane heaters blow warm air inside so the concrete can cure in the cold weather. That's my Kona Unit X in front, photographed drive side out, of course."
   - 2026-10-31T09:30-07:00: "Only three segments have been hung for span 36. I'm guessing the night crew took Friday night off."
     photo:
       file: 2026-10-31-piper-and-toby.jpg
