@@ -4,17 +4,18 @@ import fs from "node:fs";
 
 // KML colours are aabbggrr hex
 const STYLES = {
-  // spans: finished ones in the drawing's grey (#888780), unfinished ones a pale outline, so they read on aerial imagery
-  // without relying on hue. Finished spans are outlined in the drawing's darkest outline colour (#2C2C2A), 1.5 wide like the
-  // unfinished ones. Google My Maps ignores the outline colour and draws the border in the fill colour at full strength, so
-  // the finished fills are 75% opaque (bf), or their border wouldn't show there
+  // spans: finished ones a dark warm grey (#4F4E4A, the drawing's grey darkened), unfinished ones a pale outline, so they read
+  // on aerial imagery without relying on hue. Finished spans are outlined in the drawing's darkest outline colour (#2C2C2A),
+  // 1.5 wide like the unfinished ones. Google My Maps ignores the outline colour and draws the border in the fill colour at
+  // full strength, so the fills are dark and 40% opaque (66), as the unfinished ones are, for a clear border there
   finished:
-    "<PolyStyle><color>bf808788</color></PolyStyle><LineStyle><color>ff2a2c2c</color><width>1.5</width></LineStyle>",
+    "<PolyStyle><color>664a4e4f</color></PolyStyle><LineStyle><color>ff2a2c2c</color><width>1.5</width></LineStyle>",
   unfinished:
     "<PolyStyle><color>66ffffff</color></PolyStyle><LineStyle><color>ff4a4a4a</color><width>1.5</width></LineStyle>",
-  // finished steel spans: the drawing's tan (#E3D3B2), 75% opaque and outlined like the other finished spans
+  // finished steel spans: a dark tan (#8B6F3E, the drawing's tan darkened), 40% opaque and outlined like the other finished
+  // spans
   steel:
-    "<PolyStyle><color>bfb2d3e3</color></PolyStyle><LineStyle><color>ff2a2c2c</color><width>1.5</width></LineStyle>",
+    "<PolyStyle><color>663e6f8b</color></PolyStyle><LineStyle><color>ff2a2c2c</color><width>1.5</width></LineStyle>",
   // supports: the pier caps, solid mid grey with a dark outline
   support:
     "<PolyStyle><color>ff8a8a8a</color></PolyStyle><LineStyle><color>ff222222</color><width>1</width></LineStyle>",
