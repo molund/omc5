@@ -23,13 +23,13 @@
   // the span-label switches need Clayton Clipper spans on screen, so they fade and can't be changed without them
   const disabled = (k) => (k === "labels" || k === "cclabels") && !avail;
   const opacity = (k) => (disabled(k) ? "0.4" : "");
-  // greenbelt and creeks only in drawing mode, roads, construction yard, walking paths and highway labels in the two SFMSF
+  // greenbelt and creeks only in drawing mode, roads (with their labels), construction yard and walking paths in the two SFMSF
   // views (drawing mode and SFMSF zoom),
   // aerial photo everywhere but drawing mode, and the SFMSF span labels and the support beams on their own only for Mike
   function hidden(k) {
     if (k === "labels" || k === "beams") return !isMike;
     if (k === "greenbelt" || k === "creeks") return !layers.drawing;
-    if (k === "roads" || k === "yard" || k === "walk" || k === "roadlabels")
+    if (k === "roads" || k === "yard" || k === "walk")
       return !(layers.drawing || layers.sfzoom);
     if (k === "aerial") return layers.drawing;
     return false;
