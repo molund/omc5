@@ -30,7 +30,6 @@ export const LAYERS = [
       ["aerial", "Aerial photo", "aerial", true],
       ["greenbelt", "Greenbelt", "greenbelt", false],
       ["roads", "Roads", "roads", true],
-      ["roadlabels", "Highway labels", "road-labels", false],
       ["yard", "Construction yard", "yard", false],
       ["ave72", "Future 72 Ave", "ave72", false],
       ["creeks", "Creeks", "creeks", false],
@@ -73,7 +72,6 @@ export const PROGRESS_DEFAULTS = {
   railway: false,
   labels: false,
   cclabels: true,
-  roadlabels: false,
   arrows: false,
   gantry: true,
   beams: false,
@@ -114,7 +112,6 @@ const PROGRESS_SHOWS = {
   railway: [".railway"],
   labels: [".spanlabel"],
   cclabels: [".cclabel"],
-  roadlabels: [".road.hwy15", ".road.fraser"],
   arrows: ["text.n.guideway"],
   gantry: [".gantry"],
   beams: [".gantry"],
@@ -159,7 +156,7 @@ export function layerCss(state) {
         state[k] &&
         !((k === "greenbelt" || k === "creeks") && !state.drawing) &&
         !(
-          ["roads", "yard", "walk", "roadlabels"].includes(k) &&
+          ["roads", "yard", "walk"].includes(k) &&
           !state.drawing &&
           !state.sfzoom
         ) &&
@@ -182,9 +179,10 @@ export function layerCss(state) {
           (on
             ? ""
             : ".bg.hwy15,.bg.ave72,.fraser{visibility:visible !important}");
+      // roads, with their Pacific Hwy and Fraser Hwy labels
       else if (k === "roads")
         r +=
-          '.roads,.fraser,.hwy15,line[class="bg"]{display:' +
+          '.roads,.fraser,.hwy15,.road.hwy15,.road.fraser,line[class="bg"]{display:' +
           (on ? "inline" : "none") +
           " !important}";
       else if (k === "labels")
@@ -208,11 +206,6 @@ export function layerCss(state) {
       else if (k === "gantry" || k === "beams") r += "";
       else if (k === "supports")
         r += on ? "" : 'rect.g,circle[fill="#D7D7D7"]{display:none !important}';
-      else if (k === "roadlabels")
-        r +=
-          ".road.hwy15,.road.fraser{display:" +
-          (on ? "inline" : "none") +
-          " !important}";
       else if (k === "unfinished")
         r +=
           ".guideway.unfinished{display:" +
