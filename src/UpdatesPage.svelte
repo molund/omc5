@@ -23,6 +23,11 @@
     crossorigin: "anonymous",
     async: "",
   };
+  // a heading's date first: "Oct 31, 2026 at 9:30 a.m."
+  const heading = (t) => {
+    const [time, date] = asOf(t).split(" on ");
+    return `${date} at ${time}`;
+  };
   let counts = $state({});
   fetchCounts().then((c) => (counts = c));
 
@@ -81,36 +86,44 @@
   }}
 />
 
+<!-- laid out like a README on GitHub: a heading per update, the note, its photo, its minor changes as a list with code-style
+     times, then its comments -->
 <main class="page">
-  <a class="back" href={MAP}>← Back to the map</a>
   <h1>Past updates</h1>
-  <ol class="list">
-    {#each shown as n (anchor(n.time))}
-      <li id={anchor(n.time)}>
-        <div class="asof">{asOf(n.time)}</div>
-        <div class="note">{n.text}</div>
-        {#each n.minor as m}<div class="minor">
-            <span class="minor-time">{minorTime(m.time, n.time)}</span>
-            {m.text}
-          </div>{/each}
-        {#if n.photo}
-          <figure class="photo">
-            <a href={n.photo.src}
-              ><img
-                src={n.photo.src}
-                alt={n.photo.caption || "Photo for this update"}
-                loading="lazy"
-              /></a
-            >
-            {#if n.photo.caption}<figcaption>{n.photo.caption}</figcaption>{/if}
-          </figure>
-        {/if}
+  <a class="back" href={MAP}>← Back to the map</a>
+  {#each shown as n (anchor(n.time))}
+    <article id={anchor(n.time)}>
+      <h2>{heading(n.time)}</h2>
+      <p class="note">{n.text}</p>
+      {#if n.photo}
+        <figure class="photo">
+          <a href={n.photo.src}
+            ><img
+              src={n.photo.src}
+              alt={n.photo.caption || "Photo for this update"}
+              loading="lazy"
+            /></a
+          >
+          {#if n.photo.caption}<figcaption>{n.photo.caption}</figcaption>{/if}
+        </figure>
+      {/if}
+      {#if n.minor.length}
+        <h3>Minor changes</h3>
+        <ul class="minor">
+          {#each n.minor as m}<li>
+              <code>{minorTime(m.time, n.time)}</code>
+              {m.text}
+            </li>{/each}
+        </ul>
+      {/if}
+      <div class="discuss">
         <button
           class="comments-link"
           aria-expanded={open === anchor(n.time)}
           onclick={() =>
             (open = open === anchor(n.time) ? null : anchor(n.time))}
-          >{open === anchor(n.time)
+          ><span aria-hidden="true">💬</span>
+          {open === anchor(n.time)
             ? "Hide comments"
             : counts[term(n.time)]?.comments
               ? `Comments (${counts[term(n.time)].comments})`
@@ -123,15 +136,15 @@
               .map(([e, c]) => `${e} ${c}`)
               .join(', ')}"
           >
-            {#each counts[term(n.time)].reactions as [e, c]}<span
+            {#each counts[term(n.time)].reactions as [e, c]}<span class="pill"
                 >{e} {c}</span
               >{/each}
           </span>
         {/if}
-        {#if open === anchor(n.time)}<div class="comments" use:giscus={n.time}></div>{/if}
-      </li>
-    {/each}
-  </ol>
+      </div>
+      {#if open === anchor(n.time)}<div class="comments" use:giscus={n.time}></div>{/if}
+    </article>
+  {/each}
   <!-- the first page has one button to older updates; later pages go either way, with Next off on the last page -->
   {#if pages > 1}
     <nav class="pager" aria-label="Pages of updates">
@@ -148,55 +161,111 @@
 </main>
 
 <style>
-  /* a plain reading page, a comfortable width, all sizes in rem so they follow the iPhone's Text Size setting */
+  /* a GitHub README look: system font, headings with a rule under them, link colour for links, code-style times; all sizes
+     in rem so they follow the iPhone's Text Size setting */
   .page {
     max-width: calc(640rem / 17);
     margin: 0 auto;
     padding: calc(16px + env(safe-area-inset-top, 0px)) 16px 32px;
     font-size: calc(15rem / 17);
-  }
-  .back {
-    color: var(--ink);
-    font-size: calc(13rem / 17);
+    line-height: 1.5;
   }
   h1 {
-    margin: 12px 0 8px;
-    font-size: calc(22rem / 17);
-  }
-  .list {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-  .list li {
-    padding: 12px 0;
+    margin: 12px 0 4px;
+    padding-bottom: 6px;
     border-bottom: 1px solid var(--line);
+    font-size: calc(26rem / 17);
+    line-height: 1.25;
   }
-  .list li:last-child {
-    border-bottom: 0;
+  .back {
+    color: var(--accent);
+    font-size: calc(13rem / 17);
+    text-decoration: none;
   }
-  .asof {
-    font-size: calc(12rem / 17);
-    color: var(--mute);
+  h2 {
+    margin: 28px 0 8px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--line);
+    font-size: calc(19rem / 17);
+    line-height: 1.25;
+  }
+  h3 {
+    margin: 14px 0 4px;
+    font-size: calc(15rem / 17);
   }
   .note {
+    margin: 0;
+  }
+  /* an update's photo, the page's width, opening full size when tapped */
+  .photo {
+    margin: 10px 0 0;
+  }
+  .photo img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+  }
+  .photo figcaption {
+    margin-top: 4px;
+    font-size: calc(13rem / 17);
+    font-style: italic;
+    color: var(--mute);
+  }
+  /* the minor changes, a bullet list, each time in GitHub's inline-code style */
+  .minor {
+    margin: 0;
+    padding-left: 22px;
+  }
+  .minor li + li {
     margin-top: 4px;
   }
-  /* a minor update under the note: its time, then its text, smaller and set in */
-  .minor {
-    margin-top: 6px;
-    padding-left: 10px;
-    border-left: 2px solid var(--line);
-    font-size: calc(14rem / 17);
+  code {
+    padding: 0.15em 0.4em;
+    border-radius: 6px;
+    background: rgba(129, 139, 152, 0.18);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 85%;
   }
-  .minor-time {
-    color: var(--mute);
+  /* the comments link (in the link colour) and the reactions as GitHub's pills */
+  .discuss {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 12px;
+  }
+  .comments-link {
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: calc(14rem / 17);
+    color: var(--accent);
+    cursor: pointer;
+  }
+  .reactions {
+    display: inline-flex;
+    gap: 6px;
+  }
+  .pill {
+    padding: 0 8px;
+    border: 1px solid var(--line);
+    border-radius: 2em;
+    background: var(--bg);
+    font-size: calc(12rem / 17);
+  }
+  /* the giscus thread, set off from the update by a dashed line */
+  .comments {
+    margin-top: 10px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--line);
   }
   /* the page buttons: the site's buttons (as on the card and in the layer panel), sharing the width, tall enough to tap */
   .pager {
     display: flex;
     gap: 8px;
-    margin-top: 16px;
+    margin-top: 24px;
   }
   .pager button {
     flex: 1;
@@ -205,45 +274,5 @@
   .pager button:disabled {
     opacity: 0.4;
     cursor: default;
-  }
-  /* the comments toggle, a plain text link, and the giscus thread it opens */
-  .comments-link {
-    display: inline-block;
-    margin-top: 8px;
-    padding: 0;
-    border: 0;
-    background: none;
-    font: inherit;
-    font-size: calc(13rem / 17);
-    color: var(--ink);
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    cursor: pointer;
-  }
-  .comments {
-    margin-top: 8px;
-  }
-  /* the thread's reactions, beside the Comments link */
-  .reactions {
-    display: inline-flex;
-    gap: 10px;
-    margin-left: 12px;
-    font-size: calc(13rem / 17);
-    color: var(--mute);
-  }
-  /* an update's photo, the page's width, opening full size when tapped */
-  .photo {
-    margin: 8px 0 0;
-  }
-  .photo figcaption {
-    margin-top: 4px;
-    font-size: calc(12rem / 17);
-    color: var(--mute);
-  }
-  .photo img {
-    display: block;
-    width: 100%;
-    height: auto;
-    border-radius: 6px;
   }
 </style>
