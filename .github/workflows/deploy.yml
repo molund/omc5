@@ -63,6 +63,14 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+      # export the GeoJSON and KML from the drawing as it is now and publish them with the site, at
+      # https://molund.github.io/omc5/data/ (the copies committed in data/ are only updated by running the export by hand)
+      - run: npm run export-geojson
+      - name: Publish the data files
+        run: |
+          mkdir -p dist/data/kml
+          cp data/*.geojson data/control-points.json data/LICENSE data/README.md dist/data/
+          cp data/kml/*.kml dist/data/kml/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
