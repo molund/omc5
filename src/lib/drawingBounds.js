@@ -1,7 +1,8 @@
 // The leftmost, rightmost, highest and lowest points of what is actually drawn in plan.svg right now, in canvas units, after
 // turning the canvas by `turn` degrees about (cx, cy). Hidden layers, defs, masks, clip paths and shapes painted only in white
 // (the canvas backing, which can't be seen on the white page) don't count, nor do the aerial photos (it measures the drawing),
-// and anything clipped (the zoomed photo frame clips the guideway, for one) only counts as far as its clip.
+// and anything clipped (the zoomed photo frame clips the guideway, for one) only counts as far as its clip. With `only` (a CSS
+// selector), just the shapes in or matching it count.
 const SHAPES = "path, polygon, polyline, line, rect, circle, ellipse, text";
 const WHITE = /^(none|rgb\(255, 255, 255\)|#fff(fff)?|white)$/i;
 
@@ -23,7 +24,7 @@ function paintedOnlyWhite(el) {
   return WHITE.test(fill) && WHITE.test(stroke);
 }
 
-export function drawingBounds(root, turn, cx, cy) {
+export function drawingBounds(root, turn, cx, cy, only) {
   const toRoot = DOMMatrix.fromMatrix(root.getScreenCTM()).inverse(),
     toCanvas = (el, x, y) =>
       new DOMPoint(x, y)
@@ -92,6 +93,7 @@ export function drawingBounds(root, turn, cx, cy) {
     bottom = null;
   root.querySelectorAll(SHAPES).forEach((el) => {
     if (el.closest("defs, mask, clipPath, symbol, pattern, marker")) return;
+    if (only && !el.closest(only)) return;
     if (!shown(el, root) || paintedOnlyWhite(el)) return;
     let b;
     try {

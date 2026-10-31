@@ -138,9 +138,9 @@ export function setView(vb, turn = 0) {
   els.stage.scrollTop = 0;
 }
 
-// Progress-chart mode's canvas is the Clayton Clipper route (see canvasProgress); it starts zoomed so PROGRESS_VIEW_WIDTH fills
-// the stage's width and scrolled so the gantry's span sits at PROGRESS_SPAN_AT across and down the stage; from there it zooms
-// and pans like any other view, and Fit shows the whole route
+// Progress-chart mode's canvas is the Clayton Clipper built so far (see canvasProgress); it starts zoomed so PROGRESS_VIEW_WIDTH
+// fills the stage's width and scrolled so the gantry's span sits at PROGRESS_SPAN_AT across and down the stage; from there it
+// zooms and pans like any other view, and Fit shows everything built
 export function progressView() {
   canvasProgress();
   const c = els.gantrySpanCentre;
@@ -158,13 +158,15 @@ export function progressView() {
     stage.clientHeight * PROGRESS_SPAN_AT.y;
 }
 
-// Progress's canvas: what Progress draws (the route, not the aerial photo), upright, with a margin on every side of
-// HORIZONTAL_MARGIN times its diagonal, but no wider than the overview aerial; the whole canvas when there is nothing to measure
+// Progress's canvas: the Clayton Clipper's finished spans the gantry has reached, and the gantry (not the unfinished spans
+// ahead of it, which run almost the whole width of the aerial), upright, with a margin on every side of HORIZONTAL_MARGIN
+// times their diagonal, but no wider than the overview aerial; the whole canvas when there is nothing to measure
+const BUILT = ".guideway.cc.reached:not(.unfinished), .gantry";
 function canvasProgress() {
   // the layer rules for Progress's switches have to be on the page before measuring what shows
   flushSync();
   els.turn.removeAttribute("transform");
-  const e = drawingBounds(els.svg, 0, TURN_X, TURN_Y);
+  const e = drawingBounds(els.svg, 0, TURN_X, TURN_Y, BUILT);
   if (!e) return setView(FULL_VB);
   const m =
     HORIZONTAL_MARGIN * Math.hypot(e.right.x - e.left.x, e.bottom.y - e.top.y);
