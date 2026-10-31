@@ -114,8 +114,8 @@ def body(n):
         else:
             parts.append(m["text"])
     if n["minor"]:
-        # as on the Past updates page: a Minor changes list, each time in code style
-        parts.append("### Minor changes")
+        # as on the Past updates page: a Follow-ups list, each time in code style
+        parts.append("### Follow-ups")
         parts.append("\n".join(f"- `{minor_time(t, n['time'])}` {text}" for t, text in n["minor"]))
     parts.append(f"[See it on the Clayton Clipper Tracker]({SITE}updates/#{anchor})")
     # giscus's strict-mode marker: the sha1 of the title it asks for
