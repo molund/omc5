@@ -9,7 +9,7 @@ compiled by Mike Olund. It is not from TransLink or the Province of BC.
 | `clipper-supports.geojson` | One point per support, at the centre of its pillar(s)     |
 | `clipper-pillars.geojson`  | One point per pillar (column), where it stands            |
 | `clipper-spans.geojson`    | One polygon per span deck (or per girder line, see below) |
-| `control-points.json`      | The two measured points used to georeference the drawing  |
+| `control-points.json`      | The two control points used to georeference the drawing   |
 | `LICENSE`                  | CC0 1.0: public domain, no conditions                     |
 
 Coordinates are WGS84 longitude/latitude (GeoJSON, RFC 7946). The files open directly in QGIS, ArcGIS, geojson.io,
@@ -20,9 +20,10 @@ Leaflet, Mapbox and Google Earth (import), and GitHub shows them on a map.
 The supports and spans were traced on Apple Maps aerial imagery and checked on site visits, in the plan drawing that this
 repository's site shows (`src/assets/plan.svg`). `data/generate-data.js` converts the drawing to lon/lat.
 
-Scale, rotation and position come from two tulip pillars measured by Mike Olund, one at each end of the line: where
-Clayton Clipper spans 13 and 14 meet (near 182 Street), matched to the finished tulip before the gantry reached it, and
-where spans 92 and 93 meet (near 168 Street), matched to its foundation hole.
+Scale, rotation and position come from two control points, one at each end of the line, placed by Mike Olund on very
+high-resolution Apple Maps aerial imagery in the Maps app for macOS: where Clayton Clipper spans 13 and 14 meet (near 182
+Street), matched to the finished tulip before the gantry reached it, and where spans 92 and 93 meet (near 168 Street),
+matched to its foundation hole.
 
 ## Other sources
 
@@ -49,7 +50,7 @@ historic railway line, which came from these sources:
 
 ## Accuracy
 
-The two measured tulip pillars (where spans 13 and 14 meet, and where spans 92 and 93 meet) are accurate to within
+The two control points (where spans 13 and 14 meet, and where spans 92 and 93 meet) are accurate to within
 about a foot (0.3 m). Elsewhere,
 accuracy depends on how well the drawing matches the imagery it was traced on. Support spacing and span lengths along the line are more accurate than the absolute position.
 
