@@ -65,8 +65,7 @@
     class="show"
     title="Show the progress card"
     aria-label="Show the progress card"
-    onclick={() => (ui.cardHidden = false)}
-    ><Icon kind="info" /></button
+    onclick={() => (ui.cardHidden = false)}><Icon kind="info" /></button
   >
 {:else if layers.progress && ui.gantry}
   {@const { span, ahead, total } = ui.gantry}
@@ -125,13 +124,13 @@
         ><Icon kind="comment" /><span
           >Comments{activity?.comments ? ` (${activity.comments})` : ""}</span
         >{#if activity?.reactions.length}<span class="reactions"
-            >{#each activity.reactions as [e, c]}<span>{e} {c}</span>{/each}</span
+            >{#each activity.reactions as [e, c]}<span>{e} {c}</span
+              >{/each}</span
           >{/if}</a
       >
     {/if}
   </div>
 {/if}
-
 
 <style>
   /* every size on the card is in rem, so it follows the iPhone's Text Size setting (see app.css) */

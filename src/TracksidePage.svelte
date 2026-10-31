@@ -155,7 +155,10 @@
           </span>
         {/if}
       </div>
-      {#if open === anchor(n.time)}<div class="comments" use:giscus={n.time}></div>{/if}
+      {#if open === anchor(n.time)}<div
+          class="comments"
+          use:giscus={n.time}
+        ></div>{/if}
     </article>
   {/each}
   <!-- the first page has one button to older updates; later pages go either way, with Next off on the last page -->
@@ -314,13 +317,8 @@
     background: var(--knob);
     color: var(--knob-ink);
     font-family:
-      -apple-system,
-      BlinkMacSystemFont,
-      "Segoe UI",
-      "Noto Sans",
-      Helvetica,
-      Arial,
-      sans-serif;
+      -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica,
+      Arial, sans-serif;
     font-size: calc(14rem / 17);
     font-weight: 600;
   }
