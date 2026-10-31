@@ -1,11 +1,11 @@
 <script>
-  import { LAYERS, labelsAvailable } from "./lib/layers.js";
-  import PanelIcon from "./PanelIcon.svelte";
+  import { LAYERS, labelsAvailable } from "./lib/layerSwitches.js";
+  import Icon from "./Icon.svelte";
   import { fly, slide } from "svelte/transition";
   import {
     layers,
     ui,
-    toggle,
+    setSwitch,
     showAll,
     reset,
     setZoom,
@@ -13,7 +13,7 @@
     isFit,
     centreView,
     isMike,
-  } from "./lib/state.svelte.js";
+  } from "./lib/appState.svelte.js";
 
   // each press of zoom in or out changes the zoom by this factor, about the middle of the stage; Fit's zoom depends on the
   // stage and canvas shape, so it is worked out when pressed
@@ -23,22 +23,22 @@
   // the span-label switches need Clayton Clipper spans on screen, and the direction arrows the finished spans they sit on, so
   // they fade and can't be changed without them
   const disabled = (k) =>
-    ((k === "labels" || k === "cclabels") && !avail) ||
+    ((k === "omc5Labels" || k === "spanLabels") && !avail) ||
     (k === "arrows" && !layers.guideway);
   const opacity = (k) => (disabled(k) ? "0.4" : "");
   // greenbelt and creeks only in drawing mode, roads (with their labels), construction yard and walking paths in the two SFMSF
   // views (drawing mode and SFMSF zoom),
   // aerial photo everywhere but drawing mode, and the SFMSF span labels and the support beams on their own only for Mike
   function hidden(k) {
-    if (k === "labels" || k === "beams") return !isMike;
-    if (k === "greenbelt" || k === "creeks") return !layers.drawing;
+    if (k === "omc5Labels" || k === "beams") return !isMike;
+    if (k === "greenbelt" || k === "creeks") return !layers.sfmsfDrawing;
     if (k === "roads" || k === "yard" || k === "walk")
-      return !(layers.drawing || layers.sfzoom);
-    if (k === "aerial") return layers.drawing;
+      return !(layers.sfmsfDrawing || layers.sfmsfAerial);
+    if (k === "aerial") return layers.sfmsfDrawing;
     return false;
   }
   // the Reference group shows only in the two SFMSF views; the Built by group only for Mike, and not in the two SFMSF views
-  const sfmsf = $derived(layers.drawing || layers.sfzoom);
+  const sfmsf = $derived(layers.sfmsfDrawing || layers.sfmsfAerial);
   const groupHidden = (group) =>
     (group === "Reference" && !sfmsf) ||
     (group === "Built by" && (!isMike || sfmsf));
@@ -49,7 +49,7 @@
   // the style showing (null for Off): the first if both are on (Show all turns on both gantry switches, and the drawing shows the full gantry)
   const picked = (opts) => opts.find(([k]) => layers[k])?.[0] ?? null;
   function change(e, k) {
-    toggle(k, e.currentTarget.checked);
+    setSwitch(k, e.currentTarget.checked);
     // the mode logic can put the switch straight back (e.g. unticking Full), so match the box to the state
     e.currentTarget.checked = layers[k];
   }
@@ -72,7 +72,7 @@
           target="_blank"
           rel="noopener"
           title="Source on GitHub"
-          aria-label="Source on GitHub"><PanelIcon kind="github" /></a
+          aria-label="Source on GitHub"><Icon kind="github" /></a
         >
       </div>
       <button
@@ -80,7 +80,7 @@
         aria-label={ui.phone ? "Close the menu" : "Hide the layer panel"}
         class="hide"
         onclick={() => (ui.collapsed = true)}
-        ><PanelIcon kind={ui.phone ? "close" : "panel"} /></button
+        ><Icon kind={ui.phone ? "close" : "panel"} /></button
       >
     </div>
     <!-- the source code, with GitHub's mark -->
@@ -102,7 +102,7 @@
           class:on={layers[k]}
           aria-pressed={layers[k]}
           onclick={() => {
-            if (!layers[k]) toggle(k, true);
+            if (!layers[k]) setSwitch(k, true);
             // on a phone, picking a view closes the menu to show it
             if (ui.phone) ui.collapsed = true;
           }}>{label}</button
@@ -116,7 +116,7 @@
       aria-expanded={ui.layersOpen}
       aria-controls="layer-list"
       onclick={() => (ui.layersOpen = !ui.layersOpen)}
-      >Layers<PanelIcon kind="chevron" /></button
+      >Layers<Icon kind="chevron" /></button
     >
     {#if ui.layersOpen}
       <div id="layer-list" transition:slide={{ duration: 150 }}>
@@ -143,8 +143,8 @@
                     disabled={disabled(k)}
                     onclick={() =>
                       o
-                        ? toggle(o, true)
-                        : opts.forEach(([s]) => toggle(s, false))}
+                        ? setSwitch(o, true)
+                        : opts.forEach(([s]) => setSwitch(s, false))}
                     >{text}</button
                   >
                 {/each}
@@ -185,14 +185,14 @@
           aria-label="Zoom out"
           disabled={isFit()}
           onclick={() => setZoom(ui.zoom / ZOOM_STEP)}
-          ><PanelIcon kind="minus" /></button
+          ><Icon kind="minus" /></button
         >
         <output aria-live="polite">{(ui.zoom / ui.fit).toFixed(1)}×</output>
         <button
           title="Zoom in"
           aria-label="Zoom in"
           onclick={() => setZoom(ui.zoom * ZOOM_STEP)}
-          ><PanelIcon kind="plus" /></button
+          ><Icon kind="plus" /></button
         >
       </div>
       <button
@@ -201,14 +201,14 @@
         title="Fit the whole plan"
         aria-label="Fit the whole plan"
         aria-pressed={isFit()}
-        onclick={() => setZoom(fitZoom())}><PanelIcon kind="fit" /></button
+        onclick={() => setZoom(fitZoom())}><Icon kind="fit" /></button
       >
       <button
         class="ico"
         title="Center the plan at this zoom"
         aria-label="Center the plan at this zoom"
         disabled={isFit()}
-        onclick={centreView}><PanelIcon kind="centre" /></button
+        onclick={centreView}><Icon kind="centre" /></button
       >
     </footer>
   {/if}

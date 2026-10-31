@@ -1,14 +1,14 @@
 // Layer switches: [key, label, class in plan.svg, on by default], in panel groups. The View group comes first and
-// is shown as radio buttons: picking one switches the others off (see toggle in state.svelte.js)
+// is shown as radio buttons: picking one switches the others off (see setSwitch in appState.svelte.js)
 export const LAYERS = [
   [
     "View",
     [
       ["progress", "Progress", "progress", false],
-      ["view_default", "Full aerial", "view_default", false],
+      ["fullAerial", "Full aerial", "fullAerial", false],
       ["horizontal", "Horizontal aerial", "horizontal", false],
-      ["sfzoom", "SFMSF aerial", "sfzoom", true],
-      ["drawing", "SFMSF drawing", "drawing", false],
+      ["sfmsfAerial", "SFMSF aerial", "sfmsfAerial", true],
+      ["sfmsfDrawing", "SFMSF drawing", "sfmsfDrawing", false],
     ],
   ],
   [
@@ -19,8 +19,8 @@ export const LAYERS = [
       ["guideway", "Finished spans", "guideway", true],
       ["unfinished", "Unfinished spans", "unfinished", true],
       ["supports", "Supports", "supports", true],
-      ["labels", "OMC5 span labels", "spanlabel", true],
-      ["cclabels", "Span labels", "cclabel", false],
+      ["omc5Labels", "OMC5 span labels", "spanlabel", true],
+      ["spanLabels", "Span labels", "cclabel", false],
       ["arrows", "Direction arrows", "arrows", false],
     ],
   ],
@@ -47,18 +47,18 @@ export const LAYERS = [
   ],
 ];
 // The normal view (the on-by-default column above), which Drawing mode returns to when it is switched off
-export const normalDefaults = {};
+export const sfmsfAerialDefaults = {};
 LAYERS.forEach((g) =>
   g[1].forEach((l) => {
-    normalDefaults[l[0]] = l[3];
+    sfmsfAerialDefaults[l[0]] = l[3];
   }),
 );
 // "Full" is the earlier default: the whole canvas with roads and the SFMSF labels off
-export const fullDefaults = Object.assign({}, normalDefaults, {
-  sfzoom: false,
+export const fullAerialDefaults = Object.assign({}, sfmsfAerialDefaults, {
+  sfmsfAerial: false,
   roads: false,
-  labels: false,
-  view_default: true,
+  omc5Labels: false,
+  fullAerial: true,
 });
 // Switches that progress-chart mode starts with, which match what it shows: the Clayton Clipper's spans (finished and
 // unfinished) with their span numbers, the aerial photo and the full gantry. Every switch works in it, as in Full image.
@@ -70,8 +70,8 @@ export const PROGRESS_DEFAULTS = {
   yard: false,
   ave72: false,
   railway: false,
-  labels: false,
-  cclabels: true,
+  omc5Labels: false,
+  spanLabels: true,
   arrows: false,
   gantry: true,
   beams: false,
@@ -80,10 +80,15 @@ export const PROGRESS_DEFAULTS = {
   ff: false,
 };
 // Opening view: Progress, as it is picked from the panel
-export const defaults = Object.assign({}, fullDefaults, PROGRESS_DEFAULTS, {
-  progress: true,
-  view_default: false,
-});
+export const defaults = Object.assign(
+  {},
+  fullAerialDefaults,
+  PROGRESS_DEFAULTS,
+  {
+    progress: true,
+    fullAerial: false,
+  },
+);
 // violet: opposite the gantry's yellow on the colour wheel, so it stands out and goes with it
 export const PROGRESS_COLOUR = "#6D28D9";
 // Progress-chart mode hides everything (with visibility, which leaves the masks and clip paths the drawing relies on untouched)
@@ -110,8 +115,8 @@ const PROGRESS_SHOWS = {
   yard: [".yard"],
   ave72: [".ave72"],
   railway: [".railway"],
-  labels: [".spanlabel"],
-  cclabels: [".cclabel"],
+  omc5Labels: [".spanlabel"],
+  spanLabels: [".cclabel"],
   arrows: ["text.n.guideway"],
   gantry: [".gantry"],
   beams: [".gantry"],
@@ -119,7 +124,7 @@ const PROGRESS_SHOWS = {
 // Drawing mode shrinks the canvas to the first-photo frame (the area the greenbelt drawing fills)
 export const FULL_VB = "-6840.7 -5402.04 12387.4 8699.48",
   DRAW_VB = "-38.4 -126.95 2188.4 1888.55",
-  ZOOM_VB = "-38.4 -126.95 2188.4 1888.55"; // drawing mode and zoom view: the right edge cuts through span A
+  SFMSF_AERIAL_VB = "-38.4 -126.95 2188.4 1888.55"; // drawing mode and zoom view: the right edge cuts through span A
 // Progress-chart mode zooms to the span the gantry is on: a view three gantry lengths wide (the gantry's trusses are 401.56
 // canvas units long), with the span 35% of the way across and down
 export const GANTRY_LENGTH = 401.56,
@@ -136,7 +141,7 @@ export const HORIZONTAL_VIEW_METRES = 350;
 
 // Full image view draws the old railway line about 50% heavier: the line itself, and its cross ties (dash) thicker on the same
 // spacing. The original line is inside the 1.11x zoomed frame; its two extensions are in canvas units, 1.11 times larger.
-export const FULL_VIEW_CSS =
+export const FULL_AERIAL_CSS =
   "#nwsr-railway{stroke-width:3 !important}" +
   "#nwsr-railway-ties{stroke-dasharray:3 13 !important}" +
   "#railway-extension path:first-of-type,#railway-extension-north path:first-of-type{stroke-width:3.33 !important}" +
@@ -154,20 +159,20 @@ export function layerCss(state) {
     g[1].forEach(([k, , cls]) => {
       const on =
         state[k] &&
-        !((k === "greenbelt" || k === "creeks") && !state.drawing) &&
+        !((k === "greenbelt" || k === "creeks") && !state.sfmsfDrawing) &&
         !(
           ["roads", "yard", "walk"].includes(k) &&
-          !state.drawing &&
-          !state.sfzoom
+          !state.sfmsfDrawing &&
+          !state.sfmsfAerial
         ) &&
-        !(k === "aerial" && state.drawing) &&
-        !((k === "labels" || k === "cclabels") && !avail) &&
+        !(k === "aerial" && state.sfmsfDrawing) &&
+        !((k === "omc5Labels" || k === "spanLabels") && !avail) &&
         !(k === "hires" && !state.aerial);
       if (
         k === "progress" ||
-        k === "drawing" ||
-        k === "sfzoom" ||
-        k === "view_default" ||
+        k === "sfmsfDrawing" ||
+        k === "sfmsfAerial" ||
+        k === "fullAerial" ||
         k === "horizontal"
       )
         return;
@@ -185,13 +190,13 @@ export function layerCss(state) {
           '.roads,.fraser,.hwy15,.road.hwy15,.road.fraser,line[class="bg"]{display:' +
           (on ? "inline" : "none") +
           " !important}";
-      else if (k === "labels")
+      else if (k === "omc5Labels")
         r +=
           ".spanlabel{display:" +
           (on ? "inline" : "none") +
           " !important}" +
           (on ? "" : ".spanlabel.steel-hwy15{display:none !important}");
-      else if (k === "cclabels")
+      else if (k === "spanLabels")
         r +=
           ".cclabel{display:" +
           (on ? "inline" : "none") +
@@ -244,7 +249,7 @@ export function layerCss(state) {
   }
   r +=
     'polygon.ave72[fill="#FFFFFF"]{opacity:' +
-    (state.greenbelt && state.drawing ? 1 : 0) +
+    (state.greenbelt && state.sfmsfDrawing ? 1 : 0) +
     " !important}";
   return r;
 }

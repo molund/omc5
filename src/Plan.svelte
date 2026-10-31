@@ -1,10 +1,10 @@
 <script>
   import { onMount } from "svelte";
   import planSvg from "./assets/plan.svg?raw";
-  import { DRAW_VB, ZOOM_VB, FULL_VB } from "./lib/layers.js";
-  import { tagLaunchers } from "./lib/tagLaunchers.js";
-  import { gantrySpan } from "./lib/gantrySpan.js";
-  import { placeGantry } from "./lib/gantryAnchor.js";
+  import { DRAW_VB, SFMSF_AERIAL_VB, FULL_VB } from "./lib/layerSwitches.js";
+  import { tagBuiltBy } from "./lib/builtBy.js";
+  import { gantryProgress } from "./lib/gantryProgress.js";
+  import { placeGantry } from "./lib/placeGantry.js";
   import { status } from "./lib/status.js";
   import {
     layers,
@@ -17,7 +17,7 @@
     fillView,
     progressView,
     horizontalView,
-  } from "./lib/state.svelte.js";
+  } from "./lib/appState.svelte.js";
   import ProgressCard from "./ProgressCard.svelte";
 
   let stage;
@@ -27,12 +27,12 @@
     const svg = stage.querySelector("svg");
     els.stage = stage;
     els.svg = svg;
-    tagLaunchers(svg);
+    tagBuiltBy(svg);
     // the gantry's span and whether it is complete come from status.yaml
     const gantry = svg.querySelector("#clayton-clipper");
     if (gantry && status.span) gantry.dataset.span = status.span;
-    els.gantrySpan = placeGantry(svg);
-    ui.gantry = gantrySpan(svg, status.span ? status.complete : null);
+    els.gantrySpanCentre = placeGantry(svg);
+    ui.gantry = gantryProgress(svg, status.span ? status.complete : null);
     // the turn that levels the Clayton Clipper route: the line from span 105's label to span 1's, turned flat
     const toRoot = DOMMatrix.fromMatrix(svg.getScreenCTM()).inverse(),
       label = (n) => {
@@ -60,15 +60,15 @@
     ui.ready = true;
     svg.style.width = ui.zoom + "%";
     if (layers.progress) progressView();
-    else if (layers.drawing) {
+    else if (layers.sfmsfDrawing) {
       setView(DRAW_VB);
       fillView();
-    } else if (layers.sfzoom) {
-      setView(ZOOM_VB);
+    } else if (layers.sfmsfAerial) {
+      setView(SFMSF_AERIAL_VB);
       fillView();
     } else if (layers.horizontal) horizontalView();
     // the views a reload can come back to (the page itself opens on Progress)
-    else if (ui.view === "view_default") {
+    else if (ui.view === "fullAerial") {
       setView(FULL_VB);
       fillView();
     }

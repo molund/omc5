@@ -1,15 +1,15 @@
 <script>
   import LayerPanel from "./LayerPanel.svelte";
-  import PanelIcon from "./PanelIcon.svelte";
+  import Icon from "./Icon.svelte";
   import Plan from "./Plan.svelte";
-  import { layerCss, FULL_VIEW_CSS } from "./lib/layers.js";
+  import { layerCss, FULL_AERIAL_CSS } from "./lib/layerSwitches.js";
   import { fade } from "svelte/transition";
-  import { layers, ui, PHONE } from "./lib/state.svelte.js";
+  import { layers, ui, PHONE } from "./lib/appState.svelte.js";
 
   // the layer rules wait until Plan has tagged the drawing, which needs it laid out as plan.svg draws it on its own
   const css = $derived(
     ui.ready
-      ? layerCss(layers) + (ui.view === "view_default" ? FULL_VIEW_CSS : "")
+      ? layerCss(layers) + (ui.view === "fullAerial" ? FULL_AERIAL_CSS : "")
       : "",
   );
   // turning a tablet or resizing the window across the phone width: the panel opens beside the plan, or the menu closes
@@ -56,7 +56,7 @@
     aria-label={ui.phone ? "Open the menu" : "Show the layer panel"}
     aria-expanded="false"
     onclick={() => (ui.collapsed = false)}
-    ><PanelIcon kind={ui.phone ? "menu" : "panel"} /></button
+    ><Icon kind={ui.phone ? "menu" : "panel"} /></button
   >
 {/if}
 
