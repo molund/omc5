@@ -4,13 +4,14 @@ Positions of the elevated guideway supports (pillars and bents) and spans of the
 Fraser Highway in Surrey, BC, from 166 Street to 184 Street (about 4 km). This is an independent, unofficial dataset
 compiled by Mike Olund. It is not from TransLink or the Province of BC.
 
-| File                       | Contents                                                  |
-| -------------------------- | --------------------------------------------------------- |
-| `clipper-supports.geojson` | One point per support, at the centre of its pillar(s)     |
-| `clipper-pillars.geojson`  | One point per pillar (column), where it stands            |
-| `clipper-spans.geojson`    | One polygon per span deck (or per girder line, see below) |
-| `control-points.json`      | The two control points used to georeference the drawing   |
-| `LICENSE`                  | CC0 1.0: public domain, no conditions                     |
+| File                       | Contents                                                                               |
+| -------------------------- | -------------------------------------------------------------------------------------- |
+| `clipper-supports.geojson` | One point per support, at the centre of its pillar(s)                                  |
+| `clipper-pillars.geojson`  | One point per pillar (column), where it stands                                         |
+| `clipper-spans.geojson`    | One polygon per span deck (or per girder line, see below)                              |
+| `control-points.json`      | The two control points used to georeference the drawing                                |
+| `kml/`                     | The same three layers as KML, for Google My Maps and Google Earth (one file per layer) |
+| `LICENSE`                  | CC0 1.0: public domain, no conditions                                                  |
 
 Coordinates are WGS84 longitude/latitude (GeoJSON, RFC 7946). The files open directly in QGIS, ArcGIS, geojson.io,
 Leaflet, Mapbox and Google Earth (import), and GitHub shows them on a map.
