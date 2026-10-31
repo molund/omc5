@@ -1,5 +1,5 @@
 <script>
-  // The past updates page: every status note, newest first, each with an id from its time stamp (e.g. #2026-10-30T20-45) so
+  // The Trackside page: every status note, newest first, each with an id from its time stamp (e.g. #2026-10-30T20-45) so
   // a single update can be linked to
   import { onMount } from "svelte";
   import { status, asOf, minorTime } from "./lib/status.js";
@@ -107,7 +107,7 @@
 <!-- laid out like a README on GitHub: a heading per update, the note, its photo, its minor changes as a list with code-style
      times, then its comments -->
 <main class="page">
-  <h1>Past updates</h1>
+  <h1>Trackside</h1>
   <a class="back" href={MAP}>← Back to the map</a>
   {#each shown as n (anchor(n.time))}
     <article id={anchor(n.time)}>

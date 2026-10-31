@@ -5,20 +5,20 @@
   import { anchor, term, fetchCounts } from "./lib/comments.js";
   import Icon from "./Icon.svelte";
 
-  // "today" or "yesterday" on the card (the past updates list keeps full dates)
+  // "today" or "yesterday" on the card (Trackside keeps full dates)
   const when = asOf(status.updated, true);
   // the newest note's own time: "9:30 a.m." today, "9:30 a.m. yesterday", and so on
   const postedAt = status.history[0]
     ? asOf(status.history[0].time, true).replace(/ today$/, "")
     : "";
-  // the past updates page
-  const UPDATES = `${import.meta.env.BASE_URL}updates/`;
+  // the Trackside page
+  const TRACKSIDE = `${import.meta.env.BASE_URL}trackside/`;
   // the Comments button opens the newest update on that page with its comments open, and shows its comment and reaction
   // counts once GitHub has sent them
   const newest = status.history[0];
   const COMMENTS = newest
-    ? `${UPDATES}?comments#${anchor(newest.time)}`
-    : UPDATES;
+    ? `${TRACKSIDE}?comments#${anchor(newest.time)}`
+    : TRACKSIDE;
   let activity = $state(null);
   if (newest)
     fetchCounts().then((c) => (activity = c[term(newest.time)] ?? null));
@@ -108,14 +108,14 @@
         <span class="chip">{postedAt}</span>{status.note}
         {#if status.more.length}<a
             class="more"
-            href="{UPDATES}#{anchor(newest.time)}">More</a
+            href="{TRACKSIDE}#{anchor(newest.time)}">More</a
           >{/if}
       </div>{/if}
     {#each status.minor as m}<div class="note later">
         <span class="chip">{minorTime(m.time, status.history[0].time)}</span
         >{m.text}
       </div>{/each}
-    {#if status.photo}<a class="thumb" href={UPDATES}
+    {#if status.photo}<a class="thumb" href={TRACKSIDE}
         ><img
           src={status.photo.src}
           alt={status.photo.caption || "Photo for this update"}
@@ -255,7 +255,7 @@
     font-size: calc(11rem / 17);
     font-weight: 600;
   }
-  /* the link to the rest of a longer note, on the Past updates page */
+  /* the link to the rest of a longer note, on the Trackside page */
   .more {
     color: var(--accent);
     white-space: nowrap;
@@ -273,7 +273,7 @@
     margin-top: 4px;
     font-size: calc(13rem / 17);
   }
-  /* the newest update's photo, a short strip across the card, opening the past updates page (the newest is at its top) */
+  /* the newest update's photo, a short strip across the card, opening the Trackside page (the newest is at its top) */
   .thumb {
     display: block;
     margin-top: 8px;
