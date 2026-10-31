@@ -122,7 +122,8 @@
       {#if n.minor.length}
         <h3>Follow-ups</h3>
         <ul class="minor">
-          {#each n.minor as m}<li>
+          <!-- oldest first, in the order they happened (the card shows the newest first) -->
+          {#each [...n.minor].reverse() as m}<li>
               <code>{minorTime(m.time, n.time)}</code>
               {m.text}
             </li>{/each}
