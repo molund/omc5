@@ -337,7 +337,6 @@ function exportGeojson() {
   const meta = {
     source:
       "Traced on aerial imagery and checked on site visits; see data/README.md",
-    exported: new Date().toISOString().slice(0, 10),
   };
   write(`${OUT}supports.geojson`, supports, meta);
   write(`${OUT}pillars.geojson`, pillarFeatures, meta);

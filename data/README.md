@@ -97,4 +97,4 @@ are regenerated on every update; the copies in this folder only when the export 
 ## Updating
 
 After changing the drawing, run `npm run export-geojson` and commit the regenerated files. The `metadata` block in each
-file records the export date and the accuracy figures.
+file records where the data came from. There is no export date, so the files only change when the data does.
