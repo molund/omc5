@@ -6,8 +6,10 @@ span: 36
 # whether that span is complete (or at least hung)
 complete: false
 # every note, newest first, each stamped with the time of the update that added it; the progress card shows only the newest,
-# under the date (an empty note shows none). A note can have a photo on the line under it, `    photo: file.jpg`, a file in
-# public/images/sorry-im-a-shitty-photographer/
+# under the date (an empty note shows none). A note can have a photo, indented under it, with its own caption:
+#     photo:
+#       file: span-36.jpg (in public/images/sorry-im-a-shitty-photographer/)
+#       caption: "What the photo shows"
 notes:
   - 2026-10-30T20:45-07:00: "The Clayton Clipper has moved to span 36."
   - 2026-10-30T12:45-07:00: "The Clayton Clipper has started moving its supports, getting ready to move from span 35 to span 36."

@@ -89,8 +89,11 @@
     </div>
     {#if when}<div class="asof">As of {when}</div>{/if}
     {#if status.note}<div class="note">{status.note}</div>{/if}
-    {#if status.photo}<a class="thumb" href={status.photo}
-        ><img src={status.photo} alt="Photo for this update" /></a
+    {#if status.photo}<a class="thumb" href={status.photo.src}
+        ><img
+          src={status.photo.src}
+          alt={status.photo.caption || "Photo for this update"}
+        /></a
       >{/if}
     {#if status.history.length}
       <a class="history-link" href={UPDATES}
