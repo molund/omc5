@@ -234,11 +234,11 @@
     color: var(--mute);
   }
   /* the follow-ups, a bullet list, each time in GitHub's inline-code style */
-  .followUps {
+  .follow-ups {
     margin: 0;
     padding-left: 22px;
   }
-  .followUps li + li {
+  .follow-ups li + li {
     margin-top: 4px;
   }
   code {
