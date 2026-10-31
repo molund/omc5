@@ -120,7 +120,7 @@
           </p>{/if}
       {/each}
       {#if n.minor.length}
-        <h3>Minor changes</h3>
+        <h3>Follow-ups</h3>
         <ul class="minor">
           {#each n.minor as m}<li>
               <code>{minorTime(m.time, n.time)}</code>
