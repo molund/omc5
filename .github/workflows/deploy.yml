@@ -65,7 +65,7 @@ jobs:
         env:
           # Mike's fine-grained token (Discussions: read and write on this repo), since the built-in token can create
           # threads in the Announcement category but not edit them; the built-in token until that secret exists
-          GITHUB_TOKEN: ${{ secrets.DISCUSSIONS_TOKEN || secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.DISCUSSION_TOKEN || secrets.GITHUB_TOKEN }}
         run: python3 .github/scripts/sync_discussions.py
       - uses: actions/setup-node@v4
         with:

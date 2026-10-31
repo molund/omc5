@@ -1,7 +1,7 @@
 name: Recreate the comment threads
 
 # Run by hand (Actions > Recreate the comment threads > Run workflow): deletes every comment thread, comments and all, and makes
-# them again from status.yaml with the DISCUSSIONS_TOKEN secret, so they are Mike's.
+# them again from status.yaml with the DISCUSSION_TOKEN secret, so they are Mike's.
 on:
   workflow_dispatch:
 
@@ -15,5 +15,5 @@ jobs:
       - uses: actions/checkout@v4
       - name: Delete and recreate the comment threads
         env:
-          GITHUB_TOKEN: ${{ secrets.DISCUSSIONS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.DISCUSSION_TOKEN }}
         run: python3 .github/scripts/sync_discussions.py --recreate
