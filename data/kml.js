@@ -7,15 +7,15 @@ const STYLES = {
   // spans: finished ones a dark warm grey (#4F4E4A, the drawing's grey darkened), unfinished ones a pale outline, so they read
   // on aerial imagery without relying on hue. Finished spans are outlined in the drawing's darkest outline colour (#2C2C2A),
   // 1.5 wide like the unfinished ones. Google My Maps ignores the outline colour and draws the border in the fill colour at
-  // full strength, so the fills are dark and 40% opaque (66), as the unfinished ones are, for a clear border there
+  // full strength, so the fills are dark and 50% opaque (80), for a clear border there that still reads over greenery
   finished:
-    "<PolyStyle><color>664a4e4f</color></PolyStyle><LineStyle><color>ff2a2c2c</color><width>1.5</width></LineStyle>",
+    "<PolyStyle><color>804a4e4f</color></PolyStyle><LineStyle><color>ff2a2c2c</color><width>1.5</width></LineStyle>",
   unfinished:
     "<PolyStyle><color>66ffffff</color></PolyStyle><LineStyle><color>ff4a4a4a</color><width>1.5</width></LineStyle>",
-  // finished steel spans: a dark tan (#8B6F3E, the drawing's tan darkened), 40% opaque and outlined like the other finished
+  // finished steel spans: a dark tan (#8B6F3E, the drawing's tan darkened), 50% opaque and outlined like the other finished
   // spans
   steel:
-    "<PolyStyle><color>663e6f8b</color></PolyStyle><LineStyle><color>ff2a2c2c</color><width>1.5</width></LineStyle>",
+    "<PolyStyle><color>803e6f8b</color></PolyStyle><LineStyle><color>ff2a2c2c</color><width>1.5</width></LineStyle>",
   // supports: the pier caps, solid mid grey with a dark outline
   support:
     "<PolyStyle><color>ff8a8a8a</color></PolyStyle><LineStyle><color>ff222222</color><width>1</width></LineStyle>",
