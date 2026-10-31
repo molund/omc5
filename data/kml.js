@@ -4,11 +4,18 @@ import fs from "node:fs";
 
 // KML colours are aabbggrr hex
 const STYLES = {
-  // spans: finished ones solid dark grey, unfinished ones a pale outline, so they read on aerial imagery without relying on hue
+  // spans: finished ones a dark warm grey (#4F4E4A, the drawing's grey darkened), unfinished ones a pale outline, so they read
+  // on aerial imagery without relying on hue. Finished spans are outlined in the drawing's darkest outline colour (#2C2C2A),
+  // 1.5 wide like the unfinished ones. Google My Maps ignores the outline colour and draws the border in the fill colour at
+  // full strength, so the fills are dark and 50% opaque (80), for a clear border there that still reads over greenery
   finished:
-    "<PolyStyle><color>ff4a4a4a</color></PolyStyle><LineStyle><color>ff222222</color><width>1</width></LineStyle>",
+    "<PolyStyle><color>804a4e4f</color></PolyStyle><LineStyle><color>ff2a2c2c</color><width>1.5</width></LineStyle>",
   unfinished:
     "<PolyStyle><color>66ffffff</color></PolyStyle><LineStyle><color>ff4a4a4a</color><width>1.5</width></LineStyle>",
+  // finished steel spans: a dark steel blue (#2F5C8A; the drawing's tan doesn't show over greenery), 50% opaque and outlined
+  // like the other finished spans
+  steel:
+    "<PolyStyle><color>808a5c2f</color></PolyStyle><LineStyle><color>ff2a2c2c</color><width>1.5</width></LineStyle>",
   // supports: the pier caps, solid mid grey with a dark outline
   support:
     "<PolyStyle><color>ff8a8a8a</color></PolyStyle><LineStyle><color>ff222222</color><width>1</width></LineStyle>",
@@ -55,24 +62,27 @@ function nameOf(p) {
   return `Pillar #${p.id}`;
 }
 
-// spans by whether they are finished (spans exported without it count as finished); supports alike; points all alike
+// spans by whether they are finished (spans exported without it count as finished), finished steel ones in their own colour;
+// supports alike; points all alike
 const styleOf = (p) =>
   "finished" in p || "cc_span" in p
     ? p.finished === false
       ? "unfinished"
-      : "finished"
+      : p.kind === "steel girder"
+        ? "steel"
+        : "finished"
     : "cc_joint" in p
       ? "support"
       : "Point";
 
 // one Placemark per line, so diffs show which features changed
 export function writeKml(file, title, features, meta) {
-  // the styles the layer's features use (the spans layer always has both span styles)
+  // the styles the layer's features use (the spans layer always has both finished and unfinished)
   const styles = [
     ...new Set(
       features.flatMap((f) =>
         "cc_span" in f.properties
-          ? ["finished", "unfinished"]
+          ? ["finished", "unfinished", styleOf(f.properties)]
           : [styleOf(f.properties)],
       ),
     ),
