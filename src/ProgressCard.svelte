@@ -7,6 +7,10 @@
 
   // "today" or "yesterday" on the card (the past updates list keeps full dates)
   const when = asOf(status.updated, true);
+  // the newest note's own time: "9:30 a.m." today, "9:30 a.m. yesterday", and so on
+  const postedAt = status.history[0]
+    ? asOf(status.history[0].time, true).replace(/ today$/, "")
+    : "";
   // the past updates page
   const UPDATES = `${import.meta.env.BASE_URL}updates/`;
   // the Comments button opens the newest update on that page with its comments open, and shows its comment and reaction
@@ -98,10 +102,14 @@
       ></div>
     </div>
     {#if when}<div class="asof">As of {when}</div>{/if}
-    {#if status.note}<div class="note">{status.note}</div>{/if}
-    {#each status.minor as m}<div class="minor">
-        <span class="minor-time">{minorTime(m.time, status.history[0].time)}</span>
-        {m.text}
+    <!-- the note and its minor updates, each led by its own time in a small chip, so the note keeps its time when "As of"
+         moves on to a minor update -->
+    {#if status.note}<div class="note">
+        <span class="chip">{postedAt}</span>{status.note}
+      </div>{/if}
+    {#each status.minor as m}<div class="note later">
+        <span class="chip">{minorTime(m.time, status.history[0].time)}</span
+        >{m.text}
       </div>{/each}
     {#if status.photo}<a class="thumb" href={UPDATES}
         ><img
@@ -232,15 +240,19 @@
     height: 100%;
     border-radius: 5px;
   }
-  /* a minor update under the note: its time, then its text, smaller and set in */
-  .minor {
-    margin-top: 6px;
-    padding-left: 8px;
-    border-left: 2px solid var(--line);
-    font-size: calc(12rem / 17);
-  }
-  .minor-time {
+  /* a time chip leading the note or a minor update: small grey pill */
+  .chip {
+    display: inline-block;
+    margin-right: 4px;
+    padding: 0 6px;
+    border-radius: 9px;
+    background: var(--bg);
     color: var(--mute);
+    font-size: calc(11rem / 17);
+    font-weight: 600;
+  }
+  .note.later {
+    margin-top: 6px;
   }
   .asof {
     margin-top: 8px;
