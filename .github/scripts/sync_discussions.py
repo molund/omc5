@@ -75,7 +75,7 @@ def body(n):
     return "\n\n".join(parts)
 
 
-def graphql(query, **variables):
+def graphql(query, soft=False, **variables):
     req = urllib.request.Request(
         "https://api.github.com/graphql",
         data=json.dumps({"query": query, "variables": variables}).encode(),
@@ -83,6 +83,9 @@ def graphql(query, **variables):
     )
     res = json.load(urllib.request.urlopen(req))
     if res.get("errors"):
+        if soft:
+            print(f"::warning::{res['errors'][0].get('message')}")
+            return None
         sys.exit(f"::error::{res['errors']}")
     return res["data"]
 
@@ -122,13 +125,15 @@ def main():
             )
             print(f"created {t}")
         elif have[t][1].strip() != b.strip():
-            graphql(
+            # a thread giscus started (on a first comment, before this ran) can't be edited by the workflow: leave it
+            done = graphql(
                 """mutation($id: ID!, $body: String!) {
                      updateDiscussion(input: {discussionId: $id, body: $body}) { discussion { id } } }""",
+                soft=True,
                 id=have[t][0],
                 body=b,
             )
-            print(f"updated {t}")
+            print(f"updated {t}" if done else f"left {t} as it is (not ours to edit)")
 
 
 if __name__ == "__main__":
