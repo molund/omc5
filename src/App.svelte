@@ -1,18 +1,18 @@
 <script>
   import LayerPanel from "./LayerPanel.svelte";
   import Icon from "./Icon.svelte";
-  import Plan from "./Plan.svelte";
+  import MapView from "./MapView.svelte";
   import { layerCss, FULL_AERIAL_CSS } from "./lib/layerSwitches.js";
   import { fade } from "svelte/transition";
   import { layers, ui, PHONE } from "./lib/appState.svelte.js";
 
-  // the layer rules wait until Plan has tagged the drawing, which needs it laid out as map.svg draws it on its own
+  // the layer rules wait until MapView has tagged the drawing, which needs it laid out as map.svg draws it on its own
   const css = $derived(
     ui.ready
       ? layerCss(layers) + (ui.view === "fullAerial" ? FULL_AERIAL_CSS : "")
       : "",
   );
-  // turning a tablet or resizing the window across the phone width: the panel opens beside the plan, or the menu closes
+  // turning a tablet or resizing the window across the phone width: the panel opens beside the map, or the menu closes
   $effect(() => {
     const changed = (e) => {
       ui.phone = e.matches;
@@ -38,9 +38,9 @@
   {#if !ui.collapsed}
     <LayerPanel />
   {/if}
-  <Plan />
+  <MapView />
 </div>
-<!-- on a phone the open menu dims the plan; tapping the plan closes it -->
+<!-- on a phone the open menu dims the map; tapping the map closes it -->
 {#if ui.phone && !ui.collapsed}
   <div
     class="backdrop"
@@ -70,7 +70,7 @@
     grid-template-columns: 1fr;
     grid-template-rows: 1fr;
   }
-  /* on a phone the panel slides in over the plan, so the plan always has the whole screen */
+  /* on a phone the panel slides in over the map, so the map always has the whole screen */
   @media (max-width: 760px) {
     .app {
       grid-template-columns: 1fr;

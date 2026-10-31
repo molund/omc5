@@ -96,16 +96,16 @@ export const PROGRESS_COLOUR = "#6D28D9";
 // The Clayton Clipper's finished spans are violet up to the span the gantry has reached, their usual colour past it, and its
 // span numbers are black, or white on violet.
 const PROGRESS_CSS =
-  "#plan polygon,#plan path,#plan line,#plan polyline,#plan rect,#plan circle,#plan ellipse,#plan text{visibility:hidden !important}" +
-  "#plan mask *,#plan clipPath *,#plan defs *{visibility:visible !important}" +
-  "#plan polygon.guideway.cc.reached:not(.unfinished){fill:" +
+  "#map polygon,#map path,#map line,#map polyline,#map rect,#map circle,#map ellipse,#map text{visibility:hidden !important}" +
+  "#map mask *,#map clipPath *,#map defs *{visibility:visible !important}" +
+  "#map polygon.guideway.cc.reached:not(.unfinished){fill:" +
   PROGRESS_COLOUR +
   " !important}" +
-  "#plan text.cclabel.cc{fill:#000000 !important}" +
+  "#map text.cclabel.cc{fill:#000000 !important}" +
   // white where the number sits on a span in the progress colour
-  "#plan text.cclabel.cc.on-reached{fill:#ffffff !important}" +
+  "#map text.cclabel.cc.on-reached{fill:#ffffff !important}" +
   // the SFMSF span labels' grey (unfinished spans) and default dark grey (the steel spans) in the same black
-  '#plan text.spanlabel[style*="#767676"],#plan text.spanlabel:not([style*="fill"]){fill:#000000 !important}';
+  '#map text.spanlabel[style*="#767676"],#map text.spanlabel:not([style*="fill"]){fill:#000000 !important}';
 // what each switch shows in progress-chart mode (whether it shows is still up to the layer's own display rule)
 const PROGRESS_SHOWS = {
   // finished spans, concrete and steel
@@ -205,7 +205,7 @@ export function layerCss(state) {
       else if (k === "cc" || k === "ll" || k === "ff")
         r += on
           ? ""
-          : "#plan ." + k + "." + k + "." + k + "{display:none !important}";
+          : "#map ." + k + "." + k + "." + k + "{display:none !important}";
       else if (k === "arrows")
         r += on ? "" : "text.n.guideway{display:none !important}";
       else if (k === "gantry" || k === "beams") r += "";
@@ -244,7 +244,7 @@ export function layerCss(state) {
     const shows = Object.keys(PROGRESS_SHOWS)
       .filter((k) => state[k])
       .flatMap((k) => PROGRESS_SHOWS[k])
-      .flatMap((sel) => [`#plan ${sel}`, `#plan ${sel} *`]);
+      .flatMap((sel) => [`#map ${sel}`, `#map ${sel} *`]);
     if (shows.length) r += `${shows.join(",")}{visibility:visible !important}`;
   }
   r +=

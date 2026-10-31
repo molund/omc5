@@ -1,6 +1,6 @@
 <script>
   import { onMount } from "svelte";
-  import planSvg from "./assets/map.svg?raw";
+  import mapSvg from "./assets/map.svg?raw";
   import { DRAW_VB, SFMSF_AERIAL_VB, FULL_VB } from "./lib/layerSwitches.js";
   import { tagBuiltBy } from "./lib/builtBy.js";
   import { gantryProgress } from "./lib/gantryProgress.js";
@@ -53,7 +53,7 @@
         (-Math.atan2(first.y - last.y, first.x - last.x) * 180) / Math.PI;
     // everything in the drawing goes in one group, so Horizontal can turn it all
     const turn = document.createElementNS("http://www.w3.org/2000/svg", "g");
-    turn.id = "plan-turn";
+    turn.id = "map-turn";
     turn.append(...svg.childNodes);
     svg.append(turn);
     els.turn = turn;
@@ -92,14 +92,14 @@
       setZoom(gz * e.scale, e.clientX, e.clientY);
     };
     // Safari's own pinch would zoom the whole page instead; stop it anywhere on the page (a pinch that starts on the
-    // progress card or a button, say), not only on the plan, which zooms itself above
+    // progress card or a button, say), not only on the map, which zooms itself above
     const noPageZoom = (e) => e.preventDefault();
     stage.addEventListener("wheel", wheel, { passive: false });
     stage.addEventListener("gesturestart", gesturestart);
     stage.addEventListener("gesturechange", gesturechange);
     document.addEventListener("gesturestart", noPageZoom, { passive: false });
     document.addEventListener("gesturechange", noPageZoom, { passive: false });
-    // a filled or fitted plan stays so when the window or the layer panel changes the stage size
+    // a filled or fitted map stays so when the window or the layer panel changes the stage size
     const resize = new ResizeObserver(() => {
       if (ui.filled) fillView();
       else if (isFit()) setZoom(fitZoom());
@@ -133,7 +133,7 @@
     stage.scrollTop = drag.t - (e.clientY - drag.y);
   }
   const end = () => (drag = null);
-  // Safari (iPhone, iPad, Mac) sends pinches as gesture events, which the plan zooms with itself
+  // Safari (iPhone, iPad, Mac) sends pinches as gesture events, which the map zooms with itself
   const safariPinch = "GestureEvent" in window;
 </script>
 
@@ -150,7 +150,7 @@
     onpointerup={end}
     onpointercancel={end}
   >
-    {@html planSvg}
+    {@html mapSvg}
   </main>
   <ProgressCard />
 </div>
@@ -169,7 +169,7 @@
     cursor: grab;
     touch-action: pan-x pan-y pinch-zoom;
   }
-  /* where the plan zooms itself on a pinch, the browser mustn't zoom the page with it */
+  /* where the map zooms itself on a pinch, the browser mustn't zoom the page with it */
   .stage.safari-pinch {
     touch-action: pan-x pan-y;
   }
