@@ -4,15 +4,16 @@ import fs from "node:fs";
 
 // KML colours are aabbggrr hex
 const STYLES = {
-  // spans: finished ones solid in the drawing's grey (#888780) with its dark grey outline (#5F5E5A), unfinished ones a pale
-  // outline, so they read on aerial imagery without relying on hue
+  // spans: finished ones solid in the drawing's grey (#888780), unfinished ones a pale outline, so they read on aerial imagery
+  // without relying on hue. Finished spans are outlined in the drawing's darkest outline colour (#2C2C2A), 1.5 wide like the
+  // unfinished ones: its own #5F5E5A at 1 wide is too close to the fill to show in Google Maps
   finished:
-    "<PolyStyle><color>ff808788</color></PolyStyle><LineStyle><color>ff5a5e5f</color><width>1</width></LineStyle>",
+    "<PolyStyle><color>ff808788</color></PolyStyle><LineStyle><color>ff2a2c2c</color><width>1.5</width></LineStyle>",
   unfinished:
     "<PolyStyle><color>66ffffff</color></PolyStyle><LineStyle><color>ff4a4a4a</color><width>1.5</width></LineStyle>",
-  // finished steel spans: the drawing's tan (#E3D3B2) with its dark grey outline (#5F5E5A)
+  // finished steel spans: the drawing's tan (#E3D3B2), outlined like the other finished spans
   steel:
-    "<PolyStyle><color>ffb2d3e3</color></PolyStyle><LineStyle><color>ff5a5e5f</color><width>1</width></LineStyle>",
+    "<PolyStyle><color>ffb2d3e3</color></PolyStyle><LineStyle><color>ff2a2c2c</color><width>1.5</width></LineStyle>",
   // supports: the pier caps, solid mid grey with a dark outline
   support:
     "<PolyStyle><color>ff8a8a8a</color></PolyStyle><LineStyle><color>ff222222</color><width>1</width></LineStyle>",
