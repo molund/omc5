@@ -3751,188 +3751,188 @@
   <g id="cc-span-labels">
     <text
       class="n cclabel cc steel-hwy15"
-      x="-40.57"
-      y="-151.77"
+      x="-40.59"
+      y="-167.50"
       dy=".36em"
       text-anchor="middle"
       style="font-size: 9.44px"
-      transform="rotate(34.1 -40.57 -151.77)"
+      transform="rotate(34.1 -40.59 -167.50)"
     >
       47
     </text>
     <text
       class="n cclabel cc steel-hwy15"
-      x="100.32"
-      y="-55.71"
+      x="100.23"
+      y="-73.56"
       dy=".36em"
       text-anchor="middle"
       style="font-size: 9.44px"
-      transform="rotate(34.4 100.32 -55.71)"
+      transform="rotate(34.4 100.23 -73.56)"
     >
       46
     </text>
     <text
       class="n cclabel cc steel-hwy15"
-      x="239.60"
-      y="38.92"
+      x="239.64"
+      y="18.12"
       dy=".36em"
       text-anchor="middle"
       style="font-size: 9.44px"
-      transform="rotate(33.9 239.60 38.92)"
+      transform="rotate(33.9 239.64 18.12)"
     >
       45
     </text>
     <text
       class="n cclabel cc"
-      x="358.21"
-      y="118.64"
+      x="358.26"
+      y="92.99"
       dy=".36em"
       text-anchor="middle"
       style="font-size: 9.44px; fill: #ffffff"
-      transform="rotate(33.9 358.21 118.64)"
+      transform="rotate(33.9 358.26 92.99)"
     >
       44
     </text>
     <text
       class="n cclabel cc"
-      x="456.12"
-      y="184.86"
+      x="455.96"
+      y="154.91"
       dy=".36em"
       text-anchor="middle"
       style="font-size: 9.44px; fill: #ffffff"
-      transform="rotate(34.3 456.12 184.86)"
+      transform="rotate(34.3 455.96 154.91)"
     >
       43
     </text>
     <text
       class="n cclabel cc"
-      x="554.54"
-      y="249.95"
+      x="555.01"
+      y="227.73"
       dy=".36em"
       text-anchor="middle"
       style="font-size: 9.44px; fill: #ffffff"
-      transform="rotate(32.8 554.54 249.95)"
+      transform="rotate(32.8 555.01 227.73)"
     >
       42
     </text>
     <text
       class="n cclabel cc"
-      x="668.65"
-      y="322.16"
+      x="669.59"
+      y="300.55"
       dy=".36em"
       text-anchor="middle"
       style="font-size: 9.44px; fill: #ffffff"
-      transform="rotate(31.5 668.65 322.16)"
+      transform="rotate(31.5 669.59 300.55)"
     >
       41
     </text>
     <text
       class="n cclabel cc"
-      x="784.28"
-      y="393.10"
+      x="785.22"
+      y="371.48"
       dy=".36em"
       text-anchor="middle"
       style="font-size: 9.44px; fill: #ffffff"
-      transform="rotate(31.5 784.28 393.10)"
+      transform="rotate(31.5 785.22 371.48)"
     >
       40
     </text>
     <text
       class="n cclabel cc"
-      x="897.84"
-      y="465.92"
+      x="897.95"
+      y="444.59"
       dy=".36em"
       text-anchor="middle"
       style="font-size: 9.44px; fill: #767676"
-      transform="rotate(33.7 897.84 465.92)"
+      transform="rotate(33.7 897.95 444.59)"
     >
       39
     </text>
     <text
       class="n cclabel cc"
-      x="1009.22"
-      y="541.17"
+      x="1009.03"
+      y="519.84"
       dy=".36em"
       text-anchor="middle"
       style="font-size: 9.44px; fill: #767676"
-      transform="rotate(34.5 1009.22 541.17)"
+      transform="rotate(34.5 1009.03 519.84)"
     >
       38
     </text>
     <text
       class="n cclabel cc"
-      x="1111.63"
-      y="610.27"
+      x="1111.82"
+      y="588.94"
       dy=".36em"
       text-anchor="middle"
       style="font-size: 9.44px; fill: #767676"
-      transform="rotate(33.5 1111.63 610.27)"
+      transform="rotate(33.5 1111.82 588.94)"
     >
       37
     </text>
     <text
       class="n cclabel cc"
-      x="1215.14"
-      y="678.84"
+      x="1215.32"
+      y="657.50"
       dy=".36em"
       text-anchor="middle"
       style="font-size: 9.44px; fill: #767676"
-      transform="rotate(33.5 1215.14 678.84)"
+      transform="rotate(33.5 1215.32 657.50)"
     >
       36
     </text>
     <text
       class="n cclabel cc"
-      x="1327.58"
-      y="753.06"
+      x="1327.69"
+      y="731.72"
       dy=".36em"
       text-anchor="middle"
       style="font-size: 9.44px; fill: #767676"
-      transform="rotate(33.7 1327.58 753.06)"
+      transform="rotate(33.7 1327.69 731.72)"
     >
       35
     </text>
     <text
       class="n cclabel cc"
-      x="1440.20"
-      y="827.13"
+      x="1440.46"
+      y="805.79"
       dy=".36em"
       text-anchor="middle"
       style="font-size: 9.44px; fill: #767676"
-      transform="rotate(33.3 1440.20 827.13)"
+      transform="rotate(33.3 1440.46 805.79)"
     >
       34
     </text>
     <text
       class="n cclabel cc"
-      x="1553.57"
-      y="899.98"
+      x="1554.24"
+      y="878.65"
       dy=".36em"
       text-anchor="middle"
       style="font-size: 9.44px; fill: #ffffff"
-      transform="rotate(32.2 1553.57 899.98)"
+      transform="rotate(32.2 1554.24 878.65)"
     >
       33
     </text>
     <text
       class="n cclabel cc"
-      x="1669.30"
-      y="968.04"
+      x="1671.27"
+      y="948.11"
       dy=".36em"
       text-anchor="middle"
       style="font-size: 9.44px; fill: #ffffff"
-      transform="rotate(28.2 1669.30 968.04)"
+      transform="rotate(28.2 1671.27 948.11)"
     >
       32
     </text>
     <text
       class="n cclabel cc"
-      x="1789.49"
-      y="1032.71"
+      x="1791.35"
+      y="1013.75"
       dy=".36em"
       text-anchor="middle"
       style="font-size: 9.44px; fill: #ffffff"
-      transform="rotate(28.4 1789.49 1032.71)"
+      transform="rotate(28.4 1791.35 1013.75)"
     >
       31
     </text>
@@ -5408,34 +5408,34 @@
     </text>
     <text
       class="n cclabel cc steel-hwy15"
-      x="-613.36"
-      y="-537.97"
+      x="-613.37"
+      y="-553.67"
       dy=".36em"
       text-anchor="middle"
       style="font-size: 9.44px"
-      transform="rotate(33.9 -613.36 -537.97)"
+      transform="rotate(33.9 -613.37 -553.67)"
     >
       52
     </text>
     <text
       class="n cclabel cc steel-hwy15"
-      x="-764.86"
-      y="-639.79"
+      x="-764.85"
+      y="-655.49"
       dy=".36em"
       text-anchor="middle"
       style="font-size: 9.44px"
-      transform="rotate(33.9 -764.86 -639.79)"
+      transform="rotate(33.9 -764.85 -655.49)"
     >
       53
     </text>
     <text
       class="n cclabel cc steel-hwy15"
       x="-917.99"
-      y="-746.53"
+      y="-762.23"
       dy=".36em"
       text-anchor="middle"
       style="font-size: 9.44px"
-      transform="rotate(36.0 -917.99 -746.53)"
+      transform="rotate(36.0 -917.99 -762.23)"
     >
       54
     </text>
