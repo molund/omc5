@@ -109,6 +109,17 @@ def existing():
         after = d["pageInfo"]["endCursor"]
 
 
+def check_count(limit=100):
+    """Fail once the category reaches `limit` threads: the Past updates page reads only GitHub's first 100."""
+    n = len(existing())
+    print(f"{n} comment threads")
+    if n >= limit:
+        sys.exit(
+            f"::error::{n} comment threads: the Past updates page only reads the first {limit} for comment and reaction "
+            "counts (src/UpdatesPage.svelte). Time to decide how to handle more."
+        )
+
+
 def main():
     have = existing()
     for n in notes():
@@ -137,4 +148,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    check_count() if "--check-count" in sys.argv else main()
