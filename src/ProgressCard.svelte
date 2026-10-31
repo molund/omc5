@@ -6,6 +6,8 @@
 
   // "today" or "yesterday" on the card (the past updates list keeps full dates)
   const when = asOf(status.updated, true);
+  // the past updates page
+  const UPDATES = `${import.meta.env.BASE_URL}updates/`;
 
   // what each number counts, shown when it is hovered or clicked with a mouse, tapped (tap again to hide) or pressed with
   // Enter/Space
@@ -17,8 +19,6 @@
       "Total span positions on the Clayton Clipper's route. Parallel spans at the same location count as one.",
   };
   let tip = $state(null);
-  // the update history dialog
-  let historyDialog;
   const toggle = (k) => (tip = tip === k ? null : k);
   // a tap anywhere else, or Escape, closes the tip
   function outside(e) {
@@ -90,39 +90,13 @@
     {#if when}<div class="asof">As of {when}</div>{/if}
     {#if status.note}<div class="note">{status.note}</div>{/if}
     {#if status.history.length}
-      <button class="history-link" onclick={() => historyDialog.showModal()}
-        >Past updates</button
+      <a class="history-link" href={UPDATES}
+        >Past updates</a
       >
     {/if}
   </div>
 {/if}
 
-<!-- every status note, newest first; a click on the backdrop closes it (Escape closes it too, natively) -->
-<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_noninteractive_element_interactions -->
-<dialog
-  class="history"
-  aria-labelledby="history-title"
-  bind:this={historyDialog}
-  onclick={(e) => e.target === historyDialog && historyDialog.close()}
->
-  <div class="history-head">
-    <h2 id="history-title">Past updates</h2>
-    <button
-      class="close"
-      title="Close"
-      aria-label="Close past updates"
-      onclick={() => historyDialog.close()}><Icon kind="close" /></button
-    >
-  </div>
-  <ol class="history-list">
-    {#each status.history as n}
-      <li>
-        <div class="asof">{asOf(n.time)}</div>
-        <div class="note">{n.text}</div>
-      </li>
-    {/each}
-  </ol>
-</dialog>
 
 <style>
   /* every size on the card is in rem, so it follows the iPhone's Text Size setting (see app.css) */
@@ -246,57 +220,11 @@
   }
   /* a plain text link at the foot of the card */
   .history-link {
+    display: inline-block;
     margin-top: 8px;
-    padding: 0;
-    border: 0;
-    background: none;
-    font: inherit;
     font-size: calc(12rem / 17);
     color: var(--ink);
     text-decoration: underline;
     text-underline-offset: 3px;
-    cursor: pointer;
-  }
-  /* the update history: a centred panel whose list scrolls, newest at the top */
-  .history {
-    width: calc(360rem / 17);
-    max-width: calc(100% - 24px);
-    max-height: calc(100% - 48px);
-    padding: 0;
-    background: var(--panel);
-    color: var(--ink);
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
-  }
-  .history[open] {
-    display: flex;
-    flex-direction: column;
-  }
-  .history::backdrop {
-    background: rgba(0, 0, 0, 0.4);
-  }
-  .history-head {
-    position: relative;
-    padding: 12px 14px 8px;
-    border-bottom: 1px solid var(--line);
-  }
-  .history-head h2 {
-    margin: 0;
-    font-size: calc(15rem / 17);
-    font-weight: 600;
-  }
-  .history-list {
-    margin: 0;
-    padding: 4px 14px 14px;
-    list-style: none;
-    overflow-y: auto;
-  }
-  .history-list li {
-    padding: 8px 0;
-    border-bottom: 1px solid var(--line);
-  }
-  .history-list li:last-child {
-    border-bottom: 0;
   }
 </style>
