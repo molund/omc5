@@ -45,10 +45,4 @@ Then open http://localhost:5173/omc5/.
 
 Not used by the site itself. `data/` is an open dataset (CC0) of the guideway supports,
 pillars and spans from 166 St to 184 St, exported from the drawing as GeoJSON. See
-`data/README.md` for details.
-
-- `data/clipper-supports.geojson` — one point per support
-- `data/clipper-pillars.geojson` — one point per pillar
-- `data/clipper-spans.geojson` — span outlines
-- `data/control-points.json` — the two measured points that tie the drawing to real-world coordinates
-- `scripts/export-geojson.js` — regenerates the GeoJSON (`npm run export-geojson`)
+[data/README.md](data/README.md) for the files, how they were made and how to update them.
