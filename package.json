@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "export-geojson": "node scripts/export-geojson.js"
+    "export-geojson": "node data/export-geojson.js"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^7.3.1",

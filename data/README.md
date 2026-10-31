@@ -18,7 +18,7 @@ Leaflet, Mapbox and Google Earth (import), and GitHub shows them on a map.
 ## How it was made
 
 The supports and spans were traced on Apple Maps aerial imagery and checked on site visits, in the plan drawing that this
-repository's site shows (`src/assets/plan.svg`). `scripts/export-geojson.js` converts the drawing to lon/lat.
+repository's site shows (`src/assets/plan.svg`). `data/export-geojson.js` converts the drawing to lon/lat.
 
 Scale, rotation and position come from two tulip pillars measured by Mike Olund, one at each end of the line: where
 Clayton Clipper spans 13 and 14 meet (near 182 Street) and where spans 92 and 93 meet (near 168 Street).
