@@ -205,8 +205,12 @@
     margin: 14px 0 4px;
     font-size: calc(15rem / 17);
   }
+  /* paragraphs spaced apart (the first sits right under the heading) */
   .note {
-    margin: 0;
+    margin: 10px 0 0;
+  }
+  h2 + .note {
+    margin-top: 0;
   }
   /* an update's photo, the page's width, opening full size when tapped */
   .photo {
@@ -218,8 +222,9 @@
     height: auto;
     border-radius: 6px;
   }
+  /* with room under it, so the caption reads as the photo's and not the next paragraph's */
   .photo figcaption {
-    margin-top: 4px;
+    margin: 4px 0 20px;
     font-size: calc(13rem / 17);
     font-style: italic;
     color: var(--mute);
