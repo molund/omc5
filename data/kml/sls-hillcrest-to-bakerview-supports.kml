@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2"><Document>
-<name>Clayton Clipper supports</name>
+<name>SLS Hillcrest to Bakerview supports</name>
 <description>Traced on aerial imagery and checked on site visits; see data/README.md. Exported 2026-10-29.</description>
 <Style id="s"><IconStyle><scale>0.6</scale><color>ff333333</color><Icon><href>https://maps.google.com/mapfiles/kml/shapes/placemark_circle.png</href></Icon></IconStyle><LabelStyle><scale>0</scale></LabelStyle></Style>
 <Placemark><name>Support #1</name><styleUrl>#s</styleUrl><ExtendedData><Data name="id"><value>1</value></Data><Data name="pillars"><value>2</value></Data><Data name="cap_bearing"><value>30</value></Data></ExtendedData><Point><coordinates>-122.7629612,49.1514067</coordinates></Point></Placemark>
