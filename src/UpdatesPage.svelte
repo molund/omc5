@@ -205,8 +205,12 @@
     margin: 14px 0 4px;
     font-size: calc(15rem / 17);
   }
+  /* paragraphs spaced apart (the first sits right under the heading) */
   .note {
-    margin: 0;
+    margin: 10px 0 0;
+  }
+  h2 + .note {
+    margin-top: 0;
   }
   /* an update's photo, the page's width, opening full size when tapped */
   .photo {
