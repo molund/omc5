@@ -258,7 +258,7 @@
     justify-content: space-between;
     width: 100%;
     min-height: calc(44rem / 17);
-    margin-top: 14px;
+    margin: 22px 0 8px;
   }
   /* the panel's two sections, View and Layers, are headed a little larger than the rest of its text, and bold */
   .top,
