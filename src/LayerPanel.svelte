@@ -175,7 +175,7 @@
   <!-- the zoom controls stay pinned to the bottom of the panel; none on a phone: it pinches to zoom -->
   {#if !ui.phone}
     <footer class="foot">
-      <!-- zoom out, the zoom (100% at Fit), and zoom in, in one pill -->
+      <!-- zoom out, the zoom (1.0× at Fit), and zoom in, in one pill -->
       <div class="step" role="group" aria-label="Zoom">
         <button
           title="Zoom out"
@@ -184,9 +184,7 @@
           onclick={() => setZoom(ui.zoom / ZOOM_STEP)}
           ><PanelIcon kind="minus" /></button
         >
-        <output aria-live="polite"
-          >{Math.round((ui.zoom / ui.fit) * 100)}%</output
-        >
+        <output aria-live="polite">{(ui.zoom / ui.fit).toFixed(1)}×</output>
         <button
           title="Zoom in"
           aria-label="Zoom in"
