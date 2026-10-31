@@ -3,7 +3,7 @@
 Each update's thread is created here, before anyone comments, so its body can show the update itself (the note, then the
 photo and its caption, as on the Past updates page) instead of giscus's plain link. Threads are titled as the site asks giscus
 for them, "Update 2026-10-31 09:30" (Yukon time), and carry giscus's hidden sha1 marker, so giscus finds them in strict mode.
-A thread whose update has since been edited has its body brought up to date, and threads older than the newest 100 are
+A thread whose update has since been edited has its body brought up to date, and threads older than the newest 30 are
 closed as outdated and locked. Needs GITHUB_TOKEN with discussions: write.
 """
 
@@ -146,7 +146,7 @@ def main():
                 body=b,
             )
             print(f"updated {t}" if done else f"left {t} as it is (not ours to edit)")
-    close_old(keep=100)
+    close_old(keep=30)
 
 
 def close_old(keep):
