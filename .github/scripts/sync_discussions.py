@@ -12,6 +12,7 @@ import json
 import os
 import re
 import sys
+import urllib.error
 import urllib.request
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
@@ -101,7 +102,10 @@ def graphql(query, soft=False, **variables):
         data=json.dumps({"query": query, "variables": variables}).encode(),
         headers={"Authorization": f"bearer {os.environ['GITHUB_TOKEN']}", "Content-Type": "application/json"},
     )
-    res = json.load(urllib.request.urlopen(req))
+    try:
+        res = json.load(urllib.request.urlopen(req))
+    except urllib.error.HTTPError as e:
+        sys.exit(f"::error::GitHub said {e.code}: {e.read().decode()[:300]}")
     if res.get("errors"):
         if soft:
             print(f"::warning::{res['errors'][0].get('message')}")
@@ -196,5 +200,21 @@ def close_old(keep):
             print(f"locked {t}")
 
 
+def delete_all():
+    """Delete every thread in the category, comments and all (used once, to remake them under Mike's name)."""
+    for t, (tid, *_) in existing().items():
+        graphql(
+            """mutation($id: ID!) { deleteDiscussion(input: {id: $id}) { discussion { id } } }""",
+            id=tid,
+        )
+        print(f"deleted {t}")
+
+
 if __name__ == "__main__":
-    check_count() if "--check-count" in sys.argv else main()
+    if "--check-count" in sys.argv:
+        check_count()
+    elif "--recreate" in sys.argv:
+        delete_all()
+        main()
+    else:
+        main()
