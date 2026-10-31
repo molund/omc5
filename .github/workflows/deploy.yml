@@ -39,6 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      discussions: write
     steps:
       - uses: actions/checkout@v4
       - name: Update status.yaml
@@ -57,6 +58,13 @@ jobs:
             git commit -am "$msg"
             git push
           fi
+      # give each status note its own comments thread (GitHub Discussion) showing the note, photo and caption, for giscus on
+      # the Past updates page; a failure here doesn't stop the deploy
+      - name: Create or update the comment threads
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 .github/scripts/sync_discussions.py
       - uses: actions/setup-node@v4
         with:
           node-version: 22
