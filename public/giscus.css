@@ -1,0 +1,8 @@
+/* The giscus comments' theme on the Past updates page: giscus's own GitHub light / dark theme (following the visitor's
+   setting), with the upvote arrows on comments hidden (giscus has no setting for that). Relies on giscus's class name
+   gsc-upvote-button; if giscus renames it, the arrows just come back. */
+@import url("https://giscus.app/themes/preferred_color_scheme.css");
+
+.gsc-upvote-button {
+  display: none !important;
+}

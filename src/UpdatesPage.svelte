@@ -18,7 +18,11 @@
     "data-reactions-enabled": "1",
     "data-emit-metadata": "0",
     "data-input-position": "top",
-    "data-theme": "preferred_color_scheme",
+    // GitHub light / dark as before, minus the upvote arrows (public/giscus.css)
+    "data-theme": new URL(
+      `${import.meta.env.BASE_URL}giscus.css`,
+      location.origin,
+    ).href,
     "data-lang": "en",
     crossorigin: "anonymous",
     async: "",
