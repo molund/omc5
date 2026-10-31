@@ -4,14 +4,14 @@ Positions of the elevated guideway supports (pillars and bents) and spans of the
 Fraser Highway in Surrey, BC, from 166 Street to 184 Street (about 4 km). This is an independent, unofficial dataset
 compiled by Mike Olund. It is not from TransLink or the Province of BC.
 
-| File                                          | Contents                                                                               |
-| --------------------------------------------- | -------------------------------------------------------------------------------------- |
-| `sls-hillcrest-to-bakerview-supports.geojson` | One polygon per support: the outline of its pier cap                                   |
-| `sls-hillcrest-to-bakerview-pillars.geojson`  | One point per pillar (column), where it stands                                         |
-| `sls-hillcrest-to-bakerview-spans.geojson`    | One polygon per span deck (or per girder line, see below)                              |
-| `control-points.json`                         | The two control points used to georeference the drawing                                |
-| `kml/`                                        | The same three layers as KML, for Google My Maps and Google Earth (one file per layer) |
-| `LICENSE`                                     | CC0 1.0: public domain, no conditions                                                  |
+| File                                          | Contents                                                                                                             |
+| --------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `sls-hillcrest-to-bakerview-supports.geojson` | One polygon per support: the outline of its pier cap                                                                 |
+| `sls-hillcrest-to-bakerview-pillars.geojson`  | One point per pillar (column), where it stands                                                                       |
+| `sls-hillcrest-to-bakerview-spans.geojson`    | One polygon per span deck (or per girder line, see below)                                                            |
+| `control-points.json`                         | The two control points used to georeference the drawing                                                              |
+| `kml/`                                        | The same three layers as KML, for Google My Maps and Google Earth (one file per layer; see below for the spans' two) |
+| `LICENSE`                                     | CC0 1.0: public domain, no conditions                                                                                |
 
 Coordinates are WGS84 longitude/latitude (GeoJSON, RFC 7946). The files open directly in QGIS, ArcGIS, geojson.io,
 Leaflet, Mapbox and Google Earth (import), and GitHub shows them on a map.
@@ -80,19 +80,23 @@ this file for where each column actually stands.
 
 ### Spans
 
-| Property     | Meaning                                                                                                  |
-| ------------ | -------------------------------------------------------------------------------------------------------- |
-| `id`         | Sequential number from west to east                                                                      |
-| `kind`       | `segmental (gantry)`, `precast girder` or `steel girder`                                                 |
-| `cc_span`    | Clayton Clipper span number (1–105, counted in the order the launching gantry builds them)               |
-| `sfmsf_span` | Span label used near the SFMSF (letters A–S, numbers 1–11), where there is one                           |
-| `finished`   | Whether the span is built, as of the export (in the KML, finished spans are solid, unfinished ones pale) |
+| Property     | Meaning                                                                                                          |
+| ------------ | ---------------------------------------------------------------------------------------------------------------- |
+| `id`         | Sequential number from west to east                                                                              |
+| `kind`       | `segmental (gantry)`, `precast girder` or `steel girder`                                                         |
+| `cc_span`    | Clayton Clipper span number (1–105, counted in the order the launching gantry builds them)                       |
+| `sfmsf_span` | Span label used near the SFMSF (letters A–S, numbers 1–11), where there is one                                   |
+| `finished`   | Whether the span is built, as of the export (in the progress KML, finished spans are dark, unfinished ones pale) |
 
 Some spans have more than one feature. Where the eastbound and westbound tracks are separate structures, each is its
 own polygon with the same `cc_span`. Each steel span is drawn as its two girder lines.
 
 `finished` is only current as of the export. The copies published with the site, at https://molund.github.io/omc5/data/,
 are regenerated on every update, and the copies in this folder are committed back whenever the data changes.
+
+The spans come as two KML files: `kml/sls-hillcrest-to-bakerview-spans-progress.kml` shows them as built so far, styled by
+`finished`, and `kml/sls-hillcrest-to-bakerview-spans-full.kml` shows every span finished, as the line will look when
+complete (it leaves out `finished`).
 
 ## Updating
 
