@@ -1,5 +1,5 @@
-// Export the guideway supports and spans in src/assets/plan.svg as GeoJSON (data/clipper-supports.geojson and
-// data/clipper-spans.geojson), and the same as KML in data/kml/. Run with `npm run export-geojson` after changing the drawing.
+// Export the guideway supports and spans in src/assets/plan.svg as GeoJSON (data/sls-hillcrest-to-bakerview-supports.geojson and
+// data/sls-hillcrest-to-bakerview-spans.geojson), and the same as KML in data/kml/. Run with `npm run export-geojson` after changing the drawing.
 // - Every shape is taken down to canvas units through its transforms (as getScreenCTM does in the browser), then to lon/lat
 //   with a similarity transform (scale, turn, shift) to Web Mercator, the projection of the Apple Maps screenshots the
 //   drawing is traced on, fitted to the measured pins in data/control-points.json.
@@ -13,7 +13,7 @@ import { writeKml } from "./kml.js";
 const SVG = "src/assets/plan.svg",
   CONTROL = "data/control-points.json",
   STATUS = "status.yaml",
-  OUT = "data/clipper-",
+  OUT = "data/sls-hillcrest-to-bakerview-",
   R = 6378137; // Web Mercator sphere radius
 
 // 2D affine matrices as [a, b, c, d, e, f] (x' = a x + c y + e, y' = b x + d y + f), as in SVG
@@ -344,18 +344,23 @@ function exportGeojson() {
   // the same three layers as KML, one file each, so the spans can be re-imported into My Maps on their own
   fs.mkdirSync("data/kml", { recursive: true });
   writeKml(
-    "data/kml/clipper-supports.kml",
-    "Clayton Clipper supports",
+    "data/kml/sls-hillcrest-to-bakerview-supports.kml",
+    "SLS Hillcrest to Bakerview supports",
     supports,
     meta,
   );
   writeKml(
-    "data/kml/clipper-pillars.kml",
-    "Clayton Clipper pillars",
+    "data/kml/sls-hillcrest-to-bakerview-pillars.kml",
+    "SLS Hillcrest to Bakerview pillars",
     pillarFeatures,
     meta,
   );
-  writeKml("data/kml/clipper-spans.kml", "Clayton Clipper spans", spans, meta);
+  writeKml(
+    "data/kml/sls-hillcrest-to-bakerview-spans.kml",
+    "SLS Hillcrest to Bakerview spans",
+    spans,
+    meta,
+  );
   console.log(
     `${supports.length} supports, ${pillarFeatures.length} pillars, ${spans.length} spans`,
   );
