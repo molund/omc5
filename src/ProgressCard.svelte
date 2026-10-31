@@ -102,8 +102,11 @@
       ></div>
     </div>
     {#if when}<div class="asof">As of {when}</div>{/if}
-    <!-- the note and its minor updates, each led by its own time in a small chip, so the note keeps its time when "As of"
-         moves on to a minor update -->
+    <!-- every update, newest first: the follow-ups, then the original note, each led by its own time in a small chip -->
+    {#each status.minor as m}<div class="note">
+        <span class="chip">{minorTime(m.time, status.history[0].time)}</span
+        >{m.text}
+      </div>{/each}
     {#if status.note}<div class="note">
         <span class="chip">{postedAt}</span>{status.note}
         {#if status.more.length}<a
@@ -111,10 +114,6 @@
             href="{TRACKSIDE}#{anchor(newest.time)}">More</a
           >{/if}
       </div>{/if}
-    {#each status.minor as m}<div class="note later">
-        <span class="chip">{minorTime(m.time, status.history[0].time)}</span
-        >{m.text}
-      </div>{/each}
     {#if status.photo}<a class="thumb" href={TRACKSIDE}
         ><img
           src={status.photo.src}
@@ -260,7 +259,7 @@
     color: var(--accent);
     white-space: nowrap;
   }
-  .note.later {
+  .note + .note {
     margin-top: 6px;
   }
   .asof {
