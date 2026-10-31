@@ -1,6 +1,6 @@
 <script>
   // panel: a window with a sidebar (show or hide the layer panel); menu: three lines (open the menu on a phone); close: a
-  // cross (close it, or the progress card); info: an information icon (bring the progress card back); chevron: a "›" (fold the layer switches out or away); minus, plus: a − or + (zoom out or in); fit: four corner brackets (zoom to fit); centre: a crosshair (center without zooming); github: the GitHub mark (link to the repo)
+  // cross (close it, or the progress card); info: an information icon (bring the progress card back); comment: a speech bubble (comment on the newest update); chevron: a "›" (fold the layer switches out or away); minus, plus: a − or + (zoom out or in); fit: four corner brackets (zoom to fit); centre: a crosshair (center without zooming); github: the GitHub mark (link to the repo)
   let { kind = "panel" } = $props();
 </script>
 
@@ -19,6 +19,12 @@
     <line x1="2.5" y1="4.5" x2="15.5" y2="4.5" />
     <line x1="2.5" y1="9" x2="15.5" y2="9" />
     <line x1="2.5" y1="13.5" x2="15.5" y2="13.5" />
+  {:else if kind === "comment"}
+    <!-- a speech bubble with its tail at the lower left -->
+    <path
+      d="M3.75 3h10.5a1.75 1.75 0 0 1 1.75 1.75v6.5A1.75 1.75 0 0 1 14.25 13H8.5l-3.5 3v-3H3.75A1.75 1.75 0 0 1 2 11.25v-6.5A1.75 1.75 0 0 1 3.75 3z"
+      stroke-linejoin="round"
+    />
   {:else if kind === "info"}
     <!-- an information icon: an "i" in a circle -->
     <circle cx="9" cy="9" r="7.25" />
