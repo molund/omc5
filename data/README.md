@@ -48,8 +48,8 @@ historic railway line, which came from these sources:
 
 ## Accuracy
 
-Those two pillars are exact. Elsewhere, accuracy depends on how well the drawing matches the imagery it was traced on.
-Support spacing and span lengths along the line are more accurate than the absolute position.
+The two measured tulip pillars (where spans 13 and 14 meet, and where spans 92 and 93 meet) are exact. Elsewhere,
+accuracy depends on how well the drawing matches the imagery it was traced on. Support spacing and span lengths along the line are more accurate than the absolute position.
 
 This is not survey data. Do not use it for engineering, construction or anything safety-related.
 
