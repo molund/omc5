@@ -92,7 +92,7 @@ Some spans have more than one feature. Where the eastbound and westbound tracks 
 own polygon with the same `cc_span`. Each steel span is drawn as its two girder lines.
 
 `finished` is only current as of the export. The copies published with the site, at https://molund.github.io/omc5/data/,
-are regenerated on every update; the copies in this folder only when the export is run by hand.
+are regenerated on every update, and the copies in this folder are committed back whenever the data changes.
 
 ## Updating
 
