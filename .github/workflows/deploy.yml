@@ -96,6 +96,21 @@ jobs:
         with:
           path: dist
 
+  # fails (and GitHub emails) once there are 100 comment threads, the most the Past updates page reads; it doesn't hold up the
+  # deploy
+  thread-count:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      discussions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check the number of comment threads
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 .github/scripts/sync_discussions.py --check-count
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
