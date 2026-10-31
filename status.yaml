@@ -1,6 +1,6 @@
 # Clayton Clipper status. The site reads it (src/lib/status.js); running the deploy workflow by hand or through the API updates
 # it (see .github/workflows/deploy.yml). Times are Pacific, rounded to the nearest quarter hour.
-updated: 2026-10-31T14:00-07:00
+updated: 2026-10-31T15:15-07:00
 # the span the gantry is working on (Clayton Clipper span numbers, 3-104)
 span: 36
 # whether that span is complete (or at least hung)
@@ -20,6 +20,12 @@ complete: true
 #     minor:
 #       - 2026-10-31T11:45-07:00: "What changed"
 notes:
+  - 2026-10-31T15:15-07:00: "Reporting from the bike at the other end of the line: the Surrey Sprinter has hung all the rocks for its first span after leaving Green Timbers Station."
+    photo:
+      file: 2026-10-31-sprinter-green-timbers.jpg
+      caption: "The Surrey Sprinter over 140 St and Fraser Highway, with its first span past Green Timbers Station hung below it."
+    more:
+      - "From here to the end of the Expo Line is only 12 more spans. The Sprinter is responsible for seven of them. The rest will be built by cranes."
   - 2026-10-31T14:00-07:00: "Check-in from the bike: all the rocks are hung and span 36 is marked as complete. Now pedalling west of 176th St to see what the rest of the line is up to."
     more:
       - "The long-missing tulip where spans 70 and 71 meet, by the golf course, has finally been built. It was the last of the driven foundations. From 71/72 on, they switched to bored foundations."
