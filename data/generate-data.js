@@ -341,7 +341,8 @@ function exportGeojson() {
   write(`${OUT}supports.geojson`, supports, meta);
   write(`${OUT}pillars.geojson`, pillarFeatures, meta);
   write(`${OUT}spans.geojson`, spans, meta);
-  // the same three layers as KML, one file each, so the spans can be re-imported into My Maps on their own
+  // the same three layers as KML, one file each, so the spans can be re-imported into My Maps on their own; the spans twice,
+  // as built so far (progress) and with every span shown finished (full, without the finished field, which would be wrong)
   fs.mkdirSync("data/kml", { recursive: true });
   writeKml(
     "data/kml/sls-hillcrest-to-bakerview-supports.kml",
@@ -356,9 +357,18 @@ function exportGeojson() {
     meta,
   );
   writeKml(
-    "data/kml/sls-hillcrest-to-bakerview-spans.kml",
-    "SLS Hillcrest to Bakerview spans",
+    "data/kml/sls-hillcrest-to-bakerview-spans-progress.kml",
+    "SLS Hillcrest to Bakerview spans (progress)",
     spans,
+    meta,
+  );
+  writeKml(
+    "data/kml/sls-hillcrest-to-bakerview-spans-full.kml",
+    "SLS Hillcrest to Bakerview spans (full)",
+    spans.map((f) => {
+      const { finished, ...properties } = f.properties;
+      return { ...f, properties };
+    }),
     meta,
   );
   console.log(
