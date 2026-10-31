@@ -12,6 +12,7 @@ import json
 import os
 import re
 import sys
+import urllib.error
 import urllib.request
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
@@ -101,7 +102,10 @@ def graphql(query, soft=False, **variables):
         data=json.dumps({"query": query, "variables": variables}).encode(),
         headers={"Authorization": f"bearer {os.environ['GITHUB_TOKEN']}", "Content-Type": "application/json"},
     )
-    res = json.load(urllib.request.urlopen(req))
+    try:
+        res = json.load(urllib.request.urlopen(req))
+    except urllib.error.HTTPError as e:
+        sys.exit(f"::error::GitHub said {e.code}: {e.read().decode()[:300]}")
     if res.get("errors"):
         if soft:
             print(f"::warning::{res['errors'][0].get('message')}")
