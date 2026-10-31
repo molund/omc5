@@ -1,4 +1,4 @@
-{"type":"FeatureCollection","metadata":{"source":"Traced on aerial imagery and checked on site visits; see data/README.md","exported":"2026-10-29"},"features":[
+{"type":"FeatureCollection","metadata":{"source":"Traced on aerial imagery and checked on site visits; see data/README.md"},"features":[
 {"type":"Feature","properties":{"id":1,"support":1},"geometry":{"type":"Point","coordinates":[-122.7629906,49.1513737]}},
 {"type":"Feature","properties":{"id":2,"support":1},"geometry":{"type":"Point","coordinates":[-122.7629318,49.1514397]}},
 {"type":"Feature","properties":{"id":3,"support":2},"geometry":{"type":"Point","coordinates":[-122.7627883,49.1512462]}},
