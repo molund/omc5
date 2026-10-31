@@ -18,7 +18,7 @@ Leaflet, Mapbox and Google Earth (import), and GitHub shows them on a map.
 
 ## How it was made
 
-The supports and spans were traced on Apple Maps aerial imagery and checked on site visits, in the plan drawing that this
+The supports and spans were traced on Apple Maps aerial imagery and checked on site visits, in the map that this
 repository's site shows (`src/assets/map.svg`). `data/generate-data.js` converts the drawing to lon/lat.
 
 Scale, rotation and position come from two control points, one at each end of the line, placed by Mike Olund on very
@@ -28,7 +28,7 @@ matched to its foundation hole.
 
 ## Other sources
 
-The GeoJSON files hold only the supports, pillars and spans. The plan drawing also shows roads, paths, a creek and a
+The GeoJSON files hold only the supports, pillars and spans. The map also shows roads, paths, a creek and a
 historic railway line, which came from these sources:
 
 - **Aerial imagery:** Apple Maps satellite screenshots, from a phone and a desktop. The site's background aerial is a

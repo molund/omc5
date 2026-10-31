@@ -1,6 +1,6 @@
 # Clayton Clipper Tracker
 
-A hand-drawn (later corrected against aerial photos) plan view tracking construction of the Surrey Langley SkyTrain guideway
+A hand-drawn (later corrected against aerial photos) map tracking construction of the Surrey Langley SkyTrain guideway
 along the Clayton Clipper's route in Surrey, BC. It shows progress as the Clipper gantry
 and crane-lifted precast spans build the guideway, updated from regular walks along the
 line.
@@ -37,7 +37,7 @@ Then open http://localhost:5173/omc5/.
 
 ## What's where
 
-- `src/assets/map.svg` — the plan-view drawing
+- `src/assets/map.svg` — the map
 - `status.yaml` — progress notes shown on the site
 - `public/images/` — aerial photos
 
