@@ -2,7 +2,7 @@
   // The past updates page: every status note, newest first, each with an id from its time stamp (e.g. #2026-10-30T20-45) so
   // a single update can be linked to
   import { onMount } from "svelte";
-  import { status, asOf } from "./lib/status.js";
+  import { status, asOf, minorTime } from "./lib/status.js";
   import { anchor, term, fetchCounts } from "./lib/comments.js";
 
   const MAP = import.meta.env.BASE_URL;
@@ -89,6 +89,10 @@
       <li id={anchor(n.time)}>
         <div class="asof">{asOf(n.time)}</div>
         <div class="note">{n.text}</div>
+        {#each n.minor as m}<div class="minor">
+            <span class="minor-time">{minorTime(m.time, n.time)}</span>
+            {m.text}
+          </div>{/each}
         {#if n.photo}
           <figure class="photo">
             <a href={n.photo.src}
@@ -177,6 +181,16 @@
   }
   .note {
     margin-top: 4px;
+  }
+  /* a minor update under the note: its time, then its text, smaller and set in */
+  .minor {
+    margin-top: 6px;
+    padding-left: 10px;
+    border-left: 2px solid var(--line);
+    font-size: calc(14rem / 17);
+  }
+  .minor-time {
+    color: var(--mute);
   }
   /* the page buttons: the site's buttons (as on the card and in the layer panel), sharing the width, tall enough to tap */
   .pager {

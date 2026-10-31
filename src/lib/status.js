@@ -4,6 +4,9 @@
 //     photo:
 //       file: span-36.jpg
 //       caption: "Its own caption, separate from the note"
+// and optionally minor updates, also indented under it (no photo, no thread or entry of their own):
+//     minor:
+//       - time: "text"
 // so a small reader does instead of a YAML library.
 import text from "../../status.yaml?raw";
 
@@ -20,13 +23,27 @@ function parse(src) {
   const out = {},
     notes = [];
   src.split("\n").forEach((line) => {
-    const n = line.match(/^\s+-\s+(\S+):\s+(.*?)\s*$/);
+    // a note: "  - time: text", two spaces in
+    const n = line.match(/^ {2}-\s+(\S+):\s+(.*?)\s*$/);
     if (n) {
-      notes.push({ time: new Date(n[1]), text: unquote(n[2]), photo: null });
+      notes.push({
+        time: new Date(n[1]),
+        text: unquote(n[2]),
+        photo: null,
+        minor: [],
+      });
       return;
     }
-    // a photo belongs to the note above it: `photo:`, then its `file:` and `caption:` indented under it
     const last = notes[notes.length - 1];
+    // a minor update under the note: "      - time: text", further in, after a "    minor:" line
+    const mi = line.match(/^ {3,}-\s+(\S+):\s+(.*?)\s*$/);
+    if (mi) {
+      if (last)
+        last.minor.push({ time: new Date(mi[1]), text: unquote(mi[2]) });
+      return;
+    }
+    if (/^\s+minor:\s*$/.test(line)) return;
+    // a photo belongs to the note above it: `photo:`, then its `file:` and `caption:` indented under it
     if (/^\s+photo:\s*$/.test(line)) {
       if (last) last.photo = { src: null, caption: "" };
       return;
@@ -45,6 +62,13 @@ function parse(src) {
   // newest first by time stamp, whatever order the list is in
   // a photo without a file doesn't count
   notes.forEach((n) => n.photo && !n.photo.src && (n.photo = null));
+  // minor updates newest first, those with text
+  notes.forEach(
+    (n) =>
+      (n.minor = n.minor
+        .filter((m) => m.text && !isNaN(m.time))
+        .sort((a, b) => b.time - a.time)),
+  );
   const sorted = notes
     .filter((n) => !isNaN(n.time))
     .sort((a, b) => b.time - a.time);
@@ -55,7 +79,9 @@ function parse(src) {
     note: sorted.length ? sorted[0].text : "",
     // the newest note's photo, { src, caption }, or null
     photo: sorted.length ? sorted[0].photo : null,
-    // every note with text, newest first, for the update history (each with its photo or null)
+    // the newest note's minor updates, [{ time, text }], newest first
+    minor: sorted.length ? sorted[0].minor : [],
+    // every note with text, newest first, for the update history (each with its photo or null, and its minor updates)
     history: sorted.filter((n) => n.text),
   };
 }
@@ -101,4 +127,10 @@ export function asOf(date, relative = false) {
     if (dayOf(d) === dayOf(now - 2 * day)) return `${time} on ${parts.weekday}`;
   }
   return `${time} on ${parts.month} ${parts.day}, ${parts.year}`;
+}
+
+// a minor update's time: just "11:45 a.m." on the same day as its note, otherwise in full
+export function minorTime(t, note) {
+  const full = asOf(t);
+  return dayOf(t) === dayOf(note) ? full.replace(/ on .*$/, "") : full;
 }
