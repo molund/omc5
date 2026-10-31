@@ -1,7 +1,7 @@
 <script>
   import { PROGRESS_COLOUR } from "./lib/layerSwitches.js";
   import { layers, ui } from "./lib/appState.svelte.js";
-  import { status, asOf, minorTime } from "./lib/status.js";
+  import { status, asOf, followUpTime } from "./lib/status.js";
   import { anchor, term, fetchCounts } from "./lib/comments.js";
   import Icon from "./Icon.svelte";
 
@@ -102,8 +102,8 @@
     </div>
     {#if when}<div class="asof">As of {when}</div>{/if}
     <!-- every update, newest first: the follow-ups, then the original note, each led by its own time in a small chip -->
-    {#each status.minor as m}<div class="note">
-        <span class="chip">{minorTime(m.time, status.history[0].time)}</span
+    {#each status.followUps as m}<div class="note">
+        <span class="chip">{followUpTime(m.time, status.history[0].time)}</span
         >{m.text}
       </div>{/each}
     {#if status.note}<div class="note">
@@ -242,7 +242,7 @@
     height: 100%;
     border-radius: 5px;
   }
-  /* a time chip leading the note or a minor update: small grey pill */
+  /* a time chip leading the note or a follow-up: small grey pill */
   .chip {
     display: inline-block;
     margin-right: 4px;

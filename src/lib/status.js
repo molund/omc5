@@ -11,8 +11,8 @@
 //       - photo:
 //           file: span-36-close-up.jpg
 //           caption: "Its caption"
-// and optionally minor updates, also indented under it (no photo, no thread or entry of their own):
-//     minor:
+// and optionally follow-ups, also indented under it (no photo, no thread or entry of their own):
+//     follow-up:
 //       - time: "text"
 // so a small reader does instead of a YAML library.
 import text from "../../status.yaml?raw";
@@ -29,7 +29,7 @@ function unquote(v) {
 function parse(src) {
   const out = {},
     notes = [];
-  // the list a "      - …" line belongs to: "more" after a "    more:" line, otherwise minor updates
+  // the list a "      - …" line belongs to: "more" after a "    more:" line, otherwise follow-ups
   let list = null,
     // the photo a `file:` or `caption:` line belongs to
     photo = null;
@@ -42,7 +42,7 @@ function parse(src) {
         text: unquote(n[2]),
         photo: null,
         more: [],
-        minor: [],
+        followUps: [],
       });
       list = null;
       photo = null;
@@ -64,15 +64,15 @@ function parse(src) {
       list = "more";
       return;
     }
-    // a minor update under the note: "      - time: text", further in, after a "    minor:" line
+    // a follow-up under the note: "      - time: text", further in, after a "    follow-up:" line
     const mi = line.match(/^ {3,}-\s+(\S+):\s+(.*?)\s*$/);
     if (mi) {
       if (last)
-        last.minor.push({ time: new Date(mi[1]), text: unquote(mi[2]) });
+        last.followUps.push({ time: new Date(mi[1]), text: unquote(mi[2]) });
       return;
     }
-    if (/^\s+minor:\s*$/.test(line)) {
-      list = "minor";
+    if (/^\s+follow-up:\s*$/.test(line)) {
+      list = "followUps";
       return;
     }
     // a photo belongs to the note above it: `photo:`, then its `file:` and `caption:` indented under it
@@ -98,10 +98,10 @@ function parse(src) {
     if (n.photo && !n.photo.src) n.photo = null;
     n.more = n.more.filter((m) => m.text || m.photo?.src);
   });
-  // minor updates newest first, those with text
+  // follow-ups newest first, those with text
   notes.forEach(
     (n) =>
-      (n.minor = n.minor
+      (n.followUps = n.followUps
         .filter((m) => m.text && !isNaN(m.time))
         .sort((a, b) => b.time - a.time)),
   );
@@ -117,9 +117,9 @@ function parse(src) {
     photo: sorted.length ? sorted[0].photo : null,
     // the newest note's further paragraphs and photos, [{ text } or { photo: { src, caption } }], or []
     more: sorted.length ? sorted[0].more : [],
-    // the newest note's minor updates, [{ time, text }], newest first
-    minor: sorted.length ? sorted[0].minor : [],
-    // every note with text, newest first, for Trackside (each with its photo or null, and its minor updates)
+    // the newest note's follow-ups, [{ time, text }], newest first
+    followUps: sorted.length ? sorted[0].followUps : [],
+    // every note with text, newest first, for Trackside (each with its photo or null, and its follow-ups)
     history: sorted.filter((n) => n.text),
   };
 }
@@ -167,8 +167,8 @@ export function asOf(date, relative = false) {
   return `${time} on ${parts.month} ${parts.day}, ${parts.year}`;
 }
 
-// a minor update's time: just "11:45 a.m." on the same day as its note, otherwise in full
-export function minorTime(t, note) {
+// a follow-up's time: just "11:45 a.m." on the same day as its note, otherwise in full
+export function followUpTime(t, note) {
   const full = asOf(t);
   return dayOf(t) === dayOf(note) ? full.replace(/ on .*$/, "") : full;
 }
