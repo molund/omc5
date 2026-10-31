@@ -12,10 +12,10 @@ const STYLES = {
     "<PolyStyle><color>804a4e4f</color></PolyStyle><LineStyle><color>ff2a2c2c</color><width>1.5</width></LineStyle>",
   unfinished:
     "<PolyStyle><color>66ffffff</color></PolyStyle><LineStyle><color>ff4a4a4a</color><width>1.5</width></LineStyle>",
-  // finished steel spans: a dark tan (#8B6F3E, the drawing's tan darkened), 50% opaque and outlined like the other finished
-  // spans
+  // finished steel spans: a dark steel blue (#2F5C8A; the drawing's tan doesn't show over greenery), 50% opaque and outlined
+  // like the other finished spans
   steel:
-    "<PolyStyle><color>803e6f8b</color></PolyStyle><LineStyle><color>ff2a2c2c</color><width>1.5</width></LineStyle>",
+    "<PolyStyle><color>808a5c2f</color></PolyStyle><LineStyle><color>ff2a2c2c</color><width>1.5</width></LineStyle>",
   // supports: the pier caps, solid mid grey with a dark outline
   support:
     "<PolyStyle><color>ff8a8a8a</color></PolyStyle><LineStyle><color>ff222222</color><width>1</width></LineStyle>",
