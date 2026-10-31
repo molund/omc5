@@ -31,14 +31,14 @@
   // aerial photo everywhere but drawing mode, and the SFMSF span labels and the support beams on their own only for Mike
   function hidden(k) {
     if (k === "labels" || k === "beams") return !isMike;
-    if (k === "greenbelt" || k === "creeks") return !layers.drawing;
+    if (k === "greenbelt" || k === "creeks") return !layers.sfmsfDrawing;
     if (k === "roads" || k === "yard" || k === "walk")
-      return !(layers.drawing || layers.sfmsfAerial);
-    if (k === "aerial") return layers.drawing;
+      return !(layers.sfmsfDrawing || layers.sfmsfAerial);
+    if (k === "aerial") return layers.sfmsfDrawing;
     return false;
   }
   // the Reference group shows only in the two SFMSF views; the Built by group only for Mike, and not in the two SFMSF views
-  const sfmsf = $derived(layers.drawing || layers.sfmsfAerial);
+  const sfmsf = $derived(layers.sfmsfDrawing || layers.sfmsfAerial);
   const groupHidden = (group) =>
     (group === "Reference" && !sfmsf) ||
     (group === "Built by" && (!isMike || sfmsf));

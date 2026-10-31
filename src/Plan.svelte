@@ -60,7 +60,7 @@
     ui.ready = true;
     svg.style.width = ui.zoom + "%";
     if (layers.progress) progressView();
-    else if (layers.drawing) {
+    else if (layers.sfmsfDrawing) {
       setView(DRAW_VB);
       fillView();
     } else if (layers.sfmsfAerial) {
@@ -68,7 +68,7 @@
       fillView();
     } else if (layers.horizontal) horizontalView();
     // the views a reload can come back to (the page itself opens on Progress)
-    else if (ui.view === "view_default") {
+    else if (ui.view === "fullAerial") {
       setView(FULL_VB);
       fillView();
     }

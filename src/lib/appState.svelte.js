@@ -5,8 +5,8 @@ import {
   HORIZONTAL_VIEW_METRES,
   UNITS_PER_METRE,
   defaults,
-  normalDefaults,
-  fullDefaults,
+  sfmsfAerialDefaults,
+  fullAerialDefaults,
   FULL_VB,
   DRAW_VB,
   SFMSF_AERIAL_VB,
@@ -65,8 +65,8 @@ export const ui = $state({
     saved?.view ??
     (defaults.progress
       ? "progress"
-      : defaults.drawing
-        ? "drawing"
+      : defaults.sfmsfDrawing
+        ? "sfmsfDrawing"
         : "sfmsfAerial"),
   zoom: 187.31,
   fit: 100,
@@ -91,8 +91,8 @@ export const els = {
 
 // "Full" stays ticked exactly while every switch matches the old default view
 function refresh() {
-  layers.view_default = Object.keys(fullDefaults).every(
-    (k) => k === "view_default" || layers[k] === fullDefaults[k],
+  layers.fullAerial = Object.keys(fullAerialDefaults).every(
+    (k) => k === "fullAerial" || layers[k] === fullAerialDefaults[k],
   );
 }
 
@@ -279,7 +279,8 @@ export function setZoom(p, cx, cy) {
 // layer on, and put everything back as it was when the mode is switched off.
 // opening in Drawing mode, so switching it off goes to the Full view (the normal view with SFMSF zoom ended, as when Drawing
 // mode is entered from it)
-const startSnap = () => (defaults.drawing ? { ...fullDefaults } : null);
+const startSnap = () =>
+  defaults.sfmsfDrawing ? { ...fullAerialDefaults } : null;
 // (on a reload, the switches saved from before Drawing mode, so switching it off still puts them back)
 let drawingSnap = saved ? (saved.drawingSnap ?? null) : startSnap();
 // Drawing mode's switches: everything on but the aerial photo, the Clayton Clipper span labels, the support beams and the
@@ -292,7 +293,7 @@ const drawingSwitches = () => ({
   progress: false,
   sfmsfAerial: false,
   horizontal: false,
-  drawing: true,
+  sfmsfDrawing: true,
 });
 function enterDrawing() {
   drawingSnap = $state.snapshot(layers);
@@ -302,7 +303,7 @@ function enterDrawing() {
 }
 function exitDrawing() {
   if (drawingSnap) Object.assign(layers, drawingSnap);
-  layers.drawing = false;
+  layers.sfmsfDrawing = false;
   drawingSnap = null;
   setView(FULL_VB);
 }
@@ -321,19 +322,19 @@ function exitSfmsfAerial() {
   layers.labels = false;
 }
 // Full image: the whole canvas, filling the stage, with the Full image switches
-function applyFull() {
+function applyFullAerial() {
   drawingSnap = null;
   setView(FULL_VB);
   fillView();
-  Object.assign(layers, fullDefaults);
+  Object.assign(layers, fullAerialDefaults);
 }
 
 const VIEWS = [
   "progress",
   "sfmsfAerial",
-  "view_default",
+  "fullAerial",
   "horizontal",
-  "drawing",
+  "sfmsfDrawing",
 ];
 
 // A layer checkbox was ticked or unticked
@@ -347,21 +348,24 @@ export function toggle(k, checked) {
   if (k === "beams" && checked) layers.gantry = false;
   if (k === "labels" && checked) layers.cclabels = false;
   if (k === "cclabels" && checked) layers.labels = false;
-  // picking any other view leaves Horizontal (Full image does so through fullDefaults)
-  if (checked && (k === "drawing" || k === "progress" || k === "sfmsfAerial"))
+  // picking any other view leaves Horizontal (Full image does so through fullAerialDefaults)
+  if (
+    checked &&
+    (k === "sfmsfDrawing" || k === "progress" || k === "sfmsfAerial")
+  )
     layers.horizontal = false;
-  if (k === "view_default") {
-    applyFull();
+  if (k === "fullAerial") {
+    applyFullAerial();
   } else if (k === "horizontal" && checked) {
-    if (layers.drawing) exitDrawing();
+    if (layers.sfmsfDrawing) exitDrawing();
     if (layers.sfmsfAerial) exitSfmsfAerial();
     drawingSnap = null;
-    Object.assign(layers, fullDefaults, {
+    Object.assign(layers, fullAerialDefaults, {
       horizontal: true,
       progress: false,
     });
     horizontalView();
-  } else if (k === "drawing") {
+  } else if (k === "sfmsfDrawing") {
     if (checked && layers.sfmsfAerial) {
       // from SFMSF aerial only the aerial photo gives way to the greenbelt; every other switch stays as it is
       drawingSnap = $state.snapshot(layers);
@@ -375,7 +379,7 @@ export function toggle(k, checked) {
     } else if (checked) enterDrawing();
     else exitDrawing();
   } else if (k === "progress" && checked) {
-    if (layers.drawing) exitDrawing();
+    if (layers.sfmsfDrawing) exitDrawing();
     if (layers.sfmsfAerial) exitSfmsfAerial();
     layers.progress = true;
     Object.assign(layers, PROGRESS_DEFAULTS);
@@ -383,10 +387,14 @@ export function toggle(k, checked) {
     ui.cardHidden = false;
     progressView();
   } else if (k === "sfmsfAerial") {
-    if (checked && layers.drawing) {
+    if (checked && layers.sfmsfDrawing) {
       // from SFMSF drawing only the greenbelt gives way to the aerial photo; every other switch stays as it is
       drawingSnap = null;
-      Object.assign(layers, { drawing: false, aerial: true, greenbelt: false });
+      Object.assign(layers, {
+        sfmsfDrawing: false,
+        aerial: true,
+        greenbelt: false,
+      });
       setView(SFMSF_AERIAL_VB);
       fillView();
     } else if (checked) {
@@ -394,7 +402,7 @@ export function toggle(k, checked) {
       // set their own)
       if (layers.progress)
         Object.keys(PROGRESS_DEFAULTS).forEach(
-          (key) => (layers[key] = fullDefaults[key]),
+          (key) => (layers[key] = fullAerialDefaults[key]),
         );
       layers.sfmsfAerial = true;
       layers.progress = false;
@@ -421,7 +429,7 @@ export function showAll() {
       k !== "creeks" &&
       k !== "roads" &&
       k !== "progress" &&
-      k !== "drawing" &&
+      k !== "sfmsfDrawing" &&
       k !== "sfmsfAerial" &&
       k !== "horizontal"
     )
@@ -438,11 +446,11 @@ export function showAll() {
 // The switches each view starts with, as picking it from the panel sets them up
 function viewSwitches(view) {
   if (view === "progress") return defaults;
-  if (view === "view_default") return fullDefaults;
+  if (view === "fullAerial") return fullAerialDefaults;
   if (view === "horizontal")
-    return { ...fullDefaults, horizontal: true, progress: false };
-  if (view === "drawing") return drawingSwitches();
-  return { ...normalDefaults, ...sfmsfAerialReference() }; // SFMSF aerial
+    return { ...fullAerialDefaults, horizontal: true, progress: false };
+  if (view === "sfmsfDrawing") return drawingSwitches();
+  return { ...sfmsfAerialDefaults, ...sfmsfAerialReference() }; // SFMSF aerial
 }
 
 // Reset: the current view's switches back as it starts with them, staying on the same view, zoom and position
