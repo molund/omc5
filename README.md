@@ -5,8 +5,8 @@ along the Clayton Clipper's route in Surrey, BC. It shows progress as the Clippe
 and crane-lifted precast spans build the guideway, updated from regular walks along the
 line.
 
-The project started as a drawing of the stretch past the SkyTrain Fleet Maintenance and
-Storage Facility (formerly OMC5) at Fraser Highway and Highway 15 (176 St), which is
+The project started as a drawing of the stretch past the Serpentine Floodplain Maintenance
+and Storage Facility (SFMSF, formerly OMC5) at Fraser Highway and Highway 15 (176 St), which is
 where the repo name comes from.
 
 **Live site:** https://molund.github.io/omc5/
