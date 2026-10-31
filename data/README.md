@@ -6,7 +6,7 @@ compiled by Mike Olund. It is not from TransLink or the Province of BC.
 
 | File                                          | Contents                                                                               |
 | --------------------------------------------- | -------------------------------------------------------------------------------------- |
-| `sls-hillcrest-to-bakerview-supports.geojson` | One point per support, at the centre of its pillar(s)                                  |
+| `sls-hillcrest-to-bakerview-supports.geojson` | One polygon per support: the outline of its pier cap                                   |
 | `sls-hillcrest-to-bakerview-pillars.geojson`  | One point per pillar (column), where it stands                                         |
 | `sls-hillcrest-to-bakerview-spans.geojson`    | One polygon per span deck (or per girder line, see below)                              |
 | `control-points.json`                         | The two control points used to georeference the drawing                                |
@@ -75,8 +75,8 @@ This is not survey data. Do not use it for engineering, construction or anything
 | `id`      | Sequential number from west to east                                                    |
 | `support` | The `id` of the support (in `sls-hillcrest-to-bakerview-supports.geojson`) it holds up |
 
-Each pillar is placed carefully in the drawing. For a two-column bent, the support point is the midpoint between its
-pillars, so use this file for where each column actually stands.
+Each pillar is placed carefully in the drawing. A support's polygon is its pier cap, which sits over its pillars, so use
+this file for where each column actually stands.
 
 ### Spans
 

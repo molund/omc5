@@ -9,7 +9,10 @@ const STYLES = {
     "<PolyStyle><color>ff4a4a4a</color></PolyStyle><LineStyle><color>ff222222</color><width>1</width></LineStyle>",
   unfinished:
     "<PolyStyle><color>66ffffff</color></PolyStyle><LineStyle><color>ff4a4a4a</color><width>1.5</width></LineStyle>",
-  // supports and pillars: small dark circles
+  // supports: the pier caps, solid mid grey with a dark outline
+  support:
+    "<PolyStyle><color>ff8a8a8a</color></PolyStyle><LineStyle><color>ff222222</color><width>1</width></LineStyle>",
+  // pillars: small dark circles
   Point:
     "<IconStyle><scale>0.6</scale><color>ff333333</color><Icon><href>https://maps.google.com/mapfiles/kml/shapes/placemark_circle.png</href></Icon></IconStyle><LabelStyle><scale>0</scale></LabelStyle>",
 };
@@ -52,17 +55,28 @@ function nameOf(p) {
   return `Pillar #${p.id}`;
 }
 
-// spans by whether they are finished (spans exported without it count as finished); points all alike
+// spans by whether they are finished (spans exported without it count as finished); supports alike; points all alike
 const styleOf = (p) =>
   "finished" in p || "cc_span" in p
     ? p.finished === false
       ? "unfinished"
       : "finished"
-    : "Point";
+    : "cc_joint" in p
+      ? "support"
+      : "Point";
 
 // one Placemark per line, so diffs show which features changed
 export function writeKml(file, title, features, meta) {
-  const type = features[0]?.geometry.type ?? "Point";
+  // the styles the layer's features use (the spans layer always has both span styles)
+  const styles = [
+    ...new Set(
+      features.flatMap((f) =>
+        "cc_span" in f.properties
+          ? ["finished", "unfinished"]
+          : [styleOf(f.properties)],
+      ),
+    ),
+  ];
   const placemarks = features.map((f) => {
     const data = Object.entries(f.properties)
       .filter(([, v]) => v !== null && v !== undefined)
@@ -76,7 +90,7 @@ export function writeKml(file, title, features, meta) {
 <kml xmlns="http://www.opengis.net/kml/2.2"><Document>
 <name>${esc(title)}</name>
 <description>${esc(`${meta.source}.`)}</description>
-${(type === "Polygon" ? ["finished", "unfinished"] : ["Point"]).map((id) => `<Style id="${id}">${STYLES[id]}</Style>`).join("\n")}
+${styles.map((id) => `<Style id="${id}">${STYLES[id]}</Style>`).join("\n")}
 ${placemarks.join("\n")}
 </Document></kml>
 `,
