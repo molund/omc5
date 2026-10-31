@@ -1,6 +1,6 @@
 # Clayton Clipper status. The site reads it (src/lib/status.js); running the deploy workflow by hand or through the API updates
 # it (see .github/workflows/deploy.yml). Times are Pacific, rounded to the nearest quarter hour.
-updated: 2026-10-31T15:45-07:00
+updated: 2026-10-31T16:15-07:00
 # the span the gantry is working on (Clayton Clipper span numbers, 3-104)
 span: 36
 # whether that span is complete (or at least hung)
@@ -27,6 +27,7 @@ notes:
     more:
       - "From here to the end of the Expo Line is only 12 more spans. The Sprinter is responsible for seven of them. The rest will be built by cranes."
     minor:
+      - 2026-10-31T16:15-07:00: "Rode past the Clayton Clipper on the way home: the crews have packed up for the Sunday shutdown, and the gantry is sitting quietly over span 36 until Monday. Nothing moving out there but the ghosts. Happy Halloween!"
       - 2026-10-31T15:45-07:00: "The Fleetwood Flyer has been parked at 152 St since finishing its run a few weeks ago. The walkways are off its trusses, but with no big cranes on site, nobody seems in a hurry to take it apart."
   - 2026-10-31T14:00-07:00: "Check-in from the bike: all the rocks are hung and span 36 is marked as complete. Now pedalling west of 176th St to see what the rest of the line is up to."
     more:
