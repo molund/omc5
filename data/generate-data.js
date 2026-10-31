@@ -1,5 +1,5 @@
 // Export the guideway supports and spans in src/assets/plan.svg as GeoJSON (data/clipper-supports.geojson and
-// data/clipper-spans.geojson). Run with `npm run export-geojson` after changing the drawing.
+// data/clipper-spans.geojson), and the same as KML in data/kml/. Run with `npm run export-geojson` after changing the drawing.
 // - Every shape is taken down to canvas units through its transforms (as getScreenCTM does in the browser), then to lon/lat
 //   with a similarity transform (scale, turn, shift) to Web Mercator, the projection of the Apple Maps screenshots the
 //   drawing is traced on, fitted to the measured pins in data/control-points.json.
@@ -8,6 +8,7 @@
 // - Spans: the guideway polygons, numbered from the nearest Clayton Clipper (cclabel) and SFMSF (spanlabel) labels.
 import fs from "node:fs";
 import { XMLParser } from "fast-xml-parser";
+import { writeKml } from "./kml.js";
 
 const SVG = "src/assets/plan.svg",
   CONTROL = "data/control-points.json",
@@ -332,6 +333,21 @@ function exportGeojson() {
   write(`${OUT}supports.geojson`, supports, meta);
   write(`${OUT}pillars.geojson`, pillarFeatures, meta);
   write(`${OUT}spans.geojson`, spans, meta);
+  // the same three layers as KML, one file each, so the spans can be re-imported into My Maps on their own
+  fs.mkdirSync("data/kml", { recursive: true });
+  writeKml(
+    "data/kml/clipper-supports.kml",
+    "Clayton Clipper supports",
+    supports,
+    meta,
+  );
+  writeKml(
+    "data/kml/clipper-pillars.kml",
+    "Clayton Clipper pillars",
+    pillarFeatures,
+    meta,
+  );
+  writeKml("data/kml/clipper-spans.kml", "Clayton Clipper spans", spans, meta);
   console.log(
     `${supports.length} supports, ${pillarFeatures.length} pillars, ${spans.length} spans`,
   );
