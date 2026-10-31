@@ -32,13 +32,20 @@ def unquote(v):
 
 
 def notes(path="status.yaml"):
-    """The notes with text, as dicts of time, text and photo (file, caption), as src/lib/status.js reads them."""
+    """The notes with text, as dicts of time, text, photo (file, caption) and minor updates [(time, text)], as
+    src/lib/status.js reads them."""
     out = []
     for line in open(path).read().split("\n"):
         # notes are two spaces in; minor updates, further in under "minor:", get no thread of their own
         m = re.match(r"^ {2}-\s+(\S+):\s+(.*?)\s*$", line)
         if m:
-            out.append({"time": datetime.fromisoformat(m.group(1)), "text": unquote(m.group(2)), "photo": None})
+            out.append({"time": datetime.fromisoformat(m.group(1)), "text": unquote(m.group(2)), "photo": None, "minor": []})
+            continue
+        # a minor update, further in under "minor:"
+        m = re.match(r"^ {3,}-\s+(\S+):\s+(.*?)\s*$", line)
+        if m:
+            if out and unquote(m.group(2)):
+                out[-1]["minor"].append((datetime.fromisoformat(m.group(1)), unquote(m.group(2))))
             continue
         if re.match(r"^\s+photo:\s*$", line) and out:
             out[-1]["photo"] = {"file": None, "caption": ""}
@@ -49,6 +56,7 @@ def notes(path="status.yaml"):
     for n in out:
         if n["photo"] and not n["photo"]["file"]:
             n["photo"] = None
+        n["minor"].sort(key=lambda m: m[0], reverse=True)
     return [n for n in out if n["text"]]
 
 
@@ -63,6 +71,12 @@ def as_of(t):
     return f"{(t.hour % 12) or 12}:{t.minute:02d} {period} on {t.strftime('%b')} {t.day}, {t.year}"
 
 
+def minor_time(t, note):
+    """As the Past updates page shows it: "11:45 a.m." on the same day as its note, otherwise in full."""
+    full = as_of(t)
+    return full.split(" on ")[0] if t.astimezone(TZ).date() == note.astimezone(TZ).date() else full
+
+
 def body(n):
     anchor = n["time"].astimezone(timezone.utc).strftime("%Y-%m-%dT%H-%M")
     parts = [f"**{as_of(n['time'])}**", n["text"]]
@@ -71,6 +85,10 @@ def body(n):
         parts.append(f"![{caption or 'Photo for this update'}]({PHOTOS}{n['photo']['file']})")
         if caption:
             parts.append(f"_{caption}_")
+    if n["minor"]:
+        # as on the Past updates page: a Minor changes list, each time in code style
+        parts.append("### Minor changes")
+        parts.append("\n".join(f"- `{minor_time(t, n['time'])}` {text}" for t, text in n["minor"]))
     parts.append(f"[See it on the Clayton Clipper Tracker]({SITE}updates/#{anchor})")
     # giscus's strict-mode marker: the sha1 of the title it asks for
     parts.append(f"<!-- sha1: {hashlib.sha1(title(n['time']).encode()).hexdigest()} -->")
