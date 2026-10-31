@@ -313,4 +313,21 @@
     font-weight: 400;
     cursor: default;
   }
+  /* on a phone: the spacing from before, the buttons sharing the full width with a gap and tall enough to tap, in the same
+     colours (a button you can't press keeps the track colour) */
+  @media (max-width: 760px) {
+    .pager {
+      gap: 8px;
+      width: auto;
+      margin-top: 24px;
+      background: none;
+    }
+    .pager button {
+      flex: 1;
+      min-height: calc(44rem / 17);
+    }
+    .pager button:disabled {
+      background: var(--track);
+    }
+  }
 </style>
