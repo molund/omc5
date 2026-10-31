@@ -3,7 +3,8 @@
 // - Every shape is taken down to canvas units through its transforms (as getScreenCTM does in the browser), then to lon/lat
 //   with a similarity transform (scale, turn, shift) to Web Mercator, the projection of the Apple Maps screenshots the
 //   drawing is traced on, fitted to the measured pins in data/control-points.json.
-// - Supports: each bent cap (rect.g) is one support; its pillars are the support circles inside it (or nearest it).
+// - Supports: each bent cap (rect.g) is one support, exported as the cap's outline; its pillars are the support circles inside
+//   it (or nearest it).
 // - Pillars: each support circle, exactly where it is drawn, with the id of its support.
 // - Spans: the guideway polygons, numbered from the nearest Clayton Clipper (cclabel) and SFMSF (spanlabel) labels.
 import fs from "node:fs";
@@ -267,8 +268,7 @@ function exportGeojson() {
   caps.sort((a, b) => along(a.q) - along(b.q));
   caps.forEach((c, i) => (c.id = i + 1));
   const supports = caps.map((c, i) => {
-    const centre = c.pillars.length ? centroid(c.pillars) : c.q,
-      [p, r] = [c.box[0], c.box[1]],
+    const [p, r] = [c.box[0], c.box[1]],
       [q, s] = [c.box[1], c.box[2]],
       long = dist(p, r) > dist(q, s) ? [p, r] : [q, s],
       [a, b] = long.map(toLonLat),
@@ -280,7 +280,7 @@ function exportGeojson() {
           180) /
         Math.PI;
     return feature(
-      { type: "Point", coordinates: toLonLat(centre) },
+      { type: "Polygon", coordinates: [[...c.box, c.box[0]].map(toLonLat)] },
       {
         id: i + 1,
         pillars: c.pillars.length,
