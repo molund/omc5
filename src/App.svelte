@@ -6,7 +6,7 @@
   import { fade } from "svelte/transition";
   import { layers, ui, PHONE } from "./lib/appState.svelte.js";
 
-  // the layer rules wait until Plan has tagged the drawing, which needs it laid out as plan.svg draws it on its own
+  // the layer rules wait until Plan has tagged the drawing, which needs it laid out as map.svg draws it on its own
   const css = $derived(
     ui.ready
       ? layerCss(layers) + (ui.view === "fullAerial" ? FULL_AERIAL_CSS : "")

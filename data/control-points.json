@@ -1,5 +1,5 @@
 {
-  "about": "The two points that tie plan.svg canvas units to WGS84: tulip pillars measured by Mike Olund, with their canvas positions in the drawing. The export fits scale, rotation and position to them exactly.",
+  "about": "The two points that tie map.svg canvas units to WGS84: tulip pillars measured by Mike Olund, with their canvas positions in the drawing. The export fits scale, rotation and position to them exactly.",
   "pins": [
     {
       "name": "Tulip at CC 13/14 (near 182 St)",

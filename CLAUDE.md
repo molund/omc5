@@ -28,7 +28,7 @@ Svelte 5 + Vite site, deployed to GitHub Pages (https://molund.github.io/omc5/) 
 
 ## Layout
 
-- `src/assets/plan.svg` — the plan-view drawing.
+- `src/assets/map.svg` — the plan-view drawing.
 - `src/lib/layerSwitches.js` — layer definitions; `LayerPanel.svelte` the switches.
 - `status.yaml` — gantry span / complete / time-stamped notes (newest shown) on the progress card. Site news
   only: update this file, don't change the drawing unless asked.

@@ -1,4 +1,4 @@
-// The leftmost, rightmost, highest and lowest points of what is actually drawn in plan.svg right now, in canvas units, after
+// The leftmost, rightmost, highest and lowest points of what is actually drawn in map.svg right now, in canvas units, after
 // turning the canvas by `turn` degrees about (cx, cy). Hidden layers, defs, masks, clip paths and shapes painted only in white
 // (the canvas backing, which can't be seen on the white page) don't count, nor do the aerial photos (it measures the drawing),
 // and anything clipped (the zoomed photo frame clips the guideway, for one) only counts as far as its clip. With `only` (a CSS

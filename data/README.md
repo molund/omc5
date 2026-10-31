@@ -19,7 +19,7 @@ Leaflet, Mapbox and Google Earth (import), and GitHub shows them on a map.
 ## How it was made
 
 The supports and spans were traced on Apple Maps aerial imagery and checked on site visits, in the plan drawing that this
-repository's site shows (`src/assets/plan.svg`). `data/generate-data.js` converts the drawing to lon/lat.
+repository's site shows (`src/assets/map.svg`). `data/generate-data.js` converts the drawing to lon/lat.
 
 Scale, rotation and position come from two control points, one at each end of the line, placed by Mike Olund on very
 high-resolution Apple Maps aerial imagery in the Maps app for macOS: where Clayton Clipper spans 13 and 14 meet (near 182

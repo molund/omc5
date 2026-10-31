@@ -53,7 +53,7 @@ hideMikeOnlyOptions();
 // Screens this narrow are phones: the layer panel is a menu that slides in over the plan
 export const PHONE = matchMedia("(max-width: 760px)");
 // zoom is a percentage of the stage width, and fit the zoom at which the whole canvas fits the stage; ready turns on the layer
-// rules once plan.svg is tagged; gantry is the Clayton Clipper's span number out of the total; phone is PHONE, kept up to
+// rules once map.svg is tagged; gantry is the Clayton Clipper's span number out of the total; phone is PHONE, kept up to
 // date by App.svelte; collapsed hides the panel (a phone opens on the plan, with the menu closed); changed is whether a layer
 // switch has been changed since the view was picked or reset, which is when Reset has something to do; filled is whether the
 // plan is at a view's opening fill (see fillView); cardHidden is whether

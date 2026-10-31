@@ -37,7 +37,7 @@ Then open http://localhost:5173/omc5/.
 
 ## What's where
 
-- `src/assets/plan.svg` — the plan-view drawing
+- `src/assets/map.svg` — the plan-view drawing
 - `status.yaml` — progress notes shown on the site
 - `public/images/` — aerial photos
 

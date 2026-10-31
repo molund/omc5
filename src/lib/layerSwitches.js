@@ -1,4 +1,4 @@
-// Layer switches: [key, label, class in plan.svg, on by default], in panel groups. The View group comes first and
+// Layer switches: [key, label, class in map.svg, on by default], in panel groups. The View group comes first and
 // is shown as radio buttons: picking one switches the others off (see setSwitch in appState.svelte.js)
 export const LAYERS = [
   [
@@ -151,7 +151,7 @@ export const FULL_AERIAL_CSS =
 export const labelsAvailable = (state) =>
   state.progress || (state.cc && (state.guideway || state.unfinished));
 
-// The CSS rules that show and hide the layers of plan.svg for the given switch state
+// The CSS rules that show and hide the layers of map.svg for the given switch state
 export function layerCss(state) {
   let r = "";
   const avail = labelsAvailable(state);

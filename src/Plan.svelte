@@ -1,6 +1,6 @@
 <script>
   import { onMount } from "svelte";
-  import planSvg from "./assets/plan.svg?raw";
+  import planSvg from "./assets/map.svg?raw";
   import { DRAW_VB, SFMSF_AERIAL_VB, FULL_VB } from "./lib/layerSwitches.js";
   import { tagBuiltBy } from "./lib/builtBy.js";
   import { gantryProgress } from "./lib/gantryProgress.js";
