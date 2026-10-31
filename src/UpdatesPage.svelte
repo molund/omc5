@@ -54,36 +54,28 @@
     eyes: "👀",
   };
   let counts = $state({});
-  // GitHub lists the threads 100 at a time, in its own order (not quite the updates' order), so pages of the list are fetched
-  // only as needed: until every update on the page showing has its thread, or the list runs out. Each visitor usually needs
-  // one request in all, and one more per 100 updates further back they page.
-  let fetched = 0,
-    more = true,
-    busy = null;
-  async function countsFor(updates) {
-    while (more && updates.some((n) => !(term(n.time) in counts))) {
-      busy ??= fetch(
-        `https://api.github.com/repos/molund/omc5/discussions?per_page=100&page=${fetched + 1}`,
-        { headers: { Accept: "application/vnd.github+json" } },
-      )
-        .then((r) => (r.ok ? r.json() : []))
-        .catch(() => []);
-      const list = await busy;
-      busy = null;
-      fetched++;
-      if (list.length < 100) more = false;
-      const out = { ...counts };
-      list.forEach((d) => {
-        out[d.title] = {
-          comments: d.comments,
-          reactions: Object.keys(EMOJI)
-            .filter((k) => d.reactions?.[k] > 0)
-            .map((k) => [EMOJI[k], d.reactions[k]]),
-        };
-      });
-      counts = out;
-    }
+  // One request only: GitHub's first 100 threads. The deploy workflow fails once the category reaches 100 threads, as a
+  // reminder to rethink this before older updates start missing their counts.
+  function countsFor() {
+    fetch("https://api.github.com/repos/molund/omc5/discussions?per_page=100", {
+      headers: { Accept: "application/vnd.github+json" },
+    })
+      .then((r) => (r.ok ? r.json() : []))
+      .then((list) => {
+        const out = {};
+        list.forEach((d) => {
+          out[d.title] = {
+            comments: d.comments,
+            reactions: Object.keys(EMOJI)
+              .filter((k) => d.reactions?.[k] > 0)
+              .map((k) => [EMOJI[k], d.reactions[k]]),
+          };
+        });
+        counts = out;
+      })
+      .catch(() => {});
   }
+  countsFor();
 
   // Pages of 10 updates, newest first. The page is in the address (?page=2), so the browser's back button and shared links
   // work; a link to one update (#2026-10-31T16-30) opens the page it is on.
@@ -100,9 +92,6 @@
   const shown = $derived(
     status.history.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE),
   );
-  $effect(() => {
-    countsFor(shown);
-  });
   function goTo(p) {
     page = p;
     open = null;
