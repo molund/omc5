@@ -12,6 +12,7 @@ import { writeKml } from "./kml.js";
 
 const SVG = "src/assets/plan.svg",
   CONTROL = "data/control-points.json",
+  STATUS = "status.yaml",
   OUT = "data/clipper-",
   R = 6378137; // Web Mercator sphere radius
 
@@ -297,7 +298,11 @@ function exportGeojson() {
     ),
   );
 
-  // spans: guideway polygons
+  // spans: guideway polygons. finished: as drawn (not class "unfinished"), except the Clayton Clipper's gantry boxes, which
+  // are finished behind the span in status.yaml, and on it once it is complete, as the site draws them
+  const status = fs.readFileSync(STATUS, "utf8"),
+    gantryAt = +(status.match(/^span:\s*(\d+)/m) || [])[1] || 0,
+    gantryDone = /^complete:\s*true\b/m.test(status);
   const spans = els
     .filter((e) => e.tag === "polygon" && e.classes.includes("guideway"))
     .map((e) => {
@@ -319,6 +324,10 @@ function exportGeojson() {
               : "precast girder",
           cc_span: n ? n.n : null,
           sfmsf_span: l ? l.t : null,
+          finished:
+            (e.classes.includes("gi") || e.classes.includes("p")) && n
+              ? n.n < gantryAt || (n.n === gantryAt && gantryDone)
+              : !e.classes.includes("unfinished"),
         },
       };
     })
