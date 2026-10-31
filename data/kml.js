@@ -75,7 +75,7 @@ export function writeKml(file, title, features, meta) {
     `<?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2"><Document>
 <name>${esc(title)}</name>
-<description>${esc(`${meta.source}. Exported ${meta.exported}.`)}</description>
+<description>${esc(`${meta.source}.`)}</description>
 ${(type === "Polygon" ? ["finished", "unfinished"] : ["Point"]).map((id) => `<Style id="${id}">${STYLES[id]}</Style>`).join("\n")}
 ${placemarks.join("\n")}
 </Document></kml>
