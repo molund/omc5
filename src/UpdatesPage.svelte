@@ -90,6 +90,20 @@
   }}
 />
 
+<!-- a photo and its caption, under a note or among its further paragraphs -->
+{#snippet photo(p)}
+  <figure class="photo">
+    <a href={p.src}
+      ><img
+        src={p.src}
+        alt={p.caption || "Photo for this update"}
+        loading="lazy"
+      /></a
+    >
+    {#if p.caption}<figcaption>{p.caption}</figcaption>{/if}
+  </figure>
+{/snippet}
+
 <!-- laid out like a README on GitHub: a heading per update, the note, its photo, its minor changes as a list with code-style
      times, then its comments -->
 <main class="page">
@@ -99,18 +113,12 @@
     <article id={anchor(n.time)}>
       <h2>{heading(n.time)}</h2>
       <p class="note">{n.text}</p>
-      {#if n.photo}
-        <figure class="photo">
-          <a href={n.photo.src}
-            ><img
-              src={n.photo.src}
-              alt={n.photo.caption || "Photo for this update"}
-              loading="lazy"
-            /></a
-          >
-          {#if n.photo.caption}<figcaption>{n.photo.caption}</figcaption>{/if}
-        </figure>
-      {/if}
+      {#if n.photo}{@render photo(n.photo)}{/if}
+      {#each n.more as m}
+        {#if m.photo}{@render photo(m.photo)}{:else}<p class="note">
+            {m.text}
+          </p>{/if}
+      {/each}
       {#if n.minor.length}
         <h3>Minor changes</h3>
         <ul class="minor">
