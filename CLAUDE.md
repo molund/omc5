@@ -1,4 +1,4 @@
-# Clayton Clipper Tracker (OMC5 plan view)
+# Clayton Clipper Tracker
 
 Svelte 5 + Vite site, deployed to GitHub Pages (https://molund.github.io/omc5/) by
 `.github/workflows/deploy.yml` on every push to `main`.
