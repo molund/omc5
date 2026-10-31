@@ -134,10 +134,11 @@ export function setView(vb, turn = 0) {
   els.stage.scrollTop = 0;
 }
 
-// Progress-chart mode starts on the whole canvas, zoomed so PROGRESS_VIEW_WIDTH fills the stage's width and scrolled so the
-// gantry's span sits at PROGRESS_SPAN_AT across and down the stage; from there it zooms and pans like any other view
+// Progress-chart mode's canvas is the Clayton Clipper route (see canvasProgress); it starts zoomed so PROGRESS_VIEW_WIDTH fills
+// the stage's width and scrolled so the gantry's span sits at PROGRESS_SPAN_AT across and down the stage; from there it zooms
+// and pans like any other view, and Fit shows the whole route
 export function progressView() {
-  setView(FULL_VB);
+  canvasProgress();
   const c = els.gantrySpan;
   if (!c) return;
   const vb = els.svg.viewBox.baseVal;
@@ -151,6 +152,28 @@ export function progressView() {
   stage.scrollTop =
     ((c.y - vb.y) / vb.height) * r.height -
     stage.clientHeight * PROGRESS_SPAN_AT.y;
+}
+
+// Progress's canvas: what Progress draws (the route, not the aerial photo), upright, with a margin on every side of
+// HORIZONTAL_MARGIN times its diagonal, but no wider than the overview aerial; the whole canvas when there is nothing to measure
+function canvasProgress() {
+  // the layer rules for Progress's switches have to be on the page before measuring what shows
+  flushSync();
+  els.turn.removeAttribute("transform");
+  const e = visibleExtent(els.svg, 0, TURN_X, TURN_Y);
+  if (!e) return setView(FULL_VB);
+  const m =
+    HORIZONTAL_MARGIN * Math.hypot(e.right.x - e.left.x, e.bottom.y - e.top.y);
+  let x = e.left.x - m,
+    x1 = e.right.x + m;
+  const photo = els.svg.querySelector("#baseoverview image");
+  if (photo) {
+    const p = turnedXRange(els.svg, photo, 0, TURN_X, TURN_Y);
+    x = Math.max(x, p.x0);
+    x1 = Math.min(x1, p.x1);
+  }
+  const y = e.top.y - m;
+  setView(`${x} ${y} ${x1 - x} ${e.bottom.y + m - y}`);
 }
 
 // Horizontal: the drawing turned so both ends of the Clayton Clipper route are level. Its canvas is what is drawn with a margin
