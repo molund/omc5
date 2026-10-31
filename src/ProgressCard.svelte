@@ -214,7 +214,9 @@
     z-index: 1;
     margin-top: -2px;
     padding: 7px 9px;
-    font-size: calc(12rem / 17); /* follows the iPhone's Text Size setting (see app.css) */
+    font-size: calc(
+      12rem / 17
+    ); /* follows the iPhone's Text Size setting (see app.css) */
     line-height: 1.35;
     color: var(--panel);
     background: var(--ink);
