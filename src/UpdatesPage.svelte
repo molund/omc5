@@ -9,6 +9,47 @@
       .toISOString()
       .slice(0, 16)
       .replace(/:/g, "-");
+
+  // Comments: one GitHub Discussion per update, through giscus, in the "Past Updates page comments" category. Each update's
+  // thread is titled by its Yukon time, e.g. "Update 2026-10-31 09:30" (the title must never change, or the thread is lost).
+  const GISCUS = {
+    "data-repo": "molund/omc5",
+    "data-repo-id": "R_kgDOVbOMWA",
+    "data-category": "Past Updates page comments",
+    "data-category-id": "DIC_kwDOVbOMWM4DKF3d",
+    "data-mapping": "specific",
+    "data-strict": "1",
+    "data-reactions-enabled": "1",
+    "data-emit-metadata": "0",
+    "data-input-position": "top",
+    "data-theme": "preferred_color_scheme",
+    "data-lang": "en",
+    crossorigin: "anonymous",
+    async: "",
+  };
+  const term = (t) =>
+    "Update " +
+    new Intl.DateTimeFormat("en-CA", {
+      timeZone: "America/Whitehorse",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hourCycle: "h23",
+    })
+      .format(t)
+      .replace(",", "");
+  // the update whose comments are open (one at a time, so the page stays light)
+  let open = $state(null);
+  // load giscus into the element for this update's thread
+  function giscus(el, t) {
+    const s = document.createElement("script");
+    s.src = "https://giscus.app/client.js";
+    Object.entries(GISCUS).forEach(([k, v]) => s.setAttribute(k, v));
+    s.setAttribute("data-term", term(t));
+    el.appendChild(s);
+  }
 </script>
 
 <main class="page">
@@ -31,6 +72,13 @@
             {#if n.photo.caption}<figcaption>{n.photo.caption}</figcaption>{/if}
           </figure>
         {/if}
+        <button
+          class="comments-link"
+          aria-expanded={open === n}
+          onclick={() => (open = open === n ? null : n)}
+          >{open === n ? "Hide comments" : "Comments"}</button
+        >
+        {#if open === n}<div class="comments" use:giscus={n.time}></div>{/if}
       </li>
     {/each}
   </ol>
@@ -70,6 +118,23 @@
   }
   .note {
     margin-top: 4px;
+  }
+  /* the comments toggle, a plain text link, and the giscus thread it opens */
+  .comments-link {
+    display: block;
+    margin-top: 8px;
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: calc(13rem / 17);
+    color: var(--ink);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+  }
+  .comments {
+    margin-top: 8px;
   }
   /* an update's photo, the page's width, opening full size when tapped */
   .photo {
