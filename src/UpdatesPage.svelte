@@ -40,7 +40,8 @@
     })
       .format(t)
       .replace(",", "");
-  // the update whose comments are open (one at a time, so the page stays light)
+  // the anchor of the update whose comments are open (one at a time, so the page stays light); a string, since $state would
+  // wrap an update object in a proxy that never equals the original
   let open = $state(null);
   // load giscus into the element for this update's thread
   function giscus(el, t) {
@@ -74,11 +75,12 @@
         {/if}
         <button
           class="comments-link"
-          aria-expanded={open === n}
-          onclick={() => (open = open === n ? null : n)}
-          >{open === n ? "Hide comments" : "Comments"}</button
+          aria-expanded={open === anchor(n.time)}
+          onclick={() =>
+            (open = open === anchor(n.time) ? null : anchor(n.time))}
+          >{open === anchor(n.time) ? "Hide comments" : "Comments"}</button
         >
-        {#if open === n}<div class="comments" use:giscus={n.time}></div>{/if}
+        {#if open === anchor(n.time)}<div class="comments" use:giscus={n.time}></div>{/if}
       </li>
     {/each}
   </ol>
