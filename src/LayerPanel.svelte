@@ -23,14 +23,14 @@
   // the span-label switches need Clayton Clipper spans on screen, and the direction arrows the finished spans they sit on, so
   // they fade and can't be changed without them
   const disabled = (k) =>
-    ((k === "labels" || k === "cclabels") && !avail) ||
+    ((k === "omc5Labels" || k === "spanLabels") && !avail) ||
     (k === "arrows" && !layers.guideway);
   const opacity = (k) => (disabled(k) ? "0.4" : "");
   // greenbelt and creeks only in drawing mode, roads (with their labels), construction yard and walking paths in the two SFMSF
   // views (drawing mode and SFMSF zoom),
   // aerial photo everywhere but drawing mode, and the SFMSF span labels and the support beams on their own only for Mike
   function hidden(k) {
-    if (k === "labels" || k === "beams") return !isMike;
+    if (k === "omc5Labels" || k === "beams") return !isMike;
     if (k === "greenbelt" || k === "creeks") return !layers.sfmsfDrawing;
     if (k === "roads" || k === "yard" || k === "walk")
       return !(layers.sfmsfDrawing || layers.sfmsfAerial);

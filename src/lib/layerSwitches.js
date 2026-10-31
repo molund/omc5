@@ -19,8 +19,8 @@ export const LAYERS = [
       ["guideway", "Finished spans", "guideway", true],
       ["unfinished", "Unfinished spans", "unfinished", true],
       ["supports", "Supports", "supports", true],
-      ["labels", "OMC5 span labels", "spanlabel", true],
-      ["cclabels", "Span labels", "cclabel", false],
+      ["omc5Labels", "OMC5 span labels", "spanlabel", true],
+      ["spanLabels", "Span labels", "cclabel", false],
       ["arrows", "Direction arrows", "arrows", false],
     ],
   ],
@@ -57,7 +57,7 @@ LAYERS.forEach((g) =>
 export const fullAerialDefaults = Object.assign({}, sfmsfAerialDefaults, {
   sfmsfAerial: false,
   roads: false,
-  labels: false,
+  omc5Labels: false,
   fullAerial: true,
 });
 // Switches that progress-chart mode starts with, which match what it shows: the Clayton Clipper's spans (finished and
@@ -70,8 +70,8 @@ export const PROGRESS_DEFAULTS = {
   yard: false,
   ave72: false,
   railway: false,
-  labels: false,
-  cclabels: true,
+  omc5Labels: false,
+  spanLabels: true,
   arrows: false,
   gantry: true,
   beams: false,
@@ -115,8 +115,8 @@ const PROGRESS_SHOWS = {
   yard: [".yard"],
   ave72: [".ave72"],
   railway: [".railway"],
-  labels: [".spanlabel"],
-  cclabels: [".cclabel"],
+  omc5Labels: [".spanlabel"],
+  spanLabels: [".cclabel"],
   arrows: ["text.n.guideway"],
   gantry: [".gantry"],
   beams: [".gantry"],
@@ -166,7 +166,7 @@ export function layerCss(state) {
           !state.sfmsfAerial
         ) &&
         !(k === "aerial" && state.sfmsfDrawing) &&
-        !((k === "labels" || k === "cclabels") && !avail) &&
+        !((k === "omc5Labels" || k === "spanLabels") && !avail) &&
         !(k === "hires" && !state.aerial);
       if (
         k === "progress" ||
@@ -190,13 +190,13 @@ export function layerCss(state) {
           '.roads,.fraser,.hwy15,.road.hwy15,.road.fraser,line[class="bg"]{display:' +
           (on ? "inline" : "none") +
           " !important}";
-      else if (k === "labels")
+      else if (k === "omc5Labels")
         r +=
           ".spanlabel{display:" +
           (on ? "inline" : "none") +
           " !important}" +
           (on ? "" : ".spanlabel.steel-hwy15{display:none !important}");
-      else if (k === "cclabels")
+      else if (k === "spanLabels")
         r +=
           ".cclabel{display:" +
           (on ? "inline" : "none") +

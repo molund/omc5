@@ -40,9 +40,9 @@ export const isMike =
   new URLSearchParams(location.search.toLowerCase()).get("ismike") === "true";
 function hideMikeOnlyOptions() {
   if (isMike) return;
-  if (layers.labels) {
-    layers.labels = false;
-    layers.cclabels = true;
+  if (layers.omc5Labels) {
+    layers.omc5Labels = false;
+    layers.spanLabels = true;
   }
   if (layers.beams) {
     layers.beams = false;
@@ -288,7 +288,7 @@ let drawingSnap = saved ? (saved.drawingSnap ?? null) : startSnap();
 const drawingSwitches = () => ({
   ...Object.fromEntries(Object.keys(layers).map((k) => [k, true])),
   aerial: false,
-  cclabels: false,
+  spanLabels: false,
   beams: false,
   progress: false,
   sfmsfAerial: false,
@@ -319,7 +319,7 @@ function exitSfmsfAerial() {
   layers.sfmsfAerial = false;
   setView(FULL_VB);
   layers.roads = false;
-  layers.labels = false;
+  layers.omc5Labels = false;
 }
 // Full image: the whole canvas, filling the stage, with the Full image switches
 function applyFullAerial() {
@@ -346,8 +346,8 @@ export function setSwitch(k, on) {
   if (k === "aerial" && on) layers.greenbelt = false;
   if (k === "gantry" && on) layers.beams = false;
   if (k === "beams" && on) layers.gantry = false;
-  if (k === "labels" && on) layers.cclabels = false;
-  if (k === "cclabels" && on) layers.labels = false;
+  if (k === "omc5Labels" && on) layers.spanLabels = false;
+  if (k === "spanLabels" && on) layers.omc5Labels = false;
   // picking any other view leaves Horizontal (Full image does so through fullAerialDefaults)
   if (on && (k === "sfmsfDrawing" || k === "progress" || k === "sfmsfAerial"))
     layers.horizontal = false;
@@ -405,14 +405,14 @@ export function setSwitch(k, on) {
       layers.progress = false;
       setView(SFMSF_AERIAL_VB);
       fillView();
-      layers.labels = true;
-      layers.cclabels = false;
+      layers.omc5Labels = true;
+      layers.spanLabels = false;
       // every Reference switch on, with the aerial photo (it is an aerial view) instead of the greenbelt
       Object.assign(layers, sfmsfAerialReference());
     } else {
       setView(FULL_VB);
       layers.roads = false;
-      layers.labels = false;
+      layers.omc5Labels = false;
     }
   }
   hideMikeOnlyOptions();
@@ -434,7 +434,7 @@ export function showAll() {
   });
   layers.greenbelt = false;
   // the two span-label sets are one or the other: Show all uses the Clayton Clipper's
-  layers.labels = false;
+  layers.omc5Labels = false;
   ui.changed = true;
   hideMikeOnlyOptions();
   refresh();
