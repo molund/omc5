@@ -10,11 +10,16 @@ complete: true
 #     photo:
 #       file: span-36.jpg (in public/images/sorry-im-a-shitty-photographer/)
 #       caption: "What the photo shows"
+# more paragraphs, indented under it (the card shows only the note, with a More link to the rest):
+#     more:
+#       - "A second paragraph"
 # and minor updates, indented under it (no photo, no comments thread or entry of their own; set `updated` to the newest):
 #     minor:
 #       - 2026-10-31T11:45-07:00: "What changed"
 notes:
   - 2026-10-31T14:00-07:00: "Check-in from the bike: all the rocks are hung and span 36 is marked as complete. The long-missing tulip where spans 70 and 71 meet, by the golf course, has finally been built too. Now pedalling west of 176th St to see what the rest of the line is up to."
+    more:
+      - "Tulip 70/71 was the last of the driven foundations. From 71/72 on, they switched to bored foundations."
     photo:
       file: 2026-10-31-tulip-70-71.jpg
       caption: "The new tulip where spans 70 and 71 meet, wrapped in an orange tarp: propane heaters blow warm air inside so the concrete can cure in the cold weather. That's my Kona Unit X in front, photographed drive side out, of course."
