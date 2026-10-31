@@ -952,144 +952,36 @@
           stroke-width="1.5"
           points="312.28,650.70 321.92,650.70 324.96,771.45 315.32,771.45"
         />
-        <clipPath id="ramp-h-trim">
-          <polygon
-            points="308.45,650.70 312.35,771.45 312.38,771.45 313.84,893.45 314.23,893.45 315.23,1014.30 314.82,1014.30 316.24,1136.20 5000.00,1136.20 5000.00,650.70"
-          />
-        </clipPath>
-        <mask
-          id="ramp-h-edge"
-          maskUnits="userSpaceOnUse"
-          x="-5000"
-          y="-5000"
-          width="10000"
-          height="10000"
-        >
-          <path
-            d="M320.14 771.45 L323.21 893.45 L312.47 1075.25"
-            fill="none"
-            stroke="#FFFFFF"
-            stroke-width="10.465"
-            stroke-linejoin="round"
-          />
-          <path
-            d="M320.14 771.45 L323.21 893.45 L312.47 1075.25"
-            fill="none"
-            stroke="#000000"
-            stroke-width="8.815"
-            stroke-linejoin="round"
-          />
-        </mask>
-        <path
-          clip-path="url(#ramp-h-trim)"
-          mask="url(#ramp-h-edge)"
+        <!-- Span H off-ramp, first span (the ramp's centre line was 320.14,771.45 to 323.21,893.45; 9.64 wide) -->
+        <polygon
           class="guideway unfinished"
-          d="M320.14 771.45 L323.21 893.45 L312.47 1075.25"
-          fill="none"
-          stroke="#888780"
-          stroke-width="10.465"
-          stroke-linejoin="round"
-          stroke-dasharray="8 5"
-        />
-        <path
-          clip-path="url(#ramp-h-trim)"
-          class="guideway unfinished"
-          d="M320.14 771.45 L323.21 893.45 L312.47 1075.25"
-          fill="none"
-          stroke="#FFFFFF"
-          stroke-opacity="0.75"
-          stroke-width="9.64"
-          stroke-linejoin="round"
-        />
-        <path
-          class="guideway unfinished"
-          d="M328.03 893.53 L318.39 893.37"
-          fill="none"
+          fill="#FFFFFF"
+          fill-opacity="0.75"
           stroke="#888780"
           stroke-width="0.825"
           stroke-dasharray="8 5"
-          stroke-dashoffset="-0.82"
-          clip-path="url(#ramp-h-trim)"
+          points="328.03,893.53 324.96,771.45 315.32,771.45 318.39,893.37"
         />
-        <path
+        <!-- Span H off-ramp, second span, including the part that merges into the I eastbound track (a guess until it is built) -->
+        <polygon
           class="guideway unfinished"
-          d="M320.88 1014.63 L311.26 1014.06"
-          fill="none"
+          fill="#FFFFFF"
+          fill-opacity="0.75"
           stroke="#888780"
           stroke-width="0.825"
           stroke-dasharray="8 5"
-          stroke-dashoffset="-0.82"
-          clip-path="url(#ramp-h-trim)"
+          points="315.23,1014.30 314.82,1014.30 315.53,1075.43 317.28,1075.53 328.03,893.53 318.39,893.37 314.74,955.09"
         />
         <!-- H off-ramp ends on the centre of the I eastbound track at mid-span I, like the L on-ramp in K --><!-- Span L: yard on-ramp joining eastbound (mirror of the Span H off-ramp) -->
-        <clipPath id="ramp-l-trim">
-          <polygon
-            points="317.12,1238.00 316.17,1358.80 316.21,1358.80 316.75,1480.20 316.90,1480.20 322.00,1601.80 5000.00,1601.80 5000.00,1238.00"
-          />
-        </clipPath>
-        <mask
-          id="ramp-l-edge"
-          maskUnits="userSpaceOnUse"
-          x="-5000"
-          y="-5000"
-          width="10000"
-          height="10000"
-        >
-          <path
-            d="M308.92 1297.50 L326.73 1480.20"
-            fill="none"
-            stroke="#FFFFFF"
-            stroke-width="10.465"
-            stroke-linejoin="round"
-          />
-          <path
-            d="M308.92 1297.50 L326.73 1480.20"
-            fill="none"
-            stroke="#000000"
-            stroke-width="8.815"
-            stroke-linejoin="round"
-          />
-        </mask>
-        <path
-          clip-path="url(#ramp-l-trim)"
-          mask="url(#ramp-l-edge)"
+        <!-- Span L on-ramp, including the part that merges into the K eastbound track (centre line was 308.92,1297.50 to 326.73,1480.20; 9.64 wide) -->
+        <polygon
           class="guideway unfinished"
-          d="M308.92 1297.50 L326.73 1480.20"
-          fill="none"
-          stroke="#888780"
-          stroke-width="10.465"
-          stroke-linejoin="round"
-          stroke-dasharray="8 5"
-        />
-        <path
-          clip-path="url(#ramp-l-trim)"
-          class="guideway unfinished"
-          d="M308.92 1297.50 L326.73 1480.20"
-          fill="none"
-          stroke="#FFFFFF"
-          stroke-opacity="0.75"
-          stroke-width="9.64"
-          stroke-linejoin="round"
-        />
-        <path
-          class="guideway unfinished"
-          d="M319.70 1358.42 L310.11 1359.35"
-          fill="none"
+          fill="#FFFFFF"
+          fill-opacity="0.75"
           stroke="#888780"
           stroke-width="0.825"
           stroke-dasharray="8 5"
-          stroke-dashoffset="-0.82"
-          clip-path="url(#ramp-l-trim)"
-        />
-        <path
-          class="guideway unfinished"
-          d="M331.53 1479.73 L321.93 1480.67"
-          fill="none"
-          stroke="#888780"
-          stroke-width="0.825"
-          stroke-dasharray="8 5"
-          stroke-dashoffset="-0.82"
-          clip-path="url(#ramp-l-trim)"
+          points="316.50,1424.98 321.93,1480.67 331.53,1479.73 316.44,1324.93 316.17,1358.80 316.21,1358.80"
         />
         <!-- Precast spans and steel girders: 10.40 wide (borders 12.05, ramp white cores 8.20) --><!-- Border for spans P and Q (darker stroke under the fill, as on D) -->
         <polygon
