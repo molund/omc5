@@ -20,8 +20,11 @@
   const ZOOM_STEP = 1.5;
   const avail = $derived(labelsAvailable(layers));
 
-  // the span-label switches need Clayton Clipper spans on screen, so they fade and can't be changed without them
-  const disabled = (k) => (k === "labels" || k === "cclabels") && !avail;
+  // the span-label switches need Clayton Clipper spans on screen, and the direction arrows the finished spans they sit on, so
+  // they fade and can't be changed without them
+  const disabled = (k) =>
+    ((k === "labels" || k === "cclabels") && !avail) ||
+    (k === "arrows" && !layers.guideway);
   const opacity = (k) => (disabled(k) ? "0.4" : "");
   // greenbelt and creeks only in drawing mode, roads (with their labels), construction yard and walking paths in the two SFMSF
   // views (drawing mode and SFMSF zoom),
