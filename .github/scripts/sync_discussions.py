@@ -74,7 +74,7 @@ def notes(path="status.yaml"):
         if n["photo"] and not n["photo"]["file"]:
             n["photo"] = None
         n["more"] = [m for m in n["more"] if m.get("text") or (m.get("photo") or {}).get("file")]
-        n["minor"].sort(key=lambda m: m[0], reverse=True)
+        n["minor"].sort(key=lambda m: m[0])  # oldest first, as on the Trackside page
     return [n for n in out if n["text"]]
 
 
