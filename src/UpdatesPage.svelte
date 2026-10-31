@@ -54,12 +54,25 @@
     eyes: "👀",
   };
   let counts = $state({});
-  fetch("https://api.github.com/repos/molund/omc5/discussions?per_page=100", {
-    headers: { Accept: "application/vnd.github+json" },
-  })
-    .then((r) => (r.ok ? r.json() : []))
-    .then((list) => {
-      const out = {};
+  // GitHub lists the threads 100 at a time, in its own order (not quite the updates' order), so pages of the list are fetched
+  // only as needed: until every update on the page showing has its thread, or the list runs out. Each visitor usually needs
+  // one request in all, and one more per 100 updates further back they page.
+  let fetched = 0,
+    more = true,
+    busy = null;
+  async function countsFor(updates) {
+    while (more && updates.some((n) => !(term(n.time) in counts))) {
+      busy ??= fetch(
+        `https://api.github.com/repos/molund/omc5/discussions?per_page=100&page=${fetched + 1}`,
+        { headers: { Accept: "application/vnd.github+json" } },
+      )
+        .then((r) => (r.ok ? r.json() : []))
+        .catch(() => []);
+      const list = await busy;
+      busy = null;
+      fetched++;
+      if (list.length < 100) more = false;
+      const out = { ...counts };
       list.forEach((d) => {
         out[d.title] = {
           comments: d.comments,
@@ -69,8 +82,37 @@
         };
       });
       counts = out;
-    })
-    .catch(() => {});
+    }
+  }
+
+  // Pages of 10 updates, newest first. The page is in the address (?page=2), so the browser's back button and shared links
+  // work; a link to one update (#2026-10-31T16-30) opens the page it is on.
+  const PAGE_SIZE = 10;
+  const pages = Math.max(1, Math.ceil(status.history.length / PAGE_SIZE));
+  function pageFromAddress() {
+    const id = location.hash.slice(1),
+      i = id ? status.history.findIndex((n) => anchor(n.time) === id) : -1;
+    if (i >= 0) return Math.floor(i / PAGE_SIZE) + 1;
+    const n = +new URLSearchParams(location.search).get("page") || 1;
+    return Math.min(Math.max(1, Math.round(n)), pages);
+  }
+  let page = $state(pageFromAddress());
+  const shown = $derived(
+    status.history.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE),
+  );
+  $effect(() => {
+    countsFor(shown);
+  });
+  function goTo(p) {
+    page = p;
+    open = null;
+    const url = new URL(location.href);
+    if (p === 1) url.searchParams.delete("page");
+    else url.searchParams.set("page", p);
+    url.hash = "";
+    history.pushState(null, "", url);
+    window.scrollTo(0, 0);
+  }
 
   // the anchor of the update whose comments are open (one at a time, so the page stays light); a string, since $state would
   // wrap an update object in a proxy that never equals the original
@@ -85,11 +127,18 @@
   }
 </script>
 
+<svelte:window
+  onpopstate={() => {
+    page = pageFromAddress();
+    open = null;
+  }}
+/>
+
 <main class="page">
   <a class="back" href={MAP}>← Back to the map</a>
   <h1>Past updates</h1>
   <ol class="list">
-    {#each status.history as n}
+    {#each shown as n (anchor(n.time))}
       <li id={anchor(n.time)}>
         <div class="asof">{asOf(n.time)}</div>
         <div class="note">{n.text}</div>
@@ -132,6 +181,19 @@
       </li>
     {/each}
   </ol>
+  <!-- the first page has one button to older updates; later pages go either way, with Next off on the last page -->
+  {#if pages > 1}
+    <nav class="pager" aria-label="Pages of updates">
+      {#if page === 1}
+        <button onclick={() => goTo(2)}>Show older</button>
+      {:else}
+        <button onclick={() => goTo(page - 1)}>Previous</button>
+        <button disabled={page === pages} onclick={() => goTo(page + 1)}
+          >Next</button
+        >
+      {/if}
+    </nav>
+  {/if}
 </main>
 
 <style>
@@ -168,6 +230,20 @@
   }
   .note {
     margin-top: 4px;
+  }
+  /* the page buttons: the site's buttons (as on the card and in the layer panel), sharing the width, tall enough to tap */
+  .pager {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .pager button {
+    flex: 1;
+    min-height: calc(44rem / 17);
+  }
+  .pager button:disabled {
+    opacity: 0.4;
+    cursor: default;
   }
   /* the comments toggle, a plain text link, and the giscus thread it opens */
   .comments-link {
