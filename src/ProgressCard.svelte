@@ -51,7 +51,7 @@
     title="Show the progress card"
     aria-label="Show the progress card"
     onclick={() => (ui.cardHidden = false)}
-    ><Icon kind="progress" /></button
+    ><Icon kind="info" /></button
   >
 {:else if layers.progress && ui.gantry}
   {@const { span, ahead, total } = ui.gantry}

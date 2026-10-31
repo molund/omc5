@@ -5,7 +5,7 @@
   import {
     layers,
     ui,
-    toggle,
+    setSwitch,
     showAll,
     reset,
     setZoom,
@@ -49,7 +49,7 @@
   // the style showing (null for Off): the first if both are on (Show all turns on both gantry switches, and the drawing shows the full gantry)
   const picked = (opts) => opts.find(([k]) => layers[k])?.[0] ?? null;
   function change(e, k) {
-    toggle(k, e.currentTarget.checked);
+    setSwitch(k, e.currentTarget.checked);
     // the mode logic can put the switch straight back (e.g. unticking Full), so match the box to the state
     e.currentTarget.checked = layers[k];
   }
@@ -102,7 +102,7 @@
           class:on={layers[k]}
           aria-pressed={layers[k]}
           onclick={() => {
-            if (!layers[k]) toggle(k, true);
+            if (!layers[k]) setSwitch(k, true);
             // on a phone, picking a view closes the menu to show it
             if (ui.phone) ui.collapsed = true;
           }}>{label}</button
@@ -143,8 +143,8 @@
                     disabled={disabled(k)}
                     onclick={() =>
                       o
-                        ? toggle(o, true)
-                        : opts.forEach(([s]) => toggle(s, false))}
+                        ? setSwitch(o, true)
+                        : opts.forEach(([s]) => setSwitch(s, false))}
                     >{text}</button
                   >
                 {/each}

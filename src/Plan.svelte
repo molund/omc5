@@ -2,8 +2,8 @@
   import { onMount } from "svelte";
   import planSvg from "./assets/plan.svg?raw";
   import { DRAW_VB, SFMSF_AERIAL_VB, FULL_VB } from "./lib/layerSwitches.js";
-  import { tagLaunchers } from "./lib/builtBy.js";
-  import { gantrySpan } from "./lib/gantryProgress.js";
+  import { tagBuiltBy } from "./lib/builtBy.js";
+  import { gantryProgress } from "./lib/gantryProgress.js";
   import { placeGantry } from "./lib/placeGantry.js";
   import { status } from "./lib/status.js";
   import {
@@ -27,12 +27,12 @@
     const svg = stage.querySelector("svg");
     els.stage = stage;
     els.svg = svg;
-    tagLaunchers(svg);
+    tagBuiltBy(svg);
     // the gantry's span and whether it is complete come from status.yaml
     const gantry = svg.querySelector("#clayton-clipper");
     if (gantry && status.span) gantry.dataset.span = status.span;
-    els.gantrySpan = placeGantry(svg);
-    ui.gantry = gantrySpan(svg, status.span ? status.complete : null);
+    els.gantrySpanCentre = placeGantry(svg);
+    ui.gantry = gantryProgress(svg, status.span ? status.complete : null);
     // the turn that levels the Clayton Clipper route: the line from span 105's label to span 1's, turned flat
     const toRoot = DOMMatrix.fromMatrix(svg.getScreenCTM()).inverse(),
       label = (n) => {
