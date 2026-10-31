@@ -261,18 +261,56 @@
     padding-top: 12px;
     border-top: 1px dashed var(--line);
   }
-  /* the page buttons: the site's buttons (as on the card and in the layer panel), sharing the width, tall enough to tap */
+  /* the page buttons, drawn like the Oldest / Newest switch in the giscus comments (GitHub's segmented control): a grey
+     track, the buttons you can press raised on it with an outline and bold text, a button you can't press flat and faded.
+     GitHub's own colours, light and dark, as giscus uses them */
   .pager {
+    --track: #eff2f5;
+    --knob: #ffffff;
+    --knob-line: #818b98;
+    --knob-ink: #1f2328;
+    --flat-ink: #59636e;
     display: flex;
-    gap: 8px;
-    margin-top: 24px;
+    gap: 0;
+    width: fit-content;
+    margin: 24px auto 0;
+    padding: 0;
+    border-radius: 6px;
+    background: var(--track);
+  }
+  @media (prefers-color-scheme: dark) {
+    .pager {
+      --track: #212830;
+      --knob: #0d1117;
+      --knob-line: #656c76;
+      --knob-ink: #f0f6fc;
+      --flat-ink: #9198a1;
+    }
   }
   .pager button {
-    flex: 1;
-    min-height: calc(44rem / 17);
+    min-width: calc(96rem / 17);
+    min-height: calc(36rem / 17);
+    padding: 0 calc(14rem / 17);
+    border: 1px solid var(--knob-line);
+    border-radius: 6px;
+    background: var(--knob);
+    color: var(--knob-ink);
+    font-family:
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      "Noto Sans",
+      Helvetica,
+      Arial,
+      sans-serif;
+    font-size: calc(14rem / 17);
+    font-weight: 600;
   }
   .pager button:disabled {
-    opacity: 0.4;
+    border-color: transparent;
+    background: transparent;
+    color: var(--flat-ink);
+    font-weight: 400;
     cursor: default;
   }
 </style>
