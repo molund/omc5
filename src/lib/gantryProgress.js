@@ -124,6 +124,12 @@ export function gantryProgress(root, complete) {
       !under.classList.contains("unfinished")
     )
       t.classList.add("on-reached");
+    // and its colour matches the piece it sits on, now that status.yaml may have finished it: white on a finished span, grey
+    // (#767676) on an unfinished one (the steel spans' numbers, drawn without a colour, keep theirs)
+    if (under && t.style.fill)
+      t.style.fill = under.classList.contains("unfinished")
+        ? "#767676"
+        : "#ffffff";
   });
   return {
     span: count,
