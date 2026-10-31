@@ -4,9 +4,10 @@ import fs from "node:fs";
 
 // KML colours are aabbggrr hex
 const STYLES = {
-  // spans: finished ones solid dark grey, unfinished ones a pale outline, so they read on aerial imagery without relying on hue
+  // spans: finished ones solid in the drawing's grey (#888780) with its dark grey outline (#5F5E5A), unfinished ones a pale
+  // outline, so they read on aerial imagery without relying on hue
   finished:
-    "<PolyStyle><color>ff4a4a4a</color></PolyStyle><LineStyle><color>ff222222</color><width>1</width></LineStyle>",
+    "<PolyStyle><color>ff808788</color></PolyStyle><LineStyle><color>ff5a5e5f</color><width>1</width></LineStyle>",
   unfinished:
     "<PolyStyle><color>66ffffff</color></PolyStyle><LineStyle><color>ff4a4a4a</color><width>1.5</width></LineStyle>",
   // finished steel spans: the drawing's tan (#E3D3B2) with its dark grey outline (#5F5E5A)
