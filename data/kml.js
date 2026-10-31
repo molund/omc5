@@ -30,24 +30,18 @@ const esc = (s) =>
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
-// with an altitude (metres above the ground), each point gets it as its height
-const coords = (ring, alt) =>
-  ring.map(([lon, lat]) => `${lon},${lat}${alt ? `,${alt}` : ""}`).join(" ");
+const coords = (ring) => ring.map(([lon, lat]) => `${lon},${lat}`).join(" ");
 
-// with an altitude, the shape floats that high above the ground in Google Earth instead of lying on it (where its 3D trees and
-// overpasses cover it); My Maps ignores it
-function geometry(g, alt) {
-  const mode = alt ? "<altitudeMode>relativeToGround</altitudeMode>" : "";
+function geometry(g) {
   if (g.type === "Point")
-    return `<Point>${mode}<coordinates>${coords([g.coordinates], alt)}</coordinates></Point>`;
+    return `<Point><coordinates>${coords([g.coordinates])}</coordinates></Point>`;
   if (g.type === "Polygon")
     return (
       "<Polygon>" +
-      mode +
       g.coordinates
         .map(
           (ring, i) =>
-            `<${i ? "innerBoundaryIs" : "outerBoundaryIs"}><LinearRing><coordinates>${coords(ring, alt)}</coordinates></LinearRing></${i ? "innerBoundaryIs" : "outerBoundaryIs"}>`,
+            `<${i ? "innerBoundaryIs" : "outerBoundaryIs"}><LinearRing><coordinates>${coords(ring)}</coordinates></LinearRing></${i ? "innerBoundaryIs" : "outerBoundaryIs"}>`,
         )
         .join("") +
       "</Polygon>"
@@ -81,8 +75,8 @@ const styleOf = (p) =>
       ? "support"
       : "Point";
 
-// one Placemark per line, so diffs show which features changed; altitude (optional) raises every shape that high, in metres
-export function writeKml(file, title, features, meta, altitude) {
+// one Placemark per line, so diffs show which features changed
+export function writeKml(file, title, features, meta) {
   // the styles the layer's features use (the spans layer always has both finished and unfinished)
   const styles = [
     ...new Set(
@@ -98,7 +92,7 @@ export function writeKml(file, title, features, meta, altitude) {
       .filter(([, v]) => v !== null && v !== undefined)
       .map(([k, v]) => `<Data name="${esc(k)}"><value>${esc(v)}</value></Data>`)
       .join("");
-    return `<Placemark><name>${esc(nameOf(f.properties))}</name><styleUrl>#${styleOf(f.properties)}</styleUrl><ExtendedData>${data}</ExtendedData>${geometry(f.geometry, altitude)}</Placemark>`;
+    return `<Placemark><name>${esc(nameOf(f.properties))}</name><styleUrl>#${styleOf(f.properties)}</styleUrl><ExtendedData>${data}</ExtendedData>${geometry(f.geometry)}</Placemark>`;
   });
   fs.writeFileSync(
     file,
