@@ -21,7 +21,8 @@ The supports and spans were traced on Apple Maps aerial imagery and checked on s
 repository's site shows (`src/assets/plan.svg`). `data/generate-data.js` converts the drawing to lon/lat.
 
 Scale, rotation and position come from two tulip pillars measured by Mike Olund, one at each end of the line: where
-Clayton Clipper spans 13 and 14 meet (near 182 Street) and where spans 92 and 93 meet (near 168 Street).
+Clayton Clipper spans 13 and 14 meet (near 182 Street), matched to the finished tulip before the gantry reached it, and
+where spans 92 and 93 meet (near 168 Street), matched to its foundation hole.
 
 ## Other sources
 
@@ -48,7 +49,8 @@ historic railway line, which came from these sources:
 
 ## Accuracy
 
-The two measured tulip pillars (where spans 13 and 14 meet, and where spans 92 and 93 meet) are exact. Elsewhere,
+The two measured tulip pillars (where spans 13 and 14 meet, and where spans 92 and 93 meet) are accurate to within
+about a foot (0.3 m). Elsewhere,
 accuracy depends on how well the drawing matches the imagery it was traced on. Support spacing and span lengths along the line are more accurate than the absolute position.
 
 This is not survey data. Do not use it for engineering, construction or anything safety-related.
