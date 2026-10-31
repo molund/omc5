@@ -2,7 +2,7 @@
   // The Trackside page: every status note, newest first, each with an id from its time stamp (e.g. #2026-10-30T20-45) so
   // a single update can be linked to
   import { onMount } from "svelte";
-  import { status, asOf, minorTime } from "./lib/status.js";
+  import { status, asOf, followUpTime } from "./lib/status.js";
   import { anchor, term, fetchCounts } from "./lib/comments.js";
 
   const MAP = import.meta.env.BASE_URL;
@@ -104,7 +104,7 @@
   </figure>
 {/snippet}
 
-<!-- laid out like a README on GitHub: a heading per update, the note, its photo, its minor changes as a list with code-style
+<!-- laid out like a README on GitHub: a heading per update, the note, its photo, its follow-ups as a list with code-style
      times, then its comments -->
 <main class="page">
   <h1>Trackside</h1>
@@ -119,12 +119,12 @@
             {m.text}
           </p>{/if}
       {/each}
-      {#if n.minor.length}
+      {#if n.followUps.length}
         <h3>Follow-ups</h3>
-        <ul class="minor">
+        <ul class="follow-ups">
           <!-- oldest first, in the order they happened (the card shows the newest first) -->
-          {#each [...n.minor].reverse() as m}<li>
-              <code>{minorTime(m.time, n.time)}</code>
+          {#each [...n.followUps].reverse() as m}<li>
+              <code>{followUpTime(m.time, n.time)}</code>
               {m.text}
             </li>{/each}
         </ul>
@@ -233,12 +233,12 @@
     font-style: italic;
     color: var(--mute);
   }
-  /* the minor changes, a bullet list, each time in GitHub's inline-code style */
-  .minor {
+  /* the follow-ups, a bullet list, each time in GitHub's inline-code style */
+  .followUps {
     margin: 0;
     padding-left: 22px;
   }
-  .minor li + li {
+  .followUps li + li {
     margin-top: 4px;
   }
   code {

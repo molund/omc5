@@ -33,15 +33,15 @@ def unquote(v):
 
 
 def notes(path="status.yaml"):
-    """The notes with text, as dicts of time, text, photo (file, caption) and minor updates [(time, text)], as
+    """The notes with text, as dicts of time, text, photo (file, caption) and follow-ups [(time, text)], as
     src/lib/status.js reads them."""
     out, section, photo = [], None, None
     for line in open(path).read().split("\n"):
-        # notes are two spaces in; minor updates, further in under "follow-up:", get no thread of their own
+        # notes are two spaces in; follow-ups, further in under "follow-up:", get no thread of their own
         m = re.match(r"^ {2}-\s+(\S+):\s+(.*?)\s*$", line)
         if m:
             out.append(
-                {"time": datetime.fromisoformat(m.group(1)), "text": unquote(m.group(2)), "photo": None, "more": [], "minor": []}
+                {"time": datetime.fromisoformat(m.group(1)), "text": unquote(m.group(2)), "photo": None, "more": [], "follow_ups": []}
             )
             section = photo = None
             continue
@@ -58,11 +58,11 @@ def notes(path="status.yaml"):
             continue
         if re.match(r"^\s+(more|follow-up|photo):\s*$", line):
             section = line.strip()[:-1]
-        # a minor update, further in under "follow-up:"
+        # a follow-up, further in under "follow-up:"
         m = re.match(r"^ {3,}-\s+(\S+):\s+(.*?)\s*$", line)
         if m:
             if out and unquote(m.group(2)):
-                out[-1]["minor"].append((datetime.fromisoformat(m.group(1)), unquote(m.group(2))))
+                out[-1]["follow_ups"].append((datetime.fromisoformat(m.group(1)), unquote(m.group(2))))
             continue
         if section == "photo" and re.match(r"^\s+photo:\s*$", line) and out:
             out[-1]["photo"] = photo = {"file": None, "caption": ""}
@@ -74,7 +74,7 @@ def notes(path="status.yaml"):
         if n["photo"] and not n["photo"]["file"]:
             n["photo"] = None
         n["more"] = [m for m in n["more"] if m.get("text") or (m.get("photo") or {}).get("file")]
-        n["minor"].sort(key=lambda m: m[0])  # oldest first, as on the Trackside page
+        n["follow_ups"].sort(key=lambda m: m[0])  # oldest first, as on the Trackside page
     return [n for n in out if n["text"]]
 
 
@@ -89,7 +89,7 @@ def as_of(t):
     return f"{(t.hour % 12) or 12}:{t.minute:02d} {period} on {t.strftime('%b')} {t.day}, {t.year}"
 
 
-def minor_time(t, note):
+def follow_up_time(t, note):
     """As the Trackside page shows it: "11:45 a.m." on the same day as its note, otherwise in full."""
     full = as_of(t)
     return full.split(" on ")[0] if t.astimezone(TZ).date() == note.astimezone(TZ).date() else full
@@ -113,10 +113,10 @@ def body(n):
             photo(m["photo"])
         else:
             parts.append(m["text"])
-    if n["minor"]:
+    if n["follow_ups"]:
         # as on the Trackside page: a Follow-ups list, each time in code style
         parts.append("### Follow-ups")
-        parts.append("\n".join(f"- `{minor_time(t, n['time'])}` {text}" for t, text in n["minor"]))
+        parts.append("\n".join(f"- `{follow_up_time(t, n['time'])}` {text}" for t, text in n["follow_ups"]))
     parts.append(f"[See it on the Clayton Clipper Tracker]({SITE}trackside/#{anchor})")
     # giscus's strict-mode marker: the sha1 of the title it asks for
     parts.append(f"<!-- sha1: {hashlib.sha1(title(n['time']).encode()).hexdigest()} -->")
