@@ -1,4 +1,4 @@
-// Export the guideway supports and spans in src/assets/plan.svg as GeoJSON (data/sls-hillcrest-to-bakerview-supports.geojson and
+// Export the guideway supports and spans in src/assets/map.svg as GeoJSON (data/sls-hillcrest-to-bakerview-supports.geojson and
 // data/sls-hillcrest-to-bakerview-spans.geojson), and the same as KML in data/kml/. Run with `npm run export-geojson` after changing the drawing.
 // - Every shape is taken down to canvas units through its transforms (as getScreenCTM does in the browser), then to lon/lat
 //   with a similarity transform (scale, turn, shift) to Web Mercator, the projection of the Apple Maps screenshots the
@@ -11,7 +11,7 @@ import fs from "node:fs";
 import { XMLParser } from "fast-xml-parser";
 import { writeKml } from "./kml.js";
 
-const SVG = "src/assets/plan.svg",
+const SVG = "src/assets/map.svg",
   CONTROL = "data/control-points.json",
   STATUS = "status.yaml",
   OUT = "data/sls-hillcrest-to-bakerview-",
