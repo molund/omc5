@@ -1,7 +1,7 @@
 """Give every status note in status.yaml its own GitHub Discussion, ready for giscus.
 
 Each update's thread is created here, before anyone comments, so its body can show the update itself (the note, then the
-photo and its caption, as on the Past updates page) instead of giscus's plain link. Threads are titled as the site asks giscus
+photo and its caption, as on the Trackside page) instead of giscus's plain link. Threads are titled as the site asks giscus
 for them, "Update 2026-10-31 09:30" (Yukon time), and carry giscus's hidden sha1 marker, so giscus finds them in strict mode.
 A thread whose update has since been edited has its body brought up to date, and threads older than the newest 30 are
 closed as outdated and locked. Needs GITHUB_TOKEN with discussions: write.
@@ -90,7 +90,7 @@ def as_of(t):
 
 
 def minor_time(t, note):
-    """As the Past updates page shows it: "11:45 a.m." on the same day as its note, otherwise in full."""
+    """As the Trackside page shows it: "11:45 a.m." on the same day as its note, otherwise in full."""
     full = as_of(t)
     return full.split(" on ")[0] if t.astimezone(TZ).date() == note.astimezone(TZ).date() else full
 
@@ -114,10 +114,10 @@ def body(n):
         else:
             parts.append(m["text"])
     if n["minor"]:
-        # as on the Past updates page: a Follow-ups list, each time in code style
+        # as on the Trackside page: a Follow-ups list, each time in code style
         parts.append("### Follow-ups")
         parts.append("\n".join(f"- `{minor_time(t, n['time'])}` {text}" for t, text in n["minor"]))
-    parts.append(f"[See it on the Clayton Clipper Tracker]({SITE}updates/#{anchor})")
+    parts.append(f"[See it on the Clayton Clipper Tracker]({SITE}trackside/#{anchor})")
     # giscus's strict-mode marker: the sha1 of the title it asks for
     parts.append(f"<!-- sha1: {hashlib.sha1(title(n['time']).encode()).hexdigest()} -->")
     return "\n\n".join(parts)
@@ -161,13 +161,13 @@ def existing():
 
 
 def check_count(limit=100):
-    """Fail once the category reaches `limit` threads: the Past updates page reads only GitHub's first 100."""
+    """Fail once the category reaches `limit` threads: the Trackside page reads only GitHub's first 100."""
     n = len(existing())
     print(f"{n} comment threads")
     if n >= limit:
         sys.exit(
-            f"::error::{n} comment threads: the Past updates page only reads the first {limit} for comment and reaction "
-            "counts (src/UpdatesPage.svelte). Time to decide how to handle more."
+            f"::error::{n} comment threads: the Trackside page only reads the first {limit} for comment and reaction "
+            "counts (src/TracksidePage.svelte). Time to decide how to handle more."
         )
 
 
@@ -201,7 +201,7 @@ def main():
 
 def close_old(keep):
     """Close as outdated and lock every thread older than the newest `keep`, so the open threads are the recent updates'
-    (the ones the Past updates page counts) and old threads can't collect spam. Newest by the update time in the title,
+    (the ones the Trackside page counts) and old threads can't collect spam. Newest by the update time in the title,
     else by when the thread was made."""
     have = existing()
 

@@ -59,7 +59,7 @@ jobs:
             git push
           fi
       # give each status note its own comments thread (GitHub Discussion) showing the note, photo and caption, for giscus on
-      # the Past updates page; a failure here doesn't stop the deploy
+      # the Trackside page; a failure here doesn't stop the deploy
       - name: Create or update the comment threads
         continue-on-error: true
         env:
@@ -98,7 +98,7 @@ jobs:
         with:
           path: dist
 
-  # fails (and GitHub emails) once there are 100 comment threads, the most the Past updates page reads; it doesn't hold up the
+  # fails (and GitHub emails) once there are 100 comment threads, the most the Trackside page reads; it doesn't hold up the
   # deploy
   thread-count:
     needs: build

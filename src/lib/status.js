@@ -4,7 +4,7 @@
 //     photo:
 //       file: span-36.jpg
 //       caption: "Its own caption, separate from the note"
-// optionally more paragraphs and photos, indented under it (shown after the note and its photo on the Past updates page and
+// optionally more paragraphs and photos, indented under it (shown after the note and its photo on the Trackside page and
 // in its thread; the card shows only the note, with a link to the rest):
 //     more:
 //       - "A second paragraph"
@@ -119,7 +119,7 @@ function parse(src) {
     more: sorted.length ? sorted[0].more : [],
     // the newest note's minor updates, [{ time, text }], newest first
     minor: sorted.length ? sorted[0].minor : [],
-    // every note with text, newest first, for the update history (each with its photo or null, and its minor updates)
+    // every note with text, newest first, for Trackside (each with its photo or null, and its minor updates)
     history: sorted.filter((n) => n.text),
   };
 }
