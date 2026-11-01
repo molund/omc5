@@ -137,11 +137,8 @@
           height="351"
         /><span>Progress</span>
       </div>
-      {#if full}<button
-          bind:this={closeButton}
-          class="close-full"
-          aria-label="Close the progress card"
-          onclick={close}><span aria-hidden="true">×</span> Close</button
+      {#if full}<button bind:this={closeButton} class="map-button" onclick={close}
+          >Map <span aria-hidden="true">→</span></button
         >{:else}<button
           class="close"
           title="Hide the progress card"
@@ -254,20 +251,29 @@
     border-bottom: 1px solid var(--line);
     background: var(--panel);
   }
-  .close-full {
-    min-width: 48px;
-    min-height: 48px;
-    padding: 0 16px;
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    background: var(--bg);
-    color: var(--ink);
-    font-size: calc(17rem / 17);
+  /* the button back to the map, in the same style as the Map buttons on Trackside and About (the pager's colours,
+     GitHub's segmented control) */
+  .map-button {
+    --track: #eff2f5;
+    --knob-line: #818b98;
+    --knob-ink: #1f2328;
+    display: inline-flex;
+    align-items: center;
+    padding: calc(6rem / 17) calc(12rem / 17);
+    border: 1px solid var(--knob-line);
+    border-radius: 6px;
+    background: var(--track);
+    color: var(--knob-ink);
+    font-size: calc(14rem / 17);
     font-weight: 600;
+    white-space: nowrap;
   }
-  .close-full span {
-    font-size: 1.25em;
-    line-height: 1;
+  @media (prefers-color-scheme: dark) {
+    .map-button {
+      --track: #212830;
+      --knob-line: #656c76;
+      --knob-ink: #f0f6fc;
+    }
   }
   /* the card's close button, in its top right corner, and the information button that takes the card's place once it is closed */
   .close {
