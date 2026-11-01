@@ -41,11 +41,15 @@ function parse(src) {
     const n = line.match(/^ {2}-\s+(\S+):\s+(.*?)\s*$/);
     if (n) {
       notes.push({
-        time: new Date(n[1]),
+        // a post can have just a date ("2026-11-01"), taken as the start of that day in BC time
+        time: new Date(
+          /^\d{4}-\d\d-\d\d$/.test(n[1]) ? `${n[1]}T00:00-07:00` : n[1],
+        ),
         text: unquote(n[2]),
         photo: null,
         more: [],
         title: "",
+        post: false,
         followUps: [],
       });
       list = null;
@@ -77,6 +81,14 @@ function parse(src) {
     }
     if (/^\s+follow-up:\s*$/.test(line)) {
       list = "followUps";
+      return;
+    }
+    // "    post: true": a post, not a status update (see `latest` below)
+    const po = line.match(/^ {4}post:\s*(.*?)\s*$/);
+    if (po) {
+      list = null;
+      photo = null;
+      if (last) last.post = po[1] === "true";
       return;
     }
     // the note's title, four spaces in
@@ -120,17 +132,21 @@ function parse(src) {
   const sorted = notes
     .filter((n) => !isNaN(n.time))
     .sort((a, b) => b.time - a.time);
+  // the progress card shows the newest status update; posts are left to Trackside
+  const latest = sorted.find((n) => n.text && !n.post) ?? null;
   return {
     updated: out.updated ? new Date(out.updated) : null,
     span: out.span ? +out.span : null,
     complete: out.complete === "true",
-    note: sorted.length ? sorted[0].text : "",
-    // the newest note's photo, { src, caption }, or null
-    photo: sorted.length ? sorted[0].photo : null,
-    // the newest note's further paragraphs and photos, [{ text } or { photo: { src, caption } }], or []
-    more: sorted.length ? sorted[0].more : [],
-    // the newest note's follow-ups, [{ time, text }], newest first
-    followUps: sorted.length ? sorted[0].followUps : [],
+    // the newest status update (not a post), for the progress card, or null
+    latest,
+    note: latest ? latest.text : "",
+    // the newest status update's photo, { src, caption }, or null
+    photo: latest ? latest.photo : null,
+    // the newest status update's further paragraphs and photos, [{ text } or { photo: { src, caption } }], or []
+    more: latest ? latest.more : [],
+    // the newest status update's follow-ups, [{ time, text }], newest first
+    followUps: latest ? latest.followUps : [],
     // every note with text, newest first, for Trackside (each with its photo or null, and its follow-ups)
     history: sorted.filter((n) => n.text),
   };

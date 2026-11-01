@@ -8,14 +8,14 @@
   // "today" or "yesterday" on the card (Trackside keeps full dates)
   const when = asOf(status.updated, true);
   // the newest note's own time, short like its follow-ups' ("9:30 a.m."): "As of" above already says which day
-  const postedAt = status.history[0]
-    ? followUpTime(status.history[0].time, status.history[0].time)
+  const postedAt = status.latest
+    ? followUpTime(status.latest.time, status.latest.time)
     : "";
   // the Trackside page
   const TRACKSIDE = `${import.meta.env.BASE_URL}trackside/`;
   // the Comments button opens the newest update on that page with its comments open, and shows its comment and reaction
   // counts once GitHub has sent them
-  const newest = status.history[0];
+  const newest = status.latest;
   const COMMENTS = newest
     ? `${TRACKSIDE}?comments#${anchor(newest.time)}`
     : TRACKSIDE;
@@ -119,7 +119,7 @@
           >{/if}
       </div>{/if}
     {#each [...status.followUps].reverse() as m}<div class="note">
-        <span class="chip">{followUpTime(m.time, status.history[0].time)}</span
+        <span class="chip">{followUpTime(m.time, status.latest.time)}</span
         >{m.text}
       </div>{/each}
     {#if status.photo}<a class="thumb" href={TRACKSIDE}
