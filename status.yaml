@@ -61,3 +61,13 @@ notes:
     photo:
       file: 2026-10-26-clipper-span-34-night.jpg
       caption: "The Clayton Clipper all lit up for the night shift, about to lift span 34's last segment. Proof that even I get lucky with a camera now and then."
+  - 2026-10-13T23:00-07:00: "This is where it all started: a late-night project on Oct 13, a hand-drawn map of the guideway past the Serpentine Floodplain Maintenance and Storage Facility, made from my walks with Piper. No aerial photos, no website, just boxes, lines and a lot of squinting."
+    title: "How a Clayton Clipper sketch became a whole website"
+    photo:
+      file: 2026-10-13-first-drawing.jpg
+      caption: "The original drawing, as of Oct 13, 2026: eleven gantry spans to go, a handful of precast spans done, and labels that only made sense to me. Proof that I'm better at drawing guideways than photographing them."
+    more:
+      - "The plan was simple: post a picture to the SkyscraperPage forum every couple of weeks, so other people following the line could see where the Clayton Clipper was. Then I started fixing it. The spans got traced against high-resolution aerial imagery, the supports got matched to within about a foot, and the drawing grew from one stretch by the SFMSF to the Clipper's whole route."
+      - "The turning point was almost an accident. I asked Claude to make me a better viewer for the SVG, and it threw in checkboxes for every layer in the drawing without being asked. I started customizing them, then kept going, and eventually decided to see if I could get the whole thing onto GitHub. On Oct 28 it became a small website: a live map, a progress card counting the Clipper's spans, and a status file behind it all. A few days later it had comments, photos, this Trackside page and its own address."
+      - "The coolest part is how I run it. From the Claude app, I can post updates, change features and fix code while I'm out on my bike or walking the dogs. Then, when I get back to my computer, Claude Code does the heavy lifting."
+      - "Not bad for something that started as a few boxes on a screen. If you've been following along, thanks for reading, and let me know in the comments what you'd like to see next."
