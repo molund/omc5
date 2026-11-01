@@ -1,10 +1,11 @@
 <script>
-  // The Trackside page: every status note, newest first, each with an id from its time stamp (e.g. #2026-10-30T20-45). It is
-  // prerendered at build time (src/prerender.js) as pages of 10 (/trackside/, /trackside/page/2/, …) and a page per update
-  // (/trackside/2026-10-30T20-45/), each with its own title, description and Open Graph photo; view says which one this is
+  // The Trackside page: every status note, newest first, each with an id from its time stamp (e.g. #2026-10-30T20-45). It
+  // is prerendered at build time (trackside/prerender.js) as pages of 10 (/trackside/, /trackside/page/2/, …) and a
+  // page per update (/trackside/2026-10-30T20-45/), each with its own title, description and Open Graph photo; view says
+  // which one this is
   import { onMount } from "svelte";
-  import { status, asOf, followUpTime } from "./lib/status.js";
-  import { anchor, term, fetchCounts, SITE } from "./lib/comments.js";
+  import { status, asOf, followUpTime } from "../src/lib/status.js";
+  import { anchor, term, fetchCounts, SITE } from "../src/lib/comments.js";
 
   let { view = { page: 1 } } = $props();
 

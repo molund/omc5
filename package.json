@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && vite build --ssr src/prerender.js --outDir dist-ssr && node dist-ssr/prerender.js",
+    "build": "vite build && vite build --ssr trackside/prerender.js --outDir dist-ssr && node dist-ssr/prerender.js",
     "preview": "vite preview",
     "export-geojson": "node data/generate-data.js"
   },
