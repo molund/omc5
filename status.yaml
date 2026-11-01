@@ -6,7 +6,10 @@ span: 36
 # whether that span is complete (or at least hung)
 complete: true
 # every note, newest first, each stamped with the time of the update that added it; the progress card shows only the newest,
-# under the date (an empty note shows none). A note can have a photo, indented under it, with its own caption:
+# under the date (an empty note shows none). A note can have a title, indented under it, for its own Trackside page's
+# <title> and link previews (not shown on any page; without one, its date is used):
+#     title: "Span 36 is complete"
+# a photo, indented under it, with its own caption:
 #     photo:
 #       file: span-36.jpg (in public/images/sorry-im-a-shitty-photographer/)
 #       caption: "What the photo shows"

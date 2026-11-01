@@ -1,6 +1,9 @@
 // The Clayton Clipper status from status.yaml: when it was last updated, the span the gantry is on, whether that span is
 // complete, and the newest of its time-stamped notes. The file is flat `key: value` lines plus the `notes:` list of
-// `  - time: "text"` lines, each optionally followed by a photo, indented under it:
+// `  - time: "text"` lines, each optionally followed by a title, for its page's <title> and Open Graph title on Trackside
+// (not shown on the page itself):
+//     title: "Span 36 is complete"
+// a photo, indented under it:
 //     photo:
 //       file: span-36.jpg
 //       caption: "Its own caption, separate from the note"
@@ -42,6 +45,7 @@ function parse(src) {
         text: unquote(n[2]),
         photo: null,
         more: [],
+        title: "",
         followUps: [],
       });
       list = null;
@@ -73,6 +77,14 @@ function parse(src) {
     }
     if (/^\s+follow-up:\s*$/.test(line)) {
       list = "followUps";
+      return;
+    }
+    // the note's title, four spaces in
+    const ti = line.match(/^ {4}title:\s*(.*?)\s*$/);
+    if (ti) {
+      list = null;
+      photo = null;
+      if (last) last.title = unquote(ti[1]);
       return;
     }
     // a photo belongs to the note above it: `photo:`, then its `file:` and `caption:` indented under it
