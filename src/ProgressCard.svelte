@@ -26,9 +26,9 @@
   // what each number counts, shown when it is hovered or clicked with a mouse, tapped (tap again to hide) or pressed with
   // Enter/Space
   const TIPS = {
-    span: "Completed span positions at or behind the Clayton Clipper. The current span counts after all its segments are hung. Previously completed spans count after the gantry crawls over them.",
+    span: "Completed span positions at or behind the Clayton Clipper. The current span counts after all its segments are hung. Spans lifted by mobile cranes count after the gantry crawls over them.",
     ahead:
-      "Completed span positions ahead, built by cranes, which the Clayton Clipper must crawl over.",
+      "Completed span positions ahead, built by mobile cranes, which the Clayton Clipper must crawl over.",
     total:
       "Total span positions on the Clayton Clipper's route. Parallel spans at the same location count as one.",
   };
