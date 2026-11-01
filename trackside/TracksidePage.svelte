@@ -32,6 +32,10 @@
     const [time, date] = asOf(t).split(" on ");
     return `${date} at ${time}`;
   };
+  // just the date, "Nov 1, 2026", shown under a post's title
+  const dateOnly = (t) => asOf(t).split(" on ")[1];
+  // what an update's heading says: a post's title, or a status update's date and time
+  const label = (n) => (n.post && n.title ? n.title : heading(n.time));
   // the addresses of an update's own page and of a page of updates, and either in full, for the Open Graph tags
   const postUrl = (n) => `${TRACKSIDE}${anchor(n.time)}/`;
   const pageUrl = (p) => (p === 1 ? TRACKSIDE : `${TRACKSIDE}page/${p}/`);
@@ -182,12 +186,15 @@
       <!-- on a page of updates, the date links to the update's own page; with a title, screen readers hear the date and
            the title (the date first, so the visible text is in the name, for voice control) -->
       <h2>
-        {#if post}{heading(n.time)}{:else}<a
+        {#if post}{label(n)}{:else}<a
             href={postUrl(n)}
-            aria-label={n.title ? `${heading(n.time)}: ${n.title}` : undefined}
-            >{heading(n.time)}</a
+            aria-label={n.title && !n.post
+              ? `${heading(n.time)}: ${n.title}`
+              : undefined}>{label(n)}</a
           >{/if}
       </h2>
+      <!-- a post leads with its title, with just its date under it -->
+      {#if n.post && n.title}<p class="date">{dateOnly(n.time)}</p>{/if}
       <p class="note">{n.text}</p>
       {#if n.photo}{@render photo(n.photo)}{/if}
       {#each n.more as m}
@@ -368,8 +375,15 @@
   .note {
     margin: 10px 0 0;
   }
-  h2 + .note {
+  h2 + .note,
+  .date + .note {
     margin-top: 0;
+  }
+  /* a post's date, small and muted under its title */
+  .date {
+    margin: -4px 0 8px;
+    font-size: calc(13rem / 17);
+    color: var(--mute);
   }
   /* an update's photo, the page's width, opening full size when tapped */
   .photo {
