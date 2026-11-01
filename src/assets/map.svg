@@ -1774,7 +1774,6 @@
                 </g>
                 <!-- truss lattice: three chords + diamond diagonals, yellow, 100% opacity, no fill -->
                 <rect
-                  opacity="0.325"
                   x="278.5"
                   y="387.55"
                   width="44"
@@ -1783,7 +1782,6 @@
                   transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
                 />
                 <rect
-                  opacity="0.325"
                   x="278.5"
                   y="709.95"
                   width="44"
