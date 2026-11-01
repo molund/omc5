@@ -44,6 +44,15 @@
       }
     </script>
     <link rel="icon" href="/favicon.ico" sizes="any" />
+    <!-- with JavaScript on, hide the text for search engines straight away, so it doesn't flash before the map loads -->
+    <script>
+      document.documentElement.classList.add("js");
+    </script>
+    <style>
+      .js #app > main {
+        display: none;
+      }
+    </style>
   </head>
   <body>
     <!-- for search engines and readers without JavaScript; src/main.js replaces it with the map -->
