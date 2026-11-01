@@ -87,7 +87,7 @@ Each page gets its own `<title>`, description, canonical link, and Open Graph an
 ## Comments
 
 Comments use [giscus](https://giscus.app): each update has its own GitHub Discussion in the
-"Trackside" category, titled by its Yukon time, e.g. "Update 2026-10-31 14:00".
+"Trackside" category, titled by its BC time (UTC−7), e.g. "Update 2026-10-31 14:00".
 
 - **Thread titles must never change**, or giscus loses the thread. They come from `term()` in
   `src/lib/comments.js`.

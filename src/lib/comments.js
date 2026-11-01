@@ -7,12 +7,12 @@ export const SITE = "https://clayton-clipper.olund.ca/";
 // an update's id on the Trackside page, from its time stamp in UTC, e.g. "2026-10-31T16-30"
 export const anchor = (t) => t.toISOString().slice(0, 16).replace(/:/g, "-");
 
-// an update's thread title, its Yukon time, e.g. "Update 2026-10-31 09:30" (the title must never change, or the thread is
-// lost; .github/scripts/sync_discussions.py makes the same titles)
+// an update's thread title, its BC time (UTC−7), e.g. "Update 2026-10-31 09:30" (the title must never change, or the
+// thread is lost; trackside/prerender.js gives the comment threads these titles)
 export const term = (t) =>
   "Update " +
   new Intl.DateTimeFormat("en-CA", {
-    timeZone: "America/Whitehorse",
+    timeZone: "America/Dawson_Creek",
     year: "numeric",
     month: "2-digit",
     day: "2-digit",

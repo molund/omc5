@@ -2,8 +2,8 @@ name: Deploy to GitHub Pages
 
 # Runs on every push to main. It can also be run by hand (Actions > Deploy to GitHub Pages > Run workflow) or through the API
 # (a repository_dispatch "set-status" event, with any of span, complete and note in client_payload). Those runs update
-# status.yaml: the time is set to now (Pacific, nearest quarter hour) and any values given override the file's. The change is
-# committed to main, and the site is rebuilt and deployed.
+# status.yaml: the time is set to now (BC time, UTC−7, nearest quarter hour) and any values given override the file's. The
+# change is committed to main, and the site is rebuilt and deployed.
 on:
   push:
     branches: [main]
