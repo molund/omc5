@@ -1,4 +1,5 @@
 <script>
+  import { tick } from "svelte";
   import { PROGRESS_COLOUR } from "./lib/layerSwitches.js";
   import { layers, ui } from "./lib/appState.svelte.js";
   import { status, asOf, followUpTime } from "./lib/status.js";
@@ -34,24 +35,63 @@
   };
   let tip = $state(null);
   const toggle = (k) => (tip = tip === k ? null : k);
-  // a tap anywhere else, or Escape, closes the tip; on a phone, a touch anywhere off the card closes the card too (the
-  // information button brings it back)
+  // a tap anywhere else, or Escape, closes the tip
   function outside(e) {
     if (!e.target.closest(".num")) tip = null;
-    if (
-      ui.phone &&
-      !ui.cardHidden &&
-      !e.target.closest(".card") &&
-      !e.target.closest(".show")
-    )
-      ui.cardHidden = true;
+  }
+
+  // On a phone the card is a full-screen dialog: it fills the screen, has its own Close button in a sticky header, and stays
+  // open until that button (or Escape) closes it. While it's open the page behind it doesn't scroll, focus moves into it and
+  // stays there, and closing it puts focus back on the information button.
+  const open = $derived(layers.progress && ui.gantry && !ui.cardHidden);
+  const full = $derived(open && ui.phone);
+  let card = $state(),
+    closeButton = $state(),
+    showButton = $state();
+  function close() {
+    tip = null;
+    ui.cardHidden = true;
+    // back to the button that reopens it, once it's drawn
+    tick().then(() => showButton?.focus());
+  }
+  $effect(() => {
+    if (!full) return;
+    const html = document.documentElement,
+      was = [html.style.overflow, document.body.style.overflow];
+    html.style.overflow = document.body.style.overflow = "hidden";
+    tick().then(() => closeButton?.focus());
+    return () => {
+      [html.style.overflow, document.body.style.overflow] = was;
+    };
+  });
+  // Escape closes the tip first, then the full-screen card; Tab stays inside the full-screen card
+  function keydown(e) {
+    if (e.key === "Escape") {
+      if (tip) tip = null;
+      else if (full) close();
+      return;
+    }
+    if (e.key !== "Tab" || !full || !card) return;
+    const stops = [
+      ...card.querySelectorAll("a[href], button:not([disabled])"),
+    ];
+    if (!stops.length) return;
+    const first = stops[0],
+      last = stops[stops.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    } else if (!card.contains(document.activeElement)) {
+      e.preventDefault();
+      first.focus();
+    }
   }
 </script>
 
-<svelte:window
-  onpointerdown={outside}
-  onkeydown={(e) => e.key === "Escape" && (tip = null)}
-/>
+<svelte:window onpointerdown={outside} onkeydown={keydown} />
 
 {#snippet num(k, value, big)}
   <button
@@ -70,6 +110,7 @@
 
 {#if layers.progress && ui.gantry && ui.cardHidden}
   <button
+    bind:this={showButton}
     class="show"
     title="Show the progress card"
     aria-label="Show the progress card"
@@ -77,22 +118,37 @@
   >
 {:else if layers.progress && ui.gantry}
   {@const { span, ahead, total } = ui.gantry}
-  <div class="card">
-    <!-- the title: the Clayton Clipper logo with "Progress" beside it, small and spaced out, as in Trackside's header -->
-    <div class="title">
-      <img
-        src="{import.meta.env.BASE_URL}images/logo.png"
-        alt="Clayton Clipper"
-        width="625"
-        height="351"
-      /><span>Progress</span>
+  <div
+    bind:this={card}
+    class="card"
+    class:full
+    role={full ? "dialog" : undefined}
+    aria-modal={full ? "true" : undefined}
+    aria-labelledby={full ? "progress-title" : undefined}
+  >
+    <!-- the title: the Clayton Clipper logo with "Progress" beside it, small and spaced out, as in Trackside's header; on a
+         phone, a sticky header with a large Close button -->
+    <div class="head">
+      <div class="title" id="progress-title">
+        <img
+          src="{import.meta.env.BASE_URL}images/logo.png"
+          alt="Clayton Clipper"
+          width="625"
+          height="351"
+        /><span>Progress</span>
+      </div>
+      {#if full}<button
+          bind:this={closeButton}
+          class="close-full"
+          aria-label="Close the progress card"
+          onclick={close}><span aria-hidden="true">×</span> Close</button
+        >{:else}<button
+          class="close"
+          title="Hide the progress card"
+          aria-label="Hide the progress card"
+          onclick={close}><Icon kind="close" /></button
+        >{/if}
     </div>
-    <button
-      class="close"
-      title="Hide the progress card"
-      aria-label="Hide the progress card"
-      onclick={() => (ui.cardHidden = true)}><Icon kind="close" /></button
-    >
     <div class="figure">
       ({@render num("span", span, true)}+{@render num(
         "ahead",
@@ -164,6 +220,54 @@
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
     z-index: 5;
+  }
+  /* on a phone: a full-screen dialog, edge to edge with no corners, scrolling inside itself, clear of the iPhone's notch,
+     home indicator and rounded corners */
+  .card.full {
+    position: fixed;
+    inset: 0;
+    width: auto;
+    max-width: none;
+    height: 100dvh;
+    padding: 0 max(16px, env(safe-area-inset-right))
+      calc(16px + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    z-index: 50;
+  }
+  /* its header stays at the top while the card scrolls: the logo and name, and the Close button */
+  .card.full .head {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0 calc(-1 * max(16px, env(safe-area-inset-right))) 12px
+      calc(-1 * max(16px, env(safe-area-inset-left)));
+    padding: calc(8px + env(safe-area-inset-top))
+      max(16px, env(safe-area-inset-right)) 8px max(16px, env(safe-area-inset-left));
+    border-bottom: 1px solid var(--line);
+    background: var(--panel);
+  }
+  .close-full {
+    min-width: 48px;
+    min-height: 48px;
+    padding: 0 16px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--ink);
+    font-size: calc(17rem / 17);
+    font-weight: 600;
+  }
+  .close-full span {
+    font-size: 1.25em;
+    line-height: 1;
   }
   /* the card's close button, in its top right corner, and the information button that takes the card's place once it is closed */
   .close {
