@@ -182,20 +182,9 @@ export function layerCss(state) {
         k === "horizontal"
       )
         return;
-      if (k === "bg")
-        r +=
-          ".bg{visibility:" +
-          (on ? "visible" : "hidden") +
-          " !important}" +
-          (on
-            ? ""
-            : ".bg.hwy15,.bg.ave72,.fraser{visibility:visible !important}");
-      // roads, with their Pacific Hwy and Fraser Hwy labels
-      else if (k === "roads")
-        r +=
-          '.roads,.fraser,.hwy15,.road.hwy15,.road.fraser,line[class="bg"]{display:' +
-          (on ? "inline" : "none") +
-          " !important}";
+      // roads: Fraser Highway and Highway 15, with their labels (every piece is tagged "roads")
+      if (k === "roads")
+        r += ".roads{display:" + (on ? "inline" : "none") + " !important}";
       else if (k === "omc5Labels")
         r += ".spanlabel{display:" + (on ? "inline" : "none") + " !important}";
       else if (k === "spanLabels")
