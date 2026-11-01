@@ -40,3 +40,16 @@ Svelte 5 + Vite site, deployed to GitHub Pages (https://clayton-clipper.olund.ca
 - `public/images/` — aerial photos.
 - `public/images/sorry-im-a-shitty-photographer/` — update photos (see the `photo:` format in `status.yaml`). Resize every
   uploaded photo to at most 800 pixels wide, save it as JPEG at quality 75, and strip all metadata before committing it.
+
+## Writing style (status updates and posts)
+
+- Spans: lowercase, "span 50", like "page 5"; capitalised only at the start of a sentence.
+- Titles: sentence case for everything, posts included ("The curious case of Clayton Clipper span 50").
+- Gantries: the full name first ("Clayton Clipper", "Surrey Sprinter"); "the Clipper", "the Sprinter" or "the gantry" after.
+- Segments: always "segments", never "rocks". When all of a span's segments are hung, the span is "marked as complete".
+- Pillar, support, tulip, hammerhead: use the word as written in the note.
+- Supports by name: "where spans 70 and 71 meet" in the text; "70/71" is fine in titles and short form.
+- Roads: Surrey's style, "176 St", "152 St" (no "th"); "Highway 15 (176 St)" on first mention; "Fraser Highway" in text
+  (the map labels stay "Fraser Hwy (1A)").
+- Stations: the official names ("Green Timbers Station", "Hillcrest-184 Street Station").
+- Times: "a.m." and "p.m.", BC time; posts show the date only.
