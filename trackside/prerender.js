@@ -112,7 +112,12 @@ function threadBody(n) {
 writeFileSync(
   "dist-ssr/threads.json",
   JSON.stringify(
-    status.history.map((n) => ({ title: term(n.time), body: threadBody(n) })),
+    status.history.map((n) => ({
+      title: term(n.time),
+      body: threadBody(n),
+      // posts stay open for comments however old they get (see close_old in sync_discussions.py)
+      post: n.post,
+    })),
     null,
     2,
   ) + "\n",

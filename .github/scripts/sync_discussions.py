@@ -72,7 +72,8 @@ def check_count(limit=100):
 
 def main():
     have = existing()
-    for n in json.load(open(THREADS)):
+    threads = json.load(open(THREADS))
+    for n in threads:
         t, b = n["title"], n["body"]
         if t not in have:
             graphql(
@@ -95,14 +96,15 @@ def main():
                 body=b,
             )
             print(f"updated {t}" if done else f"left {t} as it is (not ours to edit)")
-    close_old(keep=30)
+    close_old(keep=30, posts={n["title"] for n in threads if n.get("post")})
 
 
-def close_old(keep):
-    """Close as outdated and lock every thread older than the newest `keep`, so the open threads are the recent updates'
-    (the ones the Trackside page counts) and old threads can't collect spam. Newest by the update time in the title,
-    else by when the thread was made."""
-    have = existing()
+def close_old(keep, posts=frozenset()):
+    """Close as outdated and lock every status update's thread older than the newest `keep`, so the open threads are the
+    recent updates' (the ones the Trackside page counts) and old threads can't collect spam. Posts' threads (titles in
+    `posts`) stay open however old they are, and don't count towards `keep`. Newest by the update time in the title, else
+    by when the thread was made."""
+    have = {t: v for t, v in existing().items() if t not in posts}
 
     def when(t):
         m = re.fullmatch(r"Update (\d{4}-\d\d-\d\d \d\d:\d\d)", t)
