@@ -10,8 +10,8 @@ import { createHash } from "node:crypto";
 import { render } from "svelte/server";
 import { format } from "prettier";
 import TracksidePage from "./TracksidePage.svelte";
-import { status, followUpTime } from "./lib/status.js";
-import { anchor, term, SITE } from "./lib/comments.js";
+import { status, followUpTime } from "../lib/status.js";
+import { anchor, term, SITE } from "../lib/comments.js";
 
 const PAGE_SIZE = 10;
 
