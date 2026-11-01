@@ -322,12 +322,17 @@
     font-size: 85%;
   }
   /* the comments link (in the link colour) and the reactions as GitHub's pills */
+  /* the comments link sits close under its update, and a wide gap separates one update from the next, so the link reads
+     as the end of its own update rather than the start of the next */
   .discuss {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
     gap: 10px;
-    margin-top: 12px;
+    margin-top: 8px;
+  }
+  article + article {
+    margin-top: 36px;
   }
   .comments-link {
     padding: 0;
