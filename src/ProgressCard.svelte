@@ -7,9 +7,9 @@
 
   // "today" or "yesterday" on the card (Trackside keeps full dates)
   const when = asOf(status.updated, true);
-  // the newest note's own time: "9:30 a.m." today, "9:30 a.m. yesterday", and so on
+  // the newest note's own time, short like its follow-ups' ("9:30 a.m."): "As of" above already says which day
   const postedAt = status.history[0]
-    ? asOf(status.history[0].time, true).replace(/ today$/, "")
+    ? followUpTime(status.history[0].time, status.history[0].time)
     : "";
   // the Trackside page
   const TRACKSIDE = `${import.meta.env.BASE_URL}trackside/`;
