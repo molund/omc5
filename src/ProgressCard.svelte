@@ -130,7 +130,7 @@
         <span class="chip">{followUpTime(m.time, status.latest.time)}</span
         >{m.text}
       </div>{/each}
-    {#if status.photo}<a class="thumb" href={TRACKSIDE}
+    {#if status.photo}<a class="thumb" href="{TRACKSIDE}#{anchor(newest.time)}"
         ><img
           src={status.photo.src}
           alt={status.photo.caption || "Photo for this update"}
@@ -298,7 +298,7 @@
     margin-top: 4px;
     font-size: calc(13rem / 17);
   }
-  /* the newest update's photo, a short strip across the card, opening the Trackside page (the newest is at its top) */
+  /* the newest update's photo, a short strip across the card, opening that update on the Trackside page (where the Comments button goes) */
   .thumb {
     display: block;
     margin-top: 8px;
