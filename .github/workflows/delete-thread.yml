@@ -1,0 +1,35 @@
+name: Delete a comment thread
+
+# Run by hand (Actions > Delete a comment thread > Run workflow) or through the API: deletes one comment thread, comments
+# and all, by its discussion number, with the DISCUSSION_TOKEN secret. Only threads in the Trackside category can be
+# deleted, so a wrong number can't remove anything else. For a thread whose update is gone from status.yaml, or that is now
+# a follow-up (a thread still matching a note in status.yaml is made again on the next deploy).
+on:
+  workflow_dispatch:
+    inputs:
+      number:
+        description: "Discussion number, e.g. 8"
+        required: true
+        type: number
+
+permissions:
+  contents: read
+
+jobs:
+  delete:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete the thread
+        env:
+          GH_TOKEN: ${{ secrets.DISCUSSION_TOKEN }}
+          NUMBER: ${{ inputs.number }}
+        run: |
+          read -r id category title < <(gh api "repos/${{ github.repository }}/discussions/$NUMBER" \
+            -q '[.node_id, .category.node_id, .title] | @tsv')
+          if [ "$category" != "DIC_kwDOVbOMWM4DKF3d" ]; then
+            echo "::error::#$NUMBER ($title) isn't in the Trackside category; not deleting it"
+            exit 1
+          fi
+          gh api graphql -f query='mutation($id: ID!) { deleteDiscussion(input: {id: $id}) { discussion { number } } }' \
+            -f id="$id"
+          echo "Deleted #$NUMBER, $title"
