@@ -52,11 +52,13 @@
       : status.history.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE),
   );
 
-  // what search engines and link previews show: a post's date and note, and its photo (or the first among its further
-  // photos); a page of updates, the newest photo
+  // what search engines and link previews show: a post's title (else its date) and note, and its photo (or the first among
+  // its further photos); a page of updates, the newest photo
   const title = $derived(
     post
-      ? `${heading(post.time)} · Trackside · Clayton Clipper Tracker`
+      ? post.title
+        ? `${post.title} · Clayton Clipper Tracker`
+        : `${heading(post.time)} · Trackside · Clayton Clipper Tracker`
       : page > 1
         ? `Trackside, page ${page} · Clayton Clipper Tracker`
         : "Trackside · Clayton Clipper Tracker",
@@ -134,7 +136,9 @@
   <meta property="og:type" content={post ? "article" : "website"} />
   <meta
     property="og:title"
-    content={post ? `${heading(post.time)} · Trackside` : "Trackside"}
+    content={post
+      ? post.title || `${heading(post.time)} · Trackside`
+      : "Trackside"}
   />
   <meta property="og:description" content={description} />
   <meta property="og:url" content={url} />
