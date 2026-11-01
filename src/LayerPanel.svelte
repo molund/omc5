@@ -269,7 +269,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 8px;
-    margin-bottom: 2px;
+    margin-bottom: 8px;
   }
   .hide {
     padding: calc(6rem / 17);
