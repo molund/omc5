@@ -75,7 +75,7 @@ notes:
     title: "How a Clayton Clipper sketch became a whole website"
     photo:
       file: 2026-10-13-first-drawing.jpg
-      caption: "The earliest version I still have, from soon after the hand drawing went into Claude on Oct 13, 2026: eleven gantry spans to go, a handful of precast spans done, and labels that only made sense to me. Proof that I'm better at drawing guideways than photographing them."
+      caption: "The earliest version I still have, from soon after the hand drawing went into Claude on Oct 13, 2026: eleven gantry spans to go, a handful of precast spans done, and labels that only made sense to me."
     more:
       - "The plan was simple: post a picture to the SkyscraperPage forum every couple of weeks, so other people following the line could see where the Clayton Clipper was. Then I started fixing it. The spans got traced against high-resolution aerial imagery, the supports got matched to within about a foot, and the drawing grew from one stretch by the SFMSF to the Clipper's whole route."
       - "The turning point was almost an accident. I asked Claude to make me a better viewer for the SVG, and it threw in checkboxes for every layer in the drawing without being asked. I started customizing them, then kept going, and eventually decided to see if I could get the whole thing onto GitHub. On Oct 28 it became a small website: a live map, a progress card counting the Clipper's spans, and a status file behind it all. A few days later it had comments, photos, this Trackside page and its own address."
