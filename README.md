@@ -48,3 +48,11 @@ Then open http://localhost:5173/.
 Not used by the site itself. `data/` is an open dataset (CC0) of the guideway supports,
 pillars and spans from 166 St to 184 St, exported from the drawing as GeoJSON. See
 [data/README.md](data/README.md) for the files, how they were made and how to update them.
+
+## License
+
+The code is under the [MIT License](LICENSE). Two kinds of images in `public/images/` aren't covered by it:
+
+- the aerial images (`aerial-base.jpg` and `aerial-zoom-*.jpg`), Apple Maps screenshots that belong to Apple and its
+  imagery providers
+- the Clayton Clipper logo (`logo.png`), which belongs to the Surrey Langley SkyTrain project
