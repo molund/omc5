@@ -8,6 +8,7 @@
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { render } from "svelte/server";
+import { format } from "prettier";
 import TracksidePage from "./TracksidePage.svelte";
 import { status, followUpTime } from "./lib/status.js";
 import { anchor, term, SITE } from "./lib/comments.js";
@@ -17,7 +18,8 @@ const PAGE_SIZE = 10;
 // the client build's page, with its hashed script and stylesheet, as the template
 const template = readFileSync("dist/trackside/index.html", "utf8");
 
-function write(dir, view) {
+// each page laid out by Prettier, so it reads like hand-written HTML
+async function write(dir, view) {
   const { head, body } = render(TracksidePage, { props: { view } });
   const html = template
     .replace("</head>", `${head}\n  </head>`)
@@ -26,15 +28,22 @@ function write(dir, view) {
       `<div id="app" data-view='${JSON.stringify(view)}'>${body}</div>`,
     );
   mkdirSync(dir, { recursive: true });
-  writeFileSync(`${dir}/index.html`, html);
+  writeFileSync(
+    `${dir}/index.html`,
+    await format(html, {
+      parser: "html",
+      htmlWhitespaceSensitivity: "strict",
+    }),
+  );
 }
 
 const pages = Math.max(1, Math.ceil(status.history.length / PAGE_SIZE));
 for (let p = 1; p <= pages; p++)
-  write(p === 1 ? "dist/trackside" : `dist/trackside/page/${p}`, { page: p });
-status.history.forEach((n) =>
-  write(`dist/trackside/${anchor(n.time)}`, { post: anchor(n.time) }),
-);
+  await write(p === 1 ? "dist/trackside" : `dist/trackside/page/${p}`, {
+    page: p,
+  });
+for (const n of status.history)
+  await write(`dist/trackside/${anchor(n.time)}`, { post: anchor(n.time) });
 
 // A thread's body shows the update itself, as on the Trackside page: the note, its photo and caption, its further
 // paragraphs and photos, its follow-ups (oldest first), a link to the update's own page, and giscus's strict-mode marker,
