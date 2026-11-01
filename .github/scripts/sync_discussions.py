@@ -2,10 +2,10 @@
 
 Each update's thread is created here, before anyone comments, so its body can show the update itself (the note, then the
 photo and its caption, as on the Trackside page) instead of giscus's plain link. The titles and bodies come from the site's
-build (npm run build writes dist-ssr/threads.json, from src/prerender.js), so status.yaml is read in one place. Threads are
-titled as the site asks giscus for them, "Update 2026-10-31 09:30" (Yukon time), and carry giscus's hidden sha1 marker, so
-giscus finds them in strict mode. A thread whose update has since been edited has its body brought up to date, and threads
-older than the newest 30 are closed as outdated and locked. Needs GITHUB_TOKEN with discussions: write.
+build (npm run build writes dist-ssr/threads.json, from trackside/prerender.js), so status.yaml is read in one place.
+Threads are titled as the site asks giscus for them, "Update 2026-10-31 09:30" (Yukon time), and carry giscus's hidden sha1
+marker, so giscus finds them in strict mode. A thread whose update has since been edited has its body brought up to date,
+and threads older than the newest 30 are closed as outdated and locked. Needs GITHUB_TOKEN with discussions: write.
 """
 
 import json
@@ -65,7 +65,7 @@ def check_count(limit=100):
     if n >= limit:
         sys.exit(
             f"::error::{n} comment threads: the Trackside page only reads the first {limit} for comment and reaction "
-            "counts (src/TracksidePage.svelte). Time to decide how to handle more."
+            "counts (trackside/TracksidePage.svelte). Time to decide how to handle more."
         )
 
 
