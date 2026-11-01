@@ -33,7 +33,9 @@ Svelte 5 + Vite site, deployed to GitHub Pages (https://molund.github.io/omc5/) 
 - `status.yaml` — gantry span / complete / time-stamped notes (newest shown) on the progress card. Site news
   only: update this file, don't change the drawing unless asked. When adding a note, write it a `title:` (see the
   format in `status.yaml`): a short headline of what the note says, under 60 characters, plain words people would search
-  for (span numbers, places, gantry names), nothing the note doesn't say. Follow-ups get no title.
+  for (span numbers, places, gantry names), nothing the note doesn't say. Never a bare span number: name the gantry
+  the span belongs to (e.g. "Clayton Clipper completes span 36"), even when the note doesn't, so the title makes sense on
+  its own in a search result. Follow-ups get no title.
 - `public/images/` — aerial photos.
 - `public/images/sorry-im-a-shitty-photographer/` — update photos (see the `photo:` format in `status.yaml`). Resize every
   uploaded photo to at most 800 pixels wide, save it as JPEG at quality 75, and strip all metadata (especially the GPS
