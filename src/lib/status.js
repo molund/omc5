@@ -138,9 +138,10 @@ function parse(src) {
 
 export const status = parse(text);
 
-// the calendar day of a time, in the site's time zone, as "2026-10-29"
+// the calendar day of a time, in the site's time zone, as "2026-10-29". The site's time zone is BC time, UTC−7 all
+// year: America/Dawson_Creek, which has had no daylight saving time since 1972
 const dayOf = (t) =>
-  new Intl.DateTimeFormat("en-CA", { timeZone: "America/Whitehorse" }).format(
+  new Intl.DateTimeFormat("en-CA", { timeZone: "America/Dawson_Creek" }).format(
     t,
   );
 
@@ -152,7 +153,7 @@ export function asOf(date, relative = false) {
     d = new Date(Math.round(date.getTime() / q) * q);
   const parts = Object.fromEntries(
     new Intl.DateTimeFormat("en-US", {
-      timeZone: "America/Whitehorse",
+      timeZone: "America/Dawson_Creek",
       hour: "numeric",
       minute: "2-digit",
       hour12: true,
@@ -169,7 +170,7 @@ export function asOf(date, relative = false) {
     : "p.m.";
   const time = `${parts.hour}:${parts.minute} ${period}`;
   if (relative) {
-    // Yukon time has no daylight saving changes, so a day back is always 24 hours
+    // BC time has no daylight saving changes, so a day back is always 24 hours
     const now = Date.now(),
       day = 24 * 60 * 60 * 1000;
     if (dayOf(d) === dayOf(now)) return `${time} today`;

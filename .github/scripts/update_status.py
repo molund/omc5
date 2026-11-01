@@ -51,7 +51,7 @@ elif span and values["span"] != old_span:
 # Pacific time is a whole number of hours off UTC, so rounding the timestamp to 15 minutes lands on local quarter hours
 quarter = 15 * 60
 now = round(datetime.now().timestamp() / quarter) * quarter
-stamp = datetime.fromtimestamp(now, ZoneInfo("America/Vancouver")).isoformat(timespec="minutes")
+stamp = datetime.fromtimestamp(now, ZoneInfo("America/Dawson_Creek")).isoformat(timespec="minutes")
 values["updated"] = stamp
 
 out = []
