@@ -4472,6 +4472,7 @@
        over the station bents at the east end, Bakerview-166 Street over the short station spans at the west end -->
   <g id="station-labels">
     <text
+      id="station-label-hillcrest"
       class="stationlabel"
       x="5246.7"
       y="3053.1"
@@ -4483,6 +4484,7 @@
       Hillcrest-184 Street Station
     </text>
     <text
+      id="station-label-bakerview"
       class="stationlabel"
       x="-6612.6"
       y="-5038.5"

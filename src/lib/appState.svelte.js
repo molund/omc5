@@ -171,15 +171,28 @@ function canvasProgress() {
   const m =
     HORIZONTAL_MARGIN * Math.hypot(e.right.x - e.left.x, e.bottom.y - e.top.y);
   let x = e.left.x - m,
-    x1 = e.right.x + m;
+    x1 = e.right.x + m,
+    y = e.top.y - m,
+    y1 = e.bottom.y + m;
+  // a station label that reaches into that canvas is taken in whole, with a little room, so it isn't cut off (one that is
+  // nowhere near stays out of the picture, rather than stretching the canvas along the whole route)
+  for (const id of ["#station-label-hillcrest", "#station-label-bakerview"]) {
+    const l = drawingBounds(els.svg, 0, TURN_X, TURN_Y, id);
+    if (!l || l.right.x < x || l.left.x > x1 || l.bottom.y < y || l.top.y > y1)
+      continue;
+    const pad = 0.25 * m;
+    x = Math.min(x, l.left.x - pad);
+    x1 = Math.max(x1, l.right.x + pad);
+    y = Math.min(y, l.top.y - pad);
+    y1 = Math.max(y1, l.bottom.y + pad);
+  }
   const photo = els.svg.querySelector("#baseoverview image");
   if (photo) {
     const p = turnedXRange(els.svg, photo, 0, TURN_X, TURN_Y);
     x = Math.max(x, p.x0);
     x1 = Math.min(x1, p.x1);
   }
-  const y = e.top.y - m;
-  setView(`${x} ${y} ${x1 - x} ${e.bottom.y + m - y}`);
+  setView(`${x} ${y} ${x1 - x} ${y1 - y}`);
 }
 
 // Horizontal: the drawing turned so both ends of the Clayton Clipper route are level. Its canvas is what is drawn with a margin
