@@ -26,6 +26,16 @@ complete: true
 #     follow-up:
 #       - 2026-10-31T11:45-07:00: "What changed"
 notes:
+  - 2026-11-01: "While tracing the guideway near Highway 15, I noticed one pillar appears to have been shifted west, making Span 50 noticeably longer than the surrounding spans. There's also a concrete pad almost exactly where the pillar seems like it would have gone."
+    post: true
+    title: "The Curious Case of Span 50"
+    photo:
+      file: 2026-11-01-span-50-pad.jpg
+      caption: "I noticed this concrete pad while riding my bike through the area. It sits almost exactly where I would have expected a pillar if Span 50 had been spaced more evenly."
+    more:
+      - "Most of the guideway follows a pretty regular pattern, so Span 50 stood out right away. The concrete pad makes me wonder if they needed temporary support there during construction but couldn't place a permanent foundation in that location."
+      - "My completely non-engineer theories range from a major buried utility, to some other underground constraint, to a previously undiscovered entrance to Fraggle Rock."
+      - "Does anyone know why the pillar was shifted west and Span 50 ended up so much longer than usual?"
   - 2026-10-31T15:15-07:00: "Reporting from the bike at the other end of the line: the Surrey Sprinter has hung all the rocks for its first span after leaving Green Timbers Station."
     title: "Surrey Sprinter hangs its first span past Green Timbers"
     photo:
