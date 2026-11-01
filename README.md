@@ -51,6 +51,8 @@ pillars and spans from 166 St to 184 St, exported from the drawing as GeoJSON. S
 
 ## License
 
-The code is under the [MIT License](LICENSE). The aerial images in `public/images/` (`aerial-base.jpg` and
-`aerial-zoom-*.jpg`) are Apple Maps screenshots: they belong to Apple and its imagery providers and aren't covered by the
-MIT License.
+The code is under the [MIT License](LICENSE). Two kinds of images in `public/images/` aren't covered by it:
+
+- the aerial images (`aerial-base.jpg` and `aerial-zoom-*.jpg`), Apple Maps screenshots that belong to Apple and its
+  imagery providers
+- the Clayton Clipper logo (`logo.png`), which belongs to the Surrey Langley SkyTrain project
