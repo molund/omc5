@@ -3,8 +3,8 @@
 //   dist/trackside/index.html            the newest 10 updates
 //   dist/trackside/page/2/index.html …   the older ones, 10 a page
 //   dist/trackside/<anchor>/index.html   each update on its own, e.g. /trackside/2026-10-31T16-30/
-// and dist-ssr/threads.json, each update's comment thread title and body, for .github/scripts/sync_discussions.py, so
-// status.yaml is read in one place (lib/status.js).
+// dist/sitemap.xml, every page for search engines, and dist-ssr/threads.json, each update's comment thread title and
+// body, for .github/scripts/sync_discussions.py, so status.yaml is read in one place (lib/status.js).
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { render } from "svelte/server";
@@ -45,6 +45,36 @@ for (let p = 1; p <= pages; p++)
   });
 for (const n of status.history)
   await write(`dist/trackside/${anchor(n.time)}`, { post: anchor(n.time) });
+
+// dist/sitemap.xml, for search engines (submitted in Google Search Console, since a project site can't have a robots.txt):
+// the map, the pages of updates and each update's own page, each with when it last changed (an update, at its newest
+// follow-up; a page of updates, at its newest update; the map, at status.yaml's `updated`)
+const changed = (n) => n.followUps[0]?.time ?? n.time;
+const newest = (list) => new Date(Math.max(...list.map(changed)));
+const urls = [
+  [SITE, status.updated ?? newest(status.history)],
+  ...Array.from({ length: pages }, (_, i) => [
+    i === 0 ? `${SITE}trackside/` : `${SITE}trackside/page/${i + 1}/`,
+    newest(status.history.slice(i * PAGE_SIZE, (i + 1) * PAGE_SIZE)),
+  ]),
+  ...status.history.map((n) => [
+    `${SITE}trackside/${anchor(n.time)}/`,
+    changed(n),
+  ]),
+];
+writeFileSync(
+  "dist/sitemap.xml",
+  `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls
+  .map(
+    ([loc, t]) =>
+      `  <url><loc>${loc}</loc><lastmod>${t.toISOString()}</lastmod></url>`,
+  )
+  .join("\n")}
+</urlset>
+`,
+);
 
 // A thread's body shows the update itself, as on the Trackside page: the note, its photo and caption, its further
 // paragraphs and photos, its follow-ups (oldest first), a link to the update's own page, and giscus's strict-mode marker,
