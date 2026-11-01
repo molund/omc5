@@ -113,7 +113,7 @@ const PROGRESS_CSS =
 // what each switch shows in progress-chart mode (whether it shows is still up to the layer's own display rule)
 const PROGRESS_SHOWS = {
   // finished spans, concrete and steel
-  guideway: [".guideway", ".steel-hwy15"],
+  guideway: [".guideway"],
   unfinished: [".guideway.unfinished"],
   supports: ["rect.g", 'circle[fill="#D7D7D7"]'],
   yard: [".yard"],
@@ -197,17 +197,9 @@ export function layerCss(state) {
           (on ? "inline" : "none") +
           " !important}";
       else if (k === "omc5Labels")
-        r +=
-          ".spanlabel{display:" +
-          (on ? "inline" : "none") +
-          " !important}" +
-          (on ? "" : ".spanlabel.steel-hwy15{display:none !important}");
+        r += ".spanlabel{display:" + (on ? "inline" : "none") + " !important}";
       else if (k === "spanLabels")
-        r +=
-          ".cclabel{display:" +
-          (on ? "inline" : "none") +
-          " !important}" +
-          (on ? "" : ".cclabel.steel-hwy15{display:none !important}");
+        r += ".cclabel{display:" + (on ? "inline" : "none") + " !important}";
       else if (k === "cc" || k === "ll" || k === "ff")
         r += on
           ? ""
@@ -222,15 +214,9 @@ export function layerCss(state) {
           ".guideway.unfinished{display:" +
           (on ? "inline" : "none") +
           " !important}";
-      // finished spans: the concrete ones and the steel ones over Hwy 15 (with their labels)
+      // finished spans, concrete and steel alike
       else if (k === "guideway")
-        r +=
-          ".guideway{display:" +
-          (on ? "inline" : "none") +
-          " !important}" +
-          ".steel-hwy15,.guideway.steel-hwy15,.spanlabel.steel-hwy15,.cclabel.steel-hwy15{display:" +
-          (on ? "inline" : "none") +
-          " !important}";
+        r += ".guideway{display:" + (on ? "inline" : "none") + " !important}";
       else if (k === "yard")
         r += ".yard{display:" + (on ? "inline" : "none") + " !important}";
       else
