@@ -1,11 +1,15 @@
 <script>
-  // The Trackside page: every status note, newest first, each with an id from its time stamp (e.g. #2026-10-30T20-45) so
-  // a single update can be linked to
+  // The Trackside page: every status note, newest first, each with an id from its time stamp (e.g. #2026-10-30T20-45). It is
+  // prerendered at build time (src/prerender.js) as pages of 10 (/trackside/, /trackside/page/2/, …) and a page per update
+  // (/trackside/2026-10-30T20-45/), each with its own title, description and Open Graph photo; view says which one this is
   import { onMount } from "svelte";
   import { status, asOf, followUpTime } from "./lib/status.js";
-  import { anchor, term, fetchCounts } from "./lib/comments.js";
+  import { anchor, term, fetchCounts, SITE } from "./lib/comments.js";
+
+  let { view = { page: 1 } } = $props();
 
   const MAP = import.meta.env.BASE_URL;
+  const TRACKSIDE = `${MAP}trackside/`;
   // Comments: one GitHub Discussion per update, through giscus, in the "Past Updates page comments" category, titled by
   // term() in lib/comments.js
   const GISCUS = {
@@ -18,11 +22,6 @@
     "data-reactions-enabled": "1",
     "data-emit-metadata": "0",
     "data-input-position": "top",
-    // GitHub light / dark as before, minus the upvote arrows (public/giscus.css)
-    "data-theme": new URL(
-      `${import.meta.env.BASE_URL}giscus.css`,
-      location.origin,
-    ).href,
     "data-lang": "en",
     crossorigin: "anonymous",
     async: "",
@@ -32,63 +31,128 @@
     const [time, date] = asOf(t).split(" on ");
     return `${date} at ${time}`;
   };
+  // the addresses of an update's own page and of a page of updates, and either in full, for the Open Graph tags
+  const postUrl = (n) => `${TRACKSIDE}${anchor(n.time)}/`;
+  const pageUrl = (p) => (p === 1 ? TRACKSIDE : `${TRACKSIDE}page/${p}/`);
+  const full = (path) => new URL(path, SITE).href;
   let counts = $state({});
-  fetchCounts().then((c) => (counts = c));
 
-  // Pages of 10 updates, newest first. The page is in the address (?page=2), so the browser's back button and shared links
-  // work; a link to one update (#2026-10-31T16-30) opens the page it is on.
+  // Pages of 10 updates, newest first, or the one update this page is for
   const PAGE_SIZE = 10;
   const pages = Math.max(1, Math.ceil(status.history.length / PAGE_SIZE));
-  function pageFromAddress() {
-    const id = location.hash.slice(1),
-      i = id ? status.history.findIndex((n) => anchor(n.time) === id) : -1;
-    if (i >= 0) return Math.floor(i / PAGE_SIZE) + 1;
-    const n = +new URLSearchParams(location.search).get("page") || 1;
-    return Math.min(Math.max(1, Math.round(n)), pages);
-  }
-  let page = $state(pageFromAddress());
-  const shown = $derived(
-    status.history.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE),
+  const post = $derived(
+    view.post ? status.history.find((n) => anchor(n.time) === view.post) : null,
   );
-  function goTo(p) {
-    page = p;
-    open = null;
-    const url = new URL(location.href);
-    if (p === 1) url.searchParams.delete("page");
-    else url.searchParams.set("page", p);
-    url.hash = "";
-    history.pushState(null, "", url);
-    window.scrollTo(0, 0);
-  }
+  const page = $derived(
+    post ? null : Math.min(Math.max(1, view.page || 1), pages),
+  );
+  const shown = $derived(
+    post
+      ? [post]
+      : status.history.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE),
+  );
+
+  // what search engines and link previews show: a post's date and note, and its photo (or the first among its further
+  // photos); a page of updates, the newest photo
+  const title = $derived(
+    post
+      ? `${heading(post.time)} · Trackside · Clayton Clipper Tracker`
+      : page > 1
+        ? `Trackside, page ${page} · Clayton Clipper Tracker`
+        : "Trackside · Clayton Clipper Tracker",
+  );
+  // a note cut at a word to about 155 characters, the length search results show
+  const clip = (s, n = 155) =>
+    s.length <= n
+      ? s
+      : s.slice(0, s.lastIndexOf(" ", n - 1)).replace(/[\s,.;:]+$/, "") + "…";
+  const description = $derived(
+    post
+      ? clip(post.text)
+      : "Updates and photos from along the Surrey Langley SkyTrain guideway, following the Clayton Clipper gantry span by span.",
+  );
+  const image = $derived(
+    post
+      ? post.photo || post.more.find((m) => m.photo)?.photo
+      : status.history.find((n) => n.photo)?.photo,
+  );
+  const url = $derived(full(post ? postUrl(post) : pageUrl(page)));
 
   // the anchor of the update whose comments are open (one at a time, so the page stays light); a string, since $state would
-  // wrap an update object in a proxy that never equals the original. ?comments#2026-10-31T16-30 (the progress card's Comments
-  // button) opens that update's comments and scrolls to it.
-  let open = $state(
-    new URLSearchParams(location.search).has("comments") && location.hash
-      ? location.hash.slice(1)
-      : null,
-  );
+  // wrap an update object in a proxy that never equals the original. ?comments opens an update's comments: on its own page,
+  // or with its anchor (?comments#2026-10-31T16-30, the progress card's Comments button) on a page of updates.
+  let open = $state(null);
   onMount(() => {
-    if (location.hash)
-      document.getElementById(location.hash.slice(1))?.scrollIntoView();
+    const params = new URLSearchParams(location.search),
+      id = location.hash.slice(1);
+    fetchCounts().then((c) => (counts = c));
+    if (post) {
+      if (params.has("comments")) open = view.post;
+      return;
+    }
+    // older links: an update not on this page goes to its own page, and ?page=2 to /trackside/page/2/
+    if (id && !shown.some((n) => anchor(n.time) === id)) {
+      if (status.history.some((n) => anchor(n.time) === id))
+        location.replace(
+          `${TRACKSIDE}${id}/${params.has("comments") ? "?comments" : ""}`,
+        );
+      return;
+    }
+    if (!id && params.has("page")) {
+      const n = Math.min(
+        Math.max(1, Math.round(+params.get("page") || 1)),
+        pages,
+      );
+      location.replace(pageUrl(n));
+      return;
+    }
+    if (id) {
+      if (params.has("comments")) open = id;
+      document.getElementById(id)?.scrollIntoView();
+    }
   });
   // load giscus into the element for this update's thread
   function giscus(el, t) {
     const s = document.createElement("script");
     s.src = "https://giscus.app/client.js";
     Object.entries(GISCUS).forEach(([k, v]) => s.setAttribute(k, v));
+    // GitHub light / dark as before, minus the upvote arrows (public/giscus.css)
+    s.setAttribute(
+      "data-theme",
+      new URL(`${import.meta.env.BASE_URL}giscus.css`, location.origin).href,
+    );
     s.setAttribute("data-term", term(t));
     el.appendChild(s);
   }
 </script>
 
-<svelte:window
-  onpopstate={() => {
-    page = pageFromAddress();
-    open = null;
-  }}
-/>
+<svelte:head>
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={url} />
+  <meta property="og:site_name" content="Clayton Clipper Tracker" />
+  <meta property="og:type" content={post ? "article" : "website"} />
+  <meta
+    property="og:title"
+    content={post ? `${heading(post.time)} · Trackside` : "Trackside"}
+  />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={url} />
+  {#if image}
+    <meta property="og:image" content={full(image.src)} />
+    {#if image.caption}<meta
+        property="og:image:alt"
+        content={image.caption}
+      />{/if}
+    <meta name="twitter:card" content="summary_large_image" />
+  {:else}
+    <meta name="twitter:card" content="summary" />
+  {/if}
+  {#if post}<meta
+      property="article:published_time"
+      content={post.time.toISOString()}
+    />{/if}
+</svelte:head>
 
 <!-- a photo and its caption, under a note or among its further paragraphs -->
 {#snippet photo(p)}
@@ -108,10 +172,16 @@
      times, then its comments -->
 <main class="page">
   <h1>Trackside</h1>
+  {#if post}<a class="back" href={TRACKSIDE}>← All updates</a>
+    <span class="sep" aria-hidden="true">·</span>{/if}
   <a class="back" href={MAP}>← Back to the map</a>
   {#each shown as n (anchor(n.time))}
     <article id={anchor(n.time)}>
-      <h2>{heading(n.time)}</h2>
+      <h2>
+        {#if post}{heading(n.time)}{:else}<a href={postUrl(n)}
+            >{heading(n.time)}</a
+          >{/if}
+      </h2>
       <p class="note">{n.text}</p>
       {#if n.photo}{@render photo(n.photo)}{/if}
       {#each n.more as m}
@@ -161,16 +231,16 @@
         ></div>{/if}
     </article>
   {/each}
-  <!-- the first page has one button to older updates; later pages go either way, with Next off on the last page -->
-  {#if pages > 1}
+  <!-- the first page has one button to older updates; later pages go either way, with Next off on the last page; links to
+       the prerendered pages, so search engines follow them too -->
+  {#if !post && pages > 1}
     <nav class="pager" aria-label="Pages of updates">
       {#if page === 1}
-        <button onclick={() => goTo(2)}>Show older</button>
+        <a href={pageUrl(2)} rel="next">Show older</a>
       {:else}
-        <button onclick={() => goTo(page - 1)}>Previous</button>
-        <button disabled={page === pages} onclick={() => goTo(page + 1)}
-          >Next</button
-        >
+        <a href={pageUrl(page - 1)} rel="prev">Previous</a>
+        {#if page < pages}<a href={pageUrl(page + 1)} rel="next">Next</a
+          >{:else}<span class="off">Next</span>{/if}
       {/if}
     </nav>
   {/if}
@@ -198,12 +268,22 @@
     font-size: calc(13rem / 17);
     text-decoration: none;
   }
+  .sep {
+    margin: 0 4px;
+    font-size: calc(13rem / 17);
+    color: var(--mute);
+  }
   h2 {
     margin: 28px 0 8px;
     padding-bottom: 5px;
     border-bottom: 1px solid var(--line);
     font-size: calc(19rem / 17);
     line-height: 1.25;
+  }
+  /* a heading links to its update's own page, drawn as plain heading text */
+  h2 a {
+    color: inherit;
+    text-decoration: none;
   }
   h3 {
     margin: 14px 0 4px;
@@ -308,7 +388,14 @@
       --flat-ink: #9198a1;
     }
   }
-  .pager button {
+  /* links to the pages, drawn as buttons */
+  .pager a,
+  .pager .off {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    text-decoration: none;
     min-width: calc(96rem / 17);
     min-height: calc(36rem / 17);
     padding: 0 calc(14rem / 17);
@@ -322,7 +409,7 @@
     font-size: calc(14rem / 17);
     font-weight: 600;
   }
-  .pager button:disabled {
+  .pager .off {
     border-color: transparent;
     background: transparent;
     color: var(--flat-ink);
@@ -338,11 +425,12 @@
       margin-top: 24px;
       background: none;
     }
-    .pager button {
+    .pager a,
+    .pager .off {
       flex: 1;
       min-height: calc(44rem / 17);
     }
-    .pager button:disabled {
+    .pager .off {
       background: var(--track);
     }
   }

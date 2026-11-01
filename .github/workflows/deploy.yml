@@ -58,8 +58,15 @@ jobs:
             git commit -am "$msg"
             git push
           fi
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
       # give each status note its own comments thread (GitHub Discussion) showing the note, photo and caption, for giscus on
-      # the Trackside page; a failure here doesn't stop the deploy
+      # the Trackside page, from the titles and bodies the build wrote (dist-ssr/threads.json); a failure here doesn't stop
+      # the deploy
       - name: Create or update the comment threads
         continue-on-error: true
         env:
@@ -67,12 +74,6 @@ jobs:
           # threads in the Announcement category but not edit them; the built-in token until that secret exists
           GITHUB_TOKEN: ${{ secrets.DISCUSSION_TOKEN || secrets.GITHUB_TOKEN }}
         run: python3 .github/scripts/sync_discussions.py
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-      - run: npm ci
-      - run: npm run build
       # export the GeoJSON and KML from the drawing as it is now and publish them with the site, at
       # https://molund.github.io/omc5/data/
       - run: npm run export-geojson

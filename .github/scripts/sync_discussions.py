@@ -1,126 +1,24 @@
 """Give every status note in status.yaml its own GitHub Discussion, ready for giscus.
 
 Each update's thread is created here, before anyone comments, so its body can show the update itself (the note, then the
-photo and its caption, as on the Trackside page) instead of giscus's plain link. Threads are titled as the site asks giscus
-for them, "Update 2026-10-31 09:30" (Yukon time), and carry giscus's hidden sha1 marker, so giscus finds them in strict mode.
-A thread whose update has since been edited has its body brought up to date, and threads older than the newest 30 are
-closed as outdated and locked. Needs GITHUB_TOKEN with discussions: write.
+photo and its caption, as on the Trackside page) instead of giscus's plain link. The titles and bodies come from the site's
+build (npm run build writes dist-ssr/threads.json, from src/prerender.js), so status.yaml is read in one place. Threads are
+titled as the site asks giscus for them, "Update 2026-10-31 09:30" (Yukon time), and carry giscus's hidden sha1 marker, so
+giscus finds them in strict mode. A thread whose update has since been edited has its body brought up to date, and threads
+older than the newest 30 are closed as outdated and locked. Needs GITHUB_TOKEN with discussions: write.
 """
 
-import hashlib
 import json
 import os
 import re
 import sys
 import urllib.error
 import urllib.request
-from datetime import datetime, timezone
-from zoneinfo import ZoneInfo
 
 REPO_ID = "R_kgDOVbOMWA"
 CATEGORY_ID = "DIC_kwDOVbOMWM4DKF3d"  # "Past Updates page comments"
-SITE = "https://molund.github.io/omc5/"
-PHOTOS = SITE + "images/sorry-im-a-shitty-photographer/"
-TZ = ZoneInfo("America/Whitehorse")
-
-
-def unquote(v):
-    if re.fullmatch(r'".*"', v):
-        return json.loads(v)
-    if re.fullmatch(r"'.*'", v):
-        return v[1:-1].replace("''", "'")
-    return v
-
-
-def notes(path="status.yaml"):
-    """The notes with text, as dicts of time, text, photo (file, caption) and follow-ups [(time, text)], as
-    src/lib/status.js reads them."""
-    out, section, photo = [], None, None
-    for line in open(path).read().split("\n"):
-        # notes are two spaces in; follow-ups, further in under "follow-up:", get no thread of their own
-        m = re.match(r"^ {2}-\s+(\S+):\s+(.*?)\s*$", line)
-        if m:
-            out.append(
-                {"time": datetime.fromisoformat(m.group(1)), "text": unquote(m.group(2)), "photo": None, "more": [], "follow_ups": []}
-            )
-            section = photo = None
-            continue
-        # under "more:", a photo ("- photo:" with its file and caption under it) or a paragraph
-        if section == "more" and re.match(r"^ {3,}-\s+photo:\s*$", line):
-            photo = {"file": None, "caption": ""}
-            if out:
-                out[-1]["more"].append({"photo": photo})
-            continue
-        m = section == "more" and re.match(r"^ {3,}-\s+(.*?)\s*$", line)
-        if m:
-            if out and unquote(m.group(1)):
-                out[-1]["more"].append({"text": unquote(m.group(1))})
-            continue
-        if re.match(r"^\s+(more|follow-up|photo):\s*$", line):
-            section = line.strip()[:-1]
-        # a follow-up, further in under "follow-up:"
-        m = re.match(r"^ {3,}-\s+(\S+):\s+(.*?)\s*$", line)
-        if m:
-            if out and unquote(m.group(2)):
-                out[-1]["follow_ups"].append((datetime.fromisoformat(m.group(1)), unquote(m.group(2))))
-            continue
-        if section == "photo" and re.match(r"^\s+photo:\s*$", line) and out:
-            out[-1]["photo"] = photo = {"file": None, "caption": ""}
-            continue
-        m = re.match(r"^\s+(file|caption):\s*(.*?)\s*$", line)
-        if m and photo is not None:
-            photo[m.group(1)] = unquote(m.group(2))
-    for n in out:
-        if n["photo"] and not n["photo"]["file"]:
-            n["photo"] = None
-        n["more"] = [m for m in n["more"] if m.get("text") or (m.get("photo") or {}).get("file")]
-        n["follow_ups"].sort(key=lambda m: m[0])  # oldest first, as on the Trackside page
-    return [n for n in out if n["text"]]
-
-
-def title(t):
-    return "Update " + t.astimezone(TZ).strftime("%Y-%m-%d %H:%M")
-
-
-def as_of(t):
-    """As the site shows it: "9:30 a.m. on Oct 31, 2026" (Yukon time)."""
-    t = t.astimezone(TZ)
-    period = "a.m." if t.hour < 12 else "p.m."
-    return f"{(t.hour % 12) or 12}:{t.minute:02d} {period} on {t.strftime('%b')} {t.day}, {t.year}"
-
-
-def follow_up_time(t, note):
-    """As the Trackside page shows it: "11:45 a.m." on the same day as its note, otherwise in full."""
-    full = as_of(t)
-    return full.split(" on ")[0] if t.astimezone(TZ).date() == note.astimezone(TZ).date() else full
-
-
-def body(n):
-    anchor = n["time"].astimezone(timezone.utc).strftime("%Y-%m-%dT%H-%M")
-    # no date line: the thread's title already has it
-    parts = [n["text"]]
-
-    def photo(p):
-        parts.append(f"![{p['caption'] or 'Photo for this update'}]({PHOTOS}{p['file']})")
-        if p["caption"]:
-            parts.append(f"_{p['caption']}_")
-
-    if n["photo"]:
-        photo(n["photo"])
-    # then the further paragraphs and photos, in order
-    for m in n["more"]:
-        if "photo" in m:
-            photo(m["photo"])
-        else:
-            parts.append(m["text"])
-    if n["follow_ups"]:
-        # as on the Trackside page: a Follow-ups list, each time in code style
-        parts.append("### Follow-ups")
-        parts.append("\n".join(f"- `{follow_up_time(t, n['time'])}` {text}" for t, text in n["follow_ups"]))
-    parts.append(f"[See it on the Clayton Clipper Tracker]({SITE}trackside/#{anchor})")
-    # giscus's strict-mode marker: the sha1 of the title it asks for
-    parts.append(f"<!-- sha1: {hashlib.sha1(title(n['time']).encode()).hexdigest()} -->")
-    return "\n\n".join(parts)
+# written by npm run build
+THREADS = "dist-ssr/threads.json"
 
 
 def graphql(query, soft=False, **variables):
@@ -173,8 +71,8 @@ def check_count(limit=100):
 
 def main():
     have = existing()
-    for n in notes():
-        t, b = title(n["time"]), body(n)
+    for n in json.load(open(THREADS)):
+        t, b = n["title"], n["body"]
         if t not in have:
             graphql(
                 """mutation($repo: ID!, $cat: ID!, $title: String!, $body: String!) {
