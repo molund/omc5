@@ -2865,6 +2865,87 @@
       >
         &#x2192;
       </text>
+      <!-- direction arrows for steel spans 47 and 52-54, placed like those on 45 and 46: on each track, 25 canvas units in from its east end, westbound on the north track -->
+      <text
+        style="font-size: 17.6px"
+        class="n guideway steel-hwy15"
+        x="-2149.31"
+        y="-1070.07"
+        text-anchor="middle"
+        transform="rotate(-146.0 -2149.31 -1077.07)"
+      >
+        &#x2192;
+      </text>
+      <text
+        style="font-size: 17.6px"
+        class="n guideway steel-hwy15"
+        x="-2157.27"
+        y="-1058.25"
+        text-anchor="middle"
+        transform="rotate(34.1 -2157.27 -1065.25)"
+      >
+        &#x2192;
+      </text>
+      <text
+        style="font-size: 17.6px"
+        class="n guideway steel-hwy15 cc"
+        x="-2662.28"
+        y="-1416.02"
+        text-anchor="middle"
+        transform="rotate(-146.1 -2662.28 -1423.02)"
+      >
+        &#x2192;
+      </text>
+      <text
+        style="font-size: 17.6px"
+        class="n guideway steel-hwy15 cc"
+        x="-2670.16"
+        y="-1404.27"
+        text-anchor="middle"
+        transform="rotate(33.9 -2670.16 -1411.27)"
+      >
+        &#x2192;
+      </text>
+      <text
+        style="font-size: 17.6px"
+        class="n guideway steel-hwy15 cc"
+        x="-2784.94"
+        y="-1498.37"
+        text-anchor="middle"
+        transform="rotate(-146.1 -2784.94 -1505.37)"
+      >
+        &#x2192;
+      </text>
+      <text
+        style="font-size: 17.6px"
+        class="n guideway steel-hwy15 cc"
+        x="-2792.84"
+        y="-1486.64"
+        text-anchor="middle"
+        transform="rotate(33.9 -2792.84 -1493.64)"
+      >
+        &#x2192;
+      </text>
+      <text
+        style="font-size: 17.6px"
+        class="n guideway steel-hwy15 cc"
+        x="-2934.54"
+        y="-1600.00"
+        text-anchor="middle"
+        transform="rotate(-144.0 -2934.54 -1607.00)"
+      >
+        &#x2192;
+      </text>
+      <text
+        style="font-size: 17.6px"
+        class="n guideway steel-hwy15 cc"
+        x="-2942.85"
+        y="-1588.56"
+        text-anchor="middle"
+        transform="rotate(36.0 -2942.85 -1595.56)"
+      >
+        &#x2192;
+      </text>
       <!-- eastbound -->
       <!-- Span Q direction arrows (U+2192, rotated to the track) -->
       <text
