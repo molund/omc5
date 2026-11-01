@@ -169,6 +169,11 @@
         ><Icon kind="comment" />Trackside: updates and comments</a
       >
     </p>
+    <p class="about">
+      <a class="repo" href="{import.meta.env.BASE_URL}about/"
+        ><Icon kind="info" />About this site</a
+      >
+    </p>
     <p class="source">
       <a class="repo" href="https://github.com/molund/omc5"
         ><svg viewBox="0 0 16 16" aria-hidden="true"
@@ -262,7 +267,11 @@
   .side p.trackside {
     margin: 32px 0 0;
   }
-  .trackside :global(svg) {
+  .side p.about {
+    margin: 8px 0 0;
+  }
+  .trackside :global(svg),
+  .about :global(svg) {
     width: 1.2em;
     height: 1.2em;
     flex: none;
