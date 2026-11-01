@@ -5,7 +5,7 @@ along the Clayton Clipper's route in Surrey, BC. It shows progress as the Clippe
 and mobile-crane-lifted precast spans build the guideway, updated from regular walks along the
 line.
 
-The project started as a drawing of the stretch past the Serpentine Floodplain Maintenance
+The project started as a drawing of the stretch past the South Fraser Maintenance
 and Storage Facility (SFMSF, formerly OMC5) at Fraser Highway and Highway 15 (176 St), which is
 where the repo name comes from.
 
