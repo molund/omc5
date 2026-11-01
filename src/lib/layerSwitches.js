@@ -172,8 +172,7 @@ export function layerCss(state) {
         ) &&
         !(k === "aerial" && state.sfmsfDrawing) &&
         !(k === "stationLabels" && (state.sfmsfDrawing || state.sfmsfAerial)) &&
-        !((k === "omc5Labels" || k === "spanLabels") && !avail) &&
-        !(k === "hires" && !state.aerial);
+        !((k === "omc5Labels" || k === "spanLabels") && !avail);
       if (
         k === "progress" ||
         k === "sfmsfDrawing" ||
