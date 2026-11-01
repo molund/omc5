@@ -9,7 +9,7 @@ The project started as a drawing of the stretch past the Serpentine Floodplain M
 and Storage Facility (SFMSF, formerly OMC5) at Fraser Highway and Highway 15 (176 St), which is
 where the repo name comes from.
 
-**Live site:** https://molund.github.io/omc5/
+**Live site:** https://clayton-clipper.olund.ca/
 
 ## About
 
@@ -31,7 +31,7 @@ npm ci
 npm run dev
 ```
 
-Then open http://localhost:5173/omc5/.
+Then open http://localhost:5173/.
 
 `npm run build` makes the production build. Every push to `main` deploys to GitHub Pages.
 

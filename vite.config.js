@@ -3,9 +3,9 @@ import { svelte } from "@sveltejs/vite-plugin-svelte";
 
 export default defineConfig(({ isSsrBuild }) => ({
   plugins: [svelte()],
-  // GitHub Pages serves the site from https://molund.github.io/omc5/
-  base: "/omc5/",
-  // two pages: the map, and Trackside at /omc5/trackside/ (the SSR build, for src/prerender.js, takes its entry from --ssr)
+  // GitHub Pages serves the site from https://clayton-clipper.olund.ca/ (the custom domain set in the repo's Pages settings)
+  base: "/",
+  // two pages: the map, and Trackside at /trackside/ (the SSR build, for src/prerender.js, takes its entry from --ssr)
   build: isSsrBuild
     ? {}
     : {
