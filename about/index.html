@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>About · Clayton Clipper Tracker</title>
+    <meta
+      name="description"
+      content="Who's behind the Clayton Clipper Tracker, a hobby map of the Surrey Langley SkyTrain going up in Surrey, BC, and how it's made."
+    />
+    <link rel="canonical" href="https://clayton-clipper.olund.ca/about/" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <script type="module" src="/about/main.js"></script>
+  </head>
+  <body>
+    <main class="page">
+      <!-- the same slim bar as Trackside's: the logo and the page's name on the left, a button back to the map on the right -->
+      <header class="bar">
+        <a class="logo" href="/"
+          ><img
+            src="/images/logo.png"
+            alt="Clayton Clipper"
+            width="625"
+            height="351"
+        /></a>
+        <h1>About</h1>
+        <nav class="links"><a class="button" href="/">← Map</a></nav>
+      </header>
+
+      <p>
+        <b>Hi, I'm Mike.</b> I live in Provinceton, which is either in Clayton
+        or Cloverdale depending on who you ask, and the Surrey Langley SkyTrain
+        is going up a short walk from my house. Most days I'm out along the line
+        with Piper and Toby, my two trusty assistants, or on my bike, watching
+        the Clayton Clipper inch its way west one span at a time.
+      </p>
+      <p>
+        <b>This started as a drawing.</b> In mid-October I sketched the stretch
+        of guideway past the South Fraser Maintenance and Storage Facility,
+        mostly to share on a forum. Then I kept fixing it, and it kept growing.
+        Now it's a map of the Clipper's whole route, plus
+        <a href="/trackside/">Trackside</a>, where I post what I see along the
+        way.
+      </p>
+      <p>
+        <b>It's just me.</b> This is a hobby project. I'm not connected to
+        TransLink, TI Corp, the Province, or anyone building the line, and
+        nobody official has checked any of this. Spans and supports are placed
+        as carefully as I can manage, but they're approximate. Anything that
+        hasn't been built yet is my best guess, so please don't plan anything
+        important around it.
+      </p>
+      <p>
+        <b>The Clayton Clipper logo isn't mine.</b> It belongs to the Surrey
+        Langley SkyTrain project. I've asked permission to use it, and I'll take
+        it down if they'd rather I didn't.
+      </p>
+      <p>
+        <b>Where things come from.</b> The photos are mine, so blame me for
+        those. The sources for the map are listed in the
+        <a href="https://github.com/molund/omc5/tree/main/data">data README</a>
+        on GitHub.
+      </p>
+      <p>
+        <b>Comments.</b> Comments on Trackside are GitHub Discussions, so you'll
+        need a GitHub account to join in, and your username will show next to
+        what you write. The site itself doesn't track you or set any cookies.
+      </p>
+      <p>
+        <b>How it's made.</b> The first version was a single, very large HTML
+        file that the Claude app built as a viewer for my drawing. To split it
+        into manageable pieces, I moved it to Svelte, which looked simpler than
+        React, and I got to learn a new framework along the way. It's hosted on
+        GitHub Pages. I update it from the Claude app while I'm out on the bike
+        or walking the dogs, and do the bigger changes with Claude Code back at
+        my computer. All the code is
+        <a href="https://github.com/molund/omc5">on GitHub</a>.
+      </p>
+      <p>
+        <b>Say hi.</b> Spotted something I got wrong, or know the story behind a
+        pillar? Leave a comment on Trackside.
+      </p>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,70 @@
+/* The About page: a single column of text, laid out like Trackside, with the same slim header bar */
+.page {
+  max-width: calc(640rem / 17);
+  margin: 0 auto;
+  padding: calc(16px + env(safe-area-inset-top, 0px)) 16px 32px;
+  font-size: calc(15rem / 17);
+  line-height: 1.5;
+}
+.page p {
+  margin: 14px 0 0;
+}
+.page a {
+  color: var(--accent);
+}
+
+/* the header bar: logo and name on the left, the Map button on the right, over a line (as on Trackside) */
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  margin: 10px 0 4px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+}
+.bar .logo {
+  display: block;
+  line-height: 0;
+}
+.bar .logo img {
+  width: auto;
+  height: calc(40rem / 17);
+}
+.bar h1 {
+  margin: 0;
+  font-size: calc(13rem / 17);
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+.bar .links {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+/* the button, in the pager's colours on Trackside (GitHub's segmented control) */
+.bar .button {
+  --track: #eff2f5;
+  --knob-line: #818b98;
+  --knob-ink: #1f2328;
+  display: inline-flex;
+  align-items: center;
+  padding: calc(6rem / 17) calc(12rem / 17);
+  border: 1px solid var(--knob-line);
+  border-radius: 6px;
+  background: var(--track);
+  color: var(--knob-ink);
+  font-size: calc(14rem / 17);
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+@media (prefers-color-scheme: dark) {
+  .bar .button {
+    --track: #212830;
+    --knob-line: #656c76;
+    --knob-ink: #f0f6fc;
+  }
+}

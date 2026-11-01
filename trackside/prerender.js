@@ -47,7 +47,7 @@ for (const n of status.history)
   await write(`dist/trackside/${anchor(n.time)}`, { post: anchor(n.time) });
 
 // dist/sitemap.xml, for search engines (submitted in Google Search Console, since a project site can't have a robots.txt):
-// the map, the pages of updates and each update's own page, each with when it last changed (an update, at its newest
+// the map, the pages of updates, each update's own page and the About page, each with when it last changed (an update, at its newest
 // follow-up; a page of updates, at its newest update; the map, at status.yaml's `updated`)
 const changed = (n) => n.followUps[0]?.time ?? n.time;
 const newest = (list) => new Date(Math.max(...list.map(changed)));
@@ -61,6 +61,8 @@ const urls = [
     `${SITE}trackside/${anchor(n.time)}/`,
     changed(n),
   ]),
+  // the About page, which has no date of its own
+  [`${SITE}about/`, null],
 ];
 writeFileSync(
   "dist/sitemap.xml",
@@ -69,7 +71,7 @@ writeFileSync(
 ${urls
   .map(
     ([loc, t]) =>
-      `  <url><loc>${loc}</loc><lastmod>${t.toISOString()}</lastmod></url>`,
+      `  <url><loc>${loc}</loc>${t ? `<lastmod>${t.toISOString()}</lastmod>` : ""}</url>`,
   )
   .join("\n")}
 </urlset>
