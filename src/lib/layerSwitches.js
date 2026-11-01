@@ -74,6 +74,7 @@ export const PROGRESS_DEFAULTS = {
   omc5Labels: false,
   spanLabels: true,
   arrows: false,
+  stationLabels: false,
   gantry: true,
   beams: false,
   cc: true,
