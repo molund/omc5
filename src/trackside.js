@@ -1,5 +1,12 @@
-import { mount } from "svelte";
+import { hydrate, mount } from "svelte";
 import "./app.css";
 import TracksidePage from "./TracksidePage.svelte";
 
-export default mount(TracksidePage, { target: document.getElementById("app") });
+// which page this is, { page: 2 } or { post: "2026-10-31T16-30" }, as src/prerender.js wrote it; the prerendered page is
+// brought to life where there is one, and drawn from scratch otherwise (npm run dev)
+const target = document.getElementById("app");
+const props = { view: JSON.parse(target.dataset.view || '{"page":1}') };
+
+export default target.firstChild
+  ? hydrate(TracksidePage, { target, props })
+  : mount(TracksidePage, { target, props });

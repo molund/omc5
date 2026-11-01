@@ -13,6 +13,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # the build writes the thread titles and bodies (dist-ssr/threads.json)
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
       - name: Delete and recreate the comment threads
         env:
           GITHUB_TOKEN: ${{ secrets.DISCUSSION_TOKEN }}
