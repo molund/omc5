@@ -35,6 +35,8 @@
     if (k === "roads" || k === "yard" || k === "walk")
       return !(layers.sfmsfDrawing || layers.sfmsfAerial);
     if (k === "aerial") return layers.sfmsfDrawing;
+    if (k === "stationLabels")
+      return layers.sfmsfDrawing || layers.sfmsfAerial;
     return false;
   }
   // the Reference group shows only in the two SFMSF views; the Built by group only for Mike, and not in the two SFMSF views
