@@ -65,7 +65,15 @@
   <!-- everything but the zoom footer scrolls -->
   <div class="body">
     <div class="hd">
-      <h1>Clayton Clipper Tracker</h1>
+      <!-- the title: the Clayton Clipper logo with "Map" beside it, small and spaced out, as on the progress card and Trackside -->
+      <h1>
+        <img
+          src="{import.meta.env.BASE_URL}images/logo.png"
+          alt="Clayton Clipper"
+          width="625"
+          height="351"
+        /><span>Map</span>
+      </h1>
       <button
         title={ui.phone ? "Close the menu" : "Hide the layer panel"}
         aria-label={ui.phone ? "Close the menu" : "Hide the layer panel"}
@@ -225,8 +233,19 @@
     padding: 16px 16px 24px;
   }
   .side h1 {
-    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
     margin: 0;
+    font-size: calc(12rem / 17);
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--mute);
+  }
+  .side h1 img {
+    width: auto;
+    height: calc(36rem / 17);
   }
   .side p {
     margin: 0 0 14px;
@@ -247,7 +266,7 @@
   }
   .hd {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
     gap: 8px;
     margin-bottom: 2px;
