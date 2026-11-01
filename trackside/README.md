@@ -17,15 +17,9 @@ the real text, and then Svelte takes over in the browser for the comments and co
   share: it has the update's own title, description and photo for search results and link previews.
   On the list pages, the date heading links to it.
 
-Older links still work:
-
-- `/trackside/?page=2` goes to `/trackside/page/2/`.
-- `/trackside/#2026-10-29T13-45` scrolls to that update if it's on the page, or goes to its own
-  page if it isn't.
-- `?comments` opens the comments: `/trackside/?comments#…` for an update on the list (the progress
-  card's Comments button), or `/trackside/2026-10-31T21-00/?comments` on an update's own page.
-- `https://molund.github.io/omc5/…`, the site's address before the custom domain, is redirected by
-  GitHub to the same page here.
+The map's progress card links to the newest update on `/trackside/`: its More link to
+`/trackside/#2026-10-31T22-15`, and its Comments button to `/trackside/?comments#2026-10-31T22-15`,
+which also opens that update's comments. `?comments` works on an update's own page too.
 
 ## Files
 
