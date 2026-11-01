@@ -181,8 +181,12 @@
   <a class="back" href={MAP}>← Back to the map</a>
   {#each shown as n (anchor(n.time))}
     <article id={anchor(n.time)}>
+      <!-- on a page of updates, the date links to the update's own page; with a title, screen readers hear the date and
+           the title (the date first, so the visible text is in the name, for voice control) -->
       <h2>
-        {#if post}{heading(n.time)}{:else}<a href={postUrl(n)}
+        {#if post}{heading(n.time)}{:else}<a
+            href={postUrl(n)}
+            aria-label={n.title ? `${heading(n.time)}: ${n.title}` : undefined}
             >{heading(n.time)}</a
           >{/if}
       </h2>
