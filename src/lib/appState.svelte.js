@@ -361,8 +361,6 @@ export function setSwitch(k, on) {
   layers[k] = on;
   ui.changed = !VIEWS.includes(k);
   if (on && VIEWS.includes(k)) ui.view = k;
-  if (k === "greenbelt" && on) layers.aerial = false;
-  if (k === "aerial" && on) layers.greenbelt = false;
   if (k === "gantry" && on) layers.beams = false;
   if (k === "beams" && on) layers.gantry = false;
   if (k === "omc5Labels" && on) layers.spanLabels = false;

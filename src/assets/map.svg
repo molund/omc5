@@ -104,7 +104,7 @@
       fill: #888780;
       stroke: #5f5e5a;
       stroke-width: 1.5;
-    } /* Greenbelt fill (dot pattern): change display:none to display:inline to show it. Never show it together with the aerial photo: turn one off when the other is on */
+    } /* Greenbelt fill (dot pattern): change display:none to display:inline to show it (the site shows it only in SFMSF drawing, where the aerial photo is off) */
     .greenbelt {
       display: none;
     }
