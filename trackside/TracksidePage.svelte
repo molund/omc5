@@ -250,6 +250,11 @@
       {/if}
     </nav>
   {/if}
+  <!-- the footer, at the very bottom of every Trackside page: who's behind this, and a link to the About page -->
+  <footer class="foot">
+    <p>A hobby project by Mike, not affiliated with TransLink.</p>
+    <a href="{MAP}about/">About this site</a>
+  </footer>
 </main>
 
 <style>
@@ -261,6 +266,21 @@
     padding: calc(16px + env(safe-area-inset-top, 0px)) 16px 32px;
     font-size: calc(15rem / 17);
     line-height: 1.5;
+  }
+  /* the footer: small and muted, centred under a thin line, with the link on its own line */
+  .foot {
+    margin-top: 40px;
+    padding: 14px 0 4px;
+    border-top: 1px solid var(--line);
+    text-align: center;
+    font-size: calc(12.5rem / 17);
+    color: var(--mute);
+  }
+  .foot p {
+    margin: 0 0 4px;
+  }
+  .foot a {
+    color: var(--accent);
   }
   /* the header bar: logo and name on the left, buttons on the right (wrapping under them when there isn't room), over a line */
   /* it stays at the top of the screen while the updates scroll under it, clear of the iPhone's notch; its own top padding
