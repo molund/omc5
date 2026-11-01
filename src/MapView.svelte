@@ -17,6 +17,7 @@
     fillView,
     progressView,
     horizontalView,
+    applyHash,
   } from "./lib/appState.svelte.js";
   import ProgressCard from "./ProgressCard.svelte";
 
@@ -72,6 +73,10 @@
       setView(FULL_VB);
       fillView();
     }
+    // a view named in the address (#aerial, #horizontal, #omc, #omc-drawing) wins over the opening view
+    applyHash();
+    const onHash = () => applyHash(location.hash);
+    addEventListener("hashchange", onHash);
 
     // touchpad pinch: Chrome, Edge and Firefox send it as ctrl+wheel; Safari sends gesture events
     const wheel = (e) => {
@@ -108,6 +113,7 @@
     resize.observe(stage);
     return () => {
       resize.disconnect();
+      removeEventListener("hashchange", onHash);
       stage.removeEventListener("wheel", wheel);
       stage.removeEventListener("gesturestart", gesturestart);
       stage.removeEventListener("gesturechange", gesturechange);
