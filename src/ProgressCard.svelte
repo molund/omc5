@@ -34,9 +34,17 @@
   };
   let tip = $state(null);
   const toggle = (k) => (tip = tip === k ? null : k);
-  // a tap anywhere else, or Escape, closes the tip
+  // a tap anywhere else, or Escape, closes the tip; on a phone, a touch anywhere off the card closes the card too (the
+  // information button brings it back)
   function outside(e) {
     if (!e.target.closest(".num")) tip = null;
+    if (
+      ui.phone &&
+      !ui.cardHidden &&
+      !e.target.closest(".card") &&
+      !e.target.closest(".show")
+    )
+      ui.cardHidden = true;
   }
 </script>
 
