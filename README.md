@@ -5,6 +5,9 @@ along the Clayton Clipper's route in Surrey, BC. It shows progress as the Clippe
 and mobile-crane-lifted precast spans build the guideway, updated from regular walks along the
 line.
 
+[Trackside](https://clayton-clipper.olund.ca/trackside/) is the site's updates page: every note
+from those walks, with photos and comments. It has its own [README](trackside/README.md).
+
 The project started as a drawing of the stretch past the Serpentine Floodplain Maintenance
 and Storage Facility (SFMSF, formerly OMC5) at Fraser Highway and Highway 15 (176 St), which is
 where the repo name comes from.
@@ -37,7 +40,9 @@ Then open http://localhost:5173/.
 
 ## What's where
 
+- `src/` — the map app
 - `src/assets/map.svg` — the map
+- `trackside/` — Trackside, the updates page (see [its README](trackside/README.md))
 - `status.yaml` — progress notes shown on the site
 - `public/images/` — aerial photos
 
