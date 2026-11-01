@@ -48,10 +48,10 @@ notes:
       caption: "My two trusty assistants on our way to look at cranes. Piper on the left is a four-year-old Bernedoodle. Toby on the right is an 11-year-old mini Australian Shepherd."
     follow-up:
       - 2026-10-31T11:45-07:00: "Six segments have been hung. There is a long line of semi trucks carrying the rest of the segments."
-  - 2026-10-30T20:45-07:00: "The Clayton Clipper has moved to span 36."
-    title: "The Clayton Clipper moves to span 36"
   - 2026-10-30T12:45-07:00: "The Clayton Clipper has started moving its supports, getting ready to move from span 35 to span 36."
     title: "Clayton Clipper moves its supports toward span 36"
+    follow-up:
+      - 2026-10-30T20:45-07:00: "The Clayton Clipper has moved to span 36."
   - 2026-10-29T18:30-07:00: "Span 35's segments are glued, and Dywidag is post-tensioning now. The night shift should finish it. That makes the Clayton Clipper one-third done: 35 of 105 spans."
     title: "Span 35 post-tensioning: Clayton Clipper one-third done"
   - 2026-10-29T06:45-07:00: "All segments for span 35 are hung. A new precast beam arrived at the construction yard overnight. It will likely be installed in span 34, along with the beam that was already on site."
