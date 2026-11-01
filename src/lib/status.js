@@ -145,7 +145,7 @@ const dayOf = (t) =>
     t,
   );
 
-// "6:45 a.m. on Oct 29, 2026", Pacific time, rounded to the nearest quarter hour; with relative, a time today or yesterday
+// "6:45 a.m. on Oct 29, 2026", BC time, rounded to the nearest quarter hour; with relative, a time today or yesterday
 // reads "6:45 a.m. today" or "6:45 a.m. yesterday" instead, and the day before yesterday "6:45 a.m. on Tuesday"
 export function asOf(date, relative = false) {
   if (!date || isNaN(date)) return "";

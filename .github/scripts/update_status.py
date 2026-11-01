@@ -1,7 +1,7 @@
 """Update status.yaml for a deploy run started by hand or through the API.
 
-The time is always set to now (Pacific, rounded to the nearest quarter hour). SPAN, COMPLETE and NOTE (environment variables)
-override the file's values when given:
+The time is always set to now (BC time, UTC−7, rounded to the nearest quarter hour). SPAN, COMPLETE and NOTE (environment
+variables) override the file's values when given:
 - SPAN: the span the gantry is working on, 3-104 (it needs two spans behind it and one ahead). Moving to a new span without
   COMPLETE marks it not complete.
 - COMPLETE: true or false.
@@ -48,7 +48,7 @@ if complete:
     values["complete"] = complete
 elif span and values["span"] != old_span:
     values["complete"] = "false"
-# Pacific time is a whole number of hours off UTC, so rounding the timestamp to 15 minutes lands on local quarter hours
+# BC time is a whole number of hours off UTC, so rounding the timestamp to 15 minutes lands on local quarter hours
 quarter = 15 * 60
 now = round(datetime.now().timestamp() / quarter) * quarter
 stamp = datetime.fromtimestamp(now, ZoneInfo("America/Dawson_Creek")).isoformat(timespec="minutes")
