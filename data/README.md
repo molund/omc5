@@ -91,7 +91,7 @@ this file for where each column actually stands.
 Some spans have more than one feature. Where the eastbound and westbound tracks are separate structures, each is its
 own polygon with the same `cc_span`. Each steel span is drawn as its two girder lines.
 
-`finished` is only current as of the export. The copies published with the site, at https://molund.github.io/omc5/data/,
+`finished` is only current as of the export. The copies published with the site, at https://clayton-clipper.olund.ca/data/,
 are regenerated on every update, and the copies in this folder are committed back whenever the data changes.
 
 The spans come as two KML files: `kml/sls-hillcrest-to-bakerview-spans-progress.kml` shows them as built so far, styled by

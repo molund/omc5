@@ -2,7 +2,7 @@
 // page: each update's page anchor and thread title, and the comment and reaction counts of every thread.
 
 // the site's public address, for links that leave it: the comment threads' bodies and the Open Graph tags
-export const SITE = "https://molund.github.io/omc5/";
+export const SITE = "https://clayton-clipper.olund.ca/";
 
 // an update's id on the Trackside page, from its time stamp in UTC, e.g. "2026-10-31T16-30"
 export const anchor = (t) => t.toISOString().slice(0, 16).replace(/:/g, "-");

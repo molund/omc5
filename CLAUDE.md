@@ -1,6 +1,6 @@
 # Clayton Clipper Tracker
 
-Svelte 5 + Vite site, deployed to GitHub Pages (https://molund.github.io/omc5/) by
+Svelte 5 + Vite site, deployed to GitHub Pages (https://clayton-clipper.olund.ca/) by
 `.github/workflows/deploy.yml` on every push to `main`.
 
 ## Working from the Claude app (phone or desktop)
@@ -23,7 +23,7 @@ Svelte 5 + Vite site, deployed to GitHub Pages (https://molund.github.io/omc5/) 
 
 ## Local server
 
-- `npm ci` once, then `npm run dev` (Vite dev server, http://localhost:5173/omc5/).
+- `npm ci` once, then `npm run dev` (Vite dev server, http://localhost:5173/).
 - `npm run build` must pass before pushing; Pages deploys whatever lands on `main`.
 
 ## Layout
