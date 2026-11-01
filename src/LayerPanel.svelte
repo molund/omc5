@@ -162,6 +162,12 @@
         </div>
       </div>
     {/if}
+    <!-- Trackside, named for what it holds (updates and comments) since its own name isn't known yet, under the layers -->
+    <a class="trackside" href="{import.meta.env.BASE_URL}trackside/"
+      ><Icon kind="comment" /><span
+        ><b>Updates &amp; comments</b><small>on Trackside</small></span
+      ><span class="arrow" aria-hidden="true">→</span></a
+    >
     <!-- the source code, with GitHub's mark, under the layers -->
     <p class="source">
       <a class="repo" href="https://github.com/molund/omc5"
@@ -252,8 +258,41 @@
     color: var(--mute);
     font-size: calc(13rem / 17);
   }
+  /* the link to Trackside: a full-width row, in the page background so it reads as somewhere to go rather than another view */
+  .trackside {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 16px;
+    padding: calc(8rem / 17) 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .trackside:hover {
+    border-color: var(--accent);
+  }
+  .trackside span {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+  }
+  .trackside b {
+    font-size: calc(14rem / 17);
+  }
+  .trackside small {
+    font-size: calc(12rem / 17);
+    color: var(--mute);
+  }
+  .trackside .arrow {
+    margin-left: auto;
+    color: var(--accent);
+    font-size: calc(18rem / 17);
+  }
   .side p.source {
-    margin: 18px 0 0;
+    margin: 12px 0 0;
   }
   /* the link to the source code: GitHub's mark beside the text, both scaling with the text size */
   .repo {
