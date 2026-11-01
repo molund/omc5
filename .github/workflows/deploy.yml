@@ -75,7 +75,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.DISCUSSION_TOKEN || secrets.GITHUB_TOKEN }}
         run: python3 .github/scripts/sync_discussions.py
       # export the GeoJSON and KML from the drawing as it is now and publish them with the site, at
-      # https://molund.github.io/omc5/data/
+      # https://clayton-clipper.olund.ca/data/
       - run: npm run export-geojson
       # and commit them to data/ when they changed (the export has no date in it, so that is only when the drawing or the
       # gantry's status changed the data); a push from this workflow doesn't start it again
