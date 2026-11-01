@@ -160,10 +160,23 @@
 <!-- laid out like a README on GitHub: a heading per update, the note, its photo, its follow-ups as a list with code-style
      times, then its comments -->
 <main class="page">
-  <h1>Trackside</h1>
-  {#if post}<a class="back" href={TRACKSIDE}>← All updates</a>
-    <span class="sep" aria-hidden="true">·</span>{/if}
-  <a class="back" href={MAP}>← Back to the map</a>
+  <!-- a slim bar: the Clayton Clipper logo (back to the top of Trackside) and the page's name on the left, buttons back to
+       the map (and, on an update's own page, to all updates) on the right -->
+  <header class="bar">
+    <a class="logo" href={TRACKSIDE}
+      ><img
+        src="{MAP}images/logo.png"
+        alt="Clayton Clipper"
+        width="625"
+        height="351"
+      /></a
+    >
+    <h1>Trackside</h1>
+    <nav class="links">
+      {#if post}<a class="button" href={TRACKSIDE}>← All updates</a>{/if}
+      <a class="button" href={MAP}>← Map</a>
+    </nav>
+  </header>
   {#each shown as n (anchor(n.time))}
     <article id={anchor(n.time)}>
       <!-- on a page of updates, the date links to the update's own page; with a title, screen readers hear the date and
@@ -249,22 +262,61 @@
     font-size: calc(15rem / 17);
     line-height: 1.5;
   }
-  h1 {
-    margin: 12px 0 4px;
-    padding-bottom: 6px;
+  /* the header bar: logo and name on the left, buttons on the right (wrapping under them when there isn't room), over a line */
+  .bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 10px;
+    margin: 10px 0 4px;
+    padding-bottom: 8px;
     border-bottom: 1px solid var(--line);
-    font-size: calc(26rem / 17);
-    line-height: 1.25;
   }
-  .back {
-    color: var(--accent);
-    font-size: calc(13rem / 17);
-    text-decoration: none;
+  .logo {
+    display: block;
+    line-height: 0;
   }
-  .sep {
-    margin: 0 4px;
+  .logo img {
+    width: auto;
+    height: calc(40rem / 17);
+  }
+  /* the page's name, small and spaced out beside the logo */
+  h1 {
+    margin: 0;
     font-size: calc(13rem / 17);
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
     color: var(--mute);
+  }
+  .links {
+    display: flex;
+    gap: 8px;
+    margin-left: auto;
+  }
+  /* the buttons, in the pager's colours (GitHub's segmented control) */
+  .button {
+    --track: #eff2f5;
+    --knob-line: #818b98;
+    --knob-ink: #1f2328;
+    display: inline-flex;
+    align-items: center;
+    padding: calc(6rem / 17) calc(12rem / 17);
+    border: 1px solid var(--knob-line);
+    border-radius: 6px;
+    background: var(--track);
+    color: var(--knob-ink);
+    font-size: calc(14rem / 17);
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  @media (prefers-color-scheme: dark) {
+    .button {
+      --track: #212830;
+      --knob-line: #656c76;
+      --knob-ink: #f0f6fc;
+    }
   }
   h2 {
     margin: 28px 0 8px;
