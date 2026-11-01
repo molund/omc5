@@ -98,6 +98,18 @@
         <a href="https://github.com/molund/omc5">on GitHub</a>.
       </p>
       <p>
+        <b>Why Svelte?</b> The map is one big SVG drawing, and the code needs to
+        reach inside it to colour individual spans, place the gantry, and switch
+        layers on and off. Showing it with an ordinary <code>&lt;img&gt;</code>
+        tag would have turned it into a black box. Svelte made it easy to split
+        the code into components while keeping the SVG embedded directly in the
+        page, and its reactivity means flipping a layer switch updates the map
+        automatically. It also builds Trackside into plain HTML pages, so search
+        engines can read them, and it compiles down to small, plain JavaScript.
+        For a static site on GitHub Pages, it turned out to be a good balance of
+        organization, flexibility and simplicity.
+      </p>
+      <p>
         <b>Say hi.</b> Spotted something I got wrong, or know the story behind a
         pillar? Leave a comment on <a href="/trackside/">Trackside</a>.
       </p>
