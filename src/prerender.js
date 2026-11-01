@@ -33,6 +33,7 @@ async function write(dir, view) {
     await format(html, {
       parser: "html",
       htmlWhitespaceSensitivity: "strict",
+      printWidth: 120,
     }),
   );
 }
