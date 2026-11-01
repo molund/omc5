@@ -70,7 +70,15 @@
 {:else if layers.progress && ui.gantry}
   {@const { span, ahead, total } = ui.gantry}
   <div class="card">
-    <div class="title">Clayton Clipper</div>
+    <!-- the title: the Clayton Clipper logo with "Progress" beside it, small and spaced out, as in Trackside's header -->
+    <div class="title">
+      <img
+        src="{import.meta.env.BASE_URL}images/logo.png"
+        alt="Clayton Clipper"
+        width="625"
+        height="351"
+      /><span>Progress</span>
+    </div>
     <button
       class="close"
       title="Hide the progress card"
@@ -171,9 +179,19 @@
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
   }
   .title {
-    font-size: calc(13rem / 17);
-    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-right: calc(24rem / 17); /* clear of the close button */
+    font-size: calc(10.5rem / 17);
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
     color: var(--mute);
+  }
+  .title img {
+    width: auto;
+    height: calc(30rem / 17);
   }
   .figure {
     margin: 2px 0 8px;
