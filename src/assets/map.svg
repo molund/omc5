@@ -127,11 +127,6 @@
     /* Guideway (spans, beams, ramps, direction arrows; not bents/hammers/tulips): change display:none to display:inline to show it */
     .guideway {
       display: inline;
-    } /* Steel spans R and S by Hwy 15, with their letters and arrows (their hammerheads and column dots go with the supports): change display:inline to display:none to hide them */
-    .steel-hwy15,
-    .guideway.steel-hwy15,
-    .spanlabel.steel-hwy15 {
-      display: inline;
     } /* Gantry body (trusses, cross beams, walkways, tips, trolley; not the supports, their walkways or pads): change display:none to display:inline to show it */
     .gantry-body {
       display: inline;
