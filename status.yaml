@@ -6,7 +6,10 @@ span: 36
 # whether that span is complete (or at least hung)
 complete: true
 # every note, newest first, each stamped with the time of the update that added it; the progress card shows only the newest,
-# under the date (an empty note shows none). A note can have a photo, indented under it, with its own caption:
+# under the date (an empty note shows none). A note can have a title, indented under it, for its own Trackside page's
+# <title> and link previews (not shown on any page; without one, its date is used):
+#     title: "Span 36 is complete"
+# a photo, indented under it, with its own caption:
 #     photo:
 #       file: span-36.jpg (in public/images/sorry-im-a-shitty-photographer/)
 #       caption: "What the photo shows"
@@ -21,6 +24,7 @@ complete: true
 #       - 2026-10-31T11:45-07:00: "What changed"
 notes:
   - 2026-10-31T15:15-07:00: "Reporting from the bike at the other end of the line: the Surrey Sprinter has hung all the rocks for its first span after leaving Green Timbers Station."
+    title: "Surrey Sprinter hangs its first span past Green Timbers"
     photo:
       file: 2026-10-31-sprinter-green-timbers.jpg
       caption: "The Surrey Sprinter over 140 St and Fraser Highway, with its first span past Green Timbers Station hung below it."
@@ -30,6 +34,7 @@ notes:
       - 2026-10-31T16:15-07:00: "Rode past the Clayton Clipper on the way home: the crews have packed up for the Sunday shutdown, and the gantry is sitting quietly over span 36 until Monday. Nothing moving out there but the ghosts. Happy Halloween!"
       - 2026-10-31T15:45-07:00: "The Fleetwood Flyer has been parked at 152 St since finishing its run a few weeks ago. The walkways are off its trusses, but with no big cranes on site, nobody seems in a hurry to take it apart."
   - 2026-10-31T14:00-07:00: "Check-in from the bike: all the rocks are hung and span 36 is marked as complete. Now pedalling west of 176th St to see what the rest of the line is up to."
+    title: "Clayton Clipper completes span 36; tulip at 70/71 built"
     more:
       - "The long-missing tulip where spans 70 and 71 meet, by the golf course, has finally been built. It was the last of the driven foundations. From 71/72 on, they switched to bored foundations."
       - photo:
@@ -37,12 +42,17 @@ notes:
           caption: "The new tulip where spans 70 and 71 meet, wrapped in an orange tarp: propane heaters blow warm air inside so the concrete can cure in the cold weather. That's my Kona Unit X in front, photographed drive side out, of course."
       - "If you know the story behind this pillar, let me know in the comments."
   - 2026-10-31T09:30-07:00: "Only three segments have been hung for span 36. I'm guessing the night crew took Friday night off."
+    title: "Clayton Clipper: only three segments hung for span 36"
     photo:
       file: 2026-10-31-piper-and-toby.jpg
       caption: "My two trusty assistants on our way to look at cranes. Piper on the left is a four-year-old Bernedoodle. Toby on the right is an 11-year-old mini Australian Shepherd."
     follow-up:
       - 2026-10-31T11:45-07:00: "Six segments have been hung. There is a long line of semi trucks carrying the rest of the segments."
   - 2026-10-30T20:45-07:00: "The Clayton Clipper has moved to span 36."
+    title: "The Clayton Clipper moves to span 36"
   - 2026-10-30T12:45-07:00: "The Clayton Clipper has started moving its supports, getting ready to move from span 35 to span 36."
+    title: "Clayton Clipper moves its supports toward span 36"
   - 2026-10-29T18:30-07:00: "Span 35's segments are glued, and Dywidag is post-tensioning now. The night shift should finish it. That makes the Clayton Clipper one-third done: 35 of 105 spans."
+    title: "Span 35 post-tensioning: Clayton Clipper one-third done"
   - 2026-10-29T06:45-07:00: "All segments for span 35 are hung. A new precast beam arrived at the construction yard overnight. It will likely be installed in span 34, along with the beam that was already on site."
+    title: "Clayton Clipper finishes hanging span 35; new beam arrives"
