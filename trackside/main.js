@@ -1,8 +1,8 @@
 import { hydrate, mount } from "svelte";
-import "../app.css";
+import "../src/app.css";
 import TracksidePage from "./TracksidePage.svelte";
 
-// which page this is, { page: 2 } or { post: "2026-10-31T16-30" }, as src/trackside/prerender.js wrote it; the
+// which page this is, { page: 2 } or { post: "2026-10-31T16-30" }, as trackside/prerender.js wrote it; the
 // prerendered page is brought to life where there is one, and drawn from scratch otherwise (npm run dev)
 const target = document.getElementById("app");
 const props = { view: JSON.parse(target.dataset.view || '{"page":1}') };
