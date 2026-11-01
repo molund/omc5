@@ -292,7 +292,7 @@
     font-size: calc(18rem / 17);
   }
   .side p.source {
-    margin: 12px 0 0;
+    margin: 20px 0 0;
   }
   /* the link to the source code: GitHub's mark beside the text, both scaling with the text size */
   .repo {
