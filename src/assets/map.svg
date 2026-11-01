@@ -1774,120 +1774,28 @@
                 </g>
                 <!-- truss lattice: three chords + diamond diagonals, yellow, 100% opacity, no fill -->
                 <rect
-                  opacity="0.325"
                   x="278.5"
-                  y="375.75"
+                  y="387.55"
                   width="44"
                   height="2.5"
                   fill="#F5B400"
                   transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
                 />
                 <rect
-                  opacity="0.325"
                   x="278.5"
-                  y="407.2"
+                  y="709.95"
                   width="44"
                   height="2.5"
                   fill="#F5B400"
                   transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
                 />
-                <rect
-                  opacity="0.325"
-                  x="278.5"
-                  y="438.66"
-                  width="44"
-                  height="2.5"
-                  fill="#F5B400"
-                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
-                />
-                <rect
-                  opacity="0.325"
-                  x="278.5"
-                  y="470.11"
-                  width="44"
-                  height="2.5"
-                  fill="#F5B400"
-                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
-                />
-                <rect
-                  opacity="0.325"
-                  x="278.5"
-                  y="501.57"
-                  width="44"
-                  height="2.5"
-                  fill="#F5B400"
-                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
-                />
-                <rect
-                  opacity="0.325"
-                  x="278.5"
-                  y="533.02"
-                  width="44"
-                  height="2.5"
-                  fill="#F5B400"
-                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
-                />
-                <rect
-                  opacity="0.325"
-                  x="278.5"
-                  y="564.48"
-                  width="44"
-                  height="2.5"
-                  fill="#F5B400"
-                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
-                />
-                <rect
-                  opacity="0.325"
-                  x="278.5"
-                  y="595.93"
-                  width="44"
-                  height="2.5"
-                  fill="#F5B400"
-                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
-                />
-                <rect
-                  opacity="0.325"
-                  x="278.5"
-                  y="627.39"
-                  width="44"
-                  height="2.5"
-                  fill="#F5B400"
-                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
-                />
-                <rect
-                  opacity="0.325"
-                  x="278.5"
-                  y="658.84"
-                  width="44"
-                  height="2.5"
-                  fill="#F5B400"
-                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
-                />
-                <rect
-                  opacity="0.325"
-                  x="278.5"
-                  y="690.3"
-                  width="44"
-                  height="2.5"
-                  fill="#F5B400"
-                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
-                />
-                <rect
-                  opacity="0.325"
-                  x="278.5"
-                  y="721.75"
-                  width="44"
-                  height="2.5"
-                  fill="#F5B400"
-                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
-                />
-                <!-- Clipper blue truss tips (end legs; solid #4D76A3 to match the pads and decks as rendered): inner half of each truss (5 wide), 16.8 long, recessed 3 from each truss end; y = truss start + 3 and truss end - 19.8 -->
+                <!-- Clipper blue truss tips (end legs; solid #4D76A3 to match the pads and decks as rendered): inner half of each truss (5 wide), 11.2 long, recessed 8.6 from each truss end (trimmed by a third from the outer end); y = truss start + 8.6 and truss end - 19.8 -->
                 <rect
                   class="clipper-tip"
                   x="278.5"
-                  y="374.5"
+                  y="380.1"
                   width="5"
-                  height="16.8"
+                  height="11.2"
                   fill="#4D76A3"
                   transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
                 />
@@ -1896,16 +1804,16 @@
                   x="278.5"
                   y="708.7"
                   width="5"
-                  height="16.8"
+                  height="11.2"
                   fill="#4D76A3"
                   transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
                 />
                 <rect
                   class="clipper-tip"
                   x="317.5"
-                  y="374.5"
+                  y="380.1"
                   width="5"
-                  height="16.8"
+                  height="11.2"
                   fill="#4D76A3"
                   transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
                 />
@@ -1914,7 +1822,7 @@
                   x="317.5"
                   y="708.7"
                   width="5"
-                  height="16.8"
+                  height="11.2"
                   fill="#4D76A3"
                   transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
                 />
