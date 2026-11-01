@@ -22,6 +22,7 @@ export const LAYERS = [
       ["omc5Labels", "OMC5 span labels", "spanlabel", true],
       ["spanLabels", "Span labels", "cclabel", false],
       ["arrows", "Direction arrows", "arrows", false],
+      ["stationLabels", "Station labels", "stationlabel", true],
     ],
   ],
   [
@@ -118,6 +119,7 @@ const PROGRESS_SHOWS = {
   omc5Labels: [".spanlabel"],
   spanLabels: [".cclabel"],
   arrows: ["text.n.guideway"],
+  stationLabels: [".stationlabel"],
   gantry: [".gantry"],
   beams: [".gantry"],
 };
@@ -166,6 +168,7 @@ export function layerCss(state) {
           !state.sfmsfAerial
         ) &&
         !(k === "aerial" && state.sfmsfDrawing) &&
+        !(k === "stationLabels" && (state.sfmsfDrawing || state.sfmsfAerial)) &&
         !((k === "omc5Labels" || k === "spanLabels") && !avail) &&
         !(k === "hires" && !state.aerial);
       if (
