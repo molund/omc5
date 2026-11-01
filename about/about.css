@@ -13,15 +13,21 @@
   color: var(--accent);
 }
 
-/* the header bar: logo and name on the left, the Map button on the right, over a line (as on Trackside) */
+/* the header bar: logo and name on the left, the Map button on the right, over a line (as on Trackside); it stays at the top
+   of the screen while the page scrolls under it, clear of the iPhone's notch, and its own top padding takes the place of the
+   page's space above it */
 .bar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px 10px;
-  margin: 10px 0 4px;
-  padding-bottom: 8px;
+  margin: calc(-16px - env(safe-area-inset-top, 0px)) 0 4px;
+  padding: calc(26px + env(safe-area-inset-top, 0px)) 0 8px;
   border-bottom: 1px solid var(--line);
+  background: var(--bg);
 }
 .bar .logo {
   display: block;
