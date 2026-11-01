@@ -263,14 +263,24 @@
     line-height: 1.5;
   }
   /* the header bar: logo and name on the left, buttons on the right (wrapping under them when there isn't room), over a line */
+  /* it stays at the top of the screen while the updates scroll under it, clear of the iPhone's notch; its own top padding
+     takes the place of the page's space above it, so it sits where it did before scrolling */
   .bar {
+    position: sticky;
+    top: 0;
+    z-index: 5;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: 8px 10px;
-    margin: 10px 0 4px;
-    padding-bottom: 8px;
+    margin: calc(-16px - env(safe-area-inset-top, 0px)) 0 4px;
+    padding: calc(26px + env(safe-area-inset-top, 0px)) 0 8px;
     border-bottom: 1px solid var(--line);
+    background: var(--bg);
+  }
+  /* an update a link jumps to lands below the bar, not under it */
+  article {
+    scroll-margin-top: calc(76rem / 17 + env(safe-area-inset-top, 0px));
   }
   .logo {
     display: block;
