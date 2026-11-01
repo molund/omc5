@@ -16,7 +16,7 @@ import urllib.error
 import urllib.request
 
 REPO_ID = "R_kgDOVbOMWA"
-CATEGORY_ID = "DIC_kwDOVbOMWM4DKF3d"  # "Past Updates page comments"
+CATEGORY_ID = "DIC_kwDOVbOMWM4DKF3d"  # "Trackside"
 # written by npm run build
 THREADS = "dist-ssr/threads.json"
 

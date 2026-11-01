@@ -11,12 +11,12 @@
 
   const MAP = import.meta.env.BASE_URL;
   const TRACKSIDE = `${MAP}trackside/`;
-  // Comments: one GitHub Discussion per update, through giscus, in the "Past Updates page comments" category, titled by
-  // term() in lib/comments.js
+  // Comments: one GitHub Discussion per update, through giscus, in the "Trackside" category, titled by term() in
+  // src/lib/comments.js
   const GISCUS = {
     "data-repo": "molund/omc5",
     "data-repo-id": "R_kgDOVbOMWA",
-    "data-category": "Past Updates page comments",
+    "data-category": "Trackside",
     "data-category-id": "DIC_kwDOVbOMWM4DKF3d",
     "data-mapping": "specific",
     "data-strict": "1",
