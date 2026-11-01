@@ -4468,6 +4468,47 @@
       <circle cx="13.30" cy="0" r="2.78" fill="#D7D7D7" />
     </g>
   </g>
+  <!-- station labels, with the names from the Surrey Langley SkyTrain website, north of each station: Hillcrest-184 Street
+       over the station bents at the east end, Bakerview-166 Street over the short station spans at the west end; and the powerhouse, the DC power conversion
+       building in the dirt area just south of span 52 -->
+  <g id="station-labels">
+    <text
+      id="station-label-hillcrest"
+      class="stationlabel"
+      x="5246.7"
+      y="3053.1"
+      dy=".36em"
+      text-anchor="middle"
+      style="font-size: 28px; font-weight: 600; fill: #222222; stroke: #ffffff; stroke-width: 5; paint-order: stroke"
+      transform="rotate(32.0 5246.7 3053.1)"
+    >
+      Hillcrest-184 Street Station
+    </text>
+    <text
+      id="station-label-bakerview"
+      class="stationlabel"
+      x="-6612.6"
+      y="-5038.5"
+      dy=".36em"
+      text-anchor="middle"
+      style="font-size: 28px; font-weight: 600; fill: #222222; stroke: #ffffff; stroke-width: 5; paint-order: stroke"
+      transform="rotate(32.0 -6612.6 -5038.5)"
+    >
+      Bakerview-166 Street Station
+    </text>
+    <text
+      id="powerhouse-label"
+      class="stationlabel"
+      x="-626.9"
+      y="-517.8"
+      dy=".36em"
+      text-anchor="middle"
+      style="font-size: 28px; font-weight: 600; fill: #222222; stroke: #ffffff; stroke-width: 5; paint-order: stroke"
+      transform="rotate(33.9 -626.9 -517.8)"
+    >
+      Powerhouse
+    </text>
+  </g>
   <g id="cand-tulips" class="cand">
     <g transform="translate(2680.0 1860.0) rotate(133.4)">
       <rect
