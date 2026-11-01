@@ -26,17 +26,17 @@ complete: true
 #     follow-up:
 #       - 2026-10-31T11:45-07:00: "What changed"
 notes:
-  - 2026-11-01: "While tracing the guideway near Highway 15, I noticed one pillar appears to have been shifted west, making Span 50 noticeably longer than the surrounding spans. There's also a concrete pad almost exactly where the pillar seems like it would have gone."
+  - 2026-11-01: "While tracing the guideway near Highway 15, I noticed one pillar appears to have been shifted west, making span 50 noticeably longer than the surrounding spans. There's also a concrete pad almost exactly where the pillar seems like it would have gone."
     post: true
-    title: "The Curious Case of Span 50"
+    title: "The curious case of Clayton Clipper span 50"
     photo:
       file: 2026-11-01-span-50-pad.jpg
-      caption: "I noticed this concrete pad while riding my bike through the area. It sits almost exactly where I would have expected a pillar if Span 50 had been spaced more evenly."
+      caption: "I noticed this concrete pad while riding my bike through the area. It sits almost exactly where I would have expected a pillar if span 50 had been spaced more evenly."
     more:
-      - "Most of the guideway follows a pretty regular pattern, so Span 50 stood out right away. The concrete pad makes me wonder if they needed temporary support there during construction but couldn't place a permanent foundation in that location."
+      - "Most of the guideway follows a pretty regular pattern, so span 50 stood out right away. The concrete pad makes me wonder if they needed temporary support there during construction but couldn't place a permanent foundation in that location."
       - "My completely non-engineer theories range from a major buried utility, to some other underground constraint, to a previously undiscovered entrance to Fraggle Rock."
-      - "Does anyone know why the pillar was shifted west and Span 50 ended up so much longer than usual?"
-  - 2026-10-31T15:15-07:00: "Reporting from the bike at the other end of the line: the Surrey Sprinter has hung all the rocks for its first span after leaving Green Timbers Station."
+      - "Does anyone know why the pillar was shifted west and span 50 ended up so much longer than usual?"
+  - 2026-10-31T15:15-07:00: "Reporting from the bike at the other end of the line: the Surrey Sprinter has hung all the segments for its first span after leaving Green Timbers Station."
     title: "Surrey Sprinter hangs its first span past Green Timbers"
     photo:
       file: 2026-10-31-sprinter-green-timbers.jpg
@@ -46,7 +46,7 @@ notes:
     follow-up:
       - 2026-10-31T16:15-07:00: "Rode past the Clayton Clipper on the way home: the crews have packed up for the Sunday shutdown, and the gantry is sitting quietly over span 36 until Monday. Nothing moving out there but the ghosts. Happy Halloween!"
       - 2026-10-31T15:45-07:00: "The Fleetwood Flyer has been parked at 152 St since finishing its run a few weeks ago. The walkways are off its trusses, but with no big cranes on site, nobody seems in a hurry to take it apart."
-  - 2026-10-31T14:00-07:00: "Check-in from the bike: all the rocks are hung and span 36 is marked as complete. Now pedalling west of 176th St to see what the rest of the line is up to."
+  - 2026-10-31T14:00-07:00: "Check-in from the bike: all the segments are hung and span 36 is marked as complete. Now pedalling west of 176 St to see what the rest of the line is up to."
     title: "Clayton Clipper completes span 36; tulip at 70/71 built"
     more:
       - "The long-missing tulip where spans 70 and 71 meet, by the golf course, has finally been built. It was the last of the driven foundations. From 71/72 on, they switched to bored foundations."
