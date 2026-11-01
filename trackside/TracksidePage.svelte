@@ -178,7 +178,9 @@
     <h1>Trackside</h1>
     <nav class="links">
       {#if post}<a class="button" href={TRACKSIDE}>← All updates</a>{/if}
-      <a class="button" href={MAP}>← Map</a>
+      <a class="button" href={MAP}
+        >Map <span aria-hidden="true">→</span></a
+      >
     </nav>
   </header>
   {#each shown as n (anchor(n.time))}
