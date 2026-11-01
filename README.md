@@ -48,3 +48,9 @@ Then open http://localhost:5173/.
 Not used by the site itself. `data/` is an open dataset (CC0) of the guideway supports,
 pillars and spans from 166 St to 184 St, exported from the drawing as GeoJSON. See
 [data/README.md](data/README.md) for the files, how they were made and how to update them.
+
+## License
+
+The code is under the [MIT License](LICENSE). The aerial images in `public/images/` (`aerial-base.jpg` and
+`aerial-zoom-*.jpg`) are Apple Maps screenshots: they belong to Apple and its imagery providers and aren't covered by the
+MIT License.
