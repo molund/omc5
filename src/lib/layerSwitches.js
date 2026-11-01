@@ -216,9 +216,11 @@ export function layerCss(state) {
     ".gantry{display:" +
     (state.gantry || state.beams ? "inline" : "none") +
     " !important}" +
-    (state.gantry || !state.beams
-      ? ""
-      : ".gantry-body{display:none !important}");
+    // the body shows with the full gantry, and not with the support beams on their own; set both ways, so it doesn't rely on
+    // map.svg's own default
+    ".gantry-body{display:" +
+    (state.gantry || !state.beams ? "inline" : "none") +
+    " !important}";
   if (state.progress) {
     r += PROGRESS_CSS;
     const shows = Object.keys(PROGRESS_SHOWS)
