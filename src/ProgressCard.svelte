@@ -101,11 +101,8 @@
       ></div>
     </div>
     {#if when}<div class="asof">As of {when}</div>{/if}
-    <!-- every update, newest first: the follow-ups, then the original note, each led by its own time in a small chip -->
-    {#each status.followUps as m}<div class="note">
-        <span class="chip">{followUpTime(m.time, status.history[0].time)}</span
-        >{m.text}
-      </div>{/each}
+    <!-- every update in the order it happened, since later ones build on earlier ones: the original note, then its
+         follow-ups oldest first, each led by its own time in a small chip -->
     {#if status.note}<div class="note">
         <span class="chip">{postedAt}</span>{status.note}
         {#if status.more.length}<a
@@ -113,6 +110,10 @@
             href="{TRACKSIDE}#{anchor(newest.time)}">More</a
           >{/if}
       </div>{/if}
+    {#each [...status.followUps].reverse() as m}<div class="note">
+        <span class="chip">{followUpTime(m.time, status.history[0].time)}</span
+        >{m.text}
+      </div>{/each}
     {#if status.photo}<a class="thumb" href={TRACKSIDE}
         ><img
           src={status.photo.src}
