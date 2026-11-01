@@ -2,34 +2,40 @@
   id="map"
   preserveAspectRatio="xMidYMid meet"
   xmlns="http://www.w3.org/2000/svg"
-  viewBox="-38.4 -126.95 5585.1 3424.39"
+  viewBox="-38.4 -126.95 2974.4 1888.55"
 >
   <style>
-    /* Aerial photo base layer: change display:inline to display:none to hide it */
+    /* These defaults match the site's SFMSF drawing view, for opening the file on its own; the site sets every layer itself
+       and doesn't rely on them. Clayton Clipper span numbers and station labels: change display:none to display:inline to show them */
+    .cclabel,
+    .stationlabel {
+      display: none;
+    }
+    /* Aerial photo base layer: change display:none to display:inline to show it */
     .aerial {
-      display: inline;
-    } /* Span letters and numbers (not arrows): change display:none to display:inline to show them */
+      display: none;
+    } /* SFMSF span letters and numbers (not arrows): change display:inline to display:none to hide them */
     .spanlabel {
-      display: none;
+      display: inline;
     }
-    /* Gantry layer (the whole Clayton Clipper, separate from the background): change display:none to display:inline to show it */
+    /* Gantry layer (the whole Clayton Clipper): change display:inline to display:none to hide it */
     .gantry {
-      display: none;
+      display: inline;
     }
-    /* Pink walking paths layer: change display:none to display:inline to show them */
+    /* Pink walking paths layer: change display:inline to display:none to hide them */
     .walk-paths {
-      display: none;
+      display: inline;
     }
     /* Roads (Fraser Highway, Highway 15 and its slip lanes, with their surfaces, edges, centre lines and labels): change display:inline to display:none to hide them */
     .roads {
       display: inline;
-    } /* Works yard (hatched area and dashed outline): change display:none to display:inline to show it */
+    } /* Works yard (hatched area and dashed outline): change display:inline to display:none to hide it */
     .yard {
-      display: none;
+      display: inline;
     }
-    /* Future 72 Ave (road, shoulders and label): change display:none to display:inline to show it */
+    /* Future 72 Ave (road, shoulders and label): change display:inline to display:none to hide it */
     .ave72 {
-      display: none;
+      display: inline;
     }
     .ts {
       font-family: "DejaVu Sans", sans-serif;
@@ -104,13 +110,13 @@
       fill: #888780;
       stroke: #5f5e5a;
       stroke-width: 1.5;
-    } /* Greenbelt fill (dot pattern): change display:none to display:inline to show it (the site shows it only in SFMSF drawing, where the aerial photo is off) */
+    } /* Greenbelt fill (dot pattern): change display:inline to display:none to hide it (never shown with the aerial photo) */
     .greenbelt {
-      display: none;
+      display: inline;
     }
-    /* Creeks (North Creek and the ditch/creek by the Fraser Hwy walking path): change display:none to display:inline to show them */
+    /* Creeks (North Creek and the ditch/creek by the Fraser Hwy walking path): change display:inline to display:none to hide them */
     .creeks {
-      display: none;
+      display: inline;
     }
     /* Guideway (spans, beams, ramps, direction arrows; not bents/hammers/tulips): change display:none to display:inline to show it */
     .guideway {
@@ -122,9 +128,9 @@
     .guideway.unfinished {
       display: inline;
     }
-    /* Old New Westminster Southern Railway line: change display:none to display:inline to show it */
+    /* Old New Westminster Southern Railway line: change display:inline to display:none to hide it */
     .railway {
-      display: none;
+      display: inline;
     }
   </style>
   <!-- White canvas backing (hidden in Horizontal aerial, where the turned canvas would show it past the photo) -->
