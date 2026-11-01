@@ -54,11 +54,13 @@ LAYERS.forEach((g) =>
     sfmsfAerialDefaults[l[0]] = l[3];
   }),
 );
-// "Full" is the earlier default: the whole canvas with roads and the SFMSF labels off
+// "Full" is the earlier default: the whole canvas with roads and the SFMSF labels off, and the Clayton Clipper span labels on
+// (Horizontal starts with these too)
 export const fullAerialDefaults = Object.assign({}, sfmsfAerialDefaults, {
   sfmsfAerial: false,
   roads: false,
   omc5Labels: false,
+  spanLabels: true,
   fullAerial: true,
 });
 // Switches that progress-chart mode starts with, which match what it shows: the Clayton Clipper's spans (finished and
