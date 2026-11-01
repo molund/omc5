@@ -14,7 +14,7 @@ export const LAYERS = [
   [
     "Guideway",
     [
-      ["gantry", "Full gantry", "gantry", false],
+      ["gantry", "Gantry", "gantry", false],
       ["beams", "Support beams only", "gantry-beams", false],
       ["guideway", "Finished spans", "guideway", true],
       ["unfinished", "Unfinished spans", "unfinished", true],
