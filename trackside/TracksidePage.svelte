@@ -93,22 +93,6 @@
       if (params.has("comments")) open = view.post;
       return;
     }
-    // older links: an update not on this page goes to its own page, and ?page=2 to /trackside/page/2/
-    if (id && !shown.some((n) => anchor(n.time) === id)) {
-      if (status.history.some((n) => anchor(n.time) === id))
-        location.replace(
-          `${TRACKSIDE}${id}/${params.has("comments") ? "?comments" : ""}`,
-        );
-      return;
-    }
-    if (!id && params.has("page")) {
-      const n = Math.min(
-        Math.max(1, Math.round(+params.get("page") || 1)),
-        pages,
-      );
-      location.replace(pageUrl(n));
-      return;
-    }
     if (id) {
       if (params.has("comments")) open = id;
       document.getElementById(id)?.scrollIntoView();
