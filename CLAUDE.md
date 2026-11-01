@@ -39,5 +39,4 @@ Svelte 5 + Vite site, deployed to GitHub Pages (https://clayton-clipper.olund.ca
   its own in a search result. Follow-ups get no title.
 - `public/images/` — aerial photos.
 - `public/images/sorry-im-a-shitty-photographer/` — update photos (see the `photo:` format in `status.yaml`). Resize every
-  uploaded photo to at most 800 pixels wide, save it as JPEG at quality 75, and strip all metadata (especially the GPS
-  location) before committing it.
+  uploaded photo to at most 800 pixels wide, save it as JPEG at quality 75, and strip all metadata before committing it.
