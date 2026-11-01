@@ -44,9 +44,33 @@
       }
     </script>
     <link rel="icon" href="/favicon.ico" sizes="any" />
+    <!-- with JavaScript on, hide the text for search engines straight away, so it doesn't flash before the map loads -->
+    <script>
+      document.documentElement.classList.add("js");
+    </script>
+    <style>
+      .js #app > main {
+        display: none;
+      }
+    </style>
   </head>
   <body>
-    <div id="app"></div>
+    <!-- for search engines and readers without JavaScript; src/main.js replaces it with the map -->
+    <div id="app">
+      <main>
+        <h1>Clayton Clipper Tracker</h1>
+        <p>
+          A map of the Surrey Langley SkyTrain guideway in Surrey, BC, following
+          the Clayton Clipper gantry span by span as it builds the elevated
+          guideway along Fraser Highway, alongside the spans lifted in by mobile
+          cranes. It's updated from regular walks and rides along the line.
+        </p>
+        <p>
+          <a href="/trackside/">Trackside</a> has every update, newest first,
+          with photos and comments. The map itself needs JavaScript.
+        </p>
+      </main>
+    </div>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
