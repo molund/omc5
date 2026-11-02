@@ -80,13 +80,12 @@ this file for where each column actually stands.
 
 ### Spans
 
-| Property     | Meaning                                                                                                          |
-| ------------ | ---------------------------------------------------------------------------------------------------------------- |
-| `id`         | Sequential number from west to east                                                                              |
-| `kind`       | `segmental (gantry)`, `precast girder` or `steel girder`                                                         |
-| `cc_span`    | Clayton Clipper span number (1–105, counted in the order the launching gantry builds them)                       |
-| `sfmsf_span` | Span label used near the SFMSF (letters A–S, numbers 1–11), where there is one                                   |
-| `finished`   | Whether the span is built, as of the export (in the progress KML, finished spans are dark, unfinished ones pale) |
+| Property   | Meaning                                                                                                          |
+| ---------- | ---------------------------------------------------------------------------------------------------------------- |
+| `id`       | Sequential number from west to east                                                                              |
+| `kind`     | `segmental (gantry)`, `precast girder` or `steel girder`                                                         |
+| `cc_span`  | Clayton Clipper span number (1–105, counted in the order the launching gantry builds them)                       |
+| `finished` | Whether the span is built, as of the export (in the progress KML, finished spans are dark, unfinished ones pale) |
 
 Some spans have more than one feature. Where the eastbound and westbound tracks are separate structures, each is its
 own polygon with the same `cc_span`. Each steel span is drawn as its two girder lines.
