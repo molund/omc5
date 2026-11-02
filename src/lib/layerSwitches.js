@@ -190,8 +190,7 @@ export function layerCss(state) {
     ".gantry{display:" +
     (state.gantry ? "inline" : "none") +
     " !important}" +
-    // the SFMSF span labels (the Clayton Clipper's replace them), and the gantry's body, which shows with the whole gantry
-    ".spanlabel{display:none !important}" +
+    // the gantry's body, which shows with the whole gantry
     ".gantry-body{display:inline !important}";
   if (state.progress) {
     r += PROGRESS_CSS;
