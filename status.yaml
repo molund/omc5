@@ -28,7 +28,7 @@ complete: true
 #     follow-up:
 #       - 2026-10-31T11:45-07:00: "What changed"
 notes:
-  - 2026-11-02: "Clayton Clipper construction update for Monday, Nov. 2, 2026"
+  - 2026-11-02T09:15-07:00: "Clayton Clipper construction update for Monday, Nov. 2, 2026"
     summary: "The Night Shift must’ve worked Sunday night. Span 36 is fully glued. Crews have begun post-tensioning."
   - 2026-11-01: "The curious case of Clayton Clipper span 50"
     summary: "While tracing the guideway near Highway 15, I noticed one pillar appears to have been shifted west, making span 50 noticeably longer than the surrounding spans. There's also a concrete pad almost exactly where the pillar seems like it would have gone."
