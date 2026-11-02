@@ -8,24 +8,6 @@ export const layers = $state({
     Object.entries(saved?.layers ?? {}).filter(([k]) => k in defaults),
   ),
 });
-// ?isMike=true in the address shows Mike's own options, the SFMSF span labels and the support beams on their own; without it
-// they are never on, and the Clayton Clipper span labels and the full gantry show in their place. These are only useful for
-// moving the gantry and manipulating the spans.
-export const isMike =
-  typeof location !== "undefined" &&
-  new URLSearchParams(location.search.toLowerCase()).get("ismike") === "true";
-export function hideMikeOnlyOptions() {
-  if (isMike) return;
-  if (layers.omc5Labels) {
-    layers.omc5Labels = false;
-    layers.spanLabels = true;
-  }
-  if (layers.beams) {
-    layers.beams = false;
-    layers.gantry = true;
-  }
-}
-hideMikeOnlyOptions();
 // Screens this narrow are phones: the layer panel is a menu that slides in over the map
 export const PHONE =
   typeof matchMedia !== "undefined"
