@@ -1,5 +1,5 @@
 import { saved, autosave } from "./persist.svelte.js";
-import { layers, ui, hideMikeOnlyOptions } from "./state.svelte.js";
+import { layers, ui } from "./state.svelte.js";
 import {
   setView,
   fillView,
@@ -36,13 +36,10 @@ const startSnap = () =>
   defaults.sfmsfDrawing ? { ...fullAerialDefaults } : null;
 // (on a reload, the switches saved from before Drawing mode, so switching it off still puts them back)
 let drawingSnap = saved ? (saved.drawingSnap ?? null) : startSnap();
-// Drawing mode's switches: everything on but the aerial photo, the Clayton Clipper span labels, the support beams and the
-// other views
+// Drawing mode's switches: everything on but the aerial photo and the other views
 const drawingSwitches = () => ({
   ...Object.fromEntries(Object.keys(layers).map((k) => [k, true])),
   aerial: false,
-  spanLabels: false,
-  beams: false,
   progress: false,
   sfmsfAerial: false,
   horizontal: false,
@@ -72,7 +69,6 @@ function exitSfmsfAerial() {
   layers.sfmsfAerial = false;
   setView(FULL_VB);
   layers.roads = false;
-  layers.omc5Labels = false;
 }
 // Full image: the whole canvas, filling the stage, with the Full image switches
 function applyFullAerial() {
@@ -95,10 +91,6 @@ export function setSwitch(k, on) {
   layers[k] = on;
   ui.changed = !VIEWS.includes(k);
   if (on && VIEWS.includes(k)) ui.view = k;
-  if (k === "gantry" && on) layers.beams = false;
-  if (k === "beams" && on) layers.gantry = false;
-  if (k === "omc5Labels" && on) layers.spanLabels = false;
-  if (k === "spanLabels" && on) layers.omc5Labels = false;
   // picking any other view leaves Horizontal (Full image does so through fullAerialDefaults)
   if (on && (k === "sfmsfDrawing" || k === "progress" || k === "sfmsfAerial"))
     layers.horizontal = false;
@@ -156,17 +148,14 @@ export function setSwitch(k, on) {
       layers.progress = false;
       setView(SFMSF_AERIAL_VB);
       fillView();
-      layers.omc5Labels = true;
-      layers.spanLabels = false;
+      layers.spanLabels = true;
       // every Reference switch on, with the aerial photo (it is an aerial view) instead of the greenbelt
       Object.assign(layers, sfmsfAerialReference());
     } else {
       setView(FULL_VB);
       layers.roads = false;
-      layers.omc5Labels = false;
     }
   }
-  hideMikeOnlyOptions();
   refresh();
 }
 
@@ -184,10 +173,7 @@ export function showAll() {
       layers[k] = true;
   });
   layers.greenbelt = false;
-  // the two span-label sets are one or the other: Show all uses the Clayton Clipper's
-  layers.omc5Labels = false;
   ui.changed = true;
-  hideMikeOnlyOptions();
   refresh();
 }
 
@@ -205,7 +191,6 @@ function viewSwitches(view) {
 export function reset() {
   Object.assign(layers, viewSwitches(ui.view));
   ui.changed = false;
-  hideMikeOnlyOptions();
   refresh();
 }
 

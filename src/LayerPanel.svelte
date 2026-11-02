@@ -12,7 +12,6 @@
     fitZoom,
     isFit,
     centreView,
-    isMike,
   } from "./lib/appState/appState.svelte.js";
 
   // each press of zoom in or out changes the zoom by this factor, about the middle of the stage; Fit's zoom depends on the
@@ -20,11 +19,10 @@
   const ZOOM_STEP = 1.5;
   const avail = $derived(labelsAvailable(layers));
 
-  // the span-label switches need Clayton Clipper spans on screen, and the direction arrows the finished spans they sit on, so
+  // the span-label switch needs Clayton Clipper spans on screen, and the direction arrows the finished spans they sit on, so
   // they fade and can't be changed without them
   const disabled = (k) =>
-    ((k === "omc5Labels" || k === "spanLabels") && !avail) ||
-    (k === "arrows" && !layers.guideway);
+    (k === "spanLabels" && !avail) || (k === "arrows" && !layers.guideway);
   // the buttons in the button groups: the views, the gantry's Off / style row, and Show all and Reset; and what a button
   // that can't be pressed looks like (zoom out can't go past Fit, Center has nothing to move at Fit, and Reset has nothing
   // to do until a layer is changed)
@@ -39,9 +37,8 @@
   const opacity = (k) => (disabled(k) ? "0.4" : "");
   // greenbelt and creeks only in drawing mode, roads (with their labels), construction yard and walking paths in the two SFMSF
   // views (drawing mode and SFMSF zoom),
-  // aerial photo everywhere but drawing mode, and the SFMSF span labels and the support beams on their own only for Mike
+  // aerial photo everywhere but drawing mode
   function hidden(k) {
-    if (k === "omc5Labels" || k === "beams") return !isMike;
     if (k === "greenbelt" || k === "creeks") return !layers.sfmsfDrawing;
     if (k === "roads" || k === "yard" || k === "walk")
       return !(layers.sfmsfDrawing || layers.sfmsfAerial);
@@ -49,11 +46,9 @@
     if (k === "stationLabels") return layers.sfmsfDrawing || layers.sfmsfAerial;
     return false;
   }
-  // the Reference group shows only in the two SFMSF views; the Built by group only for Mike, and not in the two SFMSF views
+  // the Reference group shows only in the two SFMSF views
   const sfmsf = $derived(layers.sfmsfDrawing || layers.sfmsfAerial);
-  const groupHidden = (group) =>
-    (group === "Reference" && !sfmsf) ||
-    (group === "Built by" && (!isMike || sfmsf));
+  const groupHidden = (group) => group === "Reference" && !sfmsf;
   // switches picked from a row of buttons, Off or a style, instead of checkboxes (none at the moment): keyed by the first row
   // in LAYERS, where the buttons go, with its label (or none) and its styles; PAIRED lists the other rows they cover
   const PAIRS = {};
@@ -132,9 +127,7 @@
           </div>
           {#each rows as [k, label]}
             {#if PAIRS[k]}
-              {@const [name, all] = PAIRS[k]}
-              <!-- the support beams on their own are only for Mike -->
-              {@const opts = all.filter(([o]) => o !== "beams" || isMike)}
+              {@const [name, opts] = PAIRS[k]}
               {#if name}<div class="group-label" style:opacity={opacity(k)}>
                   {name}
                 </div>{/if}
