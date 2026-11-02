@@ -78,11 +78,11 @@ ${urls
 `,
 );
 
-// A thread's body shows the update itself, as on the Trackside page: the note, its photo and caption, its further
+// A thread's body shows the update itself, as on the Trackside page: the summary, its photo and caption, its further
 // paragraphs and photos, its follow-ups (oldest first), a link to the update's own page, and giscus's strict-mode marker,
 // the sha1 of the title it asks for. No date line: the thread's title already has it.
 function threadBody(n) {
-  const parts = [n.text];
+  const parts = [n.summary];
   const photo = (p) => {
     parts.push(
       `![${p.caption || "Photo for this update"}](${new URL(p.src, SITE).href})`,
@@ -90,7 +90,7 @@ function threadBody(n) {
     if (p.caption) parts.push(`_${p.caption}_`);
   };
   if (n.photo) photo(n.photo);
-  n.more.forEach((m) => (m.photo ? photo(m.photo) : parts.push(m.text)));
+  n.block.forEach((m) => (m.photo ? photo(m.photo) : parts.push(m.text)));
   if (n.followUps.length) {
     parts.push("### Follow-ups");
     parts.push(

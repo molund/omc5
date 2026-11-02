@@ -38,7 +38,7 @@ Svelte 5 + Vite site, deployed to GitHub Pages (https://clayton-clipper.olund.ca
 - `src/app.css` — Tailwind, the colour variables and the base styles; see Styling below.
 - `trackside/` — Trackside (`/trackside/`), the updates page; read `trackside/README.md` before changing it.
 - `status.yaml` — gantry span / complete / time-stamped notes (all on Trackside; the progress card shows the newest update's latest text). Site news
-  only: update this file, don't change the drawing unless asked. When adding a note, write it a `title:` (see the
+  only: update this file, don't change the drawing unless asked. When adding a note, give it a title, the first value on its line (see the
   format in `status.yaml`): a short headline of what the note says, under 60 characters, plain words people would search
   for (span numbers, places, gantry names), nothing the note doesn't say. Never a bare span number: name the gantry
   the span belongs to (e.g. "Clayton Clipper completes span 36"), even when the note doesn't, so the title makes sense on

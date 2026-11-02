@@ -1,15 +1,15 @@
 // The Clayton Clipper status from status.yaml: when it was last updated, the span the gantry is on, whether that span is
 // complete, and the newest of its time-stamped notes. The file is flat `key: value` lines plus the `notes:` list of
-// `  - time: "text"` lines, each optionally followed by a title, for its page's <title> and Open Graph title on Trackside
-// (not shown on the page itself):
-//     title: "Span 36 is complete"
+// `  - time: "title"` lines (the title is for the note's page's <title> and Open Graph title on Trackside, and is shown only
+// on a post), each followed by its summary, the note's main text, indented under it:
+//     summary: "Span 36 is complete."
 // a photo, indented under it:
 //     photo:
 //       file: span-36.jpg
 //       caption: "Its own caption, separate from the note"
-// optionally more paragraphs and photos, indented under it (shown after the note and its photo on the Trackside page and
-// in its thread; the card shows only the note):
-//     more:
+// optionally more blocks, paragraphs and photos, indented under it (shown after the summary and its photo on the Trackside page
+// and in its thread; the card shows only the summary):
+//     block:
 //       - "A second paragraph"
 //       - photo:
 //           file: span-36-close-up.jpg
@@ -27,7 +27,7 @@ import text from "../../status.yaml?raw";
  */
 
 /**
- * @typedef {{ text: string } | { photo: Photo }} MoreItem A further paragraph or photo under a note.
+ * @typedef {{ text: string } | { photo: Photo }} BlockItem A further paragraph or photo under a note.
  */
 
 /**
@@ -39,9 +39,9 @@ import text from "../../status.yaml?raw";
 /**
  * @typedef {object} Note
  * @property {Date} time The note's time stamp (a date alone is the start of that day in BC time).
- * @property {string} text The note's main text.
+ * @property {string} summary The note's main text.
  * @property {Photo|null} photo The note's photo, if it has one.
- * @property {MoreItem[]} more Further paragraphs and photos, in order.
+ * @property {BlockItem[]} block Further paragraphs and photos, in order.
  * @property {string} title The title for the note's own Trackside page, or "".
  * @property {boolean} post Whether it is a post rather than a status update.
  * @property {FollowUp[]} followUps Its follow-ups, newest first.
@@ -55,9 +55,9 @@ import text from "../../status.yaml?raw";
  * @property {Note|null} latest The newest status update (not a post).
  * @property {string} note The newest status update's text, or "".
  * @property {Photo|null} photo The newest status update's photo.
- * @property {MoreItem[]} more The newest status update's further paragraphs and photos.
+ * @property {BlockItem[]} block The newest status update's further paragraphs and photos.
  * @property {FollowUp[]} followUps The newest status update's follow-ups, newest first.
- * @property {Note[]} history Every note with text, newest first, for Trackside.
+ * @property {Note[]} history Every note with an summary, newest first, for Trackside.
  */
 
 /** Where update photos live (public/images/sorry-im-a-shitty-photographer/), as a URL on the site. */
@@ -82,7 +82,7 @@ function unquote(v) {
 function parse(src) {
   const out = {},
     notes = [];
-  // the list a "      - …" line belongs to: "more" after a "    more:" line, otherwise follow-ups
+  // the list a "      - …" line belongs to: "block" after a "    block:" line, otherwise follow-ups
   let list = null,
     // the photo a `file:` or `caption:` line belongs to
     photo = null;
@@ -95,10 +95,10 @@ function parse(src) {
         time: new Date(
           /^\d{4}-\d\d-\d\d$/.test(n[1]) ? `${n[1]}T00:00-07:00` : n[1],
         ),
-        text: unquote(n[2]),
+        title: unquote(n[2]),
+        summary: "",
         photo: null,
-        more: [],
-        title: "",
+        block: [],
         post: false,
         followUps: [],
       });
@@ -107,19 +107,19 @@ function parse(src) {
       return;
     }
     const last = notes[notes.length - 1];
-    // under "    more:", a photo, "      - photo:" with its file and caption under it, or a paragraph, "      - text"
-    if (list === "more" && /^ {3,}-\s+photo:\s*$/.test(line)) {
+    // under "    block:", a photo, "      - photo:" with its file and caption under it, or a paragraph, "      - text"
+    if (list === "block" && /^ {3,}-\s+photo:\s*$/.test(line)) {
       photo = { src: null, caption: "" };
-      if (last) last.more.push({ photo });
+      if (last) last.block.push({ photo });
       return;
     }
-    const mo = list === "more" && line.match(/^ {3,}-\s+(.*?)\s*$/);
+    const mo = list === "block" && line.match(/^ {3,}-\s+(.*?)\s*$/);
     if (mo) {
-      if (last && unquote(mo[1])) last.more.push({ text: unquote(mo[1]) });
+      if (last && unquote(mo[1])) last.block.push({ text: unquote(mo[1]) });
       return;
     }
-    if (/^\s+more:\s*$/.test(line)) {
-      list = "more";
+    if (/^\s+block:\s*$/.test(line)) {
+      list = "block";
       return;
     }
     // a follow-up under the note: "      - time: text", further in, after a "    follow-up:" line
@@ -141,12 +141,12 @@ function parse(src) {
       if (last) last.post = po[1] === "true";
       return;
     }
-    // the note's title, four spaces in
-    const ti = line.match(/^ {4}title:\s*(.*?)\s*$/);
+    // the note's summary, four spaces in
+    const ti = line.match(/^ {4}summary:\s*(.*?)\s*$/);
     if (ti) {
       list = null;
       photo = null;
-      if (last) last.title = unquote(ti[1]);
+      if (last) last.summary = unquote(ti[1]);
       return;
     }
     // a photo belongs to the note above it: `photo:`, then its `file:` and `caption:` indented under it
@@ -170,7 +170,7 @@ function parse(src) {
   // a photo without a file doesn't count
   notes.forEach((n) => {
     if (n.photo && !n.photo.src) n.photo = null;
-    n.more = n.more.filter((m) => m.text || m.photo?.src);
+    n.block = n.block.filter((m) => m.text || m.photo?.src);
   });
   // follow-ups newest first, those with text
   notes.forEach(
@@ -183,22 +183,22 @@ function parse(src) {
     .filter((n) => !isNaN(n.time))
     .sort((a, b) => b.time - a.time);
   // the newest status update; posts are left out
-  const latest = sorted.find((n) => n.text && !n.post) ?? null;
+  const latest = sorted.find((n) => n.summary && !n.post) ?? null;
   return {
     updated: out.updated ? new Date(out.updated) : null,
     span: out.span ? +out.span : null,
     complete: out.complete === "true",
     // the newest status update (not a post), or null
     latest,
-    note: latest ? latest.text : "",
+    note: latest ? latest.summary : "",
     // the newest status update's photo, { src, caption }, or null
     photo: latest ? latest.photo : null,
     // the newest status update's further paragraphs and photos, [{ text } or { photo: { src, caption } }], or []
-    more: latest ? latest.more : [],
+    block: latest ? latest.block : [],
     // the newest status update's follow-ups, [{ time, text }], newest first
     followUps: latest ? latest.followUps : [],
     // every note with text, newest first, for Trackside (each with its photo or null, and its follow-ups)
-    history: sorted.filter((n) => n.text),
+    history: sorted.filter((n) => n.summary),
   };
 }
 
