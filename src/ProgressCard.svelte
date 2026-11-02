@@ -138,7 +138,7 @@
         /><span>Progress</span>
       </div>
       {#if full}<button bind:this={closeButton} class="map-button" onclick={close}
-          >Map →</button
+          aria-label="Let’s go to the map">Let’s go</button
         >{:else}<button
           class="close"
           title="Hide the progress card"
