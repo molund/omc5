@@ -51,12 +51,7 @@ function geometry(g) {
 
 // the name shown on the map and in My Maps' list
 function nameOf(p) {
-  if ("cc_span" in p)
-    return p.cc_span
-      ? `Span ${p.cc_span}`
-      : p.sfmsf_span
-        ? `Span ${p.sfmsf_span}`
-        : `Span #${p.id}`;
+  if ("cc_span" in p) return p.cc_span ? `Span ${p.cc_span}` : `Span #${p.id}`;
   if ("cc_joint" in p)
     return p.cc_joint ? `Support ${p.cc_joint}` : `Support #${p.id}`;
   return `Pillar #${p.id}`;

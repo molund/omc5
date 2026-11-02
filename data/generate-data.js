@@ -6,7 +6,7 @@
 // - Supports: each bent cap (rect.g) is one support, exported as the cap's outline; its pillars are the support circles inside
 //   it (or nearest it).
 // - Pillars: each support circle, exactly where it is drawn, with the id of its support.
-// - Spans: the guideway polygons, numbered from the nearest Clayton Clipper (cclabel) and SFMSF (spanlabel) labels.
+// - Spans: the guideway polygons, numbered from the nearest Clayton Clipper (cclabel) labels.
 import fs from "node:fs";
 import { XMLParser } from "fast-xml-parser";
 import { writeKml } from "./kml.js";
@@ -233,8 +233,7 @@ function exportGeojson() {
         t: e.text.trim(),
         q: apply(e.ctm, [+e.attrs.x, +e.attrs.y]),
       }));
-  const cc = labels("cclabel").map((l) => ({ ...l, n: +l.t })),
-    sfmsf = labels("spanlabel");
+  const cc = labels("cclabel").map((l) => ({ ...l, n: +l.t }));
 
   // supports: one per bent cap, with the pillar circles nearest it (shapes drawn twice in the same place count once)
   const once = (list) =>
@@ -308,8 +307,7 @@ function exportGeojson() {
     .map((e) => {
       const ring = outline(e),
         q = centroid(ring),
-        n = nearest(cc, q, 35),
-        l = nearest(sfmsf, q, 35);
+        n = nearest(cc, q, 35);
       return {
         q,
         geometry: {
@@ -323,7 +321,6 @@ function exportGeojson() {
               ? "segmental (gantry)"
               : "precast girder",
           cc_span: n ? n.n : null,
-          sfmsf_span: l ? l.t : null,
           finished:
             (e.classes.includes("gi") || e.classes.includes("p")) && n
               ? n.n < gantryAt || (n.n === gantryAt && gantryDone)

@@ -51,7 +51,7 @@ export function tagBuiltBy(root) {
     tag(el, p.x, p.y);
   });
   root.querySelectorAll("text").forEach((el) => {
-    if (!has(el, /guideway|spanlabel/)) return;
+    if (!has(el, /guideway/)) return;
     tag(el, +el.getAttribute("x"), +el.getAttribute("y"));
   });
   root
