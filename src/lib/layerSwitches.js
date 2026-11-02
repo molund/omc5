@@ -65,13 +65,14 @@ export const fullAerialDefaults = Object.assign({}, sfmsfAerialDefaults, {
   fullAerial: true,
 });
 /**
- * Switches that progress-chart mode starts with, which match what it shows: the Clayton Clipper's finished spans (the
- * unfinished ones start off, but can be switched on) with their span numbers, the aerial photo and the full gantry. Every switch works in it, as in Full image.
+ * Switches that progress-chart mode starts with, which match what it shows: the Clayton Clipper's spans (finished and
+ * unfinished) with their span numbers, the aerial photo and the full gantry. Every
+ * switch works in it, as in Full image.
  * @type {Record<string, boolean>}
  */
 export const PROGRESS_DEFAULTS = {
   guideway: true,
-  unfinished: false,
+  unfinished: true,
   supports: false,
   aerial: true,
   yard: false,
@@ -104,7 +105,7 @@ export const PROGRESS_COLOUR = "#6D28D9";
  * Progress-chart mode's own CSS: it hides everything (with visibility, which leaves the masks and clip paths the drawing
  * relies on untouched) and then lets through what its switched-on layers show (see PROGRESS_SHOWS), so the base drawing,
  * which has no switch, stays hidden. The Clayton Clipper's finished spans are violet up to the span the gantry has reached,
- * their usual colour past it, and its span numbers are black, or white on violet.
+ * their usual colour past it, and its span numbers are white on violet and as in the other views everywhere else.
  */
 const PROGRESS_CSS =
   "#map polygon,#map path,#map line,#map polyline,#map rect,#map circle,#map ellipse,#map text{visibility:hidden !important}" +
@@ -112,11 +113,8 @@ const PROGRESS_CSS =
   "#map polygon.guideway.cc.reached:not(.unfinished){fill:" +
   PROGRESS_COLOUR +
   " !important}" +
-  "#map text.cclabel.cc{fill:#000000 !important}" +
-  // white where the number sits on a span in the progress colour
+  // white where the number sits on a span in the progress colour; every other number looks as it does in the other views
   "#map text.cclabel.cc.on-reached{fill:#ffffff !important}" +
-  // a white outline on every other number, so it reads on the aerial photo (the unfinished spans it sat on are off)
-  "#map text.cclabel.cc:not(.on-reached){stroke:#ffffff !important;stroke-width:3 !important;stroke-linejoin:round !important;paint-order:stroke !important}" +
   // only the Clayton Clipper's spans: the other launchers' stay hidden
   "#map .ll.ll.ll,#map .ff.ff.ff{display:none !important}";
 /**
@@ -245,12 +243,13 @@ export function layerCss(state) {
           "." + cls + "{display:" + (on ? "inline" : "none") + " !important}";
     }),
   );
-  r +=
-    ".gantry{display:" +
-    (state.gantry ? "inline" : "none") +
-    " !important}" +
-    // the gantry's body, which shows with the whole gantry
-    ".gantry-body{display:inline !important}";
+  // over the aerial photo (every view but SFMSF drawing), the unfinished spans are 45% opaque, so the finished ones stand out,
+  // and an unfinished span's number is black with a white outline, so it reads on them
+  if (state.aerial && !state.sfmsfDrawing)
+    r +=
+      "#map .guideway.unfinished{opacity:0.45 !important}" +
+      "#map text.cclabel.on-unfinished{fill:#000000 !important;stroke:#ffffff !important;stroke-width:1.5 !important;stroke-linejoin:round !important;paint-order:stroke !important}";
+  r += ".gantry{display:" + (state.gantry ? "inline" : "none") + " !important}";
   if (state.progress) {
     r += PROGRESS_CSS;
     const shows = Object.keys(PROGRESS_SHOWS)
