@@ -251,29 +251,19 @@
     border-bottom: 1px solid var(--line);
     background: var(--panel);
   }
-  /* the button back to the map, in the same style as the Map buttons on Trackside and About (the pager's colours,
-     GitHub's segmented control) */
+  /* the button back to the map: the card's primary button, filled with a lighter shade of the logo's green (#3C904B, the
+     logo's hue and saturation, lighter) with white text, the same size and shape as the Map buttons on Trackside and About */
   .map-button {
-    --track: #eff2f5;
-    --knob-line: #818b98;
-    --knob-ink: #1f2328;
     display: inline-flex;
     align-items: center;
     padding: calc(6rem / 17) calc(12rem / 17);
-    border: 1px solid var(--knob-line);
+    border: 1px solid #3c904b;
     border-radius: 6px;
-    background: var(--track);
-    color: var(--knob-ink);
+    background: #3c904b;
+    color: #ffffff;
     font-size: calc(14rem / 17);
     font-weight: 600;
     white-space: nowrap;
-  }
-  @media (prefers-color-scheme: dark) {
-    .map-button {
-      --track: #212830;
-      --knob-line: #656c76;
-      --knob-ink: #f0f6fc;
-    }
   }
   /* the card's close button, in its top right corner, and the information button that takes the card's place once it is closed */
   .close {
