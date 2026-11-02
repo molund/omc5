@@ -1,305 +1,31 @@
-import { flushSync } from "svelte";
-import { drawingBounds, turnedXRange } from "./drawingBounds.js";
+import { saved, autosave } from "./persist.svelte.js";
+import { layers, ui, hideMikeOnlyOptions } from "./state.svelte.js";
 import {
-  HORIZONTAL_MARGIN,
-  HORIZONTAL_VIEW_METRES,
-  UNITS_PER_METRE,
+  setView,
+  fillView,
+  progressView,
+  horizontalView,
+} from "./viewport.svelte.js";
+import {
   defaults,
   sfmsfAerialDefaults,
   fullAerialDefaults,
   FULL_VB,
   DRAW_VB,
   SFMSF_AERIAL_VB,
-  PROGRESS_VIEW_WIDTH,
-  PROGRESS_SPAN_AT,
   PROGRESS_DEFAULTS,
   LAYERS,
 } from "../layerSwitches.js";
 
-// The panel's settings (the layer switches, the view picked, whether Reset has something to do and whether Layers is folded
-// out) are kept in sessionStorage, so they survive reloading the page; a new tab starts afresh
-const SAVED = "panel";
-const saved = (() => {
-  try {
-    return JSON.parse(sessionStorage.getItem(SAVED));
-  } catch {
-    return null;
-  }
-})();
-// Layer switches, keyed as in LAYERS (saved ones only for switches that still exist)
-export const layers = $state({
-  ...defaults,
-  ...Object.fromEntries(
-    Object.entries(saved?.layers ?? {}).filter(([k]) => k in defaults),
-  ),
-});
-// ?isMike=true in the address shows Mike's own options, the SFMSF span labels and the support beams on their own; without it
-// they are never on, and the Clayton Clipper span labels and the full gantry show in their place. These are only useful for
-// moving the gantry and manipulating the spans.
-export const isMike =
-  typeof location !== "undefined" &&
-  new URLSearchParams(location.search.toLowerCase()).get("ismike") === "true";
-function hideMikeOnlyOptions() {
-  if (isMike) return;
-  if (layers.omc5Labels) {
-    layers.omc5Labels = false;
-    layers.spanLabels = true;
-  }
-  if (layers.beams) {
-    layers.beams = false;
-    layers.gantry = true;
-  }
-}
-hideMikeOnlyOptions();
-// Screens this narrow are phones: the layer panel is a menu that slides in over the map
-export const PHONE =
-  typeof matchMedia !== "undefined"
-    ? matchMedia("(max-width: 760px)")
-    : {
-        matches: false,
-        addEventListener: () => {},
-        removeEventListener: () => {},
-      };
-// zoom is a percentage of the stage width, and fit the zoom at which the whole canvas fits the stage; ready turns on the layer
-// rules once map.svg is tagged; gantry is the Clayton Clipper's span number out of the total; phone is PHONE, kept up to
-// date by App.svelte; collapsed hides the panel (a phone opens on the map, with the menu closed); changed is whether a layer
-// switch has been changed since the view was picked or reset, which is when Reset has something to do; filled is whether the
-// map is at a view's opening fill (see fillView); cardHidden is whether
-// the progress card has been dismissed (an information button brings it back); layersOpen is whether the layer switches are
-// folded out under Layers in the panel (folded away when the page opens, unless it is a reload)
-export const ui = $state({
-  // the view last picked (a View group key), which stays put while layers are switched on and off
-  view:
-    saved?.view ??
-    (defaults.progress
-      ? "progress"
-      : defaults.sfmsfDrawing
-        ? "sfmsfDrawing"
-        : "sfmsfAerial"),
-  zoom: 187.31,
-  fit: 100,
-  phone: PHONE.matches,
-  collapsed: PHONE.matches,
-  changed: saved?.changed ?? false,
-  cardHidden: false,
-  layersOpen: saved?.layersOpen ?? false,
-  filled: false,
-  ready: false,
-  gantry: null,
-});
-// The stage and the <svg>, set by MapView.svelte when it mounts, with the middle of the span the gantry is on (canvas units), the
-// group that turns the whole drawing (#map-turn) and the turn that levels the Clayton Clipper route (degrees)
-export const els = {
-  stage: null,
-  svg: null,
-  gantrySpanCentre: null,
-  turn: null,
-  routeAngle: 0,
-};
+// the state and the view code live in their own files; everything is still imported from here
+export * from "./state.svelte.js";
+export * from "./viewport.svelte.js";
 
 // "Full" stays ticked exactly while every switch matches the old default view
 function refresh() {
   layers.fullAerial = Object.keys(fullAerialDefaults).every(
     (k) => k === "fullAerial" || layers[k] === fullAerialDefaults[k],
   );
-}
-
-// The zoom that fits the whole canvas in the stage: the full width, or less when the canvas is taller than the stage allows
-export function fitZoom() {
-  const r = els.stage.getBoundingClientRect(),
-    vb = els.svg.viewBox.baseVal;
-  return Math.min(100, (100 * r.height * vb.width) / (r.width * vb.height));
-}
-export const isFit = () => Math.abs(ui.zoom - ui.fit) < 0.5;
-// The zoom that fills the stage with the canvas, so nothing blank shows: the full width, or more when the canvas is too short
-// to fill the stage's height at that width
-export function fillZoom() {
-  const r = els.stage.getBoundingClientRect(),
-    vb = els.svg.viewBox.baseVal;
-  return Math.max(100, (100 * r.height * vb.width) / (r.width * vb.height));
-}
-// Views open filled and centred; ui.filled keeps them so when the stage changes size (until the map is zoomed)
-export function fillView() {
-  setZoom(fillZoom());
-  centreView();
-  ui.filled = true;
-}
-
-// The whole drawing turns about the middle of the full canvas
-const [fx0, fy0, fw, fh] = FULL_VB.split(" ").map(Number),
-  TURN_X = fx0 + fw / 2,
-  TURN_Y = fy0 + fh / 2;
-
-// Show the canvas area vb, with the drawing turned by `turn` degrees (0, upright, for every view but Horizontal)
-export function setView(vb, turn = 0) {
-  const wasFit = isFit();
-  if (els.turn) {
-    if (turn)
-      els.turn.setAttribute("transform", `rotate(${turn} ${TURN_X} ${TURN_Y})`);
-    else els.turn.removeAttribute("transform");
-  }
-  els.svg.setAttribute("viewBox", vb);
-  ui.fit = fitZoom();
-  // a different canvas shape needs a different fit
-  if (wasFit) setZoom(ui.fit);
-  els.stage.scrollLeft = 0;
-  els.stage.scrollTop = 0;
-}
-
-// Progress-chart mode's canvas is the Clayton Clipper built so far (see canvasProgress); it starts zoomed so PROGRESS_VIEW_WIDTH
-// fills the stage's width and scrolled so the gantry's span sits at PROGRESS_SPAN_AT across and down the stage; from there it
-// zooms and pans like any other view, and Fit shows everything built
-export function progressView() {
-  canvasProgress();
-  const c = els.gantrySpanCentre;
-  if (!c) return;
-  const vb = els.svg.viewBox.baseVal;
-  // never less than filling the stage, so nothing blank shows
-  setZoom(Math.max((100 * vb.width) / PROGRESS_VIEW_WIDTH, fillZoom()));
-  const stage = els.stage,
-    r = els.svg.getBoundingClientRect();
-  stage.scrollLeft =
-    ((c.x - vb.x) / vb.width) * r.width -
-    stage.clientWidth * PROGRESS_SPAN_AT.x;
-  stage.scrollTop =
-    ((c.y - vb.y) / vb.height) * r.height -
-    stage.clientHeight * PROGRESS_SPAN_AT.y;
-}
-
-// Progress's canvas: the Clayton Clipper's finished spans the gantry has reached, and the gantry (not the unfinished spans
-// ahead of it, which run almost the whole width of the aerial), upright, with a margin on every side of HORIZONTAL_MARGIN
-// times their diagonal, but no wider than the overview aerial; the whole canvas when there is nothing to measure
-const BUILT = ".guideway.cc.reached:not(.unfinished), .gantry";
-function canvasProgress() {
-  // the layer rules for Progress's switches have to be on the page before measuring what shows
-  flushSync();
-  els.turn.removeAttribute("transform");
-  const e = drawingBounds(els.svg, 0, TURN_X, TURN_Y, BUILT);
-  if (!e) return setView(FULL_VB);
-  const m =
-    HORIZONTAL_MARGIN * Math.hypot(e.right.x - e.left.x, e.bottom.y - e.top.y);
-  let x = e.left.x - m,
-    x1 = e.right.x + m,
-    y = e.top.y - m,
-    y1 = e.bottom.y + m;
-  // a station label (or the powerhouse label) that reaches into that canvas is taken in whole, with a little room, so it isn't cut off (one that is
-  // nowhere near stays out of the picture, rather than stretching the canvas along the whole route)
-  for (const id of [
-    "#station-label-hillcrest",
-    "#station-label-bakerview",
-    "#powerhouse-label",
-  ]) {
-    const l = drawingBounds(els.svg, 0, TURN_X, TURN_Y, id);
-    if (!l || l.right.x < x || l.left.x > x1 || l.bottom.y < y || l.top.y > y1)
-      continue;
-    const pad = 0.25 * m;
-    x = Math.min(x, l.left.x - pad);
-    x1 = Math.max(x1, l.right.x + pad);
-    y = Math.min(y, l.top.y - pad);
-    y1 = Math.max(y1, l.bottom.y + pad);
-  }
-  const photo = els.svg.querySelector("#baseoverview image");
-  if (photo) {
-    const p = turnedXRange(els.svg, photo, 0, TURN_X, TURN_Y);
-    x = Math.max(x, p.x0);
-    x1 = Math.min(x1, p.x1);
-  }
-  setView(`${x} ${y} ${x1 - x} ${y1 - y}`);
-}
-
-// Horizontal: the drawing turned so both ends of the Clayton Clipper route are level. Its canvas is what is drawn with a margin
-// on every side of HORIZONTAL_MARGIN times the distance between its two ends; it starts zoomed to HORIZONTAL_VIEW_METRES
-// before and after the gantry's span, with the span in the middle
-export function horizontalView() {
-  canvasHorizontal();
-  const c = els.gantrySpanCentre;
-  if (!c) return;
-  const vb = els.svg.viewBox.baseVal;
-  setZoom(
-    Math.max(
-      (100 * vb.width) / (2 * HORIZONTAL_VIEW_METRES * UNITS_PER_METRE),
-      fillZoom(),
-    ),
-  );
-  // the span's middle, turned with the drawing, then onto the middle of the stage
-  const r = (els.routeAngle * Math.PI) / 180,
-    x = TURN_X + (c.x - TURN_X) * Math.cos(r) - (c.y - TURN_Y) * Math.sin(r),
-    y = TURN_Y + (c.x - TURN_X) * Math.sin(r) + (c.y - TURN_Y) * Math.cos(r);
-  const stage = els.stage,
-    box = els.svg.getBoundingClientRect();
-  stage.scrollLeft =
-    ((x - vb.x) / vb.width) * box.width - stage.clientWidth / 2;
-  stage.scrollTop =
-    ((y - vb.y) / vb.height) * box.height - stage.clientHeight / 2;
-}
-// Horizontal's canvas, fitted: what is drawn with a margin, but no wider than the overview aerial
-function canvasHorizontal() {
-  // the layer rules for the new switches have to be on the page before measuring what shows
-  flushSync();
-  els.turn.removeAttribute("transform");
-  const e = drawingBounds(els.svg, els.routeAngle, TURN_X, TURN_Y);
-  if (!e) return turnedFullView();
-  const m =
-    HORIZONTAL_MARGIN * Math.hypot(e.right.x - e.left.x, e.right.y - e.left.y);
-  let x = e.left.x - m,
-    x1 = e.right.x + m;
-  // no margin past the ends of the overview aerial, the widest photo
-  const photo = els.svg.querySelector("#baseoverview image");
-  if (photo) {
-    const p = turnedXRange(els.svg, photo, els.routeAngle, TURN_X, TURN_Y);
-    x = Math.max(x, p.x0);
-    x1 = Math.min(x1, p.x1);
-  }
-  const y = e.top.y - m;
-  setView(`${x} ${y} ${x1 - x} ${e.bottom.y + m - y}`, els.routeAngle);
-  setZoom(fitZoom());
-}
-// the whole canvas, turned level, all of it in view (when there is nothing drawn to measure)
-function turnedFullView() {
-  const r = (els.routeAngle * Math.PI) / 180,
-    c = Math.cos(r),
-    s = Math.sin(r);
-  const pts = [
-    [fx0, fy0],
-    [fx0 + fw, fy0],
-    [fx0 + fw, fy0 + fh],
-    [fx0, fy0 + fh],
-  ].map(([x, y]) => [
-    TURN_X + (x - TURN_X) * c - (y - TURN_Y) * s,
-    TURN_Y + (x - TURN_X) * s + (y - TURN_Y) * c,
-  ]);
-  const xs = pts.map((p) => p[0]),
-    ys = pts.map((p) => p[1]),
-    x = Math.min(...xs),
-    y = Math.min(...ys);
-  setView(
-    `${x} ${y} ${Math.max(...xs) - x} ${Math.max(...ys) - y}`,
-    els.routeAngle,
-  );
-  setZoom(fitZoom());
-}
-
-// Scroll so the middle of the canvas is in the middle of the stage, keeping the zoom
-export function centreView() {
-  const stage = els.stage;
-  stage.scrollLeft = (stage.scrollWidth - stage.clientWidth) / 2;
-  stage.scrollTop = (stage.scrollHeight - stage.clientHeight) / 2;
-}
-
-export function setZoom(p, cx, cy) {
-  const stage = els.stage;
-  ui.filled = false;
-  ui.fit = fitZoom();
-  p = Math.max(ui.fit, Math.min(16000, p));
-  const r = stage.getBoundingClientRect();
-  const x = (cx == null ? r.left + r.width / 2 : cx) - r.left,
-    y = (cy == null ? r.top + r.height / 2 : cy) - r.top;
-  const fx = (stage.scrollLeft + x) / stage.scrollWidth,
-    fy = (stage.scrollTop + y) / stage.scrollHeight;
-  ui.zoom = p;
-  els.svg.style.width = p + "%";
-  stage.scrollLeft = fx * stage.scrollWidth - x;
-  stage.scrollTop = fy * stage.scrollHeight - y;
 }
 
 // Drawing mode (SFMSF drawing): shrink the canvas to the first-photo frame and fill the stage with it, switch the aerial photo off, put the SFMSF labels and every other
@@ -483,51 +209,11 @@ export function reset() {
   refresh();
 }
 
-// Bookmarkable views: each view but Progress has its own address hash, so a link or bookmark opens on that view; Progress
-// (the opening view) leaves the address clean
-const HASHES = {
-  fullAerial: "aerial",
-  horizontal: "horizontal",
-  sfmsfAerial: "omc",
-  sfmsfDrawing: "omc-drawing",
-};
-const viewOfHash = (h) =>
-  Object.keys(HASHES).find((k) => HASHES[k] === h.replace(/^#/, "")) ??
-  (h.replace(/^#/, "") ? null : "progress");
-// the hash the page was opened with, read before anything rewrites it
-const openedWith = typeof location === "undefined" ? "" : location.hash;
-
-// Switch to the view the address names (called by MapView once the map is ready, and on back / forward or an edited hash);
-// an unknown hash is left alone
-export function applyHash(h = openedWith) {
-  const v = viewOfHash(h);
-  if (v && ui.view !== v) setSwitch(v, true);
-}
-
-// Keep the address in step with the view, without adding a history entry for every view picked
-$effect.root(() => {
-  $effect(() => {
-    if (!ui.ready || typeof location === "undefined") return;
-    const h = HASHES[ui.view] ? `#${HASHES[ui.view]}` : "";
-    if (location.hash !== h)
-      history.replaceState(null, "", h || location.pathname + location.search);
-  });
-});
-
 // Save the panel's settings whenever one changes
-$effect.root(() => {
-  $effect(() => {
-    const panel = {
-      layers: $state.snapshot(layers),
-      view: ui.view,
-      changed: ui.changed,
-      layersOpen: ui.layersOpen,
-      drawingSnap,
-    };
-    try {
-      sessionStorage.setItem(SAVED, JSON.stringify(panel));
-    } catch {
-      // storage blocked (a private window, say): settings last until the page is reloaded
-    }
-  });
-});
+autosave(() => ({
+  layers: $state.snapshot(layers),
+  view: ui.view,
+  changed: ui.changed,
+  layersOpen: ui.layersOpen,
+  drawingSnap,
+}));

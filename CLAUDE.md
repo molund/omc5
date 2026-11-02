@@ -31,7 +31,9 @@ Svelte 5 + Vite site, deployed to GitHub Pages (https://clayton-clipper.olund.ca
 - `src/assets/map.svg` — the map.
 - `src/MapView/` — `MapView.svelte` and the code only it uses (`builtBy.js`, `gantryProgress.js`); code shared by more
   than one place stays in `src/lib/`.
-- `src/lib/appState/` — the shared state (`appState.svelte.js`) and `drawingBounds.js`, which only it uses.
+- `src/lib/appState/` — the shared state and view code, imported from `appState.svelte.js`: `state.svelte.js` (layers, ui,
+  els), `viewport.svelte.js` (zoom and the canvas views), the layer switch logic (`appState.svelte.js` itself),
+  `hash.svelte.js` (address bookmarks), `persist.svelte.js` (saved panel settings) and `drawingBounds.js`.
 - `src/lib/layerSwitches.js` — layer definitions; `LayerPanel.svelte` the switches.
 - `src/app.css` — Tailwind, the colour variables and the base styles; see Styling below.
 - `trackside/` — Trackside (`/trackside/`), the updates page; read `trackside/README.md` before changing it.
