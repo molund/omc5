@@ -104,6 +104,9 @@ export function gantryProgress(root, complete) {
       !under.classList.contains("unfinished")
     )
       t.classList.add("on-reached");
+    // an unfinished span's number gets a white outline over the aerial photo (see layerCss), so it is tagged too
+    if (under && under.classList.contains("unfinished"))
+      t.classList.add("on-unfinished");
     // and its colour matches the piece it sits on, now that status.yaml may have finished it: white on a finished span, grey
     // (#767676) on an unfinished one (the steel spans' numbers, drawn without a colour, keep theirs)
     if (under && t.style.fill)
