@@ -3,7 +3,7 @@
   import { fade } from "svelte/transition";
   import { cubicIn } from "svelte/easing";
   import { PROGRESS_COLOUR } from "./lib/layerSwitches.js";
-  import { layers, ui } from "./lib/appState/appState.svelte.js";
+  import { ui } from "./lib/appState/appState.svelte.js";
   import { status, asOf } from "./lib/status.js";
   import { anchor, term, fetchCounts } from "./lib/comments.js";
   import Icon from "./Icon.svelte";
@@ -91,7 +91,7 @@
   >
 {/snippet}
 
-{#if layers.progress && ui.gantry && ui.cardHidden}
+{#if ui.gantry && ui.cardHidden}
   <button
     bind:this={showButton}
     in:fade={{ delay: 350, duration: 100 }}
@@ -100,7 +100,7 @@
     aria-label="Show the progress card"
     onclick={() => (ui.cardHidden = false)}><Icon kind="info" /></button
   >
-{:else if layers.progress && ui.gantry}
+{:else if ui.gantry}
   {@const { span, ahead, total } = ui.gantry}
   <div
     bind:this={card}

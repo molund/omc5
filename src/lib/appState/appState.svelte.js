@@ -90,7 +90,11 @@ const VIEWS = [
 export function setSwitch(k, on) {
   layers[k] = on;
   ui.changed = !VIEWS.includes(k);
-  if (on && VIEWS.includes(k)) ui.view = k;
+  if (on && VIEWS.includes(k)) {
+    ui.view = k;
+    // the progress card opens every time Progress is picked, even if it was closed before; no other view opens it
+    ui.cardHidden = k !== "progress";
+  }
   // picking any other view leaves Horizontal (Full image does so through fullAerialDefaults)
   if (on && (k === "sfmsfDrawing" || k === "progress" || k === "sfmsfAerial"))
     layers.horizontal = false;
@@ -123,8 +127,6 @@ export function setSwitch(k, on) {
     if (layers.sfmsfAerial) exitSfmsfAerial();
     layers.progress = true;
     Object.assign(layers, PROGRESS_DEFAULTS);
-    // the progress card opens every time Progress is picked, even if it was closed before
-    ui.cardHidden = false;
     progressView();
   } else if (k === "sfmsfAerial") {
     if (on && layers.sfmsfDrawing) {
