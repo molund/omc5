@@ -15,12 +15,10 @@ export const LAYERS = [
     "Guideway",
     [
       ["gantry", "Gantry", "gantry", false],
-      ["beams", "Support beams only", "gantry-beams", false],
       ["guideway", "Finished spans", "guideway", true],
       ["unfinished", "Unfinished spans", "unfinished", true],
       ["supports", "Supports", "supports", true],
-      ["omc5Labels", "OMC5 span labels", "spanlabel", true],
-      ["spanLabels", "Span labels", "cclabel", false],
+      ["spanLabels", "Span labels", "cclabel", true],
       ["arrows", "Direction arrows", "arrows", false],
       ["stationLabels", "Station labels", "stationlabel", true],
     ],
@@ -38,14 +36,6 @@ export const LAYERS = [
       ["walk", "Walking paths", "walk-paths", false],
     ],
   ],
-  [
-    "Built by",
-    [
-      ["ff", "Fleetwood Flyer", "ff", true],
-      ["cc", "Clayton Clipper", "cc", true],
-      ["ll", "Langley Launcher", "ll", true],
-    ],
-  ],
 ];
 // The normal view (the on-by-default column above), which Drawing mode returns to when it is switched off
 export const sfmsfAerialDefaults = {};
@@ -54,13 +44,10 @@ LAYERS.forEach((g) =>
     sfmsfAerialDefaults[l[0]] = l[3];
   }),
 );
-// "Full" is the earlier default: the whole canvas with roads and the SFMSF labels off, and the Clayton Clipper span labels on
-// (Horizontal starts with these too)
+// "Full" is the earlier default: the whole canvas with roads off (Horizontal starts with these too)
 export const fullAerialDefaults = Object.assign({}, sfmsfAerialDefaults, {
   sfmsfAerial: false,
   roads: false,
-  omc5Labels: false,
-  spanLabels: true,
   fullAerial: true,
 });
 // Switches that progress-chart mode starts with, which match what it shows: the Clayton Clipper's spans (finished and
@@ -73,15 +60,10 @@ export const PROGRESS_DEFAULTS = {
   yard: false,
   ave72: false,
   railway: false,
-  omc5Labels: false,
   spanLabels: true,
   arrows: false,
   stationLabels: false,
   gantry: true,
-  beams: false,
-  cc: true,
-  ll: false,
-  ff: false,
 };
 // Opening view: Progress, as it is picked from the panel
 export const defaults = Object.assign(
@@ -108,8 +90,8 @@ const PROGRESS_CSS =
   "#map text.cclabel.cc{fill:#000000 !important}" +
   // white where the number sits on a span in the progress colour
   "#map text.cclabel.cc.on-reached{fill:#ffffff !important}" +
-  // the SFMSF span labels' grey (unfinished spans) and default dark grey (the steel spans) in the same black
-  '#map text.spanlabel[style*="#767676"],#map text.spanlabel:not([style*="fill"]){fill:#000000 !important}';
+  // only the Clayton Clipper's spans: the other launchers' stay hidden
+  "#map .ll.ll.ll,#map .ff.ff.ff{display:none !important}";
 // what each switch shows in progress-chart mode (whether it shows is still up to the layer's own display rule)
 const PROGRESS_SHOWS = {
   // finished spans, concrete and steel
@@ -119,12 +101,10 @@ const PROGRESS_SHOWS = {
   yard: [".yard"],
   ave72: [".ave72"],
   railway: [".railway"],
-  omc5Labels: [".spanlabel"],
   spanLabels: [".cclabel"],
   arrows: ["text.n.guideway"],
   stationLabels: [".stationlabel"],
   gantry: [".gantry"],
-  beams: [".gantry"],
 };
 // Drawing mode shrinks the canvas to the first-photo frame (the area the greenbelt drawing fills)
 export const FULL_VB = "-6840.7 -5402.04 12387.4 8699.48",
@@ -152,9 +132,9 @@ export const FULL_AERIAL_CSS =
   "#railway-extension path:first-of-type,#railway-extension-north path:first-of-type{stroke-width:3.33 !important}" +
   "#railway-extension path:last-of-type,#railway-extension-north path:last-of-type{stroke-dasharray:3.33 14.43 !important}";
 
-// the span-label options need Clayton Clipper spans on screen: Clayton Clipper on and at least one type of span on
+// the span labels need Clayton Clipper spans on screen: at least one type of span on
 export const labelsAvailable = (state) =>
-  state.progress || (state.cc && (state.guideway || state.unfinished));
+  state.progress || state.guideway || state.unfinished;
 
 // The CSS rules that show and hide the layers of map.svg for the given switch state
 export function layerCss(state) {
@@ -172,7 +152,7 @@ export function layerCss(state) {
         ) &&
         !(k === "aerial" && state.sfmsfDrawing) &&
         !(k === "stationLabels" && (state.sfmsfDrawing || state.sfmsfAerial)) &&
-        !((k === "omc5Labels" || k === "spanLabels") && !avail);
+        !(k === "spanLabels" && !avail);
       if (
         k === "progress" ||
         k === "sfmsfDrawing" ||
@@ -184,17 +164,11 @@ export function layerCss(state) {
       // roads: Fraser Highway and Highway 15, with their labels (every piece is tagged "roads")
       if (k === "roads")
         r += ".roads{display:" + (on ? "inline" : "none") + " !important}";
-      else if (k === "omc5Labels")
-        r += ".spanlabel{display:" + (on ? "inline" : "none") + " !important}";
       else if (k === "spanLabels")
         r += ".cclabel{display:" + (on ? "inline" : "none") + " !important}";
-      else if (k === "cc" || k === "ll" || k === "ff")
-        r += on
-          ? ""
-          : "#map ." + k + "." + k + "." + k + "{display:none !important}";
       else if (k === "arrows")
         r += on ? "" : "text.n.guideway{display:none !important}";
-      else if (k === "gantry" || k === "beams") r += "";
+      else if (k === "gantry") r += "";
       else if (k === "supports")
         r += on ? "" : 'rect.g,circle[fill="#D7D7D7"]{display:none !important}';
       else if (k === "unfinished")
@@ -214,13 +188,11 @@ export function layerCss(state) {
   );
   r +=
     ".gantry{display:" +
-    (state.gantry || state.beams ? "inline" : "none") +
+    (state.gantry ? "inline" : "none") +
     " !important}" +
-    // the body shows with the full gantry, and not with the support beams on their own; set both ways, so it doesn't rely on
-    // map.svg's own default
-    ".gantry-body{display:" +
-    (state.gantry || !state.beams ? "inline" : "none") +
-    " !important}";
+    // the SFMSF span labels (the Clayton Clipper's replace them), and the gantry's body, which shows with the whole gantry
+    ".spanlabel{display:none !important}" +
+    ".gantry-body{display:inline !important}";
   if (state.progress) {
     r += PROGRESS_CSS;
     const shows = Object.keys(PROGRESS_SHOWS)
