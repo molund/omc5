@@ -5,7 +5,7 @@ variables) override the file's values when given:
 - SPAN: the span the gantry is working on, 3-104 (it needs two spans behind it and one ahead). Moving to a new span without
   COMPLETE marks it not complete.
 - COMPLETE: true or false.
-- NOTE: any text, added to the top of the notes list stamped with this update's time (older notes are kept; the site shows
+- NOTE: any text, added as the summary of an untitled note at the top of the notes list stamped with this update's time (older notes are kept; the site shows
   the newest); "-" adds an empty note, so none shows.
 Prints a one-line summary for the commit message.
 """
@@ -61,7 +61,9 @@ for line in lines:
     # a new note goes first in the list, under the `notes:` line
     if m and m.group(1) == "notes" and note.strip():
         text = "" if note.strip() == "-" else note.strip()
-        out.append(f"  - {stamp}: {json.dumps(text)}")
+        # an untitled note: the title is empty and the text is its summary
+        out.append(f'  - {stamp}: ""')
+        out.append(f"    summary: {json.dumps(text)}")
 open(PATH, "w").write("\n".join(out))
 
 state = "complete" if values.get("complete") == "true" else "in progress"

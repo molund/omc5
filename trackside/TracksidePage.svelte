@@ -76,12 +76,12 @@
       : s.slice(0, s.lastIndexOf(" ", n - 1)).replace(/[\s,.;:]+$/, "") + "…";
   const description = $derived(
     post
-      ? clip(post.text)
+      ? clip(post.summary)
       : "Updates and photos from along the Surrey Langley SkyTrain guideway, following the Clayton Clipper gantry span by span.",
   );
   const image = $derived(
     post
-      ? post.photo || post.more.find((m) => m.photo)?.photo
+      ? post.photo || post.block.find((m) => m.photo)?.photo
       : status.history.find((n) => n.photo)?.photo,
   );
   const url = $derived(full(post ? postUrl(post) : pageUrl(page)));
@@ -213,9 +213,9 @@
       {#if n.post && n.title}<p class="mx-0 -mt-1 mb-2 text-sm text-(--mute)">
           {dateOnly(n.time)}
         </p>{/if}
-      <p class="m-0">{n.text}</p>
+      <p class="m-0">{n.summary}</p>
       {#if n.photo}{@render photo(n.photo)}{/if}
-      {#each n.more as m}
+      {#each n.block as m}
         {#if m.photo}{@render photo(m.photo)}{:else}<p class="m-0 mt-2.5">
             {m.text}
           </p>{/if}
