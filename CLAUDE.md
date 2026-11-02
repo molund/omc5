@@ -47,12 +47,15 @@ Svelte 5 + Vite site, deployed to GitHub Pages (https://clayton-clipper.olund.ca
 - Everything is styled with Tailwind v4 classes in the markup (`.svelte` files and `about/index.html`); no component
   `<style>` blocks. `src/app.css` is the only stylesheet: Tailwind (with preflight), the colour variables, `@theme` and the
   base rules.
-- Sizes are written as plain numbers, set in `@theme` in `src/app.css`: 1rem is 17px, so `mt-14`, `text-13` and `rounded-6`
-  are 14px, 13px and 6px at the default text size and follow the iPhone's Text Size setting. Don't write px or rem values
-  (`mt-[14px]`); if a size has no token, add one to `@theme` (a font size is `--text-N`, a radius `--radius-N`).
+- Sizes are Tailwind's standard ones (`text-sm`, `p-4`, `rounded-md`), all in rem, so they follow the iPhone's Text Size
+  setting (the `html` rule in `src/app.css` hands 1rem to the iPhone's body text size). Use the named font sizes and radii,
+  and the spacing numbers (`mt-3.5` is 14px at 16px to the rem). Don't write px or rem values (`mt-[14px]`).
 - Colours come from the variables in `app.css` (`bg-(--panel)`, `text-(--mute)`, `border-(--line)`, `bg-(--primary-button)`,
-  `bg-(--button-bg)` and so on), which already switch in dark mode. Don't hard-code hex colours; add a variable, with its dark
-  value, to the light and both dark blocks.
+  `bg-(--button-bg)` and so on), which already switch in dark mode. Don't hard-code hex colours; add a variable to `:root`
+  as `light-dark(light, dark)`.
+- Looks shared by pages are classes in `@layer components` in `app.css` (`.page-column`, `.page-header`, `.btn` with
+  `.btn-grey` / `.btn-green`, `.pager-link`, `.eyebrow`, `.group-label`, `.fine-print`); use them before repeating a long
+  run of utilities.
 - A new page or folder with markup needs an `@source` line in `app.css`, or its classes won't be generated. The map
   drawing and `data/` are deliberately not scanned.
 - `phone:` is the phone layout (up to 760px wide, the same width as `PHONE` in `src/lib/appState.svelte.js`).

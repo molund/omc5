@@ -46,8 +46,8 @@
   <button
     data-num
     class={[
-      "relative min-h-36 cursor-help rounded-4 border-0 px-3 py-2 font-semibold text-(--ink) underline decoration-(--mute) decoration-dotted underline-offset-4 after:absolute after:-inset-x-7 after:inset-y-0 after:content-['']",
-      big ? "text-28" : "[font-size:inherit]",
+      "relative min-h-9 cursor-help rounded-sm border-0 px-0.75 py-0.5 font-semibold text-(--ink) underline decoration-(--mute) decoration-dotted underline-offset-4 after:absolute after:-inset-x-1.75 after:inset-y-0 after:content-['']",
+      big ? "text-3xl" : "[font-size:inherit]",
       tip === k ? "bg-(--bg)" : "bg-transparent hover:bg-(--bg)",
     ]}
     aria-describedby={tip === k ? "progress-tip" : undefined}
@@ -63,7 +63,7 @@
 {#if layers.progress && ui.gantry && ui.cardHidden}
   <button
     bind:this={showButton}
-    class="absolute top-12 right-12 z-5 p-6 shadow-float"
+    class="absolute top-3 right-3 z-5 p-1.5 shadow-float"
     title="Show the progress card"
     aria-label="Show the progress card"
     onclick={() => (ui.cardHidden = false)}><Icon kind="info" /></button
@@ -71,12 +71,12 @@
 {:else if layers.progress && ui.gantry}
   {@const { span, ahead, total } = ui.gantry}
   <div
-    class="absolute top-12 right-12 z-5 w-240 max-w-[calc(100%_-_var(--spacing)*24)] rounded-8 border border-(--line) bg-(--panel) px-14 pt-12 pb-14 text-(--ink) shadow-[0_2px_8px_rgba(0,0,0,0.25)]"
+    class="absolute top-3 right-3 z-5 w-60 max-w-[calc(100%_-_var(--spacing)*6)] rounded-lg border border-(--line) bg-(--panel) px-3.5 pt-3 pb-3.5 text-(--ink) shadow-[0_2px_8px_rgba(0,0,0,0.25)]"
   >
     <!-- the title: the Clayton Clipper logo with "Progress" beside it, small and spaced out, as in Trackside's header -->
-    <div class="eyebrow flex items-center gap-8 pr-24 text-10-5">
+    <div class="eyebrow flex items-center gap-2 pr-6 text-xs">
       <img
-        class="h-30 w-auto"
+        class="h-7.5 w-auto"
         src="{import.meta.env.BASE_URL}images/logo.png"
         alt="Clayton Clipper"
         width="625"
@@ -84,14 +84,16 @@
       /><span>Progress</span>
     </div>
     <button
-      class="absolute top-6 right-6 border-transparent bg-transparent p-4 text-(--mute) hover:text-(--ink)"
+      class="absolute top-1.5 right-1.5 border-transparent bg-transparent p-1 text-(--mute) hover:text-(--ink)"
       title="Hide the progress card"
       aria-label="Hide the progress card"
       onclick={close}><Icon kind="close" /></button
     >
     <!-- "36 (+8) / 105": the spans done, the spans ahead built by cranes, and the total (non-breaking spaces, which the flex
          row keeps) -->
-    <div class="mt-2 mb-8 flex flex-wrap items-baseline text-15 text-(--mute)">
+    <div
+      class="mt-0.5 mb-2 flex flex-wrap items-baseline text-base text-(--mute)"
+    >
       {@render num("span", span, true)}&nbsp;(+{@render num(
         "ahead",
         ahead,
@@ -100,14 +102,14 @@
     <!-- floats over the progress bar (no top: it sits where it would have started, just under the figure), in the card's
          colours reversed so it stands out from the card in light and dark mode -->
     {#if tip}<div
-        class="absolute inset-x-8 z-1 -mt-2 rounded-6 bg-(--ink) px-9 py-7 text-12 leading-[1.35] text-(--panel) shadow-[0_3px_10px_rgba(0,0,0,0.35)]"
+        class="absolute inset-x-2 z-1 -mt-0.5 rounded-md bg-(--ink) px-2.25 py-1.75 text-xs leading-snug text-(--panel) shadow-[0_3px_10px_rgba(0,0,0,0.35)]"
         id="progress-tip"
         role="tooltip"
       >
         {@html TIPS[tip]}
       </div>{/if}
     <div
-      class="h-10 overflow-hidden rounded-5 bg-(--line)"
+      class="h-2.5 overflow-hidden rounded-md bg-(--line)"
       role="progressbar"
       aria-label="Clayton Clipper progress"
       aria-valuemin="0"
@@ -115,7 +117,7 @@
       aria-valuenow={span}
     >
       <div
-        class="h-full rounded-5"
+        class="h-full rounded-md"
         style:width="{(span / total) * 100}%"
         style:background={PROGRESS_COLOUR}
       ></div>
