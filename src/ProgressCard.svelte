@@ -430,6 +430,26 @@
   .comment-button:hover {
     background: var(--bg);
   }
+  /* on a phone, the secondary button to Let's go: the same shape and weight, in the Map buttons' secondary colours (the
+     pager's, GitHub's segmented control) */
+  .card.full .comment-button {
+    --track: #eff2f5;
+    --knob-line: #818b98;
+    --knob-ink: #1f2328;
+    border-color: var(--knob-line);
+    border-radius: 6px;
+    background: var(--track);
+    color: var(--knob-ink);
+    font-size: calc(14rem / 17);
+    font-weight: 600;
+  }
+  @media (prefers-color-scheme: dark) {
+    .card.full .comment-button {
+      --track: #212830;
+      --knob-line: #656c76;
+      --knob-ink: #f0f6fc;
+    }
+  }
   /* the reactions, at the button's right end */
   .reactions {
     display: flex;
