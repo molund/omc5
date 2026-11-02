@@ -4,8 +4,10 @@
   let { kind = "panel" } = $props();
 </script>
 
-<!-- Icons for the buttons that show and hide the layer panel and the progress card -->
+<!-- Icons for the buttons that show and hide the layer panel and the progress card. 18px at the default text size, scaled by
+     the iPhone's Text Size setting (see app.css) -->
 <svg
+  class="block h-18 w-18"
   width="18"
   height="18"
   viewBox="0 0 18 18"
@@ -68,12 +70,3 @@
     <line x1="6.75" y1="2.75" x2="6.75" y2="15.25" />
   {/if}
 </svg>
-
-<style>
-  /* 18px at the default text size, scaled by the iPhone's Text Size setting (see app.css) */
-  svg {
-    display: block;
-    width: calc(18rem / 17);
-    height: calc(18rem / 17);
-  }
-</style>

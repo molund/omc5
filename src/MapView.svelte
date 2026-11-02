@@ -143,13 +143,19 @@
   const safariPinch = "GestureEvent" in window;
 </script>
 
-<div class="wrap">
+<div class="relative min-h-0 min-w-0">
+  <!-- where the map zooms itself on a pinch (Safari), the browser mustn't zoom the page with it; Horizontal: the white
+       canvas backing would show past the turned photo, so it goes -->
   <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
   <main
-    class="stage"
-    class:drag
-    class:horizontal={layers.horizontal}
-    class:safari-pinch={safariPinch}
+    class={[
+      "relative h-full min-w-0 touch-pan-x touch-pan-y overflow-auto select-none [-webkit-tap-highlight-color:transparent]",
+      "[&_*]:[-webkit-tap-highlight-color:transparent] [&_*]:select-none",
+      "[&_svg]:mx-auto [&_svg]:block [&_svg]:h-auto [&_svg]:w-full [&_svg]:max-w-none",
+      drag ? "cursor-grabbing" : "cursor-grab",
+      !safariPinch && "touch-pinch-zoom",
+      layers.horizontal && "[&_#canvas-backing]:hidden",
+    ]}
     bind:this={stage}
     onpointerdown={pointerdown}
     onpointermove={pointermove}
@@ -160,43 +166,3 @@
   </main>
   <ProgressCard />
 </div>
-
-<style>
-  .wrap {
-    position: relative;
-    min-width: 0;
-    min-height: 0;
-  }
-  .stage {
-    position: relative;
-    height: 100%;
-    overflow: auto;
-    min-width: 0;
-    cursor: grab;
-    touch-action: pan-x pan-y pinch-zoom;
-  }
-  /* where the map zooms itself on a pinch, the browser mustn't zoom the page with it */
-  .stage.safari-pinch {
-    touch-action: pan-x pan-y;
-  }
-  .stage.drag {
-    cursor: grabbing;
-  }
-  /* Horizontal: the white canvas backing would show past the turned photo, so it goes */
-  .stage.horizontal :global(#canvas-backing) {
-    display: none;
-  }
-  .stage,
-  .stage :global(*) {
-    -webkit-user-select: none;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .stage :global(svg) {
-    display: block;
-    margin: 0 auto;
-    width: 100%;
-    height: auto;
-    max-width: none;
-  }
-</style>

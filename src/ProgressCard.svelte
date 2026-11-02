@@ -37,7 +37,7 @@
   const toggle = (k) => (tip = tip === k ? null : k);
   // a tap anywhere else, or Escape, closes the tip
   function outside(e) {
-    if (!e.target.closest(".num")) tip = null;
+    if (!e.target.closest("[data-num]")) tip = null;
   }
 
   // On a phone the card is a full-screen dialog: it fills the screen, has its own Close button in a sticky header, and stays
@@ -88,6 +88,19 @@
     }
   }
 
+  // every size on the card is in rem, so it follows the iPhone's Text Size setting (see app.css). On a phone the Comments
+  // button is the secondary button to Let's go (the same shape and weight, in the Map buttons' secondary colours, the
+  // pager's, GitHub's segmented control), and More trackside updates is a green one at the bottom of the card.
+  const COMMENT_BUTTON = "btn mt-10 flex min-h-32 gap-6 px-10";
+  const COMMENT_BUTTON_SMALL =
+    "border-(--line) bg-(--panel) text-13 font-normal text-(--ink) hover:bg-(--bg)";
+  const COMMENT_BUTTON_FULL = "btn-grey";
+  const COMMENT_BUTTON_GREEN = "btn-green mt-40";
+  // the notes, each led by its own time in a small grey chip (a note after a note has a little more room above it)
+  const NOTE = "mt-4 text-13 [[data-note]+&]:mt-6";
+  const CHIP =
+    "mr-4 inline-block rounded-9 bg-(--bg) px-6 text-11 font-semibold text-(--mute)";
+
   function stripHtml(html) {
     return html.replace(/<[^>]*>/g, "");
   }
@@ -96,10 +109,16 @@
 <svelte:window onpointerdown={outside} onkeydown={keydown} />
 
 {#snippet num(k, value, big)}
+  <!-- the numbers are buttons, with room to tap, that look like plain figures with a dotted underline hinting at the tip;
+       the ::after is an invisible extension of the tap area over the brackets and signs, so even the "8" is a comfortable
+       target while the figure stays tight -->
   <button
-    class="num"
-    class:big
-    class:open={tip === k}
+    data-num
+    class={[
+      "relative min-h-36 cursor-help rounded-4 border-0 px-3 py-2 font-semibold text-(--ink) underline decoration-(--mute) decoration-dotted underline-offset-4 after:absolute after:-inset-x-7 after:inset-y-0 after:content-['']",
+      big ? "text-28" : "[font-size:inherit]",
+      tip === k ? "bg-(--bg)" : "bg-transparent hover:bg-(--bg)",
+    ]}
     aria-describedby={tip === k ? "progress-tip" : undefined}
     aria-label="{value}: {stripHtml(TIPS[k])}"
     onclick={(e) => (e.pointerType === "mouse" ? (tip = k) : toggle(k))}
@@ -113,7 +132,7 @@
 {#if layers.progress && ui.gantry && ui.cardHidden}
   <button
     bind:this={showButton}
-    class="show"
+    class="absolute top-12 right-12 z-5 p-6 shadow-float"
     title="Show the progress card"
     aria-label="Show the progress card"
     onclick={() => (ui.cardHidden = false)}><Icon kind="info" /></button
@@ -122,17 +141,28 @@
   {@const { span, ahead, total } = ui.gantry}
   <div
     bind:this={card}
-    class="card"
-    class:full
+    class={[
+      "bg-(--panel) text-(--ink)",
+      full
+        ? "fixed inset-0 z-50 h-[100dvh] w-auto max-w-none overflow-y-auto overscroll-contain pt-0 pr-[max(calc(var(--spacing)*16),env(safe-area-inset-right))] pb-[calc(var(--spacing)*16_+_env(safe-area-inset-bottom))] pl-[max(calc(var(--spacing)*16),env(safe-area-inset-left))]"
+        : "absolute top-12 right-12 z-5 w-240 max-w-[calc(100%_-_var(--spacing)*24)] rounded-8 border border-(--line) px-14 pt-12 pb-14 shadow-[0_2px_8px_rgba(0,0,0,0.25)]",
+    ]}
     role={full ? "dialog" : undefined}
     aria-modal={full ? "true" : undefined}
     aria-labelledby={full ? "progress-title" : undefined}
   >
     <!-- the title: the Clayton Clipper logo with "Progress" beside it, small and spaced out, as in Trackside's header; on a
          phone, a sticky header with a large Close button -->
-    <div class="head">
-      <div class="title" id="progress-title">
+    <div
+      class={full &&
+        "sticky top-0 z-2 mt-0 mr-[calc(-1_*_max(calc(var(--spacing)*16),env(safe-area-inset-right)))] mb-12 ml-[calc(-1_*_max(calc(var(--spacing)*16),env(safe-area-inset-left)))] flex items-center justify-between gap-12 border-b border-(--line) bg-(--panel) pt-[calc(var(--spacing)*8_+_env(safe-area-inset-top))] pr-[max(calc(var(--spacing)*16),env(safe-area-inset-right))] pb-8 pl-[max(calc(var(--spacing)*16),env(safe-area-inset-left))]"}
+    >
+      <div
+        class="eyebrow flex items-center gap-8 pr-24 text-10-5"
+        id="progress-title"
+      >
         <img
+          class="h-30 w-auto"
           src="{import.meta.env.BASE_URL}images/logo.png"
           alt="Clayton Clipper"
           width="625"
@@ -141,11 +171,11 @@
       </div>
       {#if full}<button
           bind:this={closeButton}
-          class="primary-button"
+          class="btn btn-green"
           onclick={close}
           aria-label="Let’s go to the map">Let’s go →</button
         >{:else}<button
-          class="close"
+          class="absolute top-6 right-6 border-transparent bg-transparent p-4 text-(--mute) hover:text-(--ink)"
           title="Hide the progress card"
           aria-label="Hide the progress card"
           onclick={close}><Icon kind="close" /></button
@@ -153,17 +183,23 @@
     </div>
     <!-- "36 (+8) / 105": the spans done, the spans ahead built by cranes, and the total (non-breaking spaces, which the flex
          row keeps) -->
-    <div class="figure">
+    <div class="mt-2 mb-8 flex flex-wrap items-baseline text-15 text-(--mute)">
       {@render num("span", span, true)}&nbsp;(+{@render num(
         "ahead",
         ahead,
       )})&nbsp;/&nbsp;{@render num("total", total)}
     </div>
-    {#if tip}<div class="tip" id="progress-tip" role="tooltip">
+    <!-- floats over the progress bar (no top: it sits where it would have started, just under the figure), in the card's
+         colours reversed so it stands out from the card in light and dark mode -->
+    {#if tip}<div
+        class="absolute inset-x-8 z-1 -mt-2 rounded-6 bg-(--ink) px-9 py-7 text-12 leading-[1.35] text-(--panel) shadow-[0_3px_10px_rgba(0,0,0,0.35)]"
+        id="progress-tip"
+        role="tooltip"
+      >
         {@html TIPS[tip]}
       </div>{/if}
     <div
-      class="track"
+      class="h-10 overflow-hidden rounded-5 bg-(--line)"
       role="progressbar"
       aria-label="Clayton Clipper progress"
       aria-valuemin="0"
@@ -171,47 +207,57 @@
       aria-valuenow={span}
     >
       <div
-        class="fill"
+        class="h-full rounded-5"
         style:width="{(span / total) * 100}%"
         style:background={PROGRESS_COLOUR}
       ></div>
     </div>
-    {#if when}<div class="asof">As of {when}</div>{/if}
+    {#if when}<div class="mt-8 text-12 text-(--mute)">
+        As of {when}
+      </div>{/if}
     <!-- every update in the order it happened, since later ones build on earlier ones: the original note, then its
          follow-ups oldest first, each led by its own time in a small chip -->
-    {#if status.note}<div class="note">
-        <span class="chip">{postedAt}</span>{status.note}
+    {#if status.note}<div data-note class={NOTE}>
+        <span class={CHIP}>{postedAt}</span>{status.note}
         {#if status.more.length}<a
-            class="more"
+            class="whitespace-nowrap text-(--accent)"
             href="{TRACKSIDE}#{anchor(newest.time)}">More</a
           >{/if}
       </div>{/if}
-    {#each [...status.followUps].reverse() as m}<div class="note">
-        <span class="chip">{followUpTime(m.time, status.latest.time)}</span
+    {#each [...status.followUps].reverse() as m}<div data-note class={NOTE}>
+        <span class={CHIP}>{followUpTime(m.time, status.latest.time)}</span
         >{m.text}
       </div>{/each}
-    {#if status.photo}<a class="thumb" href="{TRACKSIDE}#{anchor(newest.time)}"
+    {#if status.photo}<a
+        class="mt-8 block"
+        href="{TRACKSIDE}#{anchor(newest.time)}"
         ><img
+          class="block h-110 w-full rounded-6 object-cover"
           src={status.photo.src}
           alt={status.photo.caption || "Photo for this update"}
         /></a
       >{/if}
     {#if status.history.length}
-      <a class="comment-button" href={COMMENTS}
+      <a
+        class="{COMMENT_BUTTON} {full
+          ? COMMENT_BUTTON_FULL
+          : COMMENT_BUTTON_SMALL}"
+        href={COMMENTS}
         ><Icon kind="comment" /><span
           >Comments{activity?.comments ? ` (${activity.comments})` : ""}</span
-        >{#if activity?.reactions.length}<span class="reactions"
+        >{#if activity?.reactions.length}<span
+            class="ml-auto flex gap-8 text-(--mute)"
             >{#each activity.reactions as [e, c]}<span>{e} {c}</span
               >{/each}</span
           >{/if}</a
       >
       {#if full}
-        <a class="comment-button more-updates" href={COMMENTS}>
+        <a class="{COMMENT_BUTTON} {COMMENT_BUTTON_GREEN}" href={COMMENTS}>
           More trackside updates</a
         >
         <button
           bind:this={closeButton}
-          class="primary-button view-map"
+          class="btn btn-green mt-16 w-full"
           onclick={close}
           aria-label="Let’s go to the map">View map</button
         >
@@ -219,274 +265,3 @@
     {/if}
   </div>
 {/if}
-
-<style>
-  /* every size on the card is in rem, so it follows the iPhone's Text Size setting (see app.css) */
-  .card {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    width: calc(240rem / 17); /* grows with the text */
-    max-width: calc(100% - 24px);
-    padding: 12px 14px 14px;
-    background: var(--panel);
-    color: var(--ink);
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-    z-index: 5;
-  }
-  /* on a phone: a full-screen dialog, edge to edge with no corners, scrolling inside itself, clear of the iPhone's notch,
-     home indicator and rounded corners */
-  .card.full {
-    position: fixed;
-    inset: 0;
-    width: auto;
-    max-width: none;
-    height: 100dvh;
-    padding: 0 max(16px, env(safe-area-inset-right))
-      calc(16px + env(safe-area-inset-bottom))
-      max(16px, env(safe-area-inset-left));
-    border: 0;
-    border-radius: 0;
-    box-shadow: none;
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    z-index: 50;
-  }
-  /* its header stays at the top while the card scrolls: the logo and name, and the Close button */
-  .card.full .head {
-    position: sticky;
-    top: 0;
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    margin: 0 calc(-1 * max(16px, env(safe-area-inset-right))) 12px
-      calc(-1 * max(16px, env(safe-area-inset-left)));
-    padding: calc(8px + env(safe-area-inset-top))
-      max(16px, env(safe-area-inset-right)) 8px
-      max(16px, env(safe-area-inset-left));
-    border-bottom: 1px solid var(--line);
-    background: var(--panel);
-  }
-
-  /* primary green buttons */
-  .primary-button {
-    display: inline-flex;
-    align-items: center;
-    padding: calc(6rem / 17) calc(12rem / 17);
-    border: 1px solid #3c904b;
-    border-radius: 6px;
-    background: #3c904b;
-    color: #ffffff;
-    font-size: calc(14rem / 17);
-    font-weight: 600;
-    white-space: nowrap;
-  }
-  /* the view map button at the bottom of the card */
-  .primary-button.view-map {
-    margin-top: 16px;
-    width: 100%;
-  }
-  /* the card's close button, in its top right corner, and the information button that takes the card's place once it is closed */
-  .close {
-    position: absolute;
-    top: 6px;
-    right: 6px;
-    padding: 4px;
-    border-color: transparent;
-    background: none;
-    color: var(--mute);
-  }
-  .close:hover {
-    color: var(--ink);
-  }
-  .show {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    z-index: 5;
-    padding: calc(6rem / 17);
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-  }
-  .title {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding-right: calc(24rem / 17); /* clear of the close button */
-    font-size: calc(10.5rem / 17);
-    font-weight: 700;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--mute);
-  }
-  .title img {
-    width: auto;
-    height: calc(30rem / 17);
-  }
-  .figure {
-    margin: 2px 0 8px;
-    font-size: calc(15rem / 17);
-    color: var(--mute);
-  }
-  .figure {
-    display: flex;
-    align-items: baseline;
-    flex-wrap: wrap;
-  }
-  /* the numbers are buttons, with room to tap, that look like plain figures with a dotted underline hinting at the tip */
-  .num {
-    font: inherit;
-    font-weight: 600;
-    color: var(--ink);
-    background: none;
-    border: 0;
-    border-radius: 4px;
-    padding: 2px 3px;
-    min-height: 36px;
-    position: relative;
-    cursor: help;
-    text-decoration: underline dotted;
-    text-underline-offset: 4px;
-    text-decoration-color: var(--mute);
-  }
-  /* an invisible extension of the tap area over the brackets and signs, so even the "8" is a comfortable target while the
-     figure stays tight */
-  .num::after {
-    content: "";
-    position: absolute;
-    inset: 0 -7px;
-  }
-  .num.big {
-    font-size: calc(28rem / 17);
-  }
-  .num:hover,
-  .num.open {
-    background: var(--bg);
-  }
-  /* floats over the progress bar (no top: it sits where it would have started, just under the figure), in the card's
-     colours reversed so it stands out from the card in light and dark mode */
-  .tip {
-    position: absolute;
-    left: 8px;
-    right: 8px;
-    z-index: 1;
-    margin-top: -2px;
-    padding: 7px 9px;
-    font-size: calc(
-      12rem / 17
-    ); /* follows the iPhone's Text Size setting (see app.css) */
-    line-height: 1.35;
-    color: var(--panel);
-    background: var(--ink);
-    border-radius: 6px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
-  }
-  .track {
-    height: 10px;
-    border-radius: 5px;
-    background: var(--line);
-    overflow: hidden;
-  }
-  .fill {
-    height: 100%;
-    border-radius: 5px;
-  }
-  /* a time chip leading the note or a follow-up: small grey pill */
-  .chip {
-    display: inline-block;
-    margin-right: 4px;
-    padding: 0 6px;
-    border-radius: 9px;
-    background: var(--bg);
-    color: var(--mute);
-    font-size: calc(11rem / 17);
-    font-weight: 600;
-  }
-  /* the link to the rest of a longer note, on the Trackside page */
-  .more {
-    color: var(--accent);
-    white-space: nowrap;
-  }
-  .note + .note {
-    margin-top: 6px;
-  }
-  .asof {
-    margin-top: 8px;
-    font-size: calc(12rem / 17);
-    color: var(--mute);
-  }
-  /* 13px at the default text size, scaled by the iPhone's Text Size setting (see app.css) */
-  .note {
-    margin-top: 4px;
-    font-size: calc(13rem / 17);
-  }
-  /* the newest update's photo, a short strip across the card, opening that update on the Trackside page (where the Comments button goes) */
-  .thumb {
-    display: block;
-    margin-top: 8px;
-  }
-  .thumb img {
-    display: block;
-    width: 100%;
-    height: calc(110rem / 17);
-    object-fit: cover;
-    border-radius: 6px;
-  }
-  /* a plain text link at the foot of the card */
-  /* the Comments button: a full-width button in the site's button style (it is a link, so the style is spelled out), with a
-     speech bubble and the newest update's comment and reaction counts */
-  .comment-button {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-top: 10px;
-    min-height: calc(32rem / 17);
-    padding: calc(6rem / 17) calc(10rem / 17);
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    background: var(--panel);
-    color: var(--ink);
-    font-size: calc(13rem / 17);
-    text-decoration: none;
-  }
-  .comment-button:hover {
-    background: var(--bg);
-  }
-  /* on a phone, the secondary button to Let's go: the same shape and weight, in the Map buttons' secondary colours (the
-     pager's, GitHub's segmented control) */
-  .card.full .comment-button {
-    --track: #eff2f5;
-    --knob-line: #818b98;
-    --knob-ink: #1f2328;
-    border-color: var(--knob-line);
-    border-radius: 6px;
-    background: var(--track);
-    color: var(--knob-ink);
-    font-size: calc(14rem / 17);
-    font-weight: 600;
-  }
-  /* More trackside updates link at the bottom of the card */
-  .card.full .comment-button.more-updates {
-    margin-top: 40px;
-    border: 1px solid #3c904b;
-    background: #3c904b;
-    color: #ffffff;
-  }
-  @media (prefers-color-scheme: dark) {
-    .card.full .comment-button {
-      --track: #212830;
-      --knob-line: #656c76;
-      --knob-ink: #f0f6fc;
-    }
-  }
-  /* the reactions, at the button's right end */
-  .reactions {
-    display: flex;
-    gap: 8px;
-    margin-left: auto;
-    color: var(--mute);
-  }
-</style>
