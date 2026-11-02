@@ -1,11 +1,11 @@
 <script>
   import { onMount } from "svelte";
-  import mapSvg from "./assets/map.svg?raw";
-  import { DRAW_VB, SFMSF_AERIAL_VB, FULL_VB } from "./lib/layerSwitches.js";
-  import { tagBuiltBy } from "./lib/builtBy.js";
-  import { gantryProgress } from "./lib/gantryProgress.js";
-  import { placeGantry } from "./lib/placeGantry.js";
-  import { status } from "./lib/status.js";
+  import mapSvg from "../assets/map.svg?raw";
+  import { DRAW_VB, SFMSF_AERIAL_VB, FULL_VB } from "../lib/layerSwitches.js";
+  import { tagBuiltBy } from "./builtBy.js";
+  import { gantryProgress } from "./gantryProgress.js";
+  import { placeGantry } from "../lib/placeGantry.js";
+  import { status } from "../lib/status.js";
   import {
     layers,
     ui,
@@ -18,8 +18,8 @@
     progressView,
     horizontalView,
     applyHash,
-  } from "./lib/appState.svelte.js";
-  import ProgressCard from "./ProgressCard.svelte";
+  } from "../lib/appState.svelte.js";
+  import ProgressCard from "../ProgressCard.svelte";
 
   let stage;
   let drag = $state(null);

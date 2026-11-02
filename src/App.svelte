@@ -1,7 +1,7 @@
 <script>
   import LayerPanel from "./LayerPanel.svelte";
   import Icon from "./Icon.svelte";
-  import MapView from "./MapView.svelte";
+  import MapView from "./MapView/MapView.svelte";
   import { layerCss, FULL_AERIAL_CSS } from "./lib/layerSwitches.js";
   import { fade } from "svelte/transition";
   import { layers, ui, PHONE } from "./lib/appState.svelte.js";

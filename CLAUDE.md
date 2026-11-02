@@ -29,6 +29,8 @@ Svelte 5 + Vite site, deployed to GitHub Pages (https://clayton-clipper.olund.ca
 ## Layout
 
 - `src/assets/map.svg` — the map.
+- `src/MapView/` — `MapView.svelte` and the code only it uses (`builtBy.js`, `gantryProgress.js`); code shared by more
+  than one place stays in `src/lib/`.
 - `src/lib/layerSwitches.js` — layer definitions; `LayerPanel.svelte` the switches.
 - `src/app.css` — Tailwind, the colour variables and the base styles; see Styling below.
 - `trackside/` — Trackside (`/trackside/`), the updates page; read `trackside/README.md` before changing it.
