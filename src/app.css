@@ -4,6 +4,7 @@
 @source "../about/index.html";
 @source "../trackside/*.svelte";
 @source "./*.svelte";
+@source "./MapView/*.svelte";
 
 /* the phone layout, up to 760px wide, the same width as PHONE in lib/appState.svelte.js */
 @custom-variant phone (@media (max-width: 760px));
