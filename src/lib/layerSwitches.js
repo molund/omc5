@@ -65,13 +65,13 @@ export const fullAerialDefaults = Object.assign({}, sfmsfAerialDefaults, {
   fullAerial: true,
 });
 /**
- * Switches that progress-chart mode starts with, which match what it shows: the Clayton Clipper's spans (finished and
- * unfinished) with their span numbers, the aerial photo and the full gantry. Every switch works in it, as in Full image.
+ * Switches that progress-chart mode starts with, which match what it shows: the Clayton Clipper's finished spans (the
+ * unfinished ones start off, but can be switched on) with their span numbers, the aerial photo and the full gantry. Every switch works in it, as in Full image.
  * @type {Record<string, boolean>}
  */
 export const PROGRESS_DEFAULTS = {
   guideway: true,
-  unfinished: true,
+  unfinished: false,
   supports: false,
   aerial: true,
   yard: false,
@@ -115,6 +115,8 @@ const PROGRESS_CSS =
   "#map text.cclabel.cc{fill:#000000 !important}" +
   // white where the number sits on a span in the progress colour
   "#map text.cclabel.cc.on-reached{fill:#ffffff !important}" +
+  // a white outline on every other number, so it reads on the aerial photo (the unfinished spans it sat on are off)
+  "#map text.cclabel.cc:not(.on-reached){stroke:#ffffff !important;stroke-width:3 !important;stroke-linejoin:round !important;paint-order:stroke !important}" +
   // only the Clayton Clipper's spans: the other launchers' stay hidden
   "#map .ll.ll.ll,#map .ff.ff.ff{display:none !important}";
 /**
