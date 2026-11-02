@@ -16,19 +16,35 @@
     <script type="module" src="/about/main.js"></script>
   </head>
   <body>
-    <main class="page">
-      <!-- the same slim bar as Trackside's: the logo and the page's name on the left, a button back to the map on the right -->
-      <header class="bar">
-        <a class="logo" href="/"
+    <main
+      class="mx-auto max-w-[calc(640rem/17)] px-[16px] pt-[calc(16px_+_env(safe-area-inset-top,0px))] pb-[32px] text-[calc(15rem/17)] leading-normal [&_p]:mt-[14px] [&_p_a]:text-(--accent)"
+    >
+      <!-- the same slim bar as Trackside's: the logo and the page's name on the left, a button back to the map on the right.
+           It stays at the top while the page scrolls under it, clear of the iPhone's notch; its own top padding takes the
+           place of the page's space above it -->
+      <header
+        class="sticky top-0 z-5 mt-[calc(-16px_-_env(safe-area-inset-top,0px))] mb-[4px] flex flex-wrap items-center gap-x-[10px] gap-y-[8px] border-b border-(--line) bg-(--bg) pt-[calc(26px_+_env(safe-area-inset-top,0px))] pb-[8px]"
+      >
+        <a class="block leading-[0]" href="/"
           ><img
+            class="h-[calc(40rem/17)] w-auto"
             src="/images/logo.png"
             alt="Clayton Clipper"
             width="625"
             height="351"
         /></a>
-        <h1>About</h1>
-        <nav class="links">
-          <a class="button" href="/?hidecardopen=1">← Map</a>
+        <h1
+          class="m-0 text-[calc(13rem/17)] font-bold tracking-[0.3em] text-(--mute) uppercase"
+        >
+          About
+        </h1>
+        <nav class="ml-auto flex gap-[8px]">
+          <!-- in the pager's colours on Trackside (GitHub's segmented control) -->
+          <a
+            class="inline-flex items-center rounded-[6px] border border-[#818b98] bg-[#eff2f5] px-[calc(12rem/17)] py-[calc(6rem/17)] text-[calc(14rem/17)] font-semibold whitespace-nowrap text-[#1f2328] no-underline dark:border-[#656c76] dark:bg-[#212830] dark:text-[#f0f6fc]"
+            href="/?hidecardopen=1"
+            >← Map</a
+          >
         </nav>
       </header>
 
