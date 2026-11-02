@@ -2,7 +2,7 @@
 
 Trackside is the site's updates page: every note in [`status.yaml`](../status.yaml), newest
 first, with its photos, follow-ups and a comment thread. The map's progress card shows only the
-newest note; Trackside keeps them all.
+latest text and a Comments button; the full notes live here.
 
 **Live:** https://clayton-clipper.olund.ca/trackside/
 
@@ -17,9 +17,8 @@ the real text, and then Svelte takes over in the browser for the comments and co
   share: it has the update's own title, description and photo for search results and link previews.
   On the list pages, the date heading links to it.
 
-The map's progress card links to the newest update on `/trackside/`: its More link to
-`/trackside/#2026-10-31T22-15`, and its Comments button to `/trackside/?comments#2026-10-31T22-15`,
-which also opens that update's comments. `?comments` works on an update's own page too.
+The progress card's Comments button goes to `/trackside/?comments#2026-10-31T22-15`,
+which opens that update's comments. `?comments` works on an update's own page too.
 
 ## Files
 
