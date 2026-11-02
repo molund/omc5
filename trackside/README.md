@@ -61,12 +61,15 @@ or the head tags, run `npm run build` and then `npm run preview` (http://localho
 
 ## What goes in `status.yaml`
 
-Each update is a note with a time stamp, and optionally, indented under it:
+Each update is a note: its time stamp and its title on one line, then indented under it:
 
-- `title:` — a short headline for the update's own page: its `<title>` and its link-preview title.
-  It isn't shown on any page. Without one, the page uses the date.
-- `photo:` — a photo and its caption, shown under the note.
-- `more:` — more paragraphs and photos, after the note.
+- The title (the value after the time stamp) — a short headline for the update's own page: its
+  `<title>` and its link-preview title. It isn't shown on a page, except on a post. `""` for none:
+  the page uses the date.
+- `summary:` — the update's main text, in a sentence or two. The progress card shows it on its own, link previews and
+  search results use it, and Trackside leads with it.
+- `photo:` — a photo and its caption, shown under the summary.
+- `block:` — more paragraphs and photos, after the summary.
 - `follow-up:` — later, time-stamped additions, shown as a list under the update. They get no
   page, title or thread of their own.
 
