@@ -17,14 +17,12 @@
   </head>
   <body>
     <main
-      class="mx-auto max-w-640 px-16 pt-[calc(var(--spacing)*16_+_env(safe-area-inset-top,0px))] pb-32 text-15 leading-normal [&_p]:mt-14 [&_p_a]:text-(--accent) [&_code]:font-[family-name:monospace]"
+      class="page-column [&_p]:mt-14 [&_p_a]:text-(--accent) [&_code]:font-[family-name:monospace]"
     >
       <!-- the same slim bar as Trackside's: the logo and the page's name on the left, a button back to the map on the right.
            It stays at the top while the page scrolls under it, clear of the iPhone's notch; its own top padding takes the
            place of the page's space above it -->
-      <header
-        class="sticky top-0 z-5 mt-[calc(var(--spacing)*-16_-_env(safe-area-inset-top,0px))] mb-4 flex flex-wrap items-center gap-x-10 gap-y-8 border-b border-(--line) bg-(--bg) pt-[calc(var(--spacing)*26_+_env(safe-area-inset-top,0px))] pb-8"
-      >
+      <header class="page-header">
         <a class="block leading-[0]" href="/"
           ><img
             class="h-40 w-auto"
@@ -33,18 +31,10 @@
             width="625"
             height="351"
         /></a>
-        <h1
-          class="m-0 text-13 font-bold tracking-[0.3em] text-(--mute) uppercase"
-        >
-          About
-        </h1>
-        <nav class="ml-auto flex gap-8">
+        <h1 class="page-header-title">About</h1>
+        <nav class="page-header-nav">
           <!-- in the pager's colours on Trackside (GitHub's segmented control) -->
-          <a
-            class="inline-flex items-center rounded-6 border border-(--button-line) bg-(--button-bg) px-12 py-6 text-14 font-semibold whitespace-nowrap text-(--button-ink) no-underline"
-            href="/?hidecardopen=1"
-            >← Map</a
-          >
+          <a class="btn btn-grey" href="/?hidecardopen=1">← Map</a>
         </nav>
       </header>
 

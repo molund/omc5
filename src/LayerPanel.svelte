@@ -78,9 +78,7 @@
   >
     <div class="mb-8 flex items-center justify-between gap-8">
       <!-- the title: the Clayton Clipper logo with "Map" beside it, small and spaced out, as on the progress card and Trackside -->
-      <h1
-        class="m-0 flex items-center gap-10 text-12 font-bold tracking-[0.3em] text-(--mute) uppercase"
-      >
+      <h1 class="eyebrow flex items-center gap-10 text-12">
         <img
           class="h-36 w-auto"
           src="{import.meta.env.BASE_URL}images/logo.png"
@@ -127,7 +125,7 @@
     {#if ui.layersOpen}
       <div id="layer-list" transition:slide={{ duration: 150 }}>
         {#each LAYERS.slice(1).filter(([g]) => !groupHidden(g)) as [group, rows]}
-          <div class="mt-14 mb-4 text-13 font-semibold text-(--mute)">
+          <div class="group-label">
             {group}
           </div>
           {#each rows as [k, label]}
@@ -135,10 +133,7 @@
               {@const [name, all] = PAIRS[k]}
               <!-- the support beams on their own are only for Mike -->
               {@const opts = all.filter(([o]) => o !== "beams" || isMike)}
-              {#if name}<div
-                  class="mt-14 mb-4 text-13 font-semibold text-(--mute)"
-                  style:opacity={opacity(k)}
-                >
+              {#if name}<div class="group-label" style:opacity={opacity(k)}>
                   {name}
                 </div>{/if}
               <div
@@ -196,17 +191,17 @@
     {/if}
     <!-- the links, set apart from the map controls above: Trackside (named for what it holds, since its own name isn't known
          yet) and the source code, each with its mark -->
-    <p class="mx-0 mt-32 mb-0 text-13 text-(--mute)">
+    <p class="fine-print mt-32">
       <a class={LINK} href="{import.meta.env.BASE_URL}trackside/"
         ><Icon kind="comment" />Trackside: updates and comments</a
       >
     </p>
-    <p class="mx-0 mt-8 mb-0 text-13 text-(--mute)">
+    <p class="fine-print">
       <a class={LINK} href="{import.meta.env.BASE_URL}about/"
         ><Icon kind="info" />About this site</a
       >
     </p>
-    <p class="mx-0 mt-8 mb-0 text-13 text-(--mute)">
+    <p class="fine-print">
       <a class={LINK} href="https://github.com/molund/omc5"
         ><svg viewBox="0 0 16 16" aria-hidden="true"
           ><path

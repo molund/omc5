@@ -91,21 +91,15 @@
   // every size on the card is in rem, so it follows the iPhone's Text Size setting (see app.css). On a phone the Comments
   // button is the secondary button to Let's go (the same shape and weight, in the Map buttons' secondary colours, the
   // pager's, GitHub's segmented control), and More trackside updates is a green one at the bottom of the card.
-  const COMMENT_BUTTON =
-    "mt-10 flex min-h-32 items-center gap-6 rounded-6 border px-10 py-6 no-underline";
+  const COMMENT_BUTTON = "btn mt-10 flex min-h-32 gap-6 px-10";
   const COMMENT_BUTTON_SMALL =
-    "border-(--line) bg-(--panel) text-13 text-(--ink) hover:bg-(--bg)";
-  const COMMENT_BUTTON_FULL =
-    "border-(--button-line) bg-(--button-bg) text-14 font-semibold text-(--button-ink)";
-  const COMMENT_BUTTON_GREEN =
-    "mt-40 border-(--primary-button) bg-(--primary-button) text-14 font-semibold text-white";
+    "border-(--line) bg-(--panel) text-13 font-normal text-(--ink) hover:bg-(--bg)";
+  const COMMENT_BUTTON_FULL = "btn-grey";
+  const COMMENT_BUTTON_GREEN = "btn-green mt-40";
   // the notes, each led by its own time in a small grey chip (a note after a note has a little more room above it)
   const NOTE = "mt-4 text-13 [[data-note]+&]:mt-6";
   const CHIP =
     "mr-4 inline-block rounded-9 bg-(--bg) px-6 text-11 font-semibold text-(--mute)";
-  // primary green buttons
-  const PRIMARY_BUTTON =
-    "inline-flex items-center rounded-6 border border-(--primary-button) bg-(--primary-button) px-12 py-6 text-14 font-semibold whitespace-nowrap text-white";
 
   function stripHtml(html) {
     return html.replace(/<[^>]*>/g, "");
@@ -138,7 +132,7 @@
 {#if layers.progress && ui.gantry && ui.cardHidden}
   <button
     bind:this={showButton}
-    class="absolute top-12 right-12 z-5 p-6 shadow-[0_1px_4px_rgba(0,0,0,0.3)]"
+    class="absolute top-12 right-12 z-5 p-6 shadow-float"
     title="Show the progress card"
     aria-label="Show the progress card"
     onclick={() => (ui.cardHidden = false)}><Icon kind="info" /></button
@@ -164,7 +158,7 @@
         "sticky top-0 z-2 mt-0 mr-[calc(-1_*_max(calc(var(--spacing)*16),env(safe-area-inset-right)))] mb-12 ml-[calc(-1_*_max(calc(var(--spacing)*16),env(safe-area-inset-left)))] flex items-center justify-between gap-12 border-b border-(--line) bg-(--panel) pt-[calc(var(--spacing)*8_+_env(safe-area-inset-top))] pr-[max(calc(var(--spacing)*16),env(safe-area-inset-right))] pb-8 pl-[max(calc(var(--spacing)*16),env(safe-area-inset-left))]"}
     >
       <div
-        class="flex items-center gap-8 pr-24 text-10-5 font-bold tracking-[0.3em] text-(--mute) uppercase"
+        class="eyebrow flex items-center gap-8 pr-24 text-10-5"
         id="progress-title"
       >
         <img
@@ -177,7 +171,7 @@
       </div>
       {#if full}<button
           bind:this={closeButton}
-          class={PRIMARY_BUTTON}
+          class="btn btn-green"
           onclick={close}
           aria-label="Let’s go to the map">Let’s go →</button
         >{:else}<button
@@ -263,7 +257,7 @@
         >
         <button
           bind:this={closeButton}
-          class="{PRIMARY_BUTTON} mt-16 w-full"
+          class="btn btn-green mt-16 w-full"
           onclick={close}
           aria-label="Let’s go to the map">View map</button
         >

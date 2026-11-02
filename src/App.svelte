@@ -69,7 +69,7 @@
 {/if}
 {#if ui.collapsed}
   <button
-    class="fixed top-[calc(env(safe-area-inset-top,0px)_+_var(--spacing)*10)] left-10 z-20 p-6 shadow-[0_1px_4px_rgba(0,0,0,0.3)]"
+    class="fixed top-[calc(env(safe-area-inset-top,0px)_+_var(--spacing)*10)] left-10 z-20 p-6 shadow-float"
     title={ui.phone ? "Open the menu" : "Show the layer panel"}
     aria-label={ui.phone ? "Open the menu" : "Show the layer panel"}
     aria-expanded="false"

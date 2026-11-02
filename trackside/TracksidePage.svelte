@@ -9,16 +9,6 @@
 
   let { view = { page: 1 } } = $props();
 
-  // The buttons, in the pager's colours (GitHub's segmented control). Tailwind finds these classes by scanning this file,
-  // so they have to stay whole strings.
-  const BUTTON =
-    "inline-flex items-center rounded-6 border border-(--button-line) bg-(--button-bg) px-12 py-6 text-14 font-semibold whitespace-nowrap text-(--button-ink) no-underline";
-  // The pager's links and its greyed-out Next, drawn alike; the colours are the grey button variables in app.css
-  const PAGER_BASE =
-    "inline-flex min-h-36 min-w-96 items-center justify-center rounded-6 border px-14 font-[family-name:-apple-system,BlinkMacSystemFont,Segoe_UI,Noto_Sans,Helvetica,Arial,sans-serif] text-14 no-underline phone:min-h-44 phone:flex-1";
-  const PAGER_LINK = `${PAGER_BASE} border-(--button-line) bg-(--pager-knob) font-semibold text-(--button-ink)`;
-  const PAGER_OFF = `${PAGER_BASE} cursor-default border-transparent bg-transparent font-normal text-(--pager-flat-ink) phone:bg-(--button-bg)`;
-
   const MAP = import.meta.env.BASE_URL;
   const TRACKSIDE = `${MAP}trackside/`;
 
@@ -177,16 +167,12 @@
 
 <!-- laid out like a README on GitHub: a heading per update, the note, its photo, its follow-ups as a list with code-style
      times, then its comments -->
-<main
-  class="mx-auto max-w-640 px-16 pt-[calc(var(--spacing)*16_+_env(safe-area-inset-top,0px))] pb-32 text-15 leading-normal"
->
+<main class="page-column">
   <!-- a slim bar: the Clayton Clipper logo (back to the top of Trackside) and the page's name on the left, buttons back to
        the map (and, on an update's own page, to all updates) on the right. It stays at the top of the screen while the
        updates scroll under it, clear of the iPhone's notch; its own top padding takes the place of the page's space above
        it, so it sits where it did before scrolling -->
-  <header
-    class="sticky top-0 z-5 mt-[calc(var(--spacing)*-16_-_env(safe-area-inset-top,0px))] mb-4 flex flex-wrap items-center gap-x-10 gap-y-8 border-b border-(--line) bg-(--bg) pt-[calc(var(--spacing)*26_+_env(safe-area-inset-top,0px))] pb-8"
-  >
+  <header class="page-header">
     <a class="block leading-[0]" href={TRACKSIDE}
       ><img
         class="h-40 w-auto"
@@ -196,12 +182,10 @@
         height="351"
       /></a
     >
-    <h1 class="m-0 text-13 font-bold tracking-[0.3em] text-(--mute) uppercase">
-      Trackside
-    </h1>
-    <nav class="ml-auto flex gap-8">
-      {#if post}<a class={BUTTON} href={TRACKSIDE}>← All updates</a>{/if}
-      <a class={BUTTON} href={MAP + "?hidecardopen=1"}>← Map</a>
+    <h1 class="page-header-title">Trackside</h1>
+    <nav class="page-header-nav">
+      {#if post}<a class="btn btn-grey" href={TRACKSIDE}>← All updates</a>{/if}
+      <a class="btn btn-grey" href={MAP + "?hidecardopen=1"}>← Map</a>
     </nav>
   </header>
   {#each shown as n (anchor(n.time))}
@@ -297,14 +281,14 @@
       aria-label="Pages of updates"
     >
       {#if page === 1}
-        <a class={PAGER_LINK} href={pageUrl(2)} rel="next">Show older</a>
+        <a class="pager-link" href={pageUrl(2)} rel="next">Show older</a>
       {:else}
-        <a class={PAGER_LINK} href={pageUrl(page - 1)} rel="prev">Previous</a>
+        <a class="pager-link" href={pageUrl(page - 1)} rel="prev">Previous</a>
         {#if page < pages}<a
-            class={PAGER_LINK}
+            class="pager-link"
             href={pageUrl(page + 1)}
             rel="next">Next</a
-          >{:else}<span class={PAGER_OFF}>Next</span>{/if}
+          >{:else}<span class="pager-link pager-link-off">Next</span>{/if}
       {/if}
     </nav>
   {/if}

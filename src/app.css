@@ -23,6 +23,7 @@
   --text-16: calc(16rem / 17);
   --text-19: calc(19rem / 17);
   --text-28: calc(28rem / 17);
+  --shadow-float: 0 1px 4px rgba(0, 0, 0, 0.3);
   --radius-4: calc(4rem / 17);
   --radius-5: calc(5rem / 17);
   --radius-6: calc(6rem / 17);
@@ -34,52 +35,30 @@
   box-sizing: border-box;
   padding-top: env(safe-area-inset-top, 0px);
   padding-bottom: env(safe-area-inset-bottom, 0px);
-  --bg: #f6f5f2;
-  --panel: #ffffff;
-  --ink: #1f2933;
-  --mute: #5b6670;
-  --line: #cbd2d9;
-  --accent: #0b5fa5;
-  --accent-ink: #ffffff;
+  /* light first, dark second: the visitor's setting picks one, and data-theme="light" or "dark" on the page forces it */
+  color-scheme: light dark;
+  --bg: light-dark(#f6f5f2, #14181c);
+  --panel: light-dark(#ffffff, #1d2329);
+  --ink: light-dark(#1f2933, #e6eaed);
+  --mute: light-dark(#5b6670, #a3adb5);
+  --line: light-dark(#cbd2d9, #39424b);
+  --accent: light-dark(#0b5fa5, #6cb4f0);
+  --accent-ink: light-dark(#ffffff, #0c1117);
   /* the green primary buttons on the progress card; the same in light and dark */
   --primary-button: #3c904b;
   /* the grey buttons (GitHub's segmented control, as in the giscus comments): the Map buttons, the pager and the progress
      card's secondary button; the pager's raised buttons and greyed-out Next have colours of their own */
-  --button-bg: #eff2f5;
-  --button-line: #818b98;
-  --button-ink: #1f2328;
-  --pager-knob: #ffffff;
-  --pager-flat-ink: #59636e;
+  --button-bg: light-dark(#eff2f5, #212830);
+  --button-line: light-dark(#818b98, #656c76);
+  --button-ink: light-dark(#1f2328, #f0f6fc);
+  --pager-knob: light-dark(#ffffff, #0d1117);
+  --pager-flat-ink: light-dark(#59636e, #9198a1);
 }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #14181c;
-    --panel: #1d2329;
-    --ink: #e6eaed;
-    --mute: #a3adb5;
-    --line: #39424b;
-    --accent: #6cb4f0;
-    --accent-ink: #0c1117;
-    --button-bg: #212830;
-    --button-line: #656c76;
-    --button-ink: #f0f6fc;
-    --pager-knob: #0d1117;
-    --pager-flat-ink: #9198a1;
-  }
+:root[data-theme="light"] {
+  color-scheme: light;
 }
 :root[data-theme="dark"] {
-  --bg: #14181c;
-  --panel: #1d2329;
-  --ink: #e6eaed;
-  --mute: #a3adb5;
-  --line: #39424b;
-  --accent: #6cb4f0;
-  --accent-ink: #0c1117;
-  --button-bg: #212830;
-  --button-line: #656c76;
-  --button-ink: #f0f6fc;
-  --pager-knob: #0d1117;
-  --pager-flat-ink: #9198a1;
+  color-scheme: dark;
 }
 html {
   scroll-padding-top: env(safe-area-inset-top, 0px);
@@ -134,8 +113,8 @@ body::before {
     font: inherit;
     /* in rem, so buttons follow the iPhone's Text Size setting: 32px tall at the default text size (13px text, 1.4 line
        height, 6px padding and a 1px border, top and bottom); icon buttons match, with their 18px icon and 6px padding */
-    font-size: calc(13rem / 17);
-    padding: calc(6rem / 17) calc(10rem / 17);
+    font-size: var(--text-13);
+    padding: calc(var(--spacing) * 6) calc(var(--spacing) * 10);
     border: 1px solid var(--line);
     border-radius: 6px;
     background: var(--panel);
@@ -153,5 +132,52 @@ body::before {
     background: var(--accent);
     color: var(--accent-ink);
     border-color: var(--accent);
+  }
+}
+
+/* shared looks for the About and Trackside pages and the buttons; utilities can still override these */
+@layer components {
+  .page-column {
+    @apply mx-auto max-w-640 px-16 pt-[calc(var(--spacing)*16_+_env(safe-area-inset-top,0px))] pb-32 text-15 leading-normal;
+  }
+  /* the slim bar at the top of a page: it stays put while the page scrolls under it, clear of the iPhone's notch; its own
+     top padding takes the place of the page's space above it */
+  .page-header {
+    @apply sticky top-0 z-5 mt-[calc(var(--spacing)*-16_-_env(safe-area-inset-top,0px))] mb-4 flex flex-wrap items-center gap-x-10 gap-y-8 border-b border-(--line) bg-(--bg) pt-[calc(var(--spacing)*26_+_env(safe-area-inset-top,0px))] pb-8;
+  }
+  /* small spaced-out capitals in grey: the page and card titles; the size is set where it's used */
+  .eyebrow {
+    @apply m-0 font-bold tracking-[0.3em] text-(--mute) uppercase;
+  }
+  .page-header-title {
+    @apply m-0 text-13 font-bold tracking-[0.3em] text-(--mute) uppercase;
+  }
+  /* a heading over a group of switches or buttons in the layer panel */
+  .group-label {
+    @apply mt-14 mb-4 text-13 font-semibold text-(--mute);
+  }
+  /* the grey small print under the layer panel's switches */
+  .fine-print {
+    @apply mx-0 mt-8 mb-0 text-13 text-(--mute);
+  }
+  .page-header-nav {
+    @apply ml-auto flex gap-8;
+  }
+  /* the pager's links and its greyed-out Next, drawn alike */
+  .pager-link {
+    @apply inline-flex min-h-36 min-w-96 items-center justify-center rounded-6 border border-(--button-line) bg-(--pager-knob) px-14 font-[family-name:-apple-system,BlinkMacSystemFont,Segoe_UI,Noto_Sans,Helvetica,Arial,sans-serif] text-14 font-semibold text-(--button-ink) no-underline phone:min-h-44 phone:flex-1;
+  }
+  .pager-link-off {
+    @apply cursor-default border-transparent bg-transparent font-normal text-(--pager-flat-ink) phone:bg-(--button-bg);
+  }
+  .btn {
+    @apply inline-flex items-center rounded-6 border px-12 py-6 text-14 font-semibold whitespace-nowrap no-underline;
+  }
+  /* GitHub's segmented-control grey, as in the pager */
+  .btn-grey {
+    @apply border-(--button-line) bg-(--button-bg) text-(--button-ink);
+  }
+  .btn-green {
+    @apply border-(--primary-button) bg-(--primary-button) text-white;
   }
 }
