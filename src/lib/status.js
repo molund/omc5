@@ -8,7 +8,7 @@
 //       file: span-36.jpg
 //       caption: "Its own caption, separate from the note"
 // optionally more paragraphs and photos, indented under it (shown after the note and its photo on the Trackside page and
-// in its thread; the card shows only the note, with a link to the rest):
+// in its thread; the card shows only the note):
 //     more:
 //       - "A second paragraph"
 //       - photo:
@@ -132,13 +132,13 @@ function parse(src) {
   const sorted = notes
     .filter((n) => !isNaN(n.time))
     .sort((a, b) => b.time - a.time);
-  // the progress card shows the newest status update; posts are left to Trackside
+  // the newest status update; posts are left out
   const latest = sorted.find((n) => n.text && !n.post) ?? null;
   return {
     updated: out.updated ? new Date(out.updated) : null,
     span: out.span ? +out.span : null,
     complete: out.complete === "true",
-    // the newest status update (not a post), for the progress card, or null
+    // the newest status update (not a post), or null
     latest,
     note: latest ? latest.text : "",
     // the newest status update's photo, { src, caption }, or null
