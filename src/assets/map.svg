@@ -158,7 +158,7 @@
       height="1968"
       preserveAspectRatio="none"
       transform="matrix(4.445894 0.000119 -0.000119 4.445894 -6875.705 -5447.095)"
-      href="images/aerial-base.jpg"
+      href="/images/aerial-base.jpg"
     />
   </g>
   <g id="landmarks" class="aerial">
@@ -168,63 +168,63 @@
       height="489"
       preserveAspectRatio="none"
       transform="matrix(1.959423 0.000035 -0.000035 1.959423 -6842.648 -5402.843)"
-      href="images/aerial-zoom-5.jpg"
+      href="/images/aerial-zoom-5.jpg"
     />
     <image
       width="558"
       height="458"
       preserveAspectRatio="none"
       transform="matrix(1.959423 0.000035 -0.000035 1.959423 -5749.316 -3933.256)"
-      href="images/aerial-zoom-8.jpg"
+      href="/images/aerial-zoom-8.jpg"
     />
     <image
       width="551"
       height="541"
       preserveAspectRatio="none"
       transform="matrix(1.959423 0.000035 -0.000035 1.959423 -4687.308 -3970.466)"
-      href="images/aerial-zoom-6.jpg"
+      href="/images/aerial-zoom-6.jpg"
     />
     <image
       width="824"
       height="326"
       preserveAspectRatio="none"
       transform="matrix(1.959431 0.000034 -0.000034 1.959431 -6343.648 -4511.293)"
-      href="images/aerial-zoom-7.jpg"
+      href="/images/aerial-zoom-7.jpg"
     />
     <image
       width="940"
       height="124"
       preserveAspectRatio="none"
       transform="matrix(1.959431 0.000034 -0.000034 1.959431 -4388.161 -3024.051)"
-      href="images/aerial-zoom-11.jpg"
+      href="/images/aerial-zoom-11.jpg"
     />
     <image
       width="1125"
       height="760"
       preserveAspectRatio="none"
       transform="matrix(1.959440 0.000045 -0.000045 1.959440 -4302.995 -2873.072)"
-      href="images/aerial-zoom-3.jpg"
+      href="/images/aerial-zoom-3.jpg"
     />
     <image
       width="370"
       height="456"
       preserveAspectRatio="none"
       transform="matrix(1.959440 0.000045 -0.000045 1.959440 -2129.990 -2277.352)"
-      href="images/aerial-zoom-10.jpg"
+      href="/images/aerial-zoom-10.jpg"
     />
     <image
       width="1049"
       height="744"
       preserveAspectRatio="none"
       transform="matrix(1.959440 0.000045 -0.000045 1.959440 -2008.525 -1415.196)"
-      href="images/aerial-zoom-4.jpg"
+      href="/images/aerial-zoom-4.jpg"
     />
     <image
       width="503"
       height="556"
       preserveAspectRatio="none"
       transform="matrix(1.959436 0.000014 -0.000014 1.959436 -144.774 -842.091)"
-      href="images/aerial-zoom-9.jpg"
+      href="/images/aerial-zoom-9.jpg"
     />
   </g>
   <g
@@ -247,7 +247,7 @@
       height="1252"
       preserveAspectRatio="none"
       transform="matrix(1.110241 -0.000052 0.000052 1.110240 2065.930 1699.562)"
-      href="images/aerial-zoom-2.jpg"
+      href="/images/aerial-zoom-2.jpg"
     />
   </g>
   <g
@@ -262,7 +262,7 @@
         width="2692.58"
         height="1699.51"
         preserveAspectRatio="none"
-        href="images/aerial-zoom-1.jpg"
+        href="/images/aerial-zoom-1.jpg"
       />
       <!-- Aerial: Apple Maps screenshot (2576x1690) -->
     </g>
