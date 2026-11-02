@@ -150,16 +150,16 @@
 
 <!-- a photo and its caption, under a note or among its further paragraphs -->
 {#snippet photo(p)}
-  <figure class="mx-0 mt-10 mb-0">
+  <figure class="mx-0 mt-2.5 mb-0">
     <a href={p.src}
       ><img
-        class="block h-auto w-full rounded-6"
+        class="block h-auto w-full rounded-md"
         src={p.src}
         alt={p.caption || "Photo for this update"}
         loading="lazy"
       /></a
     >
-    {#if p.caption}<figcaption class="mt-4 mb-20 text-13 text-(--mute) italic">
+    {#if p.caption}<figcaption class="mt-1 mb-5 text-sm text-(--mute) italic">
         {p.caption}
       </figcaption>{/if}
   </figure>
@@ -175,7 +175,7 @@
   <header class="page-header">
     <a class="block leading-[0]" href={TRACKSIDE}
       ><img
-        class="h-40 w-auto"
+        class="h-10 w-auto"
         src="{MAP}images/logo.png"
         alt="Clayton Clipper"
         width="625"
@@ -193,13 +193,13 @@
          the comments link reads as the end of its own update rather than the start of the next -->
     <article
       id={anchor(n.time)}
-      class="scroll-mt-[calc(var(--spacing)*76_+_env(safe-area-inset-top,0px))] [article+&]:mt-36"
+      class="scroll-mt-[calc(var(--spacing)*19_+_env(safe-area-inset-top,0px))] [article+&]:mt-9"
     >
       <!-- on a page of updates, the date links to the update's own page, drawn as plain heading text; with a title,
            screen readers hear the date and the title (the date first, so the visible text is in the name, for voice
            control) -->
       <h2
-        class="mt-28 mb-8 border-b border-(--line) pb-5 text-19 leading-tight font-bold"
+        class="mt-7 mb-2 border-b border-(--line) pb-1.25 text-xl leading-tight font-bold"
       >
         {#if post}{label(n)}{:else}<a
             class="text-inherit no-underline"
@@ -210,33 +210,33 @@
           >{/if}
       </h2>
       <!-- a post leads with its title, with just its date under it -->
-      {#if n.post && n.title}<p class="mx-0 -mt-4 mb-8 text-13 text-(--mute)">
+      {#if n.post && n.title}<p class="mx-0 -mt-1 mb-2 text-sm text-(--mute)">
           {dateOnly(n.time)}
         </p>{/if}
       <p class="m-0">{n.text}</p>
       {#if n.photo}{@render photo(n.photo)}{/if}
       {#each n.more as m}
-        {#if m.photo}{@render photo(m.photo)}{:else}<p class="m-0 mt-10">
+        {#if m.photo}{@render photo(m.photo)}{:else}<p class="m-0 mt-2.5">
             {m.text}
           </p>{/if}
       {/each}
       {#if n.followUps.length}
-        <h3 class="mt-14 mb-4 text-15 font-bold">Follow-ups</h3>
-        <ul class="m-0 list-disc pl-22 [&>li+li]:mt-4">
+        <h3 class="mt-3.5 mb-1 text-base font-bold">Follow-ups</h3>
+        <ul class="m-0 list-disc pl-5.5 [&>li+li]:mt-1">
           <!-- oldest first, in the order they happened (the card shows the newest first) -->
           {#each [...n.followUps].reverse() as m}<li>
               <code
-                class="rounded-6 bg-[rgba(129,139,152,0.18)] px-[0.4em] py-[0.15em] font-[family-name:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace] text-[85%]"
+                class="rounded-md bg-[rgba(129,139,152,0.18)] px-[0.4em] py-[0.15em] font-[family-name:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace] text-[85%]"
                 >{followUpTime(m.time, n.time)}</code
               >
               {m.text}
             </li>{/each}
         </ul>
       {/if}
-      <div class="mt-8 flex flex-wrap items-center gap-10">
+      <div class="mt-2 flex flex-wrap items-center gap-2.5">
         <!-- the comments link, in the link colour -->
         <button
-          class="cursor-pointer border-0 bg-transparent p-0 text-14 text-(--accent)"
+          class="cursor-pointer border-0 bg-transparent p-0 text-sm text-(--accent)"
           aria-expanded={open === anchor(n.time)}
           onclick={() =>
             (open = open === anchor(n.time) ? null : anchor(n.time))}
@@ -250,13 +250,13 @@
         {#if counts[term(n.time)]?.reactions.length}
           <!-- the reactions as GitHub's pills -->
           <span
-            class="inline-flex gap-6"
+            class="inline-flex gap-1.5"
             aria-label="Reactions: {counts[term(n.time)].reactions
               .map(([e, c]) => `${e} ${c}`)
               .join(', ')}"
           >
             {#each counts[term(n.time)].reactions as [e, c]}<span
-                class="rounded-[2em] border border-(--line) bg-(--bg) px-8 text-12"
+                class="rounded-full border border-(--line) bg-(--bg) px-2 text-xs"
                 >{e} {c}</span
               >{/each}
           </span>
@@ -264,7 +264,7 @@
       </div>
       <!-- the giscus thread, set off from the update by a dashed line -->
       {#if open === anchor(n.time)}<div
-          class="mt-10 border-t border-dashed border-(--line) pt-12"
+          class="mt-2.5 border-t border-dashed border-(--line) pt-3"
           use:giscus={n.time}
         ></div>{/if}
     </article>
@@ -277,7 +277,7 @@
        press keeps the track colour). -->
   {#if !post && pages > 1}
     <nav
-      class="mx-auto mt-24 flex w-fit rounded-6 bg-(--button-bg) phone:w-auto phone:gap-8 phone:bg-transparent"
+      class="mx-auto mt-6 flex w-fit rounded-md bg-(--button-bg) phone:w-auto phone:gap-2 phone:bg-transparent"
       aria-label="Pages of updates"
     >
       {#if page === 1}
@@ -295,9 +295,9 @@
   <!-- the footer, at the very bottom of every Trackside page: who's behind this, and a link to the About page; small and
        muted, centred under a thin line, with the link on its own line -->
   <footer
-    class="mt-40 border-t border-(--line) pt-14 pb-4 text-center text-12-5 text-(--mute)"
+    class="mt-10 border-t border-(--line) pt-3.5 pb-1 text-center text-xs text-(--mute)"
   >
-    <p class="mx-0 mt-0 mb-4">
+    <p class="mx-0 mt-0 mb-1">
       A hobby project by Mike, not affiliated with TransLink.
     </p>
     <a class="text-(--accent)" href="{MAP}about/">About this site</a>
