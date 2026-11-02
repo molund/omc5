@@ -118,13 +118,9 @@ function canvasProgress() {
     x1 = e.right.x + m,
     y = e.top.y - m,
     y1 = e.bottom.y + m;
-  // a station label (or the powerhouse label) that reaches into that canvas is taken in whole, with a little room, so it isn't cut off (one that is
+  // a station label that reaches into that canvas is taken in whole, with a little room, so it isn't cut off (one that is
   // nowhere near stays out of the picture, rather than stretching the canvas along the whole route)
-  for (const id of [
-    "#station-label-hillcrest",
-    "#station-label-bakerview",
-    "#powerhouse-label",
-  ]) {
+  for (const id of ["#station-label-hillcrest", "#station-label-bakerview"]) {
     const l = drawingBounds(els.svg, 0, TURN_X, TURN_Y, id);
     if (!l || l.right.x < x || l.left.x > x1 || l.bottom.y < y || l.top.y > y1)
       continue;
