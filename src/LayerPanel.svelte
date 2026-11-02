@@ -49,12 +49,6 @@
   // the Reference group shows only in the two SFMSF views
   const sfmsf = $derived(layers.sfmsfDrawing || layers.sfmsfAerial);
   const groupHidden = (group) => group === "Reference" && !sfmsf;
-  // switches picked from a row of buttons, Off or a style, instead of checkboxes (none at the moment): keyed by the first row
-  // in LAYERS, where the buttons go, with its label (or none) and its styles; PAIRED lists the other rows they cover
-  const PAIRS = {};
-  const PAIRED = [];
-  // the style showing (null for Off): the first if both are on (Show all turns on both gantry switches, and the drawing shows the full gantry)
-  const picked = (opts) => opts.find(([k]) => layers[k])?.[0] ?? null;
   function change(e, k) {
     setSwitch(k, e.currentTarget.checked);
     // the mode logic can put the switch straight back (e.g. unticking Full), so match the box to the state
@@ -126,51 +120,24 @@
             {group}
           </div>
           {#each rows as [k, label]}
-            {#if PAIRS[k]}
-              {@const [name, opts] = PAIRS[k]}
-              {#if name}<div class="group-label" style:opacity={opacity(k)}>
-                  {name}
-                </div>{/if}
-              <div
-                class="mt-2.5 flex flex-wrap gap-1"
-                role="group"
-                aria-label={name ?? group}
-                style:opacity={opacity(k)}
-              >
-                {#each [[null, "Off"], ...opts] as [o, text]}
-                  <button
-                    class="{GROUP_BUTTON} {DISABLED}"
-                    class:on={picked(opts) === o}
-                    aria-pressed={picked(opts) === o}
-                    disabled={disabled(k)}
-                    onclick={() =>
-                      o
-                        ? setSwitch(o, true)
-                        : opts.forEach(([s]) => setSwitch(s, false))}
-                    >{text}</button
-                  >
-                {/each}
-              </div>
-            {:else if !PAIRED.includes(k)}
-              <label
-                class={[
-                  "flex items-center gap-2.5 rounded-md px-1 py-1.5",
-                  disabled(k)
-                    ? "cursor-default"
-                    : "cursor-pointer hover:bg-(--bg)",
-                ]}
-                style:opacity={opacity(k)}
-                style:display={hidden(k) ? "none" : ""}
-              >
-                <input
-                  class="m-0 h-4.5 w-4.5 accent-(--accent) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent)"
-                  type="checkbox"
-                  checked={layers[k]}
-                  disabled={disabled(k)}
-                  onchange={(e) => change(e, k)}
-                />{label}
-              </label>
-            {/if}
+            <label
+              class={[
+                "flex items-center gap-2.5 rounded-md px-1 py-1.5",
+                disabled(k)
+                  ? "cursor-default"
+                  : "cursor-pointer hover:bg-(--bg)",
+              ]}
+              style:opacity={opacity(k)}
+              style:display={hidden(k) ? "none" : ""}
+            >
+              <input
+                class="m-0 h-4.5 w-4.5 accent-(--accent) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent)"
+                type="checkbox"
+                checked={layers[k]}
+                disabled={disabled(k)}
+                onchange={(e) => change(e, k)}
+              />{label}
+            </label>
           {/each}
         {/each}
         <div class="mt-2.5 flex flex-wrap gap-1">
