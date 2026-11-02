@@ -1,5 +1,13 @@
-// Layer switches: [key, label, class in map.svg, on by default], in panel groups. The View group comes first and
-// is shown as radio buttons: picking one switches the others off (see setSwitch in appState/appState.svelte.js)
+/**
+ * @typedef {[key: string, label: string, cls: string, on: boolean]} LayerSwitch A layer switch: its key, the label shown
+ * for it, its class in map.svg and whether it is on by default.
+ */
+
+/**
+ * The layer switches in panel groups, as [group name, switches]. The View group comes first and is shown as radio
+ * buttons: picking one switches the others off (see setSwitch in appState/appState.svelte.js).
+ * @type {Array<[string, LayerSwitch[]]>}
+ */
 export const LAYERS = [
   [
     "View",
@@ -37,21 +45,30 @@ export const LAYERS = [
     ],
   ],
 ];
-// The normal view (the on-by-default column above), which Drawing mode returns to when it is switched off
+/**
+ * The normal view (the on-by-default column above), which Drawing mode returns to when it is switched off.
+ * @type {Record<string, boolean>} Every switch's key and whether it is on.
+ */
 export const sfmsfAerialDefaults = {};
 LAYERS.forEach((g) =>
   g[1].forEach((l) => {
     sfmsfAerialDefaults[l[0]] = l[3];
   }),
 );
-// "Full" is the earlier default: the whole canvas with roads off (Horizontal starts with these too)
+/**
+ * "Full" is the earlier default: the whole canvas with roads off (Horizontal starts with these too).
+ * @type {Record<string, boolean>}
+ */
 export const fullAerialDefaults = Object.assign({}, sfmsfAerialDefaults, {
   sfmsfAerial: false,
   roads: false,
   fullAerial: true,
 });
-// Switches that progress-chart mode starts with, which match what it shows: the Clayton Clipper's spans (finished and
-// unfinished) with their span numbers, the aerial photo and the full gantry. Every switch works in it, as in Full image.
+/**
+ * Switches that progress-chart mode starts with, which match what it shows: the Clayton Clipper's spans (finished and
+ * unfinished) with their span numbers, the aerial photo and the full gantry. Every switch works in it, as in Full image.
+ * @type {Record<string, boolean>}
+ */
 export const PROGRESS_DEFAULTS = {
   guideway: true,
   unfinished: true,
@@ -65,7 +82,10 @@ export const PROGRESS_DEFAULTS = {
   stationLabels: false,
   gantry: true,
 };
-// Opening view: Progress, as it is picked from the panel
+/**
+ * Opening view: Progress, as it is picked from the panel.
+ * @type {Record<string, boolean>}
+ */
 export const defaults = Object.assign(
   {},
   fullAerialDefaults,
@@ -75,12 +95,17 @@ export const defaults = Object.assign(
     fullAerial: false,
   },
 );
-// violet: opposite the gantry's yellow on the colour wheel, so it stands out and goes with it
+/**
+ * The colour of the finished spans in progress-chart mode: violet, opposite the gantry's yellow on the colour wheel, so it
+ * stands out and goes with it.
+ */
 export const PROGRESS_COLOUR = "#6D28D9";
-// Progress-chart mode hides everything (with visibility, which leaves the masks and clip paths the drawing relies on untouched)
-// and then lets through what its switched-on layers show (PROGRESS_SHOWS), so the base drawing, which has no switch, stays hidden.
-// The Clayton Clipper's finished spans are violet up to the span the gantry has reached, their usual colour past it, and its
-// span numbers are black, or white on violet.
+/**
+ * Progress-chart mode's own CSS: it hides everything (with visibility, which leaves the masks and clip paths the drawing
+ * relies on untouched) and then lets through what its switched-on layers show (see PROGRESS_SHOWS), so the base drawing,
+ * which has no switch, stays hidden. The Clayton Clipper's finished spans are violet up to the span the gantry has reached,
+ * their usual colour past it, and its span numbers are black, or white on violet.
+ */
 const PROGRESS_CSS =
   "#map polygon,#map path,#map line,#map polyline,#map rect,#map circle,#map ellipse,#map text{visibility:hidden !important}" +
   "#map mask *,#map clipPath *,#map defs *{visibility:visible !important}" +
@@ -92,7 +117,11 @@ const PROGRESS_CSS =
   "#map text.cclabel.cc.on-reached{fill:#ffffff !important}" +
   // only the Clayton Clipper's spans: the other launchers' stay hidden
   "#map .ll.ll.ll,#map .ff.ff.ff{display:none !important}";
-// what each switch shows in progress-chart mode (whether it shows is still up to the layer's own display rule)
+/**
+ * What each switch shows in progress-chart mode, as CSS selectors (whether it shows is still up to the layer's own
+ * display rule).
+ * @type {Record<string, string[]>}
+ */
 const PROGRESS_SHOWS = {
   // finished spans, concrete and steel
   guideway: [".guideway"],
@@ -106,37 +135,58 @@ const PROGRESS_SHOWS = {
   stationLabels: [".stationlabel"],
   gantry: [".gantry"],
 };
-// Drawing mode shrinks the canvas to the first-photo frame (the area the greenbelt drawing fills)
-export const FULL_VB = "-6840.7 -5402.04 12387.4 8699.48",
-  DRAW_VB = "-38.4 -126.95 2188.4 1888.55",
-  SFMSF_AERIAL_VB = "-38.4 -126.95 2188.4 1888.55"; // drawing mode and zoom view: the right edge cuts through span A
-// Progress-chart mode zooms to the span the gantry is on: a view three gantry lengths wide (the gantry's trusses are 401.56
-// canvas units long), with the span 35% of the way across and down
-export const GANTRY_LENGTH = 401.56,
-  PROGRESS_VIEW_WIDTH = 3 * GANTRY_LENGTH,
-  // where the span sits in the view, as fractions of the view's width (from the left) and height (from the top)
-  PROGRESS_SPAN_AT = { x: 0.35, y: 0.35 };
-// Horizontal's canvas is what is drawn with a margin on every side of this fraction of the straight-line distance between its
-// two ends
+/** The whole canvas, as an SVG viewBox string. */
+export const FULL_VB = "-6840.7 -5402.04 12387.4 8699.48";
+/** Drawing mode's canvas: the first-photo frame (the area the greenbelt drawing fills). */
+export const DRAW_VB = "-38.4 -126.95 2188.4 1888.55";
+/** The SFMSF zoom view's canvas, the same frame as drawing mode: the right edge cuts through span A. */
+export const SFMSF_AERIAL_VB = "-38.4 -126.95 2188.4 1888.55";
+/** The length of the gantry's trusses, in canvas units. */
+export const GANTRY_LENGTH = 401.56;
+/**
+ * Progress-chart mode zooms to the span the gantry is on: a view three gantry lengths wide, in canvas units.
+ */
+export const PROGRESS_VIEW_WIDTH = 3 * GANTRY_LENGTH;
+/**
+ * Where the span sits in progress-chart mode's view (35% of the way across and down), as fractions of the view's width
+ * (from the left) and height (from the top).
+ */
+export const PROGRESS_SPAN_AT = { x: 0.35, y: 0.35 };
+/**
+ * Horizontal's canvas is what is drawn with a margin on every side of this fraction of the straight-line distance between
+ * its two ends.
+ */
 export const HORIZONTAL_MARGIN = 0.05;
-// The drawing's scale: 3 units per metre, shown 1.11 times larger around SFMSF, so a span (about 134 units) is about 40 m
+/** The drawing's scale: 3 units per metre, shown 1.11 times larger around SFMSF, so a span (about 134 units) is about 40 m. */
 export const UNITS_PER_METRE = 3 * 1.11;
-// Horizontal starts zoomed to show this many metres before and after the gantry's span, with the span in the middle
+/** Horizontal starts zoomed to show this many metres before and after the gantry's span, with the span in the middle. */
 export const HORIZONTAL_VIEW_METRES = 350;
 
-// Full image view draws the old railway line about 50% heavier: the line itself, and its cross ties (dash) thicker on the same
-// spacing. The original line is inside the 1.11x zoomed frame; its two extensions are in canvas units, 1.11 times larger.
+/**
+ * CSS for the Full image view, which draws the old railway line about 50% heavier: the line itself, and its cross ties
+ * (dash) thicker on the same spacing. The original line is inside the 1.11x zoomed frame; its two extensions are in canvas
+ * units, 1.11 times larger.
+ */
 export const FULL_AERIAL_CSS =
   "#nwsr-railway{stroke-width:3 !important}" +
   "#nwsr-railway-ties{stroke-dasharray:3 13 !important}" +
   "#railway-extension path:first-of-type,#railway-extension-north path:first-of-type{stroke-width:3.33 !important}" +
   "#railway-extension path:last-of-type,#railway-extension-north path:last-of-type{stroke-dasharray:3.33 14.43 !important}";
 
-// the span labels need Clayton Clipper spans on screen: at least one type of span on
+/**
+ * Whether the span labels can show: they need Clayton Clipper spans on screen, so Progress, or at least one type of span
+ * on.
+ * @param {Record<string, boolean>} state The switches' state.
+ * @returns {boolean}
+ */
 export const labelsAvailable = (state) =>
   state.progress || state.guideway || state.unfinished;
 
-// The CSS rules that show and hide the layers of map.svg for the given switch state
+/**
+ * The CSS rules that show and hide the layers of map.svg for the given switch state.
+ * @param {Record<string, boolean>} state The switches' state.
+ * @returns {string} The CSS, to put in a <style> element.
+ */
 export function layerCss(state) {
   let r = "";
   const avail = labelsAvailable(state);
