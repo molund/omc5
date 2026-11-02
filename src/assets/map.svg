@@ -99,7 +99,6 @@
     }
     .p {
       fill: #ffffff;
-      fill-opacity: 0.75;
       stroke: #888780;
       stroke-width: 0.825;
     }
@@ -934,7 +933,6 @@
         <polygon
           class="guideway unfinished"
           fill="#FFFFFF"
-          fill-opacity="0.75"
           stroke="#888780"
           stroke-width="0.825"
           points="328.03,893.53 324.96,771.45 315.32,771.45 318.39,893.37"
@@ -943,7 +941,6 @@
         <polygon
           class="guideway unfinished"
           fill="#FFFFFF"
-          fill-opacity="0.75"
           stroke="#888780"
           stroke-width="0.825"
           points="315.23,1014.30 314.82,1014.30 315.53,1075.43 317.28,1075.53 328.03,893.53 318.39,893.37 314.74,955.09"
@@ -953,7 +950,6 @@
         <polygon
           class="guideway unfinished"
           fill="#FFFFFF"
-          fill-opacity="0.75"
           stroke="#888780"
           stroke-width="0.825"
           points="316.50,1424.98 321.93,1480.67 331.53,1479.73 316.44,1324.93 316.17,1358.80 316.21,1358.80"
@@ -1093,7 +1089,6 @@
         <polygon
           class="guideway unfinished"
           fill="#FFFFFF"
-          fill-opacity="0.75"
           stroke="#888780"
           stroke-width="0.825"
           points="302.73,771.45 312.38,771.45 313.84,893.45 304.19,893.45"
@@ -1105,7 +1100,6 @@
         <polygon
           class="guideway unfinished"
           fill="#FFFFFF"
-          fill-opacity="0.75"
           stroke="#888780"
           stroke-width="0.825"
           points="304.58,893.45 314.23,893.45 314.82,1014.30 305.17,1014.30"
@@ -1117,7 +1111,6 @@
         <polygon
           class="guideway unfinished"
           fill="#FFFFFF"
-          fill-opacity="0.75"
           stroke="#888780"
           stroke-width="0.825"
           points="305.58,1014.30 315.23,1014.30 316.24,1136.20 306.60,1136.20"
@@ -1129,7 +1122,6 @@
         <polygon
           class="guideway unfinished"
           fill="#FFFFFF"
-          fill-opacity="0.75"
           stroke="#888780"
           stroke-width="0.825"
           points="306.60,1136.20 316.25,1136.20 317.09,1238.00 307.45,1238.00"
@@ -1141,7 +1133,6 @@
         <polygon
           class="guideway unfinished"
           fill="#FFFFFF"
-          fill-opacity="0.75"
           stroke="#888780"
           stroke-width="0.825"
           points="307.48,1238.00 317.12,1238.00 316.17,1358.80 306.53,1358.80"
@@ -1153,7 +1144,6 @@
         <polygon
           class="guideway unfinished"
           fill="#FFFFFF"
-          fill-opacity="0.75"
           stroke="#888780"
           stroke-width="0.825"
           points="306.57,1358.80 316.21,1358.80 316.90,1480.20 307.26,1480.20"
@@ -4134,7 +4124,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-219.60,-268.04 -107.65,-191.79 -93.75,-212.21 -205.70,-288.46"
@@ -4142,7 +4131,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-331.58,-343.41 -219.55,-268.00 -205.75,-288.50 -317.78,-363.91"
@@ -4150,7 +4138,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-464.89,-433.02 -331.57,-343.41 -317.79,-363.91 -451.11,-453.52"
@@ -4158,7 +4145,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-547.77,-488.53 -464.87,-433.01 -451.13,-453.53 -534.03,-509.05"
@@ -4166,7 +4152,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-975.34,-813.14 -1072.16,-887.82 -1087.24,-868.26 -990.42,-793.58"
@@ -4174,7 +4159,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-1072.03,-887.72 -1168.72,-964.31 -1184.06,-944.95 -1087.37,-868.36"
@@ -4182,7 +4166,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-1168.82,-964.38 -1266.47,-1040.21 -1281.61,-1020.71 -1183.96,-944.88"
@@ -4190,7 +4173,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-1266.55,-1040.28 -1364.28,-1114.79 -1379.26,-1095.15 -1281.53,-1020.64"
@@ -4198,7 +4180,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-1364.48,-1114.94 -1464.86,-1188.37 -1479.44,-1168.43 -1379.06,-1095.00"
@@ -4206,7 +4187,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-1464.90,-1188.40 -1574.46,-1267.80 -1588.96,-1247.80 -1479.40,-1168.40"
@@ -4214,7 +4194,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-1574.70,-1267.97 -1685.81,-1344.60 -1699.83,-1324.26 -1588.72,-1247.63"
@@ -4222,7 +4201,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-1685.95,-1344.69 -1798.28,-1419.87 -1812.02,-1399.35 -1699.69,-1324.17"
@@ -4230,7 +4208,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-1798.30,-1419.88 -1910.76,-1494.88 -1924.46,-1474.34 -1812.00,-1399.34"
@@ -4238,7 +4215,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-1910.76,-1494.88 -2023.19,-1569.90 -2036.89,-1549.36 -1924.46,-1474.34"
@@ -4246,7 +4222,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-2023.15,-1569.88 -2135.35,-1645.32 -2149.13,-1624.82 -2036.93,-1549.38"
@@ -4254,7 +4229,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-2135.33,-1645.31 -2246.00,-1720.01 -2259.82,-1699.53 -2149.15,-1624.83"
@@ -4262,7 +4236,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-2246.07,-1720.05 -2359.60,-1795.53 -2373.28,-1774.97 -2259.75,-1699.49"
@@ -4270,7 +4243,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-2359.56,-1795.50 -2471.69,-1870.79 -2485.45,-1850.29 -2373.32,-1775.00"
@@ -4278,7 +4250,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-2471.65,-1870.77 -2583.07,-1946.15 -2596.91,-1925.69 -2485.49,-1850.31"
@@ -4286,7 +4257,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-2583.16,-1946.21 -2696.45,-2021.34 -2710.11,-2000.76 -2596.82,-1925.63"
@@ -4294,7 +4264,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-2696.44,-2021.34 -2809.71,-2096.63 -2823.39,-2076.05 -2710.12,-2000.76"
@@ -4302,7 +4271,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-2809.56,-2096.52 -2919.97,-2172.31 -2933.95,-2151.95 -2823.54,-2076.16"
@@ -4310,7 +4278,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-2920.10,-2172.40 -3032.71,-2247.60 -3046.43,-2227.06 -2933.82,-2151.86"
@@ -4318,7 +4285,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-3032.67,-2247.57 -3144.40,-2322.82 -3158.20,-2302.34 -3046.47,-2227.09"
@@ -4326,7 +4292,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-3144.46,-2322.87 -3256.13,-2397.10 -3269.81,-2376.52 -3158.14,-2302.29"
@@ -4334,7 +4299,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-3256.04,-2397.03 -3322.93,-2442.34 -3336.79,-2421.90 -3269.90,-2376.59"
@@ -4342,7 +4306,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-3323.02,-2442.40 -3425.48,-2510.54 -3439.16,-2489.98 -3336.70,-2421.84"
@@ -4350,7 +4313,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-3425.62,-2510.63 -3511.14,-2565.89 -3524.54,-2545.15 -3439.02,-2489.89"
@@ -4358,7 +4320,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-3511.01,-2565.81 -3614.13,-2634.26 -3627.79,-2613.68 -3524.67,-2545.23"
@@ -4366,7 +4327,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-3614.21,-2634.31 -3717.35,-2701.62 -3730.85,-2680.94 -3627.71,-2613.63"
@@ -4374,7 +4334,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-3717.23,-2701.55 -3820.06,-2770.32 -3833.80,-2749.78 -3730.97,-2681.01"
@@ -4382,7 +4341,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-3820.17,-2770.38 -3930.72,-2842.73 -3944.24,-2822.07 -3833.69,-2749.72"
@@ -4390,7 +4348,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-3930.10,-2842.30 -4013.74,-2904.59 -4028.50,-2884.79 -3944.86,-2822.50"
@@ -4398,7 +4355,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-4013.59,-2904.48 -4120.06,-2986.36 -4135.12,-2966.78 -4028.65,-2884.90"
@@ -4406,7 +4362,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-4120.06,-2986.36 -4227.46,-3068.96 -4242.52,-3049.38 -4135.12,-2966.78"
@@ -4414,7 +4369,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-4227.46,-3068.96 -4334.88,-3151.56 -4349.94,-3131.98 -4242.52,-3049.38"
@@ -4422,7 +4376,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-4334.88,-3151.56 -4441.88,-3233.85 -4456.94,-3214.27 -4349.94,-3131.98"
@@ -4430,7 +4383,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-4442.27,-3234.13 -4552.33,-3312.19 -4566.61,-3292.05 -4456.55,-3213.99"
@@ -4438,7 +4390,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-4552.32,-3312.19 -4662.49,-3390.49 -4676.79,-3370.35 -4566.62,-3292.05"
@@ -4446,7 +4397,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-4662.00,-3390.13 -4768.04,-3473.55 -4783.32,-3454.13 -4677.28,-3370.71"
@@ -4454,7 +4404,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-4767.95,-3473.47 -4873.21,-3557.88 -4888.67,-3538.62 -4783.41,-3454.21"
@@ -4462,7 +4411,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-4873.06,-3557.76 -4976.95,-3643.89 -4992.71,-3624.87 -4888.82,-3538.74"
@@ -4470,7 +4418,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-4976.95,-3643.89 -5081.04,-3730.15 -5096.80,-3711.13 -4992.71,-3624.87"
@@ -4478,7 +4425,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-5081.15,-3730.24 -5150.21,-3786.08 -5165.75,-3766.88 -5096.69,-3711.04"
@@ -4486,7 +4432,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-5150.10,-3785.99 -5254.16,-3872.17 -5269.92,-3853.15 -5165.86,-3766.97"
@@ -4494,7 +4439,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-5254.16,-3872.17 -5335.15,-3939.23 -5350.91,-3920.21 -5269.92,-3853.15"
@@ -4502,7 +4446,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-5335.15,-3939.23 -5439.71,-4025.95 -5455.47,-4006.93 -5350.91,-3920.21"
@@ -4510,7 +4453,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-5439.64,-4025.89 -5542.85,-4112.63 -5558.75,-4093.73 -5455.54,-4006.99"
@@ -4518,7 +4460,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-5541.86,-4111.70 -5637.82,-4212.33 -5655.69,-4195.29 -5559.74,-4094.66"
@@ -4526,7 +4467,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-5637.82,-4212.33 -5730.06,-4309.07 -5747.94,-4292.03 -5655.69,-4195.29"
@@ -4534,7 +4474,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-5730.06,-4309.07 -5823.42,-4406.98 -5841.30,-4389.94 -5747.94,-4292.03"
@@ -4542,7 +4481,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-5823.40,-4406.96 -5908.87,-4497.15 -5926.79,-4480.15 -5841.32,-4389.96"
@@ -4550,7 +4488,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-5909.30,-4497.58 -6008.46,-4592.30 -6025.52,-4574.44 -5926.36,-4479.72"
@@ -4558,7 +4495,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-6009.08,-4592.85 -6114.34,-4680.69 -6130.16,-4661.73 -6024.90,-4573.89"
@@ -4566,7 +4502,6 @@
     <polygon
       class="p guideway unfinished cc"
       fill="#FFFFFF"
-      fill-opacity="0.75"
       stroke="#888780"
       stroke-width="0.92"
       points="-6115.42,-4681.50 -6229.04,-4756.98 -6242.70,-4736.40 -6129.08,-4660.92"
