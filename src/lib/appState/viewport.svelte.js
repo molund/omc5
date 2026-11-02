@@ -10,33 +10,53 @@ import {
   PROGRESS_SPAN_AT,
 } from "../layerSwitches.js";
 
-// The zoom that fits the whole canvas in the stage: the full width, or less when the canvas is taller than the stage allows
+/**
+ * The zoom that fits the whole canvas in the stage: the full width, or less when the canvas is taller than the stage
+ * allows.
+ * @returns {number} A percentage of the stage width.
+ */
 export function fitZoom() {
   const r = els.stage.getBoundingClientRect(),
     vb = els.svg.viewBox.baseVal;
   return Math.min(100, (100 * r.height * vb.width) / (r.width * vb.height));
 }
+/**
+ * Whether the map is zoomed to Fit.
+ * @returns {boolean}
+ */
 export const isFit = () => Math.abs(ui.zoom - ui.fit) < 0.5;
-// The zoom that fills the stage with the canvas, so nothing blank shows: the full width, or more when the canvas is too short
-// to fill the stage's height at that width
+/**
+ * The zoom that fills the stage with the canvas, so nothing blank shows: the full width, or more when the canvas is too
+ * short to fill the stage's height at that width.
+ * @returns {number} A percentage of the stage width.
+ */
 export function fillZoom() {
   const r = els.stage.getBoundingClientRect(),
     vb = els.svg.viewBox.baseVal;
   return Math.max(100, (100 * r.height * vb.width) / (r.width * vb.height));
 }
-// Views open filled and centred; ui.filled keeps them so when the stage changes size (until the map is zoomed)
+/**
+ * Fills the stage with the canvas and centres it. Views open this way; `ui.filled` keeps them so when the stage changes
+ * size (until the map is zoomed).
+ * @returns {void}
+ */
 export function fillView() {
   setZoom(fillZoom());
   centreView();
   ui.filled = true;
 }
 
-// The whole drawing turns about the middle of the full canvas
+// The whole drawing turns about the middle of the full canvas: the full canvas's top left and size, and the middle
 const [fx0, fy0, fw, fh] = FULL_VB.split(" ").map(Number),
   TURN_X = fx0 + fw / 2,
   TURN_Y = fy0 + fh / 2;
 
-// Show the canvas area vb, with the drawing turned by `turn` degrees (0, upright, for every view but Horizontal)
+/**
+ * Shows the canvas area `vb`, with the drawing turned by `turn` degrees.
+ * @param {string} vb The area to show, as an SVG viewBox string.
+ * @param {number} [turn=0] Degrees to turn the drawing by (0, upright, for every view but Horizontal).
+ * @returns {void}
+ */
 export function setView(vb, turn = 0) {
   const wasFit = isFit();
   if (els.turn) {
@@ -52,9 +72,12 @@ export function setView(vb, turn = 0) {
   els.stage.scrollTop = 0;
 }
 
-// Progress-chart mode's canvas is the Clayton Clipper built so far (see canvasProgress); it starts zoomed so PROGRESS_VIEW_WIDTH
-// fills the stage's width and scrolled so the gantry's span sits at PROGRESS_SPAN_AT across and down the stage; from there it
-// zooms and pans like any other view, and Fit shows everything built
+/**
+ * Shows progress-chart mode's canvas, the Clayton Clipper built so far (see canvasProgress). It starts zoomed so
+ * PROGRESS_VIEW_WIDTH fills the stage's width and scrolled so the gantry's span sits at PROGRESS_SPAN_AT across and down
+ * the stage; from there it zooms and pans like any other view, and Fit shows everything built.
+ * @returns {void}
+ */
 export function progressView() {
   canvasProgress();
   const c = els.gantrySpanCentre;
@@ -72,10 +95,16 @@ export function progressView() {
     stage.clientHeight * PROGRESS_SPAN_AT.y;
 }
 
-// Progress's canvas: the Clayton Clipper's finished spans the gantry has reached, and the gantry (not the unfinished spans
-// ahead of it, which run almost the whole width of the aerial), upright, with a margin on every side of HORIZONTAL_MARGIN
-// times their diagonal, but no wider than the overview aerial; the whole canvas when there is nothing to measure
+/** What progress-chart mode's canvas is fitted to: the finished spans the gantry has reached, and the gantry. */
 const BUILT = ".guideway.cc.reached:not(.unfinished), .gantry";
+
+/**
+ * Fits the canvas to progress-chart mode: the Clayton Clipper's finished spans the gantry has reached, and the gantry (not
+ * the unfinished spans ahead of it, which run almost the whole width of the aerial), upright, with a margin on every side
+ * of HORIZONTAL_MARGIN times their diagonal, but no wider than the overview aerial; the whole canvas when there is
+ * nothing to measure.
+ * @returns {void}
+ */
 function canvasProgress() {
   // the layer rules for Progress's switches have to be on the page before measuring what shows
   flushSync();
@@ -113,9 +142,12 @@ function canvasProgress() {
   setView(`${x} ${y} ${x1 - x} ${y1 - y}`);
 }
 
-// Horizontal: the drawing turned so both ends of the Clayton Clipper route are level. Its canvas is what is drawn with a margin
-// on every side of HORIZONTAL_MARGIN times the distance between its two ends; it starts zoomed to HORIZONTAL_VIEW_METRES
-// before and after the gantry's span, with the span in the middle
+/**
+ * Shows the Horizontal view: the drawing turned so both ends of the Clayton Clipper route are level. Its canvas is what is
+ * drawn with a margin on every side of HORIZONTAL_MARGIN times the distance between its two ends; it starts zoomed to
+ * HORIZONTAL_VIEW_METRES before and after the gantry's span, with the span in the middle.
+ * @returns {void}
+ */
 export function horizontalView() {
   canvasHorizontal();
   const c = els.gantrySpanCentre;
@@ -138,7 +170,10 @@ export function horizontalView() {
   stage.scrollTop =
     ((y - vb.y) / vb.height) * box.height - stage.clientHeight / 2;
 }
-// Horizontal's canvas, fitted: what is drawn with a margin, but no wider than the overview aerial
+/**
+ * Fits the canvas to Horizontal: what is drawn with a margin, but no wider than the overview aerial.
+ * @returns {void}
+ */
 function canvasHorizontal() {
   // the layer rules for the new switches have to be on the page before measuring what shows
   flushSync();
@@ -160,7 +195,10 @@ function canvasHorizontal() {
   setView(`${x} ${y} ${x1 - x} ${e.bottom.y + m - y}`, els.routeAngle);
   setZoom(fitZoom());
 }
-// the whole canvas, turned level, all of it in view (when there is nothing drawn to measure)
+/**
+ * Shows the whole canvas, turned level, all of it in view (when there is nothing drawn to measure).
+ * @returns {void}
+ */
 function turnedFullView() {
   const r = (els.routeAngle * Math.PI) / 180,
     c = Math.cos(r),
@@ -185,13 +223,23 @@ function turnedFullView() {
   setZoom(fitZoom());
 }
 
-// Scroll so the middle of the canvas is in the middle of the stage, keeping the zoom
+/**
+ * Scrolls so the middle of the canvas is in the middle of the stage, keeping the zoom.
+ * @returns {void}
+ */
 export function centreView() {
   const stage = els.stage;
   stage.scrollLeft = (stage.scrollWidth - stage.clientWidth) / 2;
   stage.scrollTop = (stage.scrollHeight - stage.clientHeight) / 2;
 }
 
+/**
+ * Zooms the map, keeping the point (cx, cy) where it is on the screen. Never less than Fit, never more than 16000%.
+ * @param {number} p The zoom, a percentage of the stage width.
+ * @param {number} [cx] The screen x to zoom about; the middle of the stage by default.
+ * @param {number} [cy] The screen y to zoom about; the middle of the stage by default.
+ * @returns {void}
+ */
 export function setZoom(p, cx, cy) {
   const stage = els.stage;
   ui.filled = false;

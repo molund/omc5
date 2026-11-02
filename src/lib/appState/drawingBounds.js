@@ -1,12 +1,20 @@
-// The leftmost, rightmost, highest and lowest points of what is actually drawn in map.svg right now, in canvas units, after
-// turning the canvas by `turn` degrees about (cx, cy). Hidden layers, defs, masks, clip paths and shapes painted only in white
-// (the canvas backing, which can't be seen on the white page) don't count, nor do the aerial photos (it measures the drawing),
-// and anything clipped (the zoomed photo frame clips the guideway, for one) only counts as far as its clip. With `only` (a CSS
-// selector), just the shapes in or matching it count.
+/**
+ * @typedef {object} Point
+ * @property {number} x
+ * @property {number} y
+ */
+
+/** The elements that are measured as drawing. */
 const SHAPES = "path, polygon, polyline, line, rect, circle, ellipse, text";
+/** The computed colour values that can't be seen on the white page. */
 const WHITE = /^(none|rgb\(255, 255, 255\)|#fff(fff)?|white)$/i;
 
-// shown: not display:none or visibility:hidden itself, and no ancestor display:none or opacity 0
+/**
+ * Whether an element is shown: not display:none or visibility:hidden itself, and no ancestor display:none or opacity 0.
+ * @param {Element} el
+ * @param {Element} root The <svg>, where the walk up the ancestors stops.
+ * @returns {boolean}
+ */
 function shown(el, root) {
   const own = getComputedStyle(el);
   if (own.visibility !== "visible" || own.display === "none") return false;
@@ -16,6 +24,11 @@ function shown(el, root) {
   }
   return true;
 }
+/**
+ * Whether an element's fill and stroke are each white or nothing (the canvas backing, for one).
+ * @param {Element} el
+ * @returns {boolean}
+ */
 function paintedOnlyWhite(el) {
   const cs = getComputedStyle(el);
   const fill = cs.fill === "none" || cs.fillOpacity === "0" ? "none" : cs.fill,
@@ -24,6 +37,20 @@ function paintedOnlyWhite(el) {
   return WHITE.test(fill) && WHITE.test(stroke);
 }
 
+/**
+ * The leftmost, rightmost, highest and lowest points of what is actually drawn in map.svg right now, in canvas units,
+ * after turning the canvas by `turn` degrees about (cx, cy). Hidden layers, defs, masks, clip paths and shapes painted
+ * only in white (the canvas backing, which can't be seen on the white page) don't count, nor do the aerial photos (it
+ * measures the drawing), and anything clipped (the zoomed photo frame clips the guideway, for one) only counts as far as
+ * its clip.
+ * @param {SVGSVGElement} root The map's <svg>.
+ * @param {number} turn Degrees to turn the canvas by.
+ * @param {number} cx The x of the point to turn about, in canvas units.
+ * @param {number} cy The y of the point to turn about, in canvas units.
+ * @param {string} [only] A CSS selector: just the shapes in or matching it count.
+ * @returns {{ left: Point, right: Point, top: Point, bottom: Point }|null} The extreme points, or null when nothing
+ * measurable is drawn.
+ */
 export function drawingBounds(root, turn, cx, cy, only) {
   const toRoot = DOMMatrix.fromMatrix(root.getScreenCTM()).inverse(),
     toCanvas = (el, x, y) =>
@@ -127,7 +154,16 @@ export function drawingBounds(root, turn, cx, cy, only) {
   return left && { left, right, top, bottom };
 }
 
-// The leftmost and rightmost x of element el's box, in canvas units, after turning the canvas by `turn` degrees about (cx, cy)
+/**
+ * The leftmost and rightmost x of an element's box, in canvas units, after turning the canvas by `turn` degrees about
+ * (cx, cy).
+ * @param {SVGSVGElement} root The map's <svg>.
+ * @param {SVGGraphicsElement} el The element to measure.
+ * @param {number} turn Degrees to turn the canvas by.
+ * @param {number} cx The x of the point to turn about, in canvas units.
+ * @param {number} cy The y of the point to turn about, in canvas units.
+ * @returns {{ x0: number, x1: number }}
+ */
 export function turnedXRange(root, el, turn, cx, cy) {
   const toRoot = DOMMatrix.fromMatrix(root.getScreenCTM()).inverse(),
     ctm = DOMMatrix.fromMatrix(el.getScreenCTM()),

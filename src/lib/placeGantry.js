@@ -1,17 +1,10 @@
-// Anchor the Clayton Clipper gantry to the span it is working on. #clayton-clipper is drawn for span data-drawn-at; this moves
-// each of its data-anchor groups to span data-span (the cclabel span numbers, 1-105). Spans are found from the drawing:
-// - the joint between spans n and n+1 is the bent cap (rect.g) nearest the midpoint of their two labels
-// - span n runs from joint n-1/n to joint n/n+1, centred on its gantry box (a gi or p polygon) where it has one, so the gantry stays
-//   on its own track; crane spans with no gantry box use the midpoint between their joints
-// Anchors (S is the working span):
-// - front: just ahead of S, its rear edge flush with S's front end
-// - second: just behind S, its front edge flush with S's back end
-// - rear: fully on S-1, its rear edge a third of its width in from S-1's back end
-// - fourth: on S-1, at the same fraction of the way along it as drawn
-//   (the supports keep the across offsets they are drawn with, and the fourth its along offset too, turned with the span)
-// - body: centred on S's midpoint, between its outer edges, and parallel to them
-// span: S plus this; end: which end of that span; edge: which edge of the support is lined up with that end (the middle of the
-// edge on the middle of the end); gap: how far in from the end, into the span, as a fraction of the support's width
+/**
+ * Where each support of the gantry goes on its span, keyed by the anchor's name. `span`: S plus this; `end`: which end of
+ * that span; `edge`: which edge of the support is lined up with that end (the middle of the edge on the middle of the
+ * end); `gap`: how far in from the end, into the span, as a fraction of the support's width; `along`: keep the along
+ * offset it is drawn with.
+ * @type {Record<string, { span: number, end?: string, edge?: string, gap?: number, along?: boolean }>}
+ */
 const SUPPORTS = {
   front: { span: 0, end: "front", edge: "rear" },
   second: { span: 0, end: "back", edge: "front" },
@@ -19,6 +12,26 @@ const SUPPORTS = {
   fourth: { span: -1, along: true },
 };
 
+/**
+ * Anchors the Clayton Clipper gantry to the span it is working on. #clayton-clipper is drawn for span data-drawn-at; this
+ * moves each of its data-anchor groups to span data-span (the cclabel span numbers, 1-105). Spans are found from the
+ * drawing:
+ * - the joint between spans n and n+1 is the bent cap (rect.g) nearest the midpoint of their two labels
+ * - span n runs from joint n-1/n to joint n/n+1, centred on its gantry box (a gi or p polygon) where it has one, so the
+ *   gantry stays on its own track; crane spans with no gantry box use the midpoint between their joints
+ *
+ * Anchors (S is the working span):
+ * - front: just ahead of S, its rear edge flush with S's front end
+ * - second: just behind S, its front edge flush with S's back end
+ * - rear: fully on S-1, its rear edge a third of its width in from S-1's back end
+ * - fourth: on S-1, at the same fraction of the way along it as drawn (the supports keep the across offsets they are drawn
+ *   with, and the fourth its along offset too, turned with the span)
+ * - body: centred on S's midpoint, between its outer edges, and parallel to them
+ *
+ * @param {SVGSVGElement} root The map's <svg>.
+ * @returns {{ x: number, y: number }|undefined} The middle of the span the gantry is on, in canvas units, for views that
+ * centre on it; undefined when the drawing has no gantry or no span for it.
+ */
 export function placeGantry(root) {
   const gantry = root.querySelector("#clayton-clipper");
   if (!gantry || !gantry.dataset.span) return;

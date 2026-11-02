@@ -20,15 +20,65 @@
 // so a small reader does instead of a YAML library.
 import text from "../../status.yaml?raw";
 
-// where update photos live (public/images/sorry-im-a-shitty-photographer/), as a URL on the site
+/**
+ * @typedef {object} Photo
+ * @property {string|null} src The photo's URL on the site (null until a `file:` line gives one).
+ * @property {string} caption The photo's caption, or "".
+ */
+
+/**
+ * @typedef {{ text: string } | { photo: Photo }} MoreItem A further paragraph or photo under a note.
+ */
+
+/**
+ * @typedef {object} FollowUp
+ * @property {Date} time When it was added.
+ * @property {string} text What it says.
+ */
+
+/**
+ * @typedef {object} Note
+ * @property {Date} time The note's time stamp (a date alone is the start of that day in BC time).
+ * @property {string} text The note's main text.
+ * @property {Photo|null} photo The note's photo, if it has one.
+ * @property {MoreItem[]} more Further paragraphs and photos, in order.
+ * @property {string} title The title for the note's own Trackside page, or "".
+ * @property {boolean} post Whether it is a post rather than a status update.
+ * @property {FollowUp[]} followUps Its follow-ups, newest first.
+ */
+
+/**
+ * @typedef {object} Status
+ * @property {Date|null} updated When status.yaml was last updated.
+ * @property {number|null} span The span the Clayton Clipper's gantry is on.
+ * @property {boolean} complete Whether that span is complete.
+ * @property {Note|null} latest The newest status update (not a post).
+ * @property {string} note The newest status update's text, or "".
+ * @property {Photo|null} photo The newest status update's photo.
+ * @property {MoreItem[]} more The newest status update's further paragraphs and photos.
+ * @property {FollowUp[]} followUps The newest status update's follow-ups, newest first.
+ * @property {Note[]} history Every note with text, newest first, for Trackside.
+ */
+
+/** Where update photos live (public/images/sorry-im-a-shitty-photographer/), as a URL on the site. */
 const PHOTOS = `${import.meta.env.BASE_URL}images/sorry-im-a-shitty-photographer/`;
 
+/**
+ * A YAML scalar without its quotes: double-quoted as JSON, single-quoted with '' for an apostrophe, otherwise as is.
+ * @param {string} v
+ * @returns {string}
+ */
 function unquote(v) {
   if (/^".*"$/.test(v)) return JSON.parse(v);
   if (/^'.*'$/.test(v)) return v.slice(1, -1).replace(/''/g, "'");
   return v;
 }
 
+/**
+ * Reads status.yaml's flat `key: value` lines and its list of notes.
+ * @param {string} src The file's text.
+ * @returns {Status}
+ */
 function parse(src) {
   const out = {},
     notes = [];
@@ -152,17 +202,30 @@ function parse(src) {
   };
 }
 
+/**
+ * The Clayton Clipper's status, read from status.yaml.
+ * @type {Status}
+ */
 export const status = parse(text);
 
-// the calendar day of a time, in the site's time zone, as "2026-10-29". The site's time zone is BC time, UTC−7 all
-// year: America/Dawson_Creek, which has had no daylight saving time since 1972
+/**
+ * The calendar day of a time, in the site's time zone, as "2026-10-29". The site's time zone is BC time, UTC−7 all year:
+ * America/Dawson_Creek, which has had no daylight saving time since 1972.
+ * @param {Date|number} t
+ * @returns {string}
+ */
 const dayOf = (t) =>
   new Intl.DateTimeFormat("en-CA", { timeZone: "America/Dawson_Creek" }).format(
     t,
   );
 
-// "6:45 a.m. on Oct 29, 2026", BC time, rounded to the nearest quarter hour; with relative, a time today or yesterday
-// reads "6:45 a.m. today" or "6:45 a.m. yesterday" instead, and the day before yesterday "6:45 a.m. on Tuesday"
+/**
+ * A time as "6:45 a.m. on Oct 29, 2026", BC time, rounded to the nearest quarter hour. With `relative`, a time today or
+ * yesterday reads "6:45 a.m. today" or "6:45 a.m. yesterday" instead, and the day before yesterday "6:45 a.m. on Tuesday".
+ * @param {Date|null} date
+ * @param {boolean} [relative=false] Use today, yesterday and the weekday where they apply.
+ * @returns {string} "" if there is no valid time.
+ */
 export function asOf(date, relative = false) {
   if (!date || isNaN(date)) return "";
   const q = 15 * 60 * 1000,
@@ -196,7 +259,12 @@ export function asOf(date, relative = false) {
   return `${time} on ${parts.month} ${parts.day}, ${parts.year}`;
 }
 
-// a follow-up's time: just "11:45 a.m." on the same day as its note, otherwise in full
+/**
+ * A follow-up's time: just "11:45 a.m." on the same day as its note, otherwise in full (see {@link asOf}).
+ * @param {Date} t The follow-up's time.
+ * @param {Date} note The time of the note it belongs to.
+ * @returns {string}
+ */
 export function followUpTime(t, note) {
   const full = asOf(t);
   return dayOf(t) === dayOf(note) ? full.replace(/ on .*$/, "") : full;
