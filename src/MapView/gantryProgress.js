@@ -51,9 +51,12 @@ export function gantryProgress(root, complete) {
       x += L.getItem(i).x;
       y += L.getItem(i).y;
     }
+    const n = nearest(toCanvas(el, x / k, y / k));
+    // so the views can find a span's pieces by number
+    el.dataset.span = n;
     return {
       el,
-      n: nearest(toCanvas(el, x / k, y / k)),
+      n,
       c: toCanvas(el, x / k, y / k),
     };
   });

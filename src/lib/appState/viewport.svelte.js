@@ -8,6 +8,7 @@ import {
   FULL_VB,
   PROGRESS_VIEW_WIDTH,
   PROGRESS_SPAN_AT,
+  PROGRESS_MIN_LAST_SPAN,
 } from "../layerSwitches.js";
 
 /**
@@ -102,7 +103,7 @@ const BUILT = ".guideway.cc.reached:not(.unfinished), .gantry";
  * Fits the canvas to progress-chart mode: the Clayton Clipper's finished spans the gantry has reached, and the gantry (not
  * the unfinished spans ahead of it, which run almost the whole width of the aerial), upright, with a margin on every side
  * of HORIZONTAL_MARGIN times their diagonal, but no wider than the overview aerial; the whole canvas when there is
- * nothing to measure.
+ * nothing to measure. Span PROGRESS_MIN_LAST_SPAN, built or not, is always taken in whole, even past the aerial's edge; it is a floor, so the canvas still grows past it with the built spans.
  * @returns {void}
  */
 function canvasProgress() {
@@ -138,6 +139,21 @@ function canvasProgress() {
     const p = turnedXRange(els.svg, photo, 0, TURN_X, TURN_Y);
     x = Math.max(x, p.x0);
     x1 = Math.min(x1, p.x1);
+  }
+  // the last span, whole and with a little room, whatever the other rules left out (the aerial's edge included)
+  const last = drawingBounds(
+    els.svg,
+    0,
+    TURN_X,
+    TURN_Y,
+    `.guideway.cc[data-span="${PROGRESS_MIN_LAST_SPAN}"]`,
+  );
+  if (last) {
+    const pad = 0.25 * m;
+    x = Math.min(x, last.left.x - pad);
+    x1 = Math.max(x1, last.right.x + pad);
+    y = Math.min(y, last.top.y - pad);
+    y1 = Math.max(y1, last.bottom.y + pad);
   }
   setView(`${x} ${y} ${x1 - x} ${y1 - y}`);
 }
