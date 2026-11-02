@@ -17,8 +17,8 @@
     fillView,
     progressView,
     horizontalView,
-    applyHash,
   } from "../lib/appState/appState.svelte.js";
+  import { applyHash } from "../lib/appState/hash.svelte.js";
   import ProgressCard from "../ProgressCard.svelte";
 
   let stage;
