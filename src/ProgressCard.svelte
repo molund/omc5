@@ -27,11 +27,11 @@
   // what each number counts, shown when it is hovered or clicked with a mouse, tapped (tap again to hide) or pressed with
   // Enter/Space
   const TIPS = {
-    span: "Completed span positions at or behind the Clayton Clipper. The current span counts after all its segments are hung. Spans lifted by mobile cranes count after the gantry crawls over them.",
+    span: "<strong>Completed span positions at or behind the Clayton Clipper.</strong> The current span position counts after all segments are hung.",
     ahead:
-      "Completed span positions ahead, built by mobile cranes, which the Clayton Clipper must crawl over.",
+      "<strong>Completed span positions ahead of the Clayton Clipper.</strong> These positions were built by mobile cranes and will count toward progress after the gantry passes over them.",
     total:
-      "Total span positions on the Clayton Clipper's route. Parallel spans at the same location count as one.",
+      "<strong>Total span positions on the Clayton Clipper route.</strong> Parallel guideways at the same location count as a single span position.",
   };
   let tip = $state(null);
   const toggle = (k) => (tip = tip === k ? null : k);
@@ -72,9 +72,7 @@
       return;
     }
     if (e.key !== "Tab" || !full || !card) return;
-    const stops = [
-      ...card.querySelectorAll("a[href], button:not([disabled])"),
-    ];
+    const stops = [...card.querySelectorAll("a[href], button:not([disabled])")];
     if (!stops.length) return;
     const first = stops[0],
       last = stops[stops.length - 1];
@@ -89,6 +87,10 @@
       first.focus();
     }
   }
+
+  function stripHtml(html) {
+    return html.replace(/<[^>]*>/g, "");
+  }
 </script>
 
 <svelte:window onpointerdown={outside} onkeydown={keydown} />
@@ -99,7 +101,7 @@
     class:big
     class:open={tip === k}
     aria-describedby={tip === k ? "progress-tip" : undefined}
-    aria-label="{value}: {TIPS[k]}"
+    aria-label="{value}: {stripHtml(TIPS[k])}"
     onclick={(e) => (e.pointerType === "mouse" ? (tip = k) : toggle(k))}
     onpointerenter={(e) => e.pointerType === "mouse" && (tip = k)}
     onpointerleave={(e) =>
@@ -137,7 +139,10 @@
           height="351"
         /><span>Progress</span>
       </div>
-      {#if full}<button bind:this={closeButton} class="map-button" onclick={close}
+      {#if full}<button
+          bind:this={closeButton}
+          class="map-button"
+          onclick={close}
           aria-label="Let’s go to the map">Let’s go →</button
         >{:else}<button
           class="close"
@@ -155,7 +160,7 @@
       )})&nbsp;/&nbsp;{@render num("total", total)}
     </div>
     {#if tip}<div class="tip" id="progress-tip" role="tooltip">
-        {TIPS[tip]}
+        {@html TIPS[tip]}
       </div>{/if}
     <div
       class="track"
@@ -229,7 +234,8 @@
     max-width: none;
     height: 100dvh;
     padding: 0 max(16px, env(safe-area-inset-right))
-      calc(16px + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+      calc(16px + env(safe-area-inset-bottom))
+      max(16px, env(safe-area-inset-left));
     border: 0;
     border-radius: 0;
     box-shadow: none;
@@ -249,7 +255,8 @@
     margin: 0 calc(-1 * max(16px, env(safe-area-inset-right))) 12px
       calc(-1 * max(16px, env(safe-area-inset-left)));
     padding: calc(8px + env(safe-area-inset-top))
-      max(16px, env(safe-area-inset-right)) 8px max(16px, env(safe-area-inset-left));
+      max(16px, env(safe-area-inset-right)) 8px
+      max(16px, env(safe-area-inset-left));
     border-bottom: 1px solid var(--line);
     background: var(--panel);
   }
