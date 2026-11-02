@@ -1,14 +1,25 @@
 // Comments on updates: one GitHub Discussion per update, through giscus. Shared by the progress card and the Trackside
 // page: each update's page anchor and thread title, and the comment and reaction counts of every thread.
 
-// the site's public address, for links that leave it: the comment threads' bodies and the Open Graph tags
+/**
+ * The site's public address, for links that leave it: the comment threads' bodies and the Open Graph tags.
+ * @type {string}
+ */
 export const SITE = "https://clayton-clipper.olund.ca/";
 
-// an update's id on the Trackside page, from its time stamp in UTC, e.g. "2026-10-31T16-30"
+/**
+ * An update's id on the Trackside page, from its time stamp in UTC, e.g. "2026-10-31T16-30".
+ * @param {Date} t The update's time stamp.
+ * @returns {string}
+ */
 export const anchor = (t) => t.toISOString().slice(0, 16).replace(/:/g, "-");
 
-// an update's thread title, its BC time (UTC−7), e.g. "Update 2026-10-31 09:30" (the title must never change, or the
-// thread is lost; trackside/prerender.js gives the comment threads these titles)
+/**
+ * An update's thread title, its BC time (UTC−7), e.g. "Update 2026-10-31 09:30". The title must never change, or the
+ * thread is lost; trackside/prerender.js gives the comment threads these titles.
+ * @param {Date} t The update's time stamp.
+ * @returns {string}
+ */
 export const term = (t) =>
   "Update " +
   new Intl.DateTimeFormat("en-CA", {
@@ -23,6 +34,7 @@ export const term = (t) =>
     .format(t)
     .replace(",", "");
 
+/** GitHub's reaction names and the emoji shown for them, in the order they are listed. */
 const EMOJI = {
   "+1": "👍",
   "-1": "👎",
@@ -34,9 +46,19 @@ const EMOJI = {
   eyes: "👀",
 };
 
-// Comment and reaction counts for every thread, from GitHub's public API (no login; 60 requests an hour per visitor), by
-// thread title: { comments, reactions: [[emoji, count], ...] }. One request only: GitHub's first 100 threads (the deploy
-// workflow fails once the category reaches 100, as a reminder to rethink this). Empty if GitHub can't be reached.
+/**
+ * @typedef {object} ThreadCounts
+ * @property {number} comments How many comments the thread has.
+ * @property {Array<[string, number]>} reactions The reactions with at least one vote, as [emoji, count] pairs.
+ */
+
+/**
+ * Comment and reaction counts for every thread, from GitHub's public API (no login; 60 requests an hour per visitor).
+ * One request only: GitHub's first 100 threads (the deploy workflow fails once the category reaches 100, as a reminder
+ * to rethink this).
+ * @returns {Promise<Record<string, ThreadCounts>>} The counts by thread title (see {@link term}); empty if GitHub can't
+ * be reached.
+ */
 export function fetchCounts() {
   return fetch(
     "https://api.github.com/repos/molund/omc5/discussions?per_page=100",

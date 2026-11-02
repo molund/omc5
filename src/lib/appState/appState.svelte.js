@@ -21,22 +21,37 @@ import {
 export * from "./state.svelte.js";
 export * from "./viewport.svelte.js";
 
-// "Full" stays ticked exactly while every switch matches the old default view
+/**
+ * Keeps "Full" ticked exactly while every switch matches the old default view.
+ * @returns {void}
+ */
 function refresh() {
   layers.fullAerial = Object.keys(fullAerialDefaults).every(
     (k) => k === "fullAerial" || layers[k] === fullAerialDefaults[k],
   );
 }
 
-// Drawing mode (SFMSF drawing): shrink the canvas to the first-photo frame and fill the stage with it, switch the aerial photo off, put the SFMSF labels and every other
-// layer on, and put everything back as it was when the mode is switched off.
-// opening in Drawing mode, so switching it off goes to the Full view (the normal view with SFMSF zoom ended, as when Drawing
-// mode is entered from it)
+/**
+ * What Drawing mode (SFMSF drawing) puts back when it is switched off: it shrinks the canvas to the first-photo frame and
+ * fills the stage with it, switches the aerial photo off and puts the SFMSF labels and every other layer on. When the page
+ * opens in Drawing mode, switching it off goes to the Full view (the normal view with SFMSF zoom ended, as when Drawing mode
+ * is entered from it).
+ * @returns {Record<string, boolean>|null}
+ */
 const startSnap = () =>
   defaults.sfmsfDrawing ? { ...fullAerialDefaults } : null;
-// (on a reload, the switches saved from before Drawing mode, so switching it off still puts them back)
+
+/**
+ * The switches as they were before Drawing mode, so switching it off puts them back (on a reload, the ones saved from
+ * before Drawing mode). null when Drawing mode is off.
+ * @type {Record<string, boolean>|null}
+ */
 let drawingSnap = saved ? (saved.drawingSnap ?? null) : startSnap();
-// Drawing mode's switches: everything on but the aerial photo and the other views
+
+/**
+ * Drawing mode's switches: everything on but the aerial photo and the other views.
+ * @returns {Record<string, boolean>}
+ */
 const drawingSwitches = () => ({
   ...Object.fromEntries(Object.keys(layers).map((k) => [k, true])),
   aerial: false,
@@ -45,32 +60,52 @@ const drawingSwitches = () => ({
   horizontal: false,
   sfmsfDrawing: true,
 });
+/**
+ * Switches Drawing mode on, remembering the switches as they were.
+ * @returns {void}
+ */
 function enterDrawing() {
   drawingSnap = $state.snapshot(layers);
   Object.assign(layers, drawingSwitches());
   setView(DRAW_VB);
   fillView();
 }
+/**
+ * Switches Drawing mode off, putting the remembered switches back.
+ * @returns {void}
+ */
 function exitDrawing() {
   if (drawingSnap) Object.assign(layers, drawingSnap);
   layers.sfmsfDrawing = false;
   drawingSnap = null;
   setView(FULL_VB);
 }
-// SFMSF aerial's Reference switches when it is arrived at from a view other than SFMSF drawing: all on, but the greenbelt
-// (never shown with the aerial photo)
+/** The keys of the Reference group's switches. */
 const REFERENCE = LAYERS.find(([g]) => g === "Reference")[1].map(([k]) => k);
+
+/**
+ * SFMSF aerial's Reference switches when it is arrived at from a view other than SFMSF drawing: all on, but the greenbelt
+ * (never shown with the aerial photo).
+ * @returns {Record<string, boolean>}
+ */
 const sfmsfAerialReference = () => ({
   ...Object.fromEntries(REFERENCE.map((k) => [k, true])),
   greenbelt: false,
 });
-// SFMSF zoom: same canvas as Drawing mode, nothing else changes except that Roads goes on with it and off again when it ends
+/**
+ * Ends SFMSF zoom, which has the same canvas as Drawing mode; nothing else changes except that Roads goes on with it and
+ * off again when it ends.
+ * @returns {void}
+ */
 function exitSfmsfAerial() {
   layers.sfmsfAerial = false;
   setView(FULL_VB);
   layers.roads = false;
 }
-// Full image: the whole canvas, filling the stage, with the Full image switches
+/**
+ * Shows Full image: the whole canvas, filling the stage, with the Full image switches.
+ * @returns {void}
+ */
 function applyFullAerial() {
   drawingSnap = null;
   setView(FULL_VB);
@@ -78,6 +113,7 @@ function applyFullAerial() {
   Object.assign(layers, fullAerialDefaults);
 }
 
+/** The keys of the View group: radio-style switches, one on at a time. */
 const VIEWS = [
   "progress",
   "sfmsfAerial",
@@ -86,7 +122,12 @@ const VIEWS = [
   "sfmsfDrawing",
 ];
 
-// A layer checkbox was ticked or unticked
+/**
+ * A layer checkbox was ticked or unticked. Picking a view sets up that view's switches, canvas and card.
+ * @param {string} k The switch's key.
+ * @param {boolean} on Whether it is now on.
+ * @returns {void}
+ */
 export function setSwitch(k, on) {
   layers[k] = on;
   ui.changed = !VIEWS.includes(k);
@@ -161,6 +202,10 @@ export function setSwitch(k, on) {
   refresh();
 }
 
+/**
+ * Show all: every switch on except the greenbelt, creeks, roads and the views.
+ * @returns {void}
+ */
 export function showAll() {
   Object.keys(layers).forEach((k) => {
     if (
@@ -179,7 +224,11 @@ export function showAll() {
   refresh();
 }
 
-// The switches each view starts with, as picking it from the panel sets them up
+/**
+ * The switches each view starts with, as picking it from the panel sets them up.
+ * @param {string} view A View group key.
+ * @returns {Record<string, boolean>}
+ */
 function viewSwitches(view) {
   if (view === "progress") return defaults;
   if (view === "fullAerial") return fullAerialDefaults;
@@ -189,7 +238,10 @@ function viewSwitches(view) {
   return { ...sfmsfAerialDefaults, ...sfmsfAerialReference() }; // SFMSF aerial
 }
 
-// Reset: the current view's switches back as it starts with them, staying on the same view, zoom and position
+/**
+ * Reset: the current view's switches back as it starts with them, staying on the same view, zoom and position.
+ * @returns {void}
+ */
 export function reset() {
   Object.assign(layers, viewSwitches(ui.view));
   ui.changed = false;
