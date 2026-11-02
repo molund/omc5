@@ -1,9 +1,10 @@
-/* Tailwind's theme and utilities only, for the About page: its preflight reset would restyle the map, Trackside and the
-   card, and scanning only about/ keeps utility classes from landing on class names used elsewhere */
+/* Tailwind's theme and utilities only, for the About and Trackside pages: its preflight reset would restyle the map and
+   the card, and scanning only about/ and trackside/ keeps utility classes from landing on class names used elsewhere */
 @layer theme, base, components, utilities;
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/utilities.css" layer(utilities) source(none);
 @source "../about";
+@source "../trackside";
 
 :root {
   box-sizing: border-box;

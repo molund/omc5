@@ -36,7 +36,12 @@ Shared with the map, in `src/`:
   comment threads all go through it.
 - `src/lib/comments.js` — each update's anchor and thread title, the comment and reaction counts,
   and `SITE`, the site's address.
-- `src/app.css` — colours and base styles.
+- `src/app.css` — colours and base styles, and Tailwind's theme and utilities (no preflight reset, and
+  only `about/` and `trackside/` are scanned for classes). Trackside is styled with Tailwind
+  classes in `TracksidePage.svelte`; its own sizes are in `px` and `rem / 17` (the site's 1rem is
+  17px), so use arbitrary values such as `mt-[14px]` where Tailwind's named sizes would be off.
+  Unlayered rules in `app.css` (such as `button`) beat Tailwind's utilities, so override them with
+  the `!` modifier.
 
 ## How it's built
 
