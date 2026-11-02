@@ -146,11 +146,13 @@
           onclick={close}><Icon kind="close" /></button
         >{/if}
     </div>
+    <!-- "36 (+8) / 105": the spans done, the spans ahead built by cranes, and the total (non-breaking spaces, which the flex
+         row keeps) -->
     <div class="figure">
-      ({@render num("span", span, true)}+{@render num(
+      {@render num("span", span, true)}&nbsp;(+{@render num(
         "ahead",
         ahead,
-      )})/{@render num("total", total)}
+      )})&nbsp;/&nbsp;{@render num("total", total)}
     </div>
     {#if tip}<div class="tip" id="progress-tip" role="tooltip">
         {TIPS[tip]}
