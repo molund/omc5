@@ -3910,8 +3910,7 @@
     </g>
   </g>
   <!-- station labels, with the names from the Surrey Langley SkyTrain website, north of each station: Hillcrest-184 Street
-       over the station bents at the east end, Bakerview-166 Street over the short station spans at the west end; and the powerhouse, the DC power conversion
-       building in the dirt area just south of span 52 -->
+       over the station bents at the east end, Bakerview-166 Street over the short station spans at the west end -->
   <g id="station-labels">
     <text
       id="station-label-hillcrest"
@@ -3936,18 +3935,6 @@
       transform="rotate(32.0 -6612.6 -5038.5)"
     >
       Bakerview-166 Street Station
-    </text>
-    <text
-      id="powerhouse-label"
-      class="stationlabel"
-      x="-626.9"
-      y="-517.8"
-      dy=".36em"
-      text-anchor="middle"
-      style="font-size: 28px; font-weight: 600; fill: #222222; stroke: #ffffff; stroke-width: 5; paint-order: stroke"
-      transform="rotate(33.9 -626.9 -517.8)"
-    >
-      Powerhouse
     </text>
   </g>
   <g id="cand-tulips" class="cand">
