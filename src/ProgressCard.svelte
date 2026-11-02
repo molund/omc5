@@ -141,7 +141,7 @@
       </div>
       {#if full}<button
           bind:this={closeButton}
-          class="map-button"
+          class="primary-button"
           onclick={close}
           aria-label="Let’s go to the map">Let’s go →</button
         >{:else}<button
@@ -205,6 +205,17 @@
               >{/each}</span
           >{/if}</a
       >
+      {#if full}
+        <a class="comment-button more-updates" href={COMMENTS}>
+          More trackside updates</a
+        >
+        <button
+          bind:this={closeButton}
+          class="primary-button view-map"
+          onclick={close}
+          aria-label="Let’s go to the map">View map</button
+        >
+      {/if}
     {/if}
   </div>
 {/if}
@@ -260,9 +271,9 @@
     border-bottom: 1px solid var(--line);
     background: var(--panel);
   }
-  /* the button back to the map: the card's primary button, filled with a lighter shade of the logo's green (#3C904B, the
-     logo's hue and saturation, lighter) with white text, the same size and shape as the Map buttons on Trackside and About */
-  .map-button {
+
+  /* primary green buttons */
+  .primary-button {
     display: inline-flex;
     align-items: center;
     padding: calc(6rem / 17) calc(12rem / 17);
@@ -273,6 +284,11 @@
     font-size: calc(14rem / 17);
     font-weight: 600;
     white-space: nowrap;
+  }
+  /* the view map button at the bottom of the card */
+  .primary-button.view-map {
+    margin-top: 16px;
+    width: 100%;
   }
   /* the card's close button, in its top right corner, and the information button that takes the card's place once it is closed */
   .close {
@@ -451,6 +467,13 @@
     color: var(--knob-ink);
     font-size: calc(14rem / 17);
     font-weight: 600;
+  }
+  /* More trackside updates link at the bottom of the card */
+  .card.full .comment-button.more-updates {
+    margin-top: 40px;
+    border: 1px solid #3c904b;
+    background: #3c904b;
+    color: #ffffff;
   }
   @media (prefers-color-scheme: dark) {
     .card.full .comment-button {
