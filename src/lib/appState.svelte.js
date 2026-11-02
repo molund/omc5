@@ -37,6 +37,7 @@ export const layers = $state({
 // they are never on, and the Clayton Clipper span labels and the full gantry show in their place. These are only useful for
 // moving the gantry and manipulating the spans.
 export const isMike =
+  typeof location !== "undefined" &&
   new URLSearchParams(location.search.toLowerCase()).get("ismike") === "true";
 function hideMikeOnlyOptions() {
   if (isMike) return;
@@ -51,7 +52,10 @@ function hideMikeOnlyOptions() {
 }
 hideMikeOnlyOptions();
 // Screens this narrow are phones: the layer panel is a menu that slides in over the map
-export const PHONE = matchMedia("(max-width: 760px)");
+export const PHONE =
+  typeof matchMedia !== "undefined"
+    ? matchMedia("(max-width: 760px)")
+    : { matches: false, addEventListener: () => {}, removeEventListener: () => {} };
 // zoom is a percentage of the stage width, and fit the zoom at which the whole canvas fits the stage; ready turns on the layer
 // rules once map.svg is tagged; gantry is the Clayton Clipper's span number out of the total; phone is PHONE, kept up to
 // date by App.svelte; collapsed hides the panel (a phone opens on the map, with the menu closed); changed is whether a layer
@@ -499,7 +503,7 @@ export function applyHash(h = openedWith) {
 // Keep the address in step with the view, without adding a history entry for every view picked
 $effect.root(() => {
   $effect(() => {
-    if (!ui.ready) return;
+    if (!ui.ready || typeof location === "undefined") return;
     const h = HASHES[ui.view] ? `#${HASHES[ui.view]}` : "";
     if (location.hash !== h)
       history.replaceState(null, "", h || location.pathname + location.search);
