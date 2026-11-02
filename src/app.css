@@ -6,7 +6,7 @@
 @source "./*.svelte";
 @source "./MapView/*.svelte";
 
-/* the phone layout, up to 760px wide, the same width as PHONE in lib/appState.svelte.js */
+/* the phone layout, up to 760px wide, the same width as PHONE in lib/appState/appState.svelte.js */
 @custom-variant phone (@media (max-width: 760px));
 
 /* Tailwind's standard sizes (text-sm, p-4, rounded-md), all in rem, so they follow the iPhone's Text Size setting (see the
