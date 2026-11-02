@@ -4,7 +4,7 @@
   import MapView from "./MapView/MapView.svelte";
   import { layerCss, FULL_AERIAL_CSS } from "./lib/layerSwitches.js";
   import { fade } from "svelte/transition";
-  import { layers, ui, PHONE } from "./lib/appState.svelte.js";
+  import { layers, ui, PHONE } from "./lib/appState/appState.svelte.js";
 
   // the layer rules wait until MapView has tagged the drawing, which needs it laid out as map.svg draws it on its own
   const css = $derived(

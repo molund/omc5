@@ -3,7 +3,7 @@
   import { fade } from "svelte/transition";
   import { cubicIn } from "svelte/easing";
   import { PROGRESS_COLOUR } from "./lib/layerSwitches.js";
-  import { layers, ui } from "./lib/appState.svelte.js";
+  import { layers, ui } from "./lib/appState/appState.svelte.js";
   import { status, asOf } from "./lib/status.js";
   import { anchor, term, fetchCounts } from "./lib/comments.js";
   import Icon from "./Icon.svelte";
