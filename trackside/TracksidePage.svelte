@@ -11,6 +11,7 @@
 
   const MAP = import.meta.env.BASE_URL;
   const TRACKSIDE = `${MAP}trackside/`;
+
   // Comments: one GitHub Discussion per update, through giscus, in the "Trackside" category, titled by term() in
   // src/lib/comments.js
   const GISCUS = {
@@ -178,7 +179,7 @@
     <h1>Trackside</h1>
     <nav class="links">
       {#if post}<a class="button" href={TRACKSIDE}>← All updates</a>{/if}
-      <a class="button" href={MAP}>← Map</a>
+      <a class="button" href={MAP + "?hidecardopen=1"}>← Map</a>
     </nav>
   </header>
   {#each shown as n (anchor(n.time))}

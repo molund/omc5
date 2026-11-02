@@ -1,10 +1,20 @@
 <script>
+  import { onMount } from "svelte";
   import LayerPanel from "./LayerPanel.svelte";
   import Icon from "./Icon.svelte";
   import MapView from "./MapView.svelte";
   import { layerCss, FULL_AERIAL_CSS } from "./lib/layerSwitches.js";
   import { fade } from "svelte/transition";
   import { layers, ui, PHONE } from "./lib/appState.svelte.js";
+
+  // if coming from Trackside or About on mobile, close the card so the map is visible
+  onMount(() => {
+    if (typeof location === "undefined" || !PHONE.matches) return;
+    if (new URLSearchParams(location.search).has("hidecardopen")) {
+      ui.cardHidden = true;
+      window.history.replaceState(null, "", location.pathname + location.hash);
+    }
+  });
 
   // the layer rules wait until MapView has tagged the drawing, which needs it laid out as map.svg draws it on its own
   const css = $derived(
