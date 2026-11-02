@@ -12,12 +12,12 @@
   // The buttons, in the pager's colours (GitHub's segmented control). Tailwind finds these classes by scanning this file,
   // so they have to stay whole strings.
   const BUTTON =
-    "inline-flex items-center rounded-[6px] border border-[#818b98] bg-[#eff2f5] px-[calc(12rem/17)] py-[calc(6rem/17)] text-[calc(14rem/17)] font-semibold whitespace-nowrap text-[#1f2328] no-underline dark:border-[#656c76] dark:bg-[#212830] dark:text-[#f0f6fc]";
-  // The pager's links and its greyed-out Next, drawn alike; the colours come from the variables on the pager itself
+    "inline-flex items-center rounded-[6px] border border-(--button-line) bg-(--button-bg) px-[calc(12rem/17)] py-[calc(6rem/17)] text-[calc(14rem/17)] font-semibold whitespace-nowrap text-(--button-ink) no-underline";
+  // The pager's links and its greyed-out Next, drawn alike; the colours are the grey button variables in app.css
   const PAGER_BASE =
     "inline-flex min-h-[calc(36rem/17)] min-w-[calc(96rem/17)] items-center justify-center rounded-[6px] border px-[calc(14rem/17)] font-[family-name:-apple-system,BlinkMacSystemFont,Segoe_UI,Noto_Sans,Helvetica,Arial,sans-serif] text-[calc(14rem/17)] no-underline max-[760px]:min-h-[calc(44rem/17)] max-[760px]:flex-1";
-  const PAGER_LINK = `${PAGER_BASE} border-(--knob-line) bg-(--knob) font-semibold text-(--knob-ink)`;
-  const PAGER_OFF = `${PAGER_BASE} cursor-default border-transparent bg-transparent font-normal text-(--flat-ink) max-[760px]:bg-(--track)`;
+  const PAGER_LINK = `${PAGER_BASE} border-(--button-line) bg-(--pager-knob) font-semibold text-(--button-ink)`;
+  const PAGER_OFF = `${PAGER_BASE} cursor-default border-transparent bg-transparent font-normal text-(--pager-flat-ink) max-[760px]:bg-(--button-bg)`;
 
   const MAP = import.meta.env.BASE_URL;
   const TRACKSIDE = `${MAP}trackside/`;
@@ -219,7 +219,7 @@
            screen readers hear the date and the title (the date first, so the visible text is in the name, for voice
            control) -->
       <h2
-        class="mt-[28px] mb-[8px] border-b border-(--line) pb-[5px] text-[calc(19rem/17)] leading-tight"
+        class="mt-[28px] mb-[8px] border-b border-(--line) pb-[5px] text-[calc(19rem/17)] leading-tight font-bold"
       >
         {#if post}{label(n)}{:else}<a
             class="text-inherit no-underline"
@@ -243,8 +243,10 @@
           </p>{/if}
       {/each}
       {#if n.followUps.length}
-        <h3 class="mt-[14px] mb-[4px] text-[calc(15rem/17)]">Follow-ups</h3>
-        <ul class="m-0 pl-[22px] [&>li+li]:mt-[4px]">
+        <h3 class="mt-[14px] mb-[4px] text-[calc(15rem/17)] font-bold">
+          Follow-ups
+        </h3>
+        <ul class="m-0 list-disc pl-[22px] [&>li+li]:mt-[4px]">
           <!-- oldest first, in the order they happened (the card shows the newest first) -->
           {#each [...n.followUps].reverse() as m}<li>
               <code
@@ -256,9 +258,9 @@
         </ul>
       {/if}
       <div class="mt-[8px] flex flex-wrap items-center gap-[10px]">
-        <!-- the comments link, in the link colour; the ! overrides the base button styles in app.css -->
+        <!-- the comments link, in the link colour -->
         <button
-          class="cursor-pointer border-0! bg-transparent! p-0! text-[calc(14rem/17)]! text-(--accent)!"
+          class="cursor-pointer border-0 bg-transparent p-0 text-[calc(14rem/17)] text-(--accent)"
           aria-expanded={open === anchor(n.time)}
           onclick={() =>
             (open = open === anchor(n.time) ? null : anchor(n.time))}
@@ -299,7 +301,7 @@
        press keeps the track colour). -->
   {#if !post && pages > 1}
     <nav
-      class="mx-auto mt-[24px] flex w-fit rounded-[6px] bg-(--track) [--flat-ink:#59636e] [--knob-line:#818b98] [--knob:#ffffff] [--knob-ink:#1f2328] [--track:#eff2f5] max-[760px]:w-auto max-[760px]:gap-[8px] max-[760px]:bg-transparent dark:[--flat-ink:#9198a1] dark:[--knob-line:#656c76] dark:[--knob:#0d1117] dark:[--knob-ink:#f0f6fc] dark:[--track:#212830]"
+      class="mx-auto mt-[24px] flex w-fit rounded-[6px] bg-(--button-bg) max-[760px]:w-auto max-[760px]:gap-[8px] max-[760px]:bg-transparent"
       aria-label="Pages of updates"
     >
       {#if page === 1}

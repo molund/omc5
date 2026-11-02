@@ -1,10 +1,12 @@
-/* Tailwind's theme and utilities only, for the About and Trackside pages: its preflight reset would restyle the map and
-   the card, and scanning only about/ and trackside/ keeps utility classes from landing on class names used elsewhere */
-@layer theme, base, components, utilities;
-@import "tailwindcss/theme.css" layer(theme);
-@import "tailwindcss/utilities.css" layer(utilities) source(none);
-@source "../about";
-@source "../trackside";
+/* Tailwind, with its preflight reset. Only the pages' own markup is scanned for classes (not the map drawing or the
+   data), so a stray word in them can't turn into a utility */
+@import "tailwindcss" source(none);
+@source "../about/index.html";
+@source "../trackside/*.svelte";
+@source "./*.svelte";
+
+/* the phone layout, up to 760px wide, the same width as PHONE in lib/appState.svelte.js */
+@custom-variant phone (@media (max-width: 760px));
 
 :root {
   box-sizing: border-box;
@@ -17,6 +19,15 @@
   --line: #cbd2d9;
   --accent: #0b5fa5;
   --accent-ink: #ffffff;
+  /* the green primary buttons on the progress card; the same in light and dark */
+  --primary-button: #3c904b;
+  /* the grey buttons (GitHub's segmented control, as in the giscus comments): the Map buttons, the pager and the progress
+     card's secondary button; the pager's raised buttons and greyed-out Next have colours of their own */
+  --button-bg: #eff2f5;
+  --button-line: #818b98;
+  --button-ink: #1f2328;
+  --pager-knob: #ffffff;
+  --pager-flat-ink: #59636e;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
@@ -27,6 +38,11 @@
     --line: #39424b;
     --accent: #6cb4f0;
     --accent-ink: #0c1117;
+    --button-bg: #212830;
+    --button-line: #656c76;
+    --button-ink: #f0f6fc;
+    --pager-knob: #0d1117;
+    --pager-flat-ink: #9198a1;
   }
 }
 :root[data-theme="dark"] {
@@ -37,6 +53,11 @@
   --line: #39424b;
   --accent: #6cb4f0;
   --accent-ink: #0c1117;
+  --button-bg: #212830;
+  --button-line: #656c76;
+  --button-ink: #f0f6fc;
+  --pager-knob: #0d1117;
+  --pager-flat-ink: #9198a1;
 }
 html {
   scroll-padding-top: env(safe-area-inset-top, 0px);
@@ -78,29 +99,37 @@ body::before {
   background: var(--bg);
   z-index: 10;
 }
-button {
-  /* quick taps (zoom in, zoom in) mustn't double-tap zoom the page */
-  touch-action: manipulation;
-  font: inherit;
-  /* in rem, so buttons follow the iPhone's Text Size setting: 32px tall at the default text size (13px text, 1.4 line
-     height, 6px padding and a 1px border, top and bottom); icon buttons match, with their 18px icon and 6px padding */
-  font-size: calc(13rem / 17);
-  padding: calc(6rem / 17) calc(10rem / 17);
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  background: var(--panel);
-  color: var(--ink);
-  cursor: pointer;
-}
-button:hover {
-  border-color: var(--accent);
-}
-button:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-button.on {
-  background: var(--accent);
-  color: var(--accent-ink);
-  border-color: var(--accent);
+/* the base button look sits in the base layer, so Tailwind utilities on a button override it */
+@layer base {
+  /* links keep the browser's underline, which Tailwind's preflight takes away */
+  a {
+    text-decoration: underline;
+  }
+
+  button {
+    /* quick taps (zoom in, zoom in) mustn't double-tap zoom the page */
+    touch-action: manipulation;
+    font: inherit;
+    /* in rem, so buttons follow the iPhone's Text Size setting: 32px tall at the default text size (13px text, 1.4 line
+       height, 6px padding and a 1px border, top and bottom); icon buttons match, with their 18px icon and 6px padding */
+    font-size: calc(13rem / 17);
+    padding: calc(6rem / 17) calc(10rem / 17);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--panel);
+    color: var(--ink);
+    cursor: pointer;
+  }
+  button:hover {
+    border-color: var(--accent);
+  }
+  button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  button.on {
+    background: var(--accent);
+    color: var(--accent-ink);
+    border-color: var(--accent);
+  }
 }

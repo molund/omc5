@@ -17,7 +17,7 @@
   </head>
   <body>
     <main
-      class="mx-auto max-w-[calc(640rem/17)] px-[16px] pt-[calc(16px_+_env(safe-area-inset-top,0px))] pb-[32px] text-[calc(15rem/17)] leading-normal [&_p]:mt-[14px] [&_p_a]:text-(--accent)"
+      class="mx-auto max-w-[calc(640rem/17)] px-[16px] pt-[calc(16px_+_env(safe-area-inset-top,0px))] pb-[32px] text-[calc(15rem/17)] leading-normal [&_p]:mt-[14px] [&_p_a]:text-(--accent) [&_code]:font-[family-name:monospace]"
     >
       <!-- the same slim bar as Trackside's: the logo and the page's name on the left, a button back to the map on the right.
            It stays at the top while the page scrolls under it, clear of the iPhone's notch; its own top padding takes the
@@ -41,7 +41,7 @@
         <nav class="ml-auto flex gap-[8px]">
           <!-- in the pager's colours on Trackside (GitHub's segmented control) -->
           <a
-            class="inline-flex items-center rounded-[6px] border border-[#818b98] bg-[#eff2f5] px-[calc(12rem/17)] py-[calc(6rem/17)] text-[calc(14rem/17)] font-semibold whitespace-nowrap text-[#1f2328] no-underline dark:border-[#656c76] dark:bg-[#212830] dark:text-[#f0f6fc]"
+            class="inline-flex items-center rounded-[6px] border border-(--button-line) bg-(--button-bg) px-[calc(12rem/17)] py-[calc(6rem/17)] text-[calc(14rem/17)] font-semibold whitespace-nowrap text-(--button-ink) no-underline"
             href="/?hidecardopen=1"
             >← Map</a
           >
