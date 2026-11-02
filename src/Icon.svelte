@@ -7,7 +7,7 @@
 <!-- Icons for the buttons that show and hide the layer panel and the progress card. 18px at the default text size, scaled by
      the iPhone's Text Size setting (see app.css) -->
 <svg
-  class="block h-[calc(18rem/17)] w-[calc(18rem/17)]"
+  class="block h-18 w-18"
   width="18"
   height="18"
   viewBox="0 0 18 18"

@@ -30,6 +30,7 @@ Svelte 5 + Vite site, deployed to GitHub Pages (https://clayton-clipper.olund.ca
 
 - `src/assets/map.svg` — the map.
 - `src/lib/layerSwitches.js` — layer definitions; `LayerPanel.svelte` the switches.
+- `src/app.css` — Tailwind, the colour variables and the base styles; see Styling below.
 - `trackside/` — Trackside (`/trackside/`), the updates page; read `trackside/README.md` before changing it.
 - `status.yaml` — gantry span / complete / time-stamped notes (newest on the progress card, all on Trackside). Site news
   only: update this file, don't change the drawing unless asked. When adding a note, write it a `title:` (see the
@@ -40,6 +41,24 @@ Svelte 5 + Vite site, deployed to GitHub Pages (https://clayton-clipper.olund.ca
 - `public/images/` — aerial photos.
 - `public/images/sorry-im-a-shitty-photographer/` — update photos (see the `photo:` format in `status.yaml`). Resize every
   uploaded photo to at most 800 pixels wide, save it as JPEG at quality 75, and strip all metadata before committing it.
+
+## Styling
+
+- Everything is styled with Tailwind v4 classes in the markup (`.svelte` files and `about/index.html`); no component
+  `<style>` blocks. `src/app.css` is the only stylesheet: Tailwind (with preflight), the colour variables, `@theme` and the
+  base rules.
+- Sizes are written as plain numbers, set in `@theme` in `src/app.css`: 1rem is 17px, so `mt-14`, `text-13` and `rounded-6`
+  are 14px, 13px and 6px at the default text size and follow the iPhone's Text Size setting. Don't write px or rem values
+  (`mt-[14px]`); if a size has no token, add one to `@theme` (a font size is `--text-N`, a radius `--radius-N`).
+- Colours come from the variables in `app.css` (`bg-(--panel)`, `text-(--mute)`, `border-(--line)`, `bg-(--primary-button)`,
+  `bg-(--button-bg)` and so on), which already switch in dark mode. Don't hard-code hex colours; add a variable, with its dark
+  value, to the light and both dark blocks.
+- A new page or folder with markup needs an `@source` line in `app.css`, or its classes won't be generated. The map
+  drawing and `data/` are deliberately not scanned.
+- `phone:` is the phone layout (up to 760px wide, the same width as `PHONE` in `src/lib/appState.svelte.js`).
+- The map drawing's own styles (`map.svg`) and the layer rules built in `src/lib/layerSwitches.js` stay plain CSS: the
+  drawing is injected as raw markup and can't take classes.
+- After a styling change, `npm run build` must pass, and `prettier --write` the changed files.
 
 ## Writing style (status updates and posts)
 

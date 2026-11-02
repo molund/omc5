@@ -8,6 +8,28 @@
 /* the phone layout, up to 760px wide, the same width as PHONE in lib/appState.svelte.js */
 @custom-variant phone (@media (max-width: 760px));
 
+/* Sizes in rem, 17 to a rem (1rem is 17px, the iPhone's default text size), so a size written as a number is that many
+   pixels at the default text size and follows the iPhone's Text Size setting from there: p-12 and gap-8 are spacing,
+   text-13 a font size and rounded-6 a corner radius */
+@theme {
+  --spacing: calc(1rem / 17);
+  --text-10-5: calc(10.5rem / 17);
+  --text-11: calc(11rem / 17);
+  --text-12: calc(12rem / 17);
+  --text-12-5: calc(12.5rem / 17);
+  --text-13: calc(13rem / 17);
+  --text-14: calc(14rem / 17);
+  --text-15: calc(15rem / 17);
+  --text-16: calc(16rem / 17);
+  --text-19: calc(19rem / 17);
+  --text-28: calc(28rem / 17);
+  --radius-4: calc(4rem / 17);
+  --radius-5: calc(5rem / 17);
+  --radius-6: calc(6rem / 17);
+  --radius-8: calc(8rem / 17);
+  --radius-9: calc(9rem / 17);
+}
+
 :root {
   box-sizing: border-box;
   padding-top: env(safe-area-inset-top, 0px);

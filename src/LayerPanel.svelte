@@ -28,14 +28,14 @@
   // the buttons in the button groups: the views, the gantry's Off / style row, and Show all and Reset; and what a button
   // that can't be pressed looks like (zoom out can't go past Fit, Center has nothing to move at Fit, and Reset has nothing
   // to do until a layer is changed)
-  const GROUP_BUTTON = "px-[0.5rem] py-[0.3rem]";
+  const GROUP_BUTTON = "px-8.5 py-5";
   const DISABLED =
     "disabled:cursor-default disabled:border-(--line) disabled:opacity-40";
   const STEP_BUTTON =
-    "rounded-none border-0 bg-transparent px-[calc(8rem/17)] py-[calc(6rem/17)] focus-visible:outline-offset-[-2px] [&:hover:not(:disabled)]:bg-(--bg)";
-  const ICON_BUTTON = "rounded-[8px] p-[calc(6rem/17)]";
+    "rounded-none border-0 bg-transparent px-8 py-6 focus-visible:outline-offset-[-2px] [&:hover:not(:disabled)]:bg-(--bg)";
+  const ICON_BUTTON = "rounded-8 p-6";
   const LINK =
-    "inline-flex items-center gap-[6px] text-inherit [&_svg]:h-[1.2em] [&_svg]:w-[1.2em] [&_svg]:flex-none";
+    "inline-flex items-center gap-6 text-inherit [&_svg]:h-[1.2em] [&_svg]:w-[1.2em] [&_svg]:flex-none";
   const opacity = (k) => (disabled(k) ? "0.4" : "");
   // greenbelt and creeks only in drawing mode, roads (with their labels), construction yard and walking paths in the two SFMSF
   // views (drawing mode and SFMSF zoom),
@@ -69,20 +69,20 @@
 
 <!-- on a phone it slides in from the left -->
 <aside
-  class="flex min-h-0 flex-col overflow-hidden border-r border-(--line) bg-(--panel) text-[calc(15rem/17)] phone:fixed phone:inset-y-0 phone:left-0 phone:z-30 phone:w-[min(300px,85vw)] phone:shadow-[2px_0_12px_rgba(0,0,0,0.3)]"
+  class="flex min-h-0 flex-col overflow-hidden border-r border-(--line) bg-(--panel) text-15 phone:fixed phone:inset-y-0 phone:left-0 phone:z-30 phone:w-[min(300px,85vw)] phone:shadow-[2px_0_12px_rgba(0,0,0,0.3)]"
   transition:fly={{ x: -320, opacity: 1, duration: ui.phone ? 200 : 0 }}
 >
   <!-- everything but the zoom footer scrolls -->
   <div
-    class="min-h-0 flex-1 overflow-y-auto px-[16px] pt-[16px] pb-[24px] phone:pt-[calc(env(safe-area-inset-top,0px)_+_16px)] phone:pb-[calc(env(safe-area-inset-bottom,0px)_+_24px)]"
+    class="min-h-0 flex-1 overflow-y-auto px-16 pt-16 pb-24 phone:pt-[calc(env(safe-area-inset-top,0px)_+_var(--spacing)*16)] phone:pb-[calc(env(safe-area-inset-bottom,0px)_+_var(--spacing)*24)]"
   >
-    <div class="mb-[8px] flex items-center justify-between gap-[8px]">
+    <div class="mb-8 flex items-center justify-between gap-8">
       <!-- the title: the Clayton Clipper logo with "Map" beside it, small and spaced out, as on the progress card and Trackside -->
       <h1
-        class="m-0 flex items-center gap-[10px] text-[calc(12rem/17)] font-bold tracking-[0.3em] text-(--mute) uppercase"
+        class="m-0 flex items-center gap-10 text-12 font-bold tracking-[0.3em] text-(--mute) uppercase"
       >
         <img
-          class="h-[calc(36rem/17)] w-auto"
+          class="h-36 w-auto"
           src="{import.meta.env.BASE_URL}images/logo.png"
           alt="Clayton Clipper"
           width="625"
@@ -92,18 +92,14 @@
       <button
         title={ui.phone ? "Close the menu" : "Hide the layer panel"}
         aria-label={ui.phone ? "Close the menu" : "Hide the layer panel"}
-        class="p-[calc(6rem/17)]"
+        class="p-6"
         onclick={() => (ui.collapsed = true)}
         ><Icon kind={ui.phone ? "close" : "panel"} /></button
       >
     </div>
-    <div
-      class="mt-[14px] mb-[4px] text-[calc(16rem/17)] font-bold text-(--mute)"
-    >
-      View presets
-    </div>
+    <div class="mt-14 mb-4 text-16 font-bold text-(--mute)">View presets</div>
     <!-- the views are presets, picked like the zoom buttons; picking the one already on does nothing to the view, as a radio button did -->
-    <div class="mt-[6px] flex flex-col gap-[4px]">
+    <div class="mt-6 flex flex-col gap-4">
       {#each LAYERS[0][1] as [k, label]}
         <button
           class="{GROUP_BUTTON} text-left"
@@ -120,7 +116,7 @@
     <!-- the layer switches fold away under Layers, so the panel is short until they are wanted -->
     <button
       class={[
-        "mt-[22px] mb-[8px] flex min-h-[calc(44rem/17)] w-full items-center justify-between text-[calc(16rem/17)] font-bold [&_svg]:[transition:transform_150ms]",
+        "mt-22 mb-8 flex min-h-44 w-full items-center justify-between text-16 font-bold [&_svg]:[transition:transform_150ms]",
         ui.layersOpen && "[&_svg]:[transform:rotate(90deg)]",
       ]}
       aria-expanded={ui.layersOpen}
@@ -131,9 +127,7 @@
     {#if ui.layersOpen}
       <div id="layer-list" transition:slide={{ duration: 150 }}>
         {#each LAYERS.slice(1).filter(([g]) => !groupHidden(g)) as [group, rows]}
-          <div
-            class="mt-[14px] mb-[4px] text-[calc(13rem/17)] font-semibold text-(--mute)"
-          >
+          <div class="mt-14 mb-4 text-13 font-semibold text-(--mute)">
             {group}
           </div>
           {#each rows as [k, label]}
@@ -142,13 +136,13 @@
               <!-- the support beams on their own are only for Mike -->
               {@const opts = all.filter(([o]) => o !== "beams" || isMike)}
               {#if name}<div
-                  class="mt-[14px] mb-[4px] text-[calc(13rem/17)] font-semibold text-(--mute)"
+                  class="mt-14 mb-4 text-13 font-semibold text-(--mute)"
                   style:opacity={opacity(k)}
                 >
                   {name}
                 </div>{/if}
               <div
-                class="mt-[10px] flex flex-wrap gap-[4px]"
+                class="mt-10 flex flex-wrap gap-4"
                 role="group"
                 aria-label={name ?? group}
                 style:opacity={opacity(k)}
@@ -170,7 +164,7 @@
             {:else if !PAIRED.includes(k)}
               <label
                 class={[
-                  "flex items-center gap-[10px] rounded-[6px] px-[4px] py-[6px]",
+                  "flex items-center gap-10 rounded-6 px-4 py-6",
                   disabled(k)
                     ? "cursor-default"
                     : "cursor-pointer hover:bg-(--bg)",
@@ -179,7 +173,7 @@
                 style:display={hidden(k) ? "none" : ""}
               >
                 <input
-                  class="m-0 h-[18px] w-[18px] accent-(--accent) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent)"
+                  class="m-0 h-18 w-18 accent-(--accent) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent)"
                   type="checkbox"
                   checked={layers[k]}
                   disabled={disabled(k)}
@@ -189,7 +183,7 @@
             {/if}
           {/each}
         {/each}
-        <div class="mt-[10px] flex flex-wrap gap-[4px]">
+        <div class="mt-10 flex flex-wrap gap-4">
           <button class="{GROUP_BUTTON} {DISABLED}" onclick={showAll}
             >Show all</button
           ><button
@@ -202,17 +196,17 @@
     {/if}
     <!-- the links, set apart from the map controls above: Trackside (named for what it holds, since its own name isn't known
          yet) and the source code, each with its mark -->
-    <p class="mx-0 mt-[32px] mb-0 text-[calc(13rem/17)] text-(--mute)">
+    <p class="mx-0 mt-32 mb-0 text-13 text-(--mute)">
       <a class={LINK} href="{import.meta.env.BASE_URL}trackside/"
         ><Icon kind="comment" />Trackside: updates and comments</a
       >
     </p>
-    <p class="mx-0 mt-[8px] mb-0 text-[calc(13rem/17)] text-(--mute)">
+    <p class="mx-0 mt-8 mb-0 text-13 text-(--mute)">
       <a class={LINK} href="{import.meta.env.BASE_URL}about/"
         ><Icon kind="info" />About this site</a
       >
     </p>
-    <p class="mx-0 mt-[8px] mb-0 text-[calc(13rem/17)] text-(--mute)">
+    <p class="mx-0 mt-8 mb-0 text-13 text-(--mute)">
       <a class={LINK} href="https://github.com/molund/omc5"
         ><svg viewBox="0 0 16 16" aria-hidden="true"
           ><path
@@ -226,13 +220,13 @@
   <!-- the zoom controls stay pinned to the bottom of the panel; none on a phone: it pinches to zoom -->
   {#if !ui.phone}
     <footer
-      class="flex flex-none items-center gap-[6px] border-t border-(--line) bg-(--panel) px-[16px] py-[10px]"
+      class="flex flex-none items-center gap-6 border-t border-(--line) bg-(--panel) px-16 py-10"
     >
       <!-- zoom out, the zoom (1.0× at Fit), and zoom in, in one pill -->
       <!-- − and + inside the pill: no border of their own, a soft fill on hover; 30px tall plus the pill's border makes 32px;
            the zoom between hairlines, in figures of even width so it doesn't jitter as it changes -->
       <div
-        class="flex flex-1 items-stretch overflow-hidden rounded-[8px] border border-(--line)"
+        class="flex flex-1 items-stretch overflow-hidden rounded-8 border border-(--line)"
         role="group"
         aria-label="Zoom"
       >
@@ -245,7 +239,7 @@
           ><Icon kind="minus" /></button
         >
         <output
-          class="flex flex-1 items-center justify-center border-x border-(--line) text-[calc(13rem/17)] text-(--mute) tabular-nums"
+          class="flex flex-1 items-center justify-center border-x border-(--line) text-13 text-(--mute) tabular-nums"
           aria-live="polite">{(ui.zoom / ui.fit).toFixed(1)}×</output
         >
         <button

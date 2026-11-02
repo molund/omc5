@@ -12,12 +12,12 @@
   // The buttons, in the pager's colours (GitHub's segmented control). Tailwind finds these classes by scanning this file,
   // so they have to stay whole strings.
   const BUTTON =
-    "inline-flex items-center rounded-[6px] border border-(--button-line) bg-(--button-bg) px-[calc(12rem/17)] py-[calc(6rem/17)] text-[calc(14rem/17)] font-semibold whitespace-nowrap text-(--button-ink) no-underline";
+    "inline-flex items-center rounded-6 border border-(--button-line) bg-(--button-bg) px-12 py-6 text-14 font-semibold whitespace-nowrap text-(--button-ink) no-underline";
   // The pager's links and its greyed-out Next, drawn alike; the colours are the grey button variables in app.css
   const PAGER_BASE =
-    "inline-flex min-h-[calc(36rem/17)] min-w-[calc(96rem/17)] items-center justify-center rounded-[6px] border px-[calc(14rem/17)] font-[family-name:-apple-system,BlinkMacSystemFont,Segoe_UI,Noto_Sans,Helvetica,Arial,sans-serif] text-[calc(14rem/17)] no-underline max-[760px]:min-h-[calc(44rem/17)] max-[760px]:flex-1";
+    "inline-flex min-h-36 min-w-96 items-center justify-center rounded-6 border px-14 font-[family-name:-apple-system,BlinkMacSystemFont,Segoe_UI,Noto_Sans,Helvetica,Arial,sans-serif] text-14 no-underline phone:min-h-44 phone:flex-1";
   const PAGER_LINK = `${PAGER_BASE} border-(--button-line) bg-(--pager-knob) font-semibold text-(--button-ink)`;
-  const PAGER_OFF = `${PAGER_BASE} cursor-default border-transparent bg-transparent font-normal text-(--pager-flat-ink) max-[760px]:bg-(--button-bg)`;
+  const PAGER_OFF = `${PAGER_BASE} cursor-default border-transparent bg-transparent font-normal text-(--pager-flat-ink) phone:bg-(--button-bg)`;
 
   const MAP = import.meta.env.BASE_URL;
   const TRACKSIDE = `${MAP}trackside/`;
@@ -160,18 +160,16 @@
 
 <!-- a photo and its caption, under a note or among its further paragraphs -->
 {#snippet photo(p)}
-  <figure class="mx-0 mt-[10px] mb-0">
+  <figure class="mx-0 mt-10 mb-0">
     <a href={p.src}
       ><img
-        class="block h-auto w-full rounded-[6px]"
+        class="block h-auto w-full rounded-6"
         src={p.src}
         alt={p.caption || "Photo for this update"}
         loading="lazy"
       /></a
     >
-    {#if p.caption}<figcaption
-        class="mt-[4px] mb-[20px] text-[calc(13rem/17)] text-(--mute) italic"
-      >
+    {#if p.caption}<figcaption class="mt-4 mb-20 text-13 text-(--mute) italic">
         {p.caption}
       </figcaption>{/if}
   </figure>
@@ -180,30 +178,28 @@
 <!-- laid out like a README on GitHub: a heading per update, the note, its photo, its follow-ups as a list with code-style
      times, then its comments -->
 <main
-  class="mx-auto max-w-[calc(640rem/17)] px-[16px] pt-[calc(16px_+_env(safe-area-inset-top,0px))] pb-[32px] text-[calc(15rem/17)] leading-normal"
+  class="mx-auto max-w-640 px-16 pt-[calc(var(--spacing)*16_+_env(safe-area-inset-top,0px))] pb-32 text-15 leading-normal"
 >
   <!-- a slim bar: the Clayton Clipper logo (back to the top of Trackside) and the page's name on the left, buttons back to
        the map (and, on an update's own page, to all updates) on the right. It stays at the top of the screen while the
        updates scroll under it, clear of the iPhone's notch; its own top padding takes the place of the page's space above
        it, so it sits where it did before scrolling -->
   <header
-    class="sticky top-0 z-5 mt-[calc(-16px_-_env(safe-area-inset-top,0px))] mb-[4px] flex flex-wrap items-center gap-x-[10px] gap-y-[8px] border-b border-(--line) bg-(--bg) pt-[calc(26px_+_env(safe-area-inset-top,0px))] pb-[8px]"
+    class="sticky top-0 z-5 mt-[calc(var(--spacing)*-16_-_env(safe-area-inset-top,0px))] mb-4 flex flex-wrap items-center gap-x-10 gap-y-8 border-b border-(--line) bg-(--bg) pt-[calc(var(--spacing)*26_+_env(safe-area-inset-top,0px))] pb-8"
   >
     <a class="block leading-[0]" href={TRACKSIDE}
       ><img
-        class="h-[calc(40rem/17)] w-auto"
+        class="h-40 w-auto"
         src="{MAP}images/logo.png"
         alt="Clayton Clipper"
         width="625"
         height="351"
       /></a
     >
-    <h1
-      class="m-0 text-[calc(13rem/17)] font-bold tracking-[0.3em] text-(--mute) uppercase"
-    >
+    <h1 class="m-0 text-13 font-bold tracking-[0.3em] text-(--mute) uppercase">
       Trackside
     </h1>
-    <nav class="ml-auto flex gap-[8px]">
+    <nav class="ml-auto flex gap-8">
       {#if post}<a class={BUTTON} href={TRACKSIDE}>← All updates</a>{/if}
       <a class={BUTTON} href={MAP + "?hidecardopen=1"}>← Map</a>
     </nav>
@@ -213,13 +209,13 @@
          the comments link reads as the end of its own update rather than the start of the next -->
     <article
       id={anchor(n.time)}
-      class="scroll-mt-[calc(76rem/17_+_env(safe-area-inset-top,0px))] [article+&]:mt-[36px]"
+      class="scroll-mt-[calc(var(--spacing)*76_+_env(safe-area-inset-top,0px))] [article+&]:mt-36"
     >
       <!-- on a page of updates, the date links to the update's own page, drawn as plain heading text; with a title,
            screen readers hear the date and the title (the date first, so the visible text is in the name, for voice
            control) -->
       <h2
-        class="mt-[28px] mb-[8px] border-b border-(--line) pb-[5px] text-[calc(19rem/17)] leading-tight font-bold"
+        class="mt-28 mb-8 border-b border-(--line) pb-5 text-19 leading-tight font-bold"
       >
         {#if post}{label(n)}{:else}<a
             class="text-inherit no-underline"
@@ -230,37 +226,33 @@
           >{/if}
       </h2>
       <!-- a post leads with its title, with just its date under it -->
-      {#if n.post && n.title}<p
-          class="mx-0 mt-[-4px] mb-[8px] text-[calc(13rem/17)] text-(--mute)"
-        >
+      {#if n.post && n.title}<p class="mx-0 -mt-4 mb-8 text-13 text-(--mute)">
           {dateOnly(n.time)}
         </p>{/if}
       <p class="m-0">{n.text}</p>
       {#if n.photo}{@render photo(n.photo)}{/if}
       {#each n.more as m}
-        {#if m.photo}{@render photo(m.photo)}{:else}<p class="m-0 mt-[10px]">
+        {#if m.photo}{@render photo(m.photo)}{:else}<p class="m-0 mt-10">
             {m.text}
           </p>{/if}
       {/each}
       {#if n.followUps.length}
-        <h3 class="mt-[14px] mb-[4px] text-[calc(15rem/17)] font-bold">
-          Follow-ups
-        </h3>
-        <ul class="m-0 list-disc pl-[22px] [&>li+li]:mt-[4px]">
+        <h3 class="mt-14 mb-4 text-15 font-bold">Follow-ups</h3>
+        <ul class="m-0 list-disc pl-22 [&>li+li]:mt-4">
           <!-- oldest first, in the order they happened (the card shows the newest first) -->
           {#each [...n.followUps].reverse() as m}<li>
               <code
-                class="rounded-[6px] bg-[rgba(129,139,152,0.18)] px-[0.4em] py-[0.15em] font-[family-name:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace] text-[85%]"
+                class="rounded-6 bg-[rgba(129,139,152,0.18)] px-[0.4em] py-[0.15em] font-[family-name:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace] text-[85%]"
                 >{followUpTime(m.time, n.time)}</code
               >
               {m.text}
             </li>{/each}
         </ul>
       {/if}
-      <div class="mt-[8px] flex flex-wrap items-center gap-[10px]">
+      <div class="mt-8 flex flex-wrap items-center gap-10">
         <!-- the comments link, in the link colour -->
         <button
-          class="cursor-pointer border-0 bg-transparent p-0 text-[calc(14rem/17)] text-(--accent)"
+          class="cursor-pointer border-0 bg-transparent p-0 text-14 text-(--accent)"
           aria-expanded={open === anchor(n.time)}
           onclick={() =>
             (open = open === anchor(n.time) ? null : anchor(n.time))}
@@ -274,13 +266,13 @@
         {#if counts[term(n.time)]?.reactions.length}
           <!-- the reactions as GitHub's pills -->
           <span
-            class="inline-flex gap-[6px]"
+            class="inline-flex gap-6"
             aria-label="Reactions: {counts[term(n.time)].reactions
               .map(([e, c]) => `${e} ${c}`)
               .join(', ')}"
           >
             {#each counts[term(n.time)].reactions as [e, c]}<span
-                class="rounded-[2em] border border-(--line) bg-(--bg) px-[8px] text-[calc(12rem/17)]"
+                class="rounded-[2em] border border-(--line) bg-(--bg) px-8 text-12"
                 >{e} {c}</span
               >{/each}
           </span>
@@ -288,7 +280,7 @@
       </div>
       <!-- the giscus thread, set off from the update by a dashed line -->
       {#if open === anchor(n.time)}<div
-          class="mt-[10px] border-t border-dashed border-(--line) pt-[12px]"
+          class="mt-10 border-t border-dashed border-(--line) pt-12"
           use:giscus={n.time}
         ></div>{/if}
     </article>
@@ -301,7 +293,7 @@
        press keeps the track colour). -->
   {#if !post && pages > 1}
     <nav
-      class="mx-auto mt-[24px] flex w-fit rounded-[6px] bg-(--button-bg) max-[760px]:w-auto max-[760px]:gap-[8px] max-[760px]:bg-transparent"
+      class="mx-auto mt-24 flex w-fit rounded-6 bg-(--button-bg) phone:w-auto phone:gap-8 phone:bg-transparent"
       aria-label="Pages of updates"
     >
       {#if page === 1}
@@ -319,9 +311,9 @@
   <!-- the footer, at the very bottom of every Trackside page: who's behind this, and a link to the About page; small and
        muted, centred under a thin line, with the link on its own line -->
   <footer
-    class="mt-[40px] border-t border-(--line) pt-[14px] pb-[4px] text-center text-[calc(12.5rem/17)] text-(--mute)"
+    class="mt-40 border-t border-(--line) pt-14 pb-4 text-center text-12-5 text-(--mute)"
   >
-    <p class="mx-0 mt-0 mb-[4px]">
+    <p class="mx-0 mt-0 mb-4">
       A hobby project by Mike, not affiliated with TransLink.
     </p>
     <a class="text-(--accent)" href="{MAP}about/">About this site</a>

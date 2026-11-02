@@ -92,20 +92,20 @@
   // button is the secondary button to Let's go (the same shape and weight, in the Map buttons' secondary colours, the
   // pager's, GitHub's segmented control), and More trackside updates is a green one at the bottom of the card.
   const COMMENT_BUTTON =
-    "mt-[10px] flex min-h-[calc(32rem/17)] items-center gap-[6px] rounded-[6px] border px-[calc(10rem/17)] py-[calc(6rem/17)] no-underline";
+    "mt-10 flex min-h-32 items-center gap-6 rounded-6 border px-10 py-6 no-underline";
   const COMMENT_BUTTON_SMALL =
-    "border-(--line) bg-(--panel) text-[calc(13rem/17)] text-(--ink) hover:bg-(--bg)";
+    "border-(--line) bg-(--panel) text-13 text-(--ink) hover:bg-(--bg)";
   const COMMENT_BUTTON_FULL =
-    "border-(--button-line) bg-(--button-bg) text-[calc(14rem/17)] font-semibold text-(--button-ink)";
+    "border-(--button-line) bg-(--button-bg) text-14 font-semibold text-(--button-ink)";
   const COMMENT_BUTTON_GREEN =
-    "mt-[40px] border-(--primary-button) bg-(--primary-button) text-[calc(14rem/17)] font-semibold text-white";
+    "mt-40 border-(--primary-button) bg-(--primary-button) text-14 font-semibold text-white";
   // the notes, each led by its own time in a small grey chip (a note after a note has a little more room above it)
-  const NOTE = "mt-[4px] text-[calc(13rem/17)] [[data-note]+&]:mt-[6px]";
+  const NOTE = "mt-4 text-13 [[data-note]+&]:mt-6";
   const CHIP =
-    "mr-[4px] inline-block rounded-[9px] bg-(--bg) px-[6px] text-[calc(11rem/17)] font-semibold text-(--mute)";
+    "mr-4 inline-block rounded-9 bg-(--bg) px-6 text-11 font-semibold text-(--mute)";
   // primary green buttons
   const PRIMARY_BUTTON =
-    "inline-flex items-center rounded-[6px] border border-(--primary-button) bg-(--primary-button) px-[calc(12rem/17)] py-[calc(6rem/17)] text-[calc(14rem/17)] font-semibold whitespace-nowrap text-white";
+    "inline-flex items-center rounded-6 border border-(--primary-button) bg-(--primary-button) px-12 py-6 text-14 font-semibold whitespace-nowrap text-white";
 
   function stripHtml(html) {
     return html.replace(/<[^>]*>/g, "");
@@ -121,8 +121,8 @@
   <button
     data-num
     class={[
-      "relative min-h-[36px] cursor-help rounded-[4px] border-0 px-[3px] py-[2px] font-semibold text-(--ink) underline decoration-(--mute) decoration-dotted underline-offset-[4px] after:absolute after:inset-x-[-7px] after:inset-y-0 after:content-['']",
-      big ? "text-[calc(28rem/17)]" : "[font-size:inherit]",
+      "relative min-h-36 cursor-help rounded-4 border-0 px-3 py-2 font-semibold text-(--ink) underline decoration-(--mute) decoration-dotted underline-offset-4 after:absolute after:-inset-x-7 after:inset-y-0 after:content-['']",
+      big ? "text-28" : "[font-size:inherit]",
       tip === k ? "bg-(--bg)" : "bg-transparent hover:bg-(--bg)",
     ]}
     aria-describedby={tip === k ? "progress-tip" : undefined}
@@ -138,7 +138,7 @@
 {#if layers.progress && ui.gantry && ui.cardHidden}
   <button
     bind:this={showButton}
-    class="absolute top-[12px] right-[12px] z-5 p-[calc(6rem/17)] shadow-[0_1px_4px_rgba(0,0,0,0.3)]"
+    class="absolute top-12 right-12 z-5 p-6 shadow-[0_1px_4px_rgba(0,0,0,0.3)]"
     title="Show the progress card"
     aria-label="Show the progress card"
     onclick={() => (ui.cardHidden = false)}><Icon kind="info" /></button
@@ -150,8 +150,8 @@
     class={[
       "bg-(--panel) text-(--ink)",
       full
-        ? "fixed inset-0 z-50 h-[100dvh] w-auto max-w-none overflow-y-auto overscroll-contain pt-0 pr-[max(16px,env(safe-area-inset-right))] pb-[calc(16px_+_env(safe-area-inset-bottom))] pl-[max(16px,env(safe-area-inset-left))]"
-        : "absolute top-[12px] right-[12px] z-5 w-[calc(240rem/17)] max-w-[calc(100%_-_24px)] rounded-[8px] border border-(--line) px-[14px] pt-[12px] pb-[14px] shadow-[0_2px_8px_rgba(0,0,0,0.25)]",
+        ? "fixed inset-0 z-50 h-[100dvh] w-auto max-w-none overflow-y-auto overscroll-contain pt-0 pr-[max(calc(var(--spacing)*16),env(safe-area-inset-right))] pb-[calc(var(--spacing)*16_+_env(safe-area-inset-bottom))] pl-[max(calc(var(--spacing)*16),env(safe-area-inset-left))]"
+        : "absolute top-12 right-12 z-5 w-240 max-w-[calc(100%_-_var(--spacing)*24)] rounded-8 border border-(--line) px-14 pt-12 pb-14 shadow-[0_2px_8px_rgba(0,0,0,0.25)]",
     ]}
     role={full ? "dialog" : undefined}
     aria-modal={full ? "true" : undefined}
@@ -161,14 +161,14 @@
          phone, a sticky header with a large Close button -->
     <div
       class={full &&
-        "sticky top-0 z-2 mt-0 mr-[calc(-1_*_max(16px,env(safe-area-inset-right)))] mb-[12px] ml-[calc(-1_*_max(16px,env(safe-area-inset-left)))] flex items-center justify-between gap-[12px] border-b border-(--line) bg-(--panel) pt-[calc(8px_+_env(safe-area-inset-top))] pr-[max(16px,env(safe-area-inset-right))] pb-[8px] pl-[max(16px,env(safe-area-inset-left))]"}
+        "sticky top-0 z-2 mt-0 mr-[calc(-1_*_max(calc(var(--spacing)*16),env(safe-area-inset-right)))] mb-12 ml-[calc(-1_*_max(calc(var(--spacing)*16),env(safe-area-inset-left)))] flex items-center justify-between gap-12 border-b border-(--line) bg-(--panel) pt-[calc(var(--spacing)*8_+_env(safe-area-inset-top))] pr-[max(calc(var(--spacing)*16),env(safe-area-inset-right))] pb-8 pl-[max(calc(var(--spacing)*16),env(safe-area-inset-left))]"}
     >
       <div
-        class="flex items-center gap-[8px] pr-[calc(24rem/17)] text-[calc(10.5rem/17)] font-bold tracking-[0.3em] text-(--mute) uppercase"
+        class="flex items-center gap-8 pr-24 text-10-5 font-bold tracking-[0.3em] text-(--mute) uppercase"
         id="progress-title"
       >
         <img
-          class="h-[calc(30rem/17)] w-auto"
+          class="h-30 w-auto"
           src="{import.meta.env.BASE_URL}images/logo.png"
           alt="Clayton Clipper"
           width="625"
@@ -181,7 +181,7 @@
           onclick={close}
           aria-label="Let’s go to the map">Let’s go →</button
         >{:else}<button
-          class="absolute top-[6px] right-[6px] border-transparent bg-transparent p-[4px] text-(--mute) hover:text-(--ink)"
+          class="absolute top-6 right-6 border-transparent bg-transparent p-4 text-(--mute) hover:text-(--ink)"
           title="Hide the progress card"
           aria-label="Hide the progress card"
           onclick={close}><Icon kind="close" /></button
@@ -189,9 +189,7 @@
     </div>
     <!-- "36 (+8) / 105": the spans done, the spans ahead built by cranes, and the total (non-breaking spaces, which the flex
          row keeps) -->
-    <div
-      class="mt-[2px] mb-[8px] flex flex-wrap items-baseline text-[calc(15rem/17)] text-(--mute)"
-    >
+    <div class="mt-2 mb-8 flex flex-wrap items-baseline text-15 text-(--mute)">
       {@render num("span", span, true)}&nbsp;(+{@render num(
         "ahead",
         ahead,
@@ -200,14 +198,14 @@
     <!-- floats over the progress bar (no top: it sits where it would have started, just under the figure), in the card's
          colours reversed so it stands out from the card in light and dark mode -->
     {#if tip}<div
-        class="absolute inset-x-[8px] z-1 mt-[-2px] rounded-[6px] bg-(--ink) px-[9px] py-[7px] text-[calc(12rem/17)] leading-[1.35] text-(--panel) shadow-[0_3px_10px_rgba(0,0,0,0.35)]"
+        class="absolute inset-x-8 z-1 -mt-2 rounded-6 bg-(--ink) px-9 py-7 text-12 leading-[1.35] text-(--panel) shadow-[0_3px_10px_rgba(0,0,0,0.35)]"
         id="progress-tip"
         role="tooltip"
       >
         {@html TIPS[tip]}
       </div>{/if}
     <div
-      class="h-[10px] overflow-hidden rounded-[5px] bg-(--line)"
+      class="h-10 overflow-hidden rounded-5 bg-(--line)"
       role="progressbar"
       aria-label="Clayton Clipper progress"
       aria-valuemin="0"
@@ -215,12 +213,12 @@
       aria-valuenow={span}
     >
       <div
-        class="h-full rounded-[5px]"
+        class="h-full rounded-5"
         style:width="{(span / total) * 100}%"
         style:background={PROGRESS_COLOUR}
       ></div>
     </div>
-    {#if when}<div class="mt-[8px] text-[calc(12rem/17)] text-(--mute)">
+    {#if when}<div class="mt-8 text-12 text-(--mute)">
         As of {when}
       </div>{/if}
     <!-- every update in the order it happened, since later ones build on earlier ones: the original note, then its
@@ -237,10 +235,10 @@
         >{m.text}
       </div>{/each}
     {#if status.photo}<a
-        class="mt-[8px] block"
+        class="mt-8 block"
         href="{TRACKSIDE}#{anchor(newest.time)}"
         ><img
-          class="block h-[calc(110rem/17)] w-full rounded-[6px] object-cover"
+          class="block h-110 w-full rounded-6 object-cover"
           src={status.photo.src}
           alt={status.photo.caption || "Photo for this update"}
         /></a
@@ -254,7 +252,7 @@
         ><Icon kind="comment" /><span
           >Comments{activity?.comments ? ` (${activity.comments})` : ""}</span
         >{#if activity?.reactions.length}<span
-            class="ml-auto flex gap-[8px] text-(--mute)"
+            class="ml-auto flex gap-8 text-(--mute)"
             >{#each activity.reactions as [e, c]}<span>{e} {c}</span
               >{/each}</span
           >{/if}</a
@@ -265,7 +263,7 @@
         >
         <button
           bind:this={closeButton}
-          class="{PRIMARY_BUTTON} mt-[16px] w-full"
+          class="{PRIMARY_BUTTON} mt-16 w-full"
           onclick={close}
           aria-label="Let’s go to the map">View map</button
         >
