@@ -185,7 +185,7 @@
     <h1 class="page-header-title">Trackside</h1>
     <nav class="page-header-nav">
       {#if post}<a class="btn btn-grey" href={TRACKSIDE}>← All updates</a>{/if}
-      <a class="btn btn-grey" href={MAP + "?hidecardopen=1"}>← Map</a>
+      <a class="btn btn-grey" href={MAP}>← Map</a>
     </nav>
   </header>
   {#each shown as n (anchor(n.time))}
