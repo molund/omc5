@@ -153,6 +153,13 @@ export const PROGRESS_VIEW_WIDTH = 3 * GANTRY_LENGTH;
  */
 export const PROGRESS_SPAN_AT = { x: 0.35, y: 0.35 };
 /**
+ * The least far along the route progress-chart mode's canvas goes: it always takes in this span whole, so the spans well
+ * ahead of the gantry (the "+8" in the figures) can be reached. It is a floor, not an edge: once the gantry gets past it
+ * the canvas grows with the built spans. Delete it (and its rule in canvasProgress) once the gantry has crossed the
+ * Serpentine River.
+ */
+export const PROGRESS_MIN_LAST_SPAN = 55;
+/**
  * Horizontal's canvas is what is drawn with a margin on every side of this fraction of the straight-line distance between
  * its two ends.
  */
