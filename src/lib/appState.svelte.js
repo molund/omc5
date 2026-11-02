@@ -55,7 +55,11 @@ hideMikeOnlyOptions();
 export const PHONE =
   typeof matchMedia !== "undefined"
     ? matchMedia("(max-width: 760px)")
-    : { matches: false, addEventListener: () => {}, removeEventListener: () => {} };
+    : {
+        matches: false,
+        addEventListener: () => {},
+        removeEventListener: () => {},
+      };
 // zoom is a percentage of the stage width, and fit the zoom at which the whole canvas fits the stage; ready turns on the layer
 // rules once map.svg is tagged; gantry is the Clayton Clipper's span number out of the total; phone is PHONE, kept up to
 // date by App.svelte; collapsed hides the panel (a phone opens on the map, with the menu closed); changed is whether a layer

@@ -25,6 +25,17 @@
   const disabled = (k) =>
     ((k === "omc5Labels" || k === "spanLabels") && !avail) ||
     (k === "arrows" && !layers.guideway);
+  // the buttons in the button groups: the views, the gantry's Off / style row, and Show all and Reset; and what a button
+  // that can't be pressed looks like (zoom out can't go past Fit, Center has nothing to move at Fit, and Reset has nothing
+  // to do until a layer is changed)
+  const GROUP_BUTTON = "px-8.5 py-5";
+  const DISABLED =
+    "disabled:cursor-default disabled:border-(--line) disabled:opacity-40";
+  const STEP_BUTTON =
+    "rounded-none border-0 bg-transparent px-8 py-6 focus-visible:outline-offset-[-2px] [&:hover:not(:disabled)]:bg-(--bg)";
+  const ICON_BUTTON = "rounded-8 p-6";
+  const LINK =
+    "inline-flex items-center gap-6 text-inherit [&_svg]:h-[1.2em] [&_svg]:w-[1.2em] [&_svg]:flex-none";
   const opacity = (k) => (disabled(k) ? "0.4" : "");
   // greenbelt and creeks only in drawing mode, roads (with their labels), construction yard and walking paths in the two SFMSF
   // views (drawing mode and SFMSF zoom),
@@ -35,8 +46,7 @@
     if (k === "roads" || k === "yard" || k === "walk")
       return !(layers.sfmsfDrawing || layers.sfmsfAerial);
     if (k === "aerial") return layers.sfmsfDrawing;
-    if (k === "stationLabels")
-      return layers.sfmsfDrawing || layers.sfmsfAerial;
+    if (k === "stationLabels") return layers.sfmsfDrawing || layers.sfmsfAerial;
     return false;
   }
   // the Reference group shows only in the two SFMSF views; the Built by group only for Mike, and not in the two SFMSF views
@@ -59,15 +69,18 @@
 
 <!-- on a phone it slides in from the left -->
 <aside
-  class="side"
+  class="flex min-h-0 flex-col overflow-hidden border-r border-(--line) bg-(--panel) text-15 phone:fixed phone:inset-y-0 phone:left-0 phone:z-30 phone:w-[min(300px,85vw)] phone:shadow-[2px_0_12px_rgba(0,0,0,0.3)]"
   transition:fly={{ x: -320, opacity: 1, duration: ui.phone ? 200 : 0 }}
 >
   <!-- everything but the zoom footer scrolls -->
-  <div class="body">
-    <div class="hd">
+  <div
+    class="min-h-0 flex-1 overflow-y-auto px-16 pt-16 pb-24 phone:pt-[calc(env(safe-area-inset-top,0px)_+_var(--spacing)*16)] phone:pb-[calc(env(safe-area-inset-bottom,0px)_+_var(--spacing)*24)]"
+  >
+    <div class="mb-8 flex items-center justify-between gap-8">
       <!-- the title: the Clayton Clipper logo with "Map" beside it, small and spaced out, as on the progress card and Trackside -->
-      <h1>
+      <h1 class="eyebrow flex items-center gap-10 text-12">
         <img
+          class="h-36 w-auto"
           src="{import.meta.env.BASE_URL}images/logo.png"
           alt="Clayton Clipper"
           width="625"
@@ -77,16 +90,17 @@
       <button
         title={ui.phone ? "Close the menu" : "Hide the layer panel"}
         aria-label={ui.phone ? "Close the menu" : "Hide the layer panel"}
-        class="hide"
+        class="p-6"
         onclick={() => (ui.collapsed = true)}
         ><Icon kind={ui.phone ? "close" : "panel"} /></button
       >
     </div>
-    <div class="grp top">View presets</div>
+    <div class="mt-14 mb-4 text-16 font-bold text-(--mute)">View presets</div>
     <!-- the views are presets, picked like the zoom buttons; picking the one already on does nothing to the view, as a radio button did -->
-    <div class="views">
+    <div class="mt-6 flex flex-col gap-4">
       {#each LAYERS[0][1] as [k, label]}
         <button
+          class="{GROUP_BUTTON} text-left"
           class:on={layers[k]}
           aria-pressed={layers[k]}
           onclick={() => {
@@ -99,8 +113,10 @@
     </div>
     <!-- the layer switches fold away under Layers, so the panel is short until they are wanted -->
     <button
-      class="fold"
-      class:open={ui.layersOpen}
+      class={[
+        "mt-22 mb-8 flex min-h-44 w-full items-center justify-between text-16 font-bold [&_svg]:[transition:transform_150ms]",
+        ui.layersOpen && "[&_svg]:[transform:rotate(90deg)]",
+      ]}
       aria-expanded={ui.layersOpen}
       aria-controls="layer-list"
       onclick={() => (ui.layersOpen = !ui.layersOpen)}
@@ -109,23 +125,26 @@
     {#if ui.layersOpen}
       <div id="layer-list" transition:slide={{ duration: 150 }}>
         {#each LAYERS.slice(1).filter(([g]) => !groupHidden(g)) as [group, rows]}
-          <div class="grp">{group}</div>
+          <div class="group-label">
+            {group}
+          </div>
           {#each rows as [k, label]}
             {#if PAIRS[k]}
               {@const [name, all] = PAIRS[k]}
               <!-- the support beams on their own are only for Mike -->
               {@const opts = all.filter(([o]) => o !== "beams" || isMike)}
-              {#if name}<div class="grp" style:opacity={opacity(k)}>
+              {#if name}<div class="group-label" style:opacity={opacity(k)}>
                   {name}
                 </div>{/if}
               <div
-                class="btns"
+                class="mt-10 flex flex-wrap gap-4"
                 role="group"
                 aria-label={name ?? group}
                 style:opacity={opacity(k)}
               >
                 {#each [[null, "Off"], ...opts] as [o, text]}
                   <button
+                    class="{GROUP_BUTTON} {DISABLED}"
                     class:on={picked(opts) === o}
                     aria-pressed={picked(opts) === o}
                     disabled={disabled(k)}
@@ -139,12 +158,17 @@
               </div>
             {:else if !PAIRED.includes(k)}
               <label
-                class="row"
-                class:disabled={disabled(k)}
+                class={[
+                  "flex items-center gap-10 rounded-6 px-4 py-6",
+                  disabled(k)
+                    ? "cursor-default"
+                    : "cursor-pointer hover:bg-(--bg)",
+                ]}
                 style:opacity={opacity(k)}
                 style:display={hidden(k) ? "none" : ""}
               >
                 <input
+                  class="m-0 h-18 w-18 accent-(--accent) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent)"
                   type="checkbox"
                   checked={layers[k]}
                   disabled={disabled(k)}
@@ -154,8 +178,11 @@
             {/if}
           {/each}
         {/each}
-        <div class="btns">
-          <button onclick={showAll}>Show all</button><button
+        <div class="mt-10 flex flex-wrap gap-4">
+          <button class="{GROUP_BUTTON} {DISABLED}" onclick={showAll}
+            >Show all</button
+          ><button
+            class="{GROUP_BUTTON} {DISABLED}"
             disabled={!ui.changed}
             onclick={reset}>Reset</button
           >
@@ -164,18 +191,18 @@
     {/if}
     <!-- the links, set apart from the map controls above: Trackside (named for what it holds, since its own name isn't known
          yet) and the source code, each with its mark -->
-    <p class="trackside">
-      <a class="repo" href="{import.meta.env.BASE_URL}trackside/"
+    <p class="fine-print mt-32">
+      <a class={LINK} href="{import.meta.env.BASE_URL}trackside/"
         ><Icon kind="comment" />Trackside: updates and comments</a
       >
     </p>
-    <p class="about">
-      <a class="repo" href="{import.meta.env.BASE_URL}about/"
+    <p class="fine-print">
+      <a class={LINK} href="{import.meta.env.BASE_URL}about/"
         ><Icon kind="info" />About this site</a
       >
     </p>
-    <p class="source">
-      <a class="repo" href="https://github.com/molund/omc5"
+    <p class="fine-print">
+      <a class={LINK} href="https://github.com/molund/omc5"
         ><svg viewBox="0 0 16 16" aria-hidden="true"
           ><path
             fill="currentColor"
@@ -187,18 +214,31 @@
   </div>
   <!-- the zoom controls stay pinned to the bottom of the panel; none on a phone: it pinches to zoom -->
   {#if !ui.phone}
-    <footer class="foot">
+    <footer
+      class="flex flex-none items-center gap-6 border-t border-(--line) bg-(--panel) px-16 py-10"
+    >
       <!-- zoom out, the zoom (1.0× at Fit), and zoom in, in one pill -->
-      <div class="step" role="group" aria-label="Zoom">
+      <!-- − and + inside the pill: no border of their own, a soft fill on hover; 30px tall plus the pill's border makes 32px;
+           the zoom between hairlines, in figures of even width so it doesn't jitter as it changes -->
+      <div
+        class="flex flex-1 items-stretch overflow-hidden rounded-8 border border-(--line)"
+        role="group"
+        aria-label="Zoom"
+      >
         <button
+          class="{STEP_BUTTON} {DISABLED}"
           title="Zoom out"
           aria-label="Zoom out"
           disabled={isFit()}
           onclick={() => setZoom(ui.zoom / ZOOM_STEP)}
           ><Icon kind="minus" /></button
         >
-        <output aria-live="polite">{(ui.zoom / ui.fit).toFixed(1)}×</output>
+        <output
+          class="flex flex-1 items-center justify-center border-x border-(--line) text-13 text-(--mute) tabular-nums"
+          aria-live="polite">{(ui.zoom / ui.fit).toFixed(1)}×</output
+        >
         <button
+          class="{STEP_BUTTON} {DISABLED}"
           title="Zoom in"
           aria-label="Zoom in"
           onclick={() => setZoom(ui.zoom * ZOOM_STEP)}
@@ -206,7 +246,7 @@
         >
       </div>
       <button
-        class="ico"
+        class="{ICON_BUTTON} {DISABLED}"
         class:on={isFit()}
         title="Zoom to fit"
         aria-label="Zoom to fit"
@@ -214,7 +254,7 @@
         onclick={() => setZoom(fitZoom())}><Icon kind="fit" /></button
       >
       <button
-        class="ico"
+        class="{ICON_BUTTON} {DISABLED}"
         title="Center without zooming"
         aria-label="Center without zooming"
         disabled={isFit()}
@@ -223,225 +263,3 @@
     </footer>
   {/if}
 </aside>
-
-<style>
-  /* a column: the scrolling body above, the zoom footer pinned below */
-  .side {
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    min-height: 0;
-    background: var(--panel);
-    border-right: 1px solid var(--line);
-    /* all text in the panel is sized in rem, so it follows the iPhone's Text Size setting (see app.css); the sizes match
-       the old 15px rows, 13px buttons and notes, and 17px heading at the default text size */
-    font-size: calc(15rem / 17);
-  }
-  .body {
-    flex: 1;
-    min-height: 0;
-    overflow-y: auto;
-    padding: 16px 16px 24px;
-  }
-  .side h1 {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 0;
-    font-size: calc(12rem / 17);
-    font-weight: 700;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--mute);
-  }
-  .side h1 img {
-    width: auto;
-    height: calc(36rem / 17);
-  }
-  .side p {
-    margin: 0 0 14px;
-    color: var(--mute);
-    font-size: calc(13rem / 17);
-  }
-  /* the links: well clear of the map controls, close together */
-  .side p.trackside {
-    margin: 32px 0 0;
-  }
-  .side p.about {
-    margin: 8px 0 0;
-  }
-  .trackside :global(svg),
-  .about :global(svg) {
-    width: 1.2em;
-    height: 1.2em;
-    flex: none;
-  }
-  .side p.source {
-    margin: 8px 0 0;
-  }
-  /* the link to the source code: GitHub's mark beside the text, both scaling with the text size */
-  .repo {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    color: inherit;
-  }
-  .repo svg {
-    width: 1.2em;
-    height: 1.2em;
-    flex: none;
-  }
-  .hd {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    margin-bottom: 8px;
-  }
-  .hide {
-    padding: calc(6rem / 17);
-  }
-  .grp {
-    margin: 14px 0 4px;
-    font-weight: 600;
-    font-size: calc(13rem / 17);
-    color: var(--mute);
-  }
-  .row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 6px 4px;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-  .row:hover {
-    background: var(--bg);
-  }
-  /* a switch that can't be changed doesn't look clickable */
-  .row.disabled {
-    cursor: default;
-  }
-  .row.disabled:hover {
-    background: none;
-  }
-  .row input {
-    width: 18px;
-    height: 18px;
-    accent-color: var(--accent);
-    margin: 0;
-  }
-  .row input:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
-  .views {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    margin-top: 6px;
-  }
-  .views button {
-    text-align: left;
-  }
-  /* buttons in the button groups: the views, the gantry's Off / style row, and Show all and Reset */
-  .views button,
-  .btns button {
-    padding: 0.3rem 0.5rem;
-  }
-  /* a full-width row, tall enough to tap on a phone, with its chevron pointing down when the switches are folded out */
-  .fold {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    min-height: calc(44rem / 17);
-    margin: 22px 0 8px;
-  }
-  /* the panel's two sections, View and Layers, are headed a little larger than the rest of its text, and bold */
-  .top,
-  .fold {
-    font-size: calc(16rem / 17);
-    font-weight: 700;
-  }
-  .fold :global(svg) {
-    transition: transform 150ms;
-  }
-  .fold.open :global(svg) {
-    transform: rotate(90deg);
-  }
-  .btns {
-    display: flex;
-    gap: 4px;
-    flex-wrap: wrap;
-    margin-top: 10px;
-  }
-  /* the zoom footer: a hairline above it, the zoom pill filling the width, then the Fit and Center icon buttons */
-  .foot {
-    flex: none;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 10px 16px;
-    border-top: 1px solid var(--line);
-    background: var(--panel);
-  }
-  .step {
-    flex: 1;
-    display: flex;
-    align-items: stretch;
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  /* − and + inside the pill: no border of their own, a soft fill on hover; 30px tall plus the pill's border makes 32px */
-  .step button {
-    border: 0;
-    border-radius: 0;
-    padding: calc(6rem / 17) calc(8rem / 17);
-    background: none;
-  }
-  .step button:hover:not(:disabled) {
-    background: var(--bg);
-  }
-  .step button:focus-visible {
-    outline-offset: -2px;
-  }
-  /* the zoom, between hairlines, in figures of even width so it doesn't jitter as it changes */
-  .step output {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-inline: 1px solid var(--line);
-    font-size: calc(13rem / 17);
-    font-variant-numeric: tabular-nums;
-    color: var(--mute);
-  }
-  .ico {
-    padding: calc(6rem / 17);
-    border-radius: 8px;
-  }
-  /* zoom out can't go past Fit, Center has nothing to move at Fit, and Reset has nothing to do until a layer is changed */
-  .btns button:disabled,
-  .foot button:disabled {
-    opacity: 0.4;
-    cursor: default;
-    border-color: var(--line);
-  }
-  @media (max-width: 760px) {
-    .side {
-      position: fixed;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      z-index: 30;
-      width: min(300px, 85vw);
-      box-shadow: 2px 0 12px rgba(0, 0, 0, 0.3);
-    }
-    .body {
-      padding-top: calc(env(safe-area-inset-top, 0px) + 16px);
-      padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 24px);
-    }
-  }
-</style>

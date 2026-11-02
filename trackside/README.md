@@ -36,7 +36,13 @@ Shared with the map, in `src/`:
   comment threads all go through it.
 - `src/lib/comments.js` — each update's anchor and thread title, the comment and reaction counts,
   and `SITE`, the site's address.
-- `src/app.css` — colours and base styles.
+- `src/app.css` — colours and base styles, and Tailwind (with its preflight reset). Only the
+  pages' own markup is scanned for classes: `about/index.html`, `trackside/*.svelte` and
+  `src/*.svelte`. Trackside is styled with Tailwind classes in `TracksidePage.svelte`; its own
+  sizes are in rem, 17 to a rem, set in `app.css`'s `@theme`: `mt-14` is 14px at the default text
+  size, `text-13` is a 13px font and `rounded-6` a 6px corner, and all of them follow the iPhone's
+  Text Size setting.
+  The base `button` look is in `app.css`'s base layer, so utilities on a button override it.
 
 ## How it's built
 

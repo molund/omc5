@@ -44,7 +44,15 @@
   {@html `<style>${css}</style>`}
 </svelte:head>
 
-<div class="app" class:collapsed={ui.collapsed}>
+<!-- on a phone the panel slides in over the map, so the map always has the whole screen -->
+<div
+  class={[
+    "grid h-full",
+    ui.collapsed
+      ? "grid-cols-[1fr] grid-rows-[1fr]"
+      : "grid-cols-[260px_1fr] phone:grid-cols-[1fr] phone:grid-rows-[1fr]",
+  ]}
+>
   {#if !ui.collapsed}
     <LayerPanel />
   {/if}
@@ -53,7 +61,7 @@
 <!-- on a phone the open menu dims the map; tapping the map closes it -->
 {#if ui.phone && !ui.collapsed}
   <div
-    class="backdrop"
+    class="fixed inset-0 z-25 bg-[rgba(0,0,0,0.35)]"
     role="presentation"
     transition:fade={{ duration: 150 }}
     onclick={closeMenu}
@@ -61,7 +69,7 @@
 {/if}
 {#if ui.collapsed}
   <button
-    class="expand"
+    class="fixed top-[calc(env(safe-area-inset-top,0px)_+_var(--spacing)*10)] left-10 z-20 p-6 shadow-float"
     title={ui.phone ? "Open the menu" : "Show the layer panel"}
     aria-label={ui.phone ? "Open the menu" : "Show the layer panel"}
     aria-expanded="false"
@@ -69,36 +77,3 @@
     ><Icon kind={ui.phone ? "menu" : "panel"} /></button
   >
 {/if}
-
-<style>
-  .app {
-    display: grid;
-    grid-template-columns: 260px 1fr;
-    height: 100%;
-  }
-  .app.collapsed {
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr;
-  }
-  /* on a phone the panel slides in over the map, so the map always has the whole screen */
-  @media (max-width: 760px) {
-    .app {
-      grid-template-columns: 1fr;
-      grid-template-rows: 1fr;
-    }
-  }
-  .backdrop {
-    position: fixed;
-    inset: 0;
-    z-index: 25;
-    background: rgba(0, 0, 0, 0.35);
-  }
-  .expand {
-    padding: calc(6rem / 17);
-    position: fixed;
-    top: calc(env(safe-area-inset-top, 0px) + 10px);
-    left: 10px;
-    z-index: 20;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-  }
-</style>
