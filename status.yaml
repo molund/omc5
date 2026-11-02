@@ -5,8 +5,8 @@ updated: 2026-10-31T16:15-07:00
 span: 36
 # whether that span is complete (or at least hung)
 complete: true
-# every note, newest first, each stamped with the time of the update that added it; the progress card shows only the newest,
-# under the date (an empty note shows none). A note can have a title, indented under it, for its own Trackside page's
+# every note, newest first, each stamped with the time of the update that added it; the progress card shows the newest note's
+# text, or its newest follow-up's if it has any (an empty note shows none). A note can have a title, indented under it, for its own Trackside page's
 # <title> and link previews (not shown on any page; without one, its date is used):
 #     title: "Span 36 is complete"
 # A note can be a post instead of a status update: "post: true" under it. A post leads with its title on Trackside, with
@@ -16,7 +16,7 @@ complete: true
 #     photo:
 #       file: span-36.jpg (in public/images/sorry-im-a-shitty-photographer/)
 #       caption: "What the photo shows"
-# more paragraphs and photos, indented under it (the card shows only the note, with a More link to the rest):
+# more paragraphs and photos, indented under it (the card shows only the note; Trackside shows it all):
 #     more:
 #       - "A second paragraph"
 #       - photo:

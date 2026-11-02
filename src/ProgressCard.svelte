@@ -1,8 +1,27 @@
 <script>
   import { tick } from "svelte";
+  import { fade } from "svelte/transition";
+  import { cubicIn } from "svelte/easing";
   import { PROGRESS_COLOUR } from "./lib/layerSwitches.js";
   import { layers, ui } from "./lib/appState.svelte.js";
+  import { status, asOf } from "./lib/status.js";
+  import { anchor, term, fetchCounts } from "./lib/comments.js";
   import Icon from "./Icon.svelte";
+
+  // "today" or "yesterday" on the card (Trackside keeps full dates)
+  const when = asOf(status.updated, true);
+  // the newest update's latest word: its newest follow-up if it has any, else its note
+  const newest = status.latest;
+  const note = status.followUps[0]?.text ?? status.note;
+  // the Comments button opens the newest update on Trackside with its comments open, and shows its comment and reaction
+  // counts once GitHub has sent them
+  const TRACKSIDE = `${import.meta.env.BASE_URL}trackside/`;
+  const COMMENTS = newest
+    ? `${TRACKSIDE}?comments#${anchor(newest.time)}`
+    : TRACKSIDE;
+  let activity = $state(null);
+  if (newest)
+    fetchCounts().then((c) => (activity = c[term(newest.time)] ?? null));
 
   // what each number counts, shown when it is hovered or clicked with a mouse, tapped (tap again to hide) or pressed with
   // Enter/Space
@@ -18,9 +37,21 @@
   // a tap anywhere else, or Escape, closes the tip
   function outside(e) {
     if (!e.target.closest("[data-num]")) tip = null;
+    // on a phone a touch anywhere off the card closes it
+    if (ui.phone && card && !card.contains(e.target)) ui.cardHidden = true;
   }
 
-  let showButton = $state();
+  // closing: the card funnels into the information button at its top right corner, like a genie into a bottle
+  function genie(_node, { duration = 500 } = {}) {
+    return {
+      duration,
+      easing: cubicIn,
+      css: (t) =>
+        `transform-origin: top right; transform: scale(${t ** 2}, ${t}) skewY(${(1 - t) * -12}deg); opacity: ${Math.min(1, t * 3)}`,
+    };
+  }
+  let card = $state(),
+    showButton = $state();
   function close() {
     tip = null;
     ui.cardHidden = true;
@@ -63,6 +94,7 @@
 {#if layers.progress && ui.gantry && ui.cardHidden}
   <button
     bind:this={showButton}
+    in:fade={{ delay: 350, duration: 100 }}
     class="absolute top-3 right-3 z-5 p-1.5 shadow-float"
     title="Show the progress card"
     aria-label="Show the progress card"
@@ -71,7 +103,9 @@
 {:else if layers.progress && ui.gantry}
   {@const { span, ahead, total } = ui.gantry}
   <div
-    class="absolute top-3 right-3 z-5 w-60 max-w-[calc(100%_-_var(--spacing)*6)] rounded-lg border border-(--line) bg-(--panel) px-3.5 pt-3 pb-3.5 text-(--ink) shadow-[0_2px_8px_rgba(0,0,0,0.25)]"
+    bind:this={card}
+    out:genie
+    class="absolute top-3 right-3 z-5 w-60 max-w-[calc(100%_-_var(--spacing)*6)] rounded-lg border border-(--line) bg-(--panel) px-3.5 pt-3 pb-3.5 text-(--ink) shadow-card"
   >
     <!-- the title: the Clayton Clipper logo with "Progress" beside it, small and spaced out, as in Trackside's header -->
     <div class="eyebrow flex items-center gap-2 pr-6 text-xs">
@@ -102,7 +136,7 @@
     <!-- floats over the progress bar (no top: it sits where it would have started, just under the figure), in the card's
          colours reversed so it stands out from the card in light and dark mode -->
     {#if tip}<div
-        class="absolute inset-x-2 z-1 -mt-0.5 rounded-md bg-(--ink) px-2.25 py-1.75 text-xs leading-snug text-(--panel) shadow-[0_3px_10px_rgba(0,0,0,0.35)]"
+        class="absolute inset-x-2 z-1 -mt-0.5 rounded-md bg-(--ink) px-2.25 py-1.75 text-xs leading-snug text-(--panel) shadow-tip"
         id="progress-tip"
         role="tooltip"
       >
@@ -122,5 +156,20 @@
         style:background={PROGRESS_COLOUR}
       ></div>
     </div>
+    {#if when}<div class="mt-2 text-xs text-(--mute)">As of {when}</div>{/if}
+    {#if note}<div class="mt-2 text-sm">{note}</div>{/if}
+    {#if newest}
+      <a
+        class="btn mt-2.5 flex min-h-8 gap-1.5 border-(--line) bg-(--panel) px-2.5 text-sm font-normal text-(--ink) hover:bg-(--bg)"
+        href={COMMENTS}
+        ><Icon kind="comment" /><span
+          >Comments{activity?.comments ? ` (${activity.comments})` : ""}</span
+        >{#if activity?.reactions.length}<span
+            class="ml-auto flex gap-2 text-(--mute)"
+            >{#each activity.reactions as [e, c]}<span>{e} {c}</span
+              >{/each}</span
+          >{/if}</a
+      >
+    {/if}
   </div>
 {/if}
