@@ -141,6 +141,17 @@ function canvasProgress() {
     x1 = Math.min(x1, p.x1);
   }
   // the last span, whole and with a little room, whatever the other rules left out (the aerial's edge included)
+  // (it is an unfinished span, which Progress hides, so it is shown while it is measured)
+  const lastPieces = [
+    ...els.svg.querySelectorAll(
+      `.guideway.cc[data-span="${PROGRESS_MIN_LAST_SPAN}"]`,
+    ),
+  ];
+  const styles = lastPieces.map((el) => el.style.cssText);
+  lastPieces.forEach((el) => {
+    el.style.setProperty("display", "inline", "important");
+    el.style.setProperty("visibility", "visible", "important");
+  });
   const last = drawingBounds(
     els.svg,
     0,
@@ -148,6 +159,7 @@ function canvasProgress() {
     TURN_Y,
     `.guideway.cc[data-span="${PROGRESS_MIN_LAST_SPAN}"]`,
   );
+  lastPieces.forEach((el, i) => (el.style.cssText = styles[i]));
   if (last) {
     const pad = 0.25 * m;
     x = Math.min(x, last.left.x - pad);
