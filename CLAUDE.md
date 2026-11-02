@@ -31,6 +31,7 @@ Svelte 5 + Vite site, deployed to GitHub Pages (https://clayton-clipper.olund.ca
 - `src/assets/map.svg` — the map.
 - `src/MapView/` — `MapView.svelte` and the code only it uses (`builtBy.js`, `gantryProgress.js`); code shared by more
   than one place stays in `src/lib/`.
+- `src/lib/appState/` — the shared state (`appState.svelte.js`) and `drawingBounds.js`, which only it uses.
 - `src/lib/layerSwitches.js` — layer definitions; `LayerPanel.svelte` the switches.
 - `src/app.css` — Tailwind, the colour variables and the base styles; see Styling below.
 - `trackside/` — Trackside (`/trackside/`), the updates page; read `trackside/README.md` before changing it.
@@ -60,7 +61,7 @@ Svelte 5 + Vite site, deployed to GitHub Pages (https://clayton-clipper.olund.ca
   run of utilities.
 - A new page or folder with markup needs an `@source` line in `app.css`, or its classes won't be generated. The map
   drawing and `data/` are deliberately not scanned.
-- `phone:` is the phone layout (up to 760px wide, the same width as `PHONE` in `src/lib/appState.svelte.js`).
+- `phone:` is the phone layout (up to 760px wide, the same width as `PHONE` in `src/lib/appState/appState.svelte.js`).
 - The map drawing's own styles (`map.svg`) and the layer rules built in `src/lib/layerSwitches.js` stay plain CSS: the
   drawing is injected as raw markup and can't take classes.
 - After a styling change, `npm run build` must pass, and `prettier --write` the changed files.

@@ -13,7 +13,7 @@
     isFit,
     centreView,
     isMike,
-  } from "./lib/appState.svelte.js";
+  } from "./lib/appState/appState.svelte.js";
 
   // each press of zoom in or out changes the zoom by this factor, about the middle of the stage; Fit's zoom depends on the
   // stage and canvas shape, so it is worked out when pressed
