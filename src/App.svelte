@@ -40,7 +40,7 @@
     "grid h-full",
     ui.collapsed
       ? "grid-cols-[1fr] grid-rows-[1fr]"
-      : "grid-cols-[260px_1fr] phone:grid-cols-[1fr] phone:grid-rows-[1fr]",
+      : "grid-cols-[calc(var(--spacing)*65)_1fr] phone:grid-cols-[1fr] phone:grid-rows-[1fr]",
   ]}
 >
   {#if !ui.collapsed}
@@ -59,7 +59,7 @@
 {/if}
 {#if ui.collapsed}
   <button
-    class="fixed top-[calc(env(safe-area-inset-top,0px)_+_var(--spacing)*10)] left-10 z-20 p-6 shadow-float"
+    class="fixed top-[calc(env(safe-area-inset-top,0px)_+_var(--spacing)*2.5)] left-2.5 z-20 p-1.5 shadow-float"
     title={ui.phone ? "Open the menu" : "Show the layer panel"}
     aria-label={ui.phone ? "Open the menu" : "Show the layer panel"}
     aria-expanded="false"

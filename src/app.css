@@ -8,27 +8,13 @@
 /* the phone layout, up to 760px wide, the same width as PHONE in lib/appState.svelte.js */
 @custom-variant phone (@media (max-width: 760px));
 
-/* Sizes in rem, 17 to a rem (1rem is 17px, the iPhone's default text size), so a size written as a number is that many
-   pixels at the default text size and follows the iPhone's Text Size setting from there: p-12 and gap-8 are spacing,
-   text-13 a font size and rounded-6 a corner radius */
+/* Tailwind's standard sizes (text-sm, p-4, rounded-md), all in rem, so they follow the iPhone's Text Size setting (see the
+   html rule below). Only the shadows are ours */
 @theme {
-  --spacing: calc(1rem / 17);
-  --text-10-5: calc(10.5rem / 17);
-  --text-11: calc(11rem / 17);
-  --text-12: calc(12rem / 17);
-  --text-12-5: calc(12.5rem / 17);
-  --text-13: calc(13rem / 17);
-  --text-14: calc(14rem / 17);
-  --text-15: calc(15rem / 17);
-  --text-16: calc(16rem / 17);
-  --text-19: calc(19rem / 17);
-  --text-28: calc(28rem / 17);
-  --shadow-float: 0 1px 4px rgba(0, 0, 0, 0.3);
-  --radius-4: calc(4rem / 17);
-  --radius-5: calc(5rem / 17);
-  --radius-6: calc(6rem / 17);
-  --radius-8: calc(8rem / 17);
-  --radius-9: calc(9rem / 17);
+  --shadow-float: 0 0.0625rem 0.25rem rgba(0, 0, 0, 0.3);
+  --shadow-card: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.25);
+  --shadow-tip: 0 0.1875rem 0.625rem rgba(0, 0, 0, 0.35);
+  --shadow-panel: 0.125rem 0 0.75rem rgba(0, 0, 0, 0.3);
 }
 
 :root {
@@ -62,9 +48,8 @@
 }
 html {
   scroll-padding-top: env(safe-area-inset-top, 0px);
-  /* 1rem is 17px, the iPhone's default body text size; on iPhones it follows the Text Size setting instead, so text sized
-     in rem (the status notes) grows and shrinks with it. Nothing else uses rem, so the rest of the page is unaffected. */
-  font-size: 17px;
+  /* 1rem is the browser's default size (16px); on iPhones it follows the Text Size setting instead (17px by default), so
+     everything sized in rem grows and shrinks with it */
 }
 @supports (font: -apple-system-body) and (-webkit-touch-callout: none) {
   html {
@@ -86,7 +71,7 @@ body {
   background: var(--bg);
   color: var(--ink);
   font:
-    15px/1.4 system-ui,
+    var(--text-base)/1.4 system-ui,
     -apple-system,
     "Segoe UI",
     Roboto,
@@ -111,12 +96,11 @@ body::before {
     /* quick taps (zoom in, zoom in) mustn't double-tap zoom the page */
     touch-action: manipulation;
     font: inherit;
-    /* in rem, so buttons follow the iPhone's Text Size setting: 32px tall at the default text size (13px text, 1.4 line
-       height, 6px padding and a 1px border, top and bottom); icon buttons match, with their 18px icon and 6px padding */
-    font-size: var(--text-13);
-    padding: calc(var(--spacing) * 6) calc(var(--spacing) * 10);
+    /* in rem, so buttons follow the iPhone's Text Size setting; icon buttons match, with their icon and padding */
+    font-size: var(--text-sm);
+    padding: calc(var(--spacing) * 1.5) calc(var(--spacing) * 2.5);
     border: 1px solid var(--line);
-    border-radius: 6px;
+    border-radius: var(--radius-md);
     background: var(--panel);
     color: var(--ink);
     cursor: pointer;
@@ -125,8 +109,8 @@ body::before {
     border-color: var(--accent);
   }
   button:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
+    outline: calc(var(--spacing) * 0.5) solid var(--accent);
+    outline-offset: calc(var(--spacing) * 0.5);
   }
   button.on {
     background: var(--accent);
@@ -138,40 +122,40 @@ body::before {
 /* shared looks for the About and Trackside pages and the buttons; utilities can still override these */
 @layer components {
   .page-column {
-    @apply mx-auto max-w-640 px-16 pt-[calc(var(--spacing)*16_+_env(safe-area-inset-top,0px))] pb-32 text-15 leading-normal;
+    @apply mx-auto max-w-2xl px-4 pt-[calc(var(--spacing)*4_+_env(safe-area-inset-top,0px))] pb-8 text-base leading-normal;
   }
   /* the slim bar at the top of a page: it stays put while the page scrolls under it, clear of the iPhone's notch; its own
      top padding takes the place of the page's space above it */
   .page-header {
-    @apply sticky top-0 z-5 mt-[calc(var(--spacing)*-16_-_env(safe-area-inset-top,0px))] mb-4 flex flex-wrap items-center gap-x-10 gap-y-8 border-b border-(--line) bg-(--bg) pt-[calc(var(--spacing)*26_+_env(safe-area-inset-top,0px))] pb-8;
+    @apply sticky top-0 z-5 mt-[calc(var(--spacing)*-4_-_env(safe-area-inset-top,0px))] mb-1 flex flex-wrap items-center gap-x-2.5 gap-y-2 border-b border-(--line) bg-(--bg) pt-[calc(var(--spacing)*6.5_+_env(safe-area-inset-top,0px))] pb-2;
   }
   /* small spaced-out capitals in grey: the page and card titles; the size is set where it's used */
   .eyebrow {
     @apply m-0 font-bold tracking-[0.3em] text-(--mute) uppercase;
   }
   .page-header-title {
-    @apply m-0 text-13 font-bold tracking-[0.3em] text-(--mute) uppercase;
+    @apply m-0 text-sm font-bold tracking-[0.3em] text-(--mute) uppercase;
   }
   /* a heading over a group of switches or buttons in the layer panel */
   .group-label {
-    @apply mt-14 mb-4 text-13 font-semibold text-(--mute);
+    @apply mt-3.5 mb-1 text-sm font-semibold text-(--mute);
   }
   /* the grey small print under the layer panel's switches */
   .fine-print {
-    @apply mx-0 mt-8 mb-0 text-13 text-(--mute);
+    @apply mx-0 mt-2 mb-0 text-sm text-(--mute);
   }
   .page-header-nav {
-    @apply ml-auto flex gap-8;
+    @apply ml-auto flex gap-2;
   }
   /* the pager's links and its greyed-out Next, drawn alike */
   .pager-link {
-    @apply inline-flex min-h-36 min-w-96 items-center justify-center rounded-6 border border-(--button-line) bg-(--pager-knob) px-14 font-[family-name:-apple-system,BlinkMacSystemFont,Segoe_UI,Noto_Sans,Helvetica,Arial,sans-serif] text-14 font-semibold text-(--button-ink) no-underline phone:min-h-44 phone:flex-1;
+    @apply inline-flex min-h-9 min-w-24 items-center justify-center rounded-md border border-(--button-line) bg-(--pager-knob) px-3.5 font-[family-name:-apple-system,BlinkMacSystemFont,Segoe_UI,Noto_Sans,Helvetica,Arial,sans-serif] text-sm font-semibold text-(--button-ink) no-underline phone:min-h-11 phone:flex-1;
   }
   .pager-link-off {
     @apply cursor-default border-transparent bg-transparent font-normal text-(--pager-flat-ink) phone:bg-(--button-bg);
   }
   .btn {
-    @apply inline-flex items-center rounded-6 border px-12 py-6 text-14 font-semibold whitespace-nowrap no-underline;
+    @apply inline-flex items-center rounded-md border px-3 py-1.5 text-sm font-semibold whitespace-nowrap no-underline;
   }
   /* GitHub's segmented-control grey, as in the pager */
   .btn-grey {
