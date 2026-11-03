@@ -937,10 +937,10 @@
         />
         <!-- Span 35 off-ramp, first span (the ramp's centre line was 320.14,771.45 to 323.21,893.45; 9.64 wide) -->
         <polygon
-          class="guideway unfinished"
-          fill="#FFFFFF"
-          stroke="#888780"
-          stroke-width="0.825"
+          class="guideway"
+          fill="#888780"
+          stroke="#5F5E5A"
+          stroke-width="1.5"
           points="328.03,893.53 324.96,771.45 315.32,771.45 318.39,893.37"
         />
         <!-- Span 35 off-ramp, second span, including the part that merges into the 36 eastbound track (a guess until it is built) -->
