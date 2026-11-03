@@ -70,7 +70,9 @@ Each update is a note: its time stamp and its title on one line, then indented u
   search results use it, and Trackside leads with it.
 - `photo:` — a photo and its caption, shown under the summary.
 - `block:` — more paragraphs and photos, after the summary.
-- `follow-up:` — later, time-stamped additions, shown as a list under the update. They get no
+- `follow-up:` — later, time-stamped additions, shown as a list under the update. Each has its own
+  `summary:`, `photo:` and `block:`, like the update. The card shows only the newest follow-up's
+  summary. They get no
   page, title or thread of their own.
 
 The comment at the top of `status.yaml` shows the exact format. Photos go in

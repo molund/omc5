@@ -14,9 +14,16 @@
 //       - photo:
 //           file: span-36-close-up.jpg
 //           caption: "Its caption"
-// and optionally follow-ups, also indented under it (no photo, no thread or entry of their own):
+// and optionally follow-ups, also indented under it (no thread or entry of their own), each with the same summary, photo and
+// block as a note, indented under its time stamp:
 //     follow-up:
-//       - time: "text"
+//       - 2026-10-31T11:45-07:00:
+//           summary: "What changed"
+//           photo:
+//             file: span-36-later.jpg
+//             caption: "Its caption"
+//           block:
+//             - "Another paragraph"
 // so a small reader does instead of a YAML library.
 import text from "../../status.yaml?raw";
 
@@ -33,7 +40,9 @@ import text from "../../status.yaml?raw";
 /**
  * @typedef {object} FollowUp
  * @property {Date} time When it was added.
- * @property {string} text What it says.
+ * @property {string} summary What it says.
+ * @property {Photo|null} photo Its photo, if it has one.
+ * @property {BlockItem[]} block Further paragraphs and photos, in order.
  */
 
 /**
@@ -82,10 +91,13 @@ function unquote(v) {
 function parse(src) {
   const out = {},
     notes = [];
-  // the list a "      - …" line belongs to: "block" after a "    block:" line, otherwise follow-ups
+  // "block" after a `block:` line, whose "- …" lines are paragraphs and photos
   let list = null,
     // the photo a `file:` or `caption:` line belongs to
-    photo = null;
+    photo = null,
+    // under `follow-up:`, and the follow-up the lines below belong to (the note's own keys are four spaces in)
+    inFU = false,
+    fu = null;
   src.split("\n").forEach((line) => {
     // a note: "  - time: text", two spaces in
     const n = line.match(/^ {2}-\s+(\S+):\s+(.*?)\s*$/);
@@ -104,33 +116,53 @@ function parse(src) {
       });
       list = null;
       photo = null;
+      inFU = false;
+      fu = null;
       return;
     }
     const last = notes[notes.length - 1];
-    // under "    block:", a photo, "      - photo:" with its file and caption under it, or a paragraph, "      - text"
+    // a key four spaces in is the note's own: what follows belongs to the note again
+    if (/^ {4}[A-Za-z-]+:/.test(line)) {
+      inFU = false;
+      fu = null;
+    }
+    // what summary, photo and block lines belong to: the follow-up they are under, else the note
+    const tgt = fu ?? last;
+    // a follow-up under the note: "      - time:", after a "    follow-up:" line, its summary, photo and block further in
+    const mi = inFU && line.match(/^ {6}-\s+(\d{4}-\d\d-\d\d\S*):\s*$/);
+    if (mi) {
+      fu = { time: new Date(mi[1]), summary: "", photo: null, block: [] };
+      if (last) last.followUps.push(fu);
+      list = null;
+      photo = null;
+      return;
+    }
+    // under "block:", a photo, "- photo:" with its file and caption under it, or a paragraph, "- text"
     if (list === "block" && /^ {3,}-\s+photo:\s*$/.test(line)) {
       photo = { src: null, caption: "" };
-      if (last) last.block.push({ photo });
+      if (tgt) tgt.block.push({ photo });
       return;
     }
     const mo = list === "block" && line.match(/^ {3,}-\s+(.*?)\s*$/);
     if (mo) {
-      if (last && unquote(mo[1])) last.block.push({ text: unquote(mo[1]) });
+      if (tgt && unquote(mo[1])) tgt.block.push({ text: unquote(mo[1]) });
       return;
     }
     if (/^\s+block:\s*$/.test(line)) {
       list = "block";
       return;
     }
-    // a follow-up under the note: "      - time: text", further in, after a "    follow-up:" line
-    const mi = line.match(/^ {3,}-\s+(\S+):\s+(.*?)\s*$/);
-    if (mi) {
-      if (last)
-        last.followUps.push({ time: new Date(mi[1]), text: unquote(mi[2]) });
+    if (/^\s+follow-up:\s*$/.test(line)) {
+      list = null;
+      inFU = true;
       return;
     }
-    if (/^\s+follow-up:\s*$/.test(line)) {
-      list = "followUps";
+    // a follow-up's summary, further in than the note's
+    const fs = fu && line.match(/^\s{7,}summary:\s*(.*?)\s*$/);
+    if (fs) {
+      list = null;
+      photo = null;
+      fu.summary = unquote(fs[1]);
       return;
     }
     // "    post: true": a post, not a status update (see `latest` below)
@@ -152,7 +184,7 @@ function parse(src) {
     // a photo belongs to the note above it: `photo:`, then its `file:` and `caption:` indented under it
     if (/^\s+photo:\s*$/.test(line)) {
       list = null;
-      if (last) photo = last.photo = { src: null, caption: "" };
+      if (tgt) photo = tgt.photo = { src: null, caption: "" };
       return;
     }
     const pf = line.match(/^\s+(file|caption):\s*(.*?)\s*$/);
@@ -172,13 +204,16 @@ function parse(src) {
     if (n.photo && !n.photo.src) n.photo = null;
     n.block = n.block.filter((m) => m.text || m.photo?.src);
   });
-  // follow-ups newest first, those with text
-  notes.forEach(
-    (n) =>
-      (n.followUps = n.followUps
-        .filter((m) => m.text && !isNaN(m.time))
-        .sort((a, b) => b.time - a.time)),
-  );
+  // follow-ups newest first, those with something to show
+  notes.forEach((n) => {
+    n.followUps.forEach((m) => {
+      if (m.photo && !m.photo.src) m.photo = null;
+      m.block = m.block.filter((b) => b.text || b.photo?.src);
+    });
+    n.followUps = n.followUps
+      .filter((m) => (m.summary || m.photo || m.block.length) && !isNaN(m.time))
+      .sort((a, b) => b.time - a.time);
+  });
   const sorted = notes
     .filter((n) => !isNaN(n.time))
     .sort((a, b) => b.time - a.time);
@@ -195,7 +230,7 @@ function parse(src) {
     photo: latest ? latest.photo : null,
     // the newest status update's further paragraphs and photos, [{ text } or { photo: { src, caption } }], or []
     block: latest ? latest.block : [],
-    // the newest status update's follow-ups, [{ time, text }], newest first
+    // the newest status update's follow-ups, [{ time, summary, photo, block }], newest first
     followUps: latest ? latest.followUps : [],
     // every note with text, newest first, for Trackside (each with its photo or null, and its follow-ups)
     history: sorted.filter((n) => n.summary),
