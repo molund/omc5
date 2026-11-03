@@ -23,10 +23,7 @@ async function write(dir, view) {
   const { head, body } = render(TracksidePage, { props: { view } });
   const html = template
     .replace("</head>", `${head}\n  </head>`)
-    .replace(
-      '<div id="app"></div>',
-      `<div id="app" data-view='${JSON.stringify(view)}'>${body}</div>`,
-    );
+    .replace('<div id="app"></div>', `<div id="app" data-view='${JSON.stringify(view)}'>${body}</div>`);
   mkdirSync(dir, { recursive: true });
   writeFileSync(
     `${dir}/index.html`,
@@ -43,8 +40,7 @@ for (let p = 1; p <= pages; p++)
   await write(p === 1 ? "dist/trackside" : `dist/trackside/page/${p}`, {
     page: p,
   });
-for (const n of status.history)
-  await write(`dist/trackside/${n.slug}`, { post: n.slug });
+for (const n of status.history) await write(`dist/trackside/${n.slug}`, { post: n.slug });
 
 // dist/sitemap.xml, for search engines (submitted in Google Search Console, since a project site can't have a robots.txt):
 // the map, the pages of updates, each update's own page and the About page, each with when it last changed (an update, at its newest
@@ -66,10 +62,7 @@ writeFileSync(
   `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls
-  .map(
-    ([loc, t]) =>
-      `  <url><loc>${loc}</loc>${t ? `<lastmod>${t.toISOString()}</lastmod>` : ""}</url>`,
-  )
+  .map(([loc, t]) => `  <url><loc>${loc}</loc>${t ? `<lastmod>${t.toISOString()}</lastmod>` : ""}</url>`)
   .join("\n")}
 </urlset>
 `,
@@ -81,13 +74,10 @@ ${urls
 function threadBody(n) {
   const parts = [n.summary];
   const photo = (p, parts) => {
-    parts.push(
-      `![${p.caption || "Photo for this update"}](${new URL(p.src, SITE).href})`,
-    );
+    parts.push(`![${p.caption || "Photo for this update"}](${new URL(p.src, SITE).href})`);
     if (p.caption) parts.push(`_${p.caption}_`);
   };
-  const blocks = (list, parts) =>
-    list.forEach((m) => (m.photo ? photo(m.photo, parts) : parts.push(m.text)));
+  const blocks = (list, parts) => list.forEach((m) => (m.photo ? photo(m.photo, parts) : parts.push(m.text)));
   if (n.photo) photo(n.photo, parts);
   blocks(n.block, parts);
   if (n.followUps.length) {
@@ -96,9 +86,7 @@ function threadBody(n) {
       [...n.followUps]
         .reverse()
         .map((m) => {
-          const item = [
-            `\`${followUpTime(m.time, n.time)}\` ${m.summary}`.trim(),
-          ];
+          const item = [`\`${followUpTime(m.time, n.time)}\` ${m.summary}`.trim()];
           if (m.photo) photo(m.photo, item);
           blocks(m.block, item);
           // later paragraphs are indented to stay inside the list item
@@ -107,12 +95,8 @@ function threadBody(n) {
         .join("\n"),
     );
   }
-  parts.push(
-    `[See it on the Clayton Clipper Tracker](${SITE}trackside/${n.slug}/)`,
-  );
-  parts.push(
-    `<!-- sha1: ${createHash("sha1").update(term(n.time)).digest("hex")} -->`,
-  );
+  parts.push(`[See it on the Clayton Clipper Tracker](${SITE}trackside/${n.slug}/)`);
+  parts.push(`<!-- sha1: ${createHash("sha1").update(term(n.time)).digest("hex")} -->`);
   return parts.join("\n\n");
 }
 
@@ -129,6 +113,4 @@ writeFileSync(
     2,
   ) + "\n",
 );
-console.log(
-  `prerendered Trackside: ${pages} page(s), ${status.history.length} updates`,
-);
+console.log(`prerendered Trackside: ${pages} page(s), ${status.history.length} updates`);

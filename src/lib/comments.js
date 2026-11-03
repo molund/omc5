@@ -60,10 +60,9 @@ const EMOJI = {
  * be reached.
  */
 export function fetchCounts() {
-  return fetch(
-    "https://api.github.com/repos/molund/omc5/discussions?per_page=100",
-    { headers: { Accept: "application/vnd.github+json" } },
-  )
+  return fetch("https://api.github.com/repos/molund/omc5/discussions?per_page=100", {
+    headers: { Accept: "application/vnd.github+json" },
+  })
     .then((r) => (r.ok ? r.json() : []))
     .then((list) => {
       const out = {};

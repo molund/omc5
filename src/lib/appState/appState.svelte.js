@@ -1,11 +1,6 @@
 import { saved, autosave } from "./persist.svelte.js";
 import { layers, ui } from "./state.svelte.js";
-import {
-  setView,
-  fillView,
-  progressView,
-  horizontalView,
-} from "./viewport.svelte.js";
+import { setView, fillView, progressView, horizontalView } from "./viewport.svelte.js";
 import {
   defaults,
   sfmsfAerialDefaults,
@@ -38,8 +33,7 @@ function refresh() {
  * is entered from it).
  * @returns {Record<string, boolean>|null}
  */
-const startSnap = () =>
-  defaults.sfmsfDrawing ? { ...fullAerialDefaults } : null;
+const startSnap = () => (defaults.sfmsfDrawing ? { ...fullAerialDefaults } : null);
 
 /**
  * The switches as they were before Drawing mode, so switching it off puts them back (on a reload, the ones saved from
@@ -114,13 +108,7 @@ function applyFullAerial() {
 }
 
 /** The keys of the View group: radio-style switches, one on at a time. */
-const VIEWS = [
-  "progress",
-  "sfmsfAerial",
-  "fullAerial",
-  "horizontal",
-  "sfmsfDrawing",
-];
+const VIEWS = ["progress", "sfmsfAerial", "fullAerial", "horizontal", "sfmsfDrawing"];
 
 /**
  * A layer checkbox was ticked or unticked. Picking a view sets up that view's switches, canvas and card.
@@ -137,8 +125,7 @@ export function setSwitch(k, on) {
     ui.cardHidden = k !== "progress";
   }
   // picking any other view leaves Horizontal (Full image does so through fullAerialDefaults)
-  if (on && (k === "sfmsfDrawing" || k === "progress" || k === "sfmsfAerial"))
-    layers.horizontal = false;
+  if (on && (k === "sfmsfDrawing" || k === "progress" || k === "sfmsfAerial")) layers.horizontal = false;
   if (k === "fullAerial") {
     applyFullAerial();
   } else if (k === "horizontal" && on) {
@@ -183,10 +170,7 @@ export function setSwitch(k, on) {
     } else if (on) {
       // leaving Progress puts back the switches it starts with as Full image has them (Full image, Horizontal and SFMSF drawing
       // set their own)
-      if (layers.progress)
-        Object.keys(PROGRESS_DEFAULTS).forEach(
-          (key) => (layers[key] = fullAerialDefaults[key]),
-        );
+      if (layers.progress) Object.keys(PROGRESS_DEFAULTS).forEach((key) => (layers[key] = fullAerialDefaults[key]));
       layers.sfmsfAerial = true;
       layers.progress = false;
       setView(SFMSF_AERIAL_VB);
@@ -232,8 +216,7 @@ export function showAll() {
 function viewSwitches(view) {
   if (view === "progress") return defaults;
   if (view === "fullAerial") return fullAerialDefaults;
-  if (view === "horizontal")
-    return { ...fullAerialDefaults, horizontal: true, progress: false };
+  if (view === "horizontal") return { ...fullAerialDefaults, horizontal: true, progress: false };
   if (view === "sfmsfDrawing") return drawingSwitches();
   return { ...sfmsfAerialDefaults, ...sfmsfAerialReference() }; // SFMSF aerial
 }

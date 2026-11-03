@@ -27,9 +27,7 @@ export function tagBuiltBy(root) {
     if (el.classList.contains("ff")) return;
     const q = toCanvas(el, x, y);
     if (!q) return;
-    const past = LAUNCHERS.find(
-      (l) => (q.x - l.P0x) * l.nx + (q.y - l.P0y) * l.ny >= -0.5,
-    );
+    const past = LAUNCHERS.find((l) => (q.x - l.P0x) * l.nx + (q.y - l.P0y) * l.ny >= -0.5);
     el.classList.add(past ? past.cls : "cc");
   }
   const has = (el, re) => re.test(el.getAttribute("class") || "");

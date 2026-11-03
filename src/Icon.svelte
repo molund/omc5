@@ -39,10 +39,7 @@
     <!-- four corner brackets -->
     <polyline points="2.75,6.5 2.75,2.75 6.5,2.75" stroke-linejoin="round" />
     <polyline points="11.5,2.75 15.25,2.75 15.25,6.5" stroke-linejoin="round" />
-    <polyline
-      points="15.25,11.5 15.25,15.25 11.5,15.25"
-      stroke-linejoin="round"
-    />
+    <polyline points="15.25,11.5 15.25,15.25 11.5,15.25" stroke-linejoin="round" />
     <polyline points="6.5,15.25 2.75,15.25 2.75,11.5" stroke-linejoin="round" />
   {:else if kind === "centre"}
     <!-- a crosshair: a small circle with four ticks -->

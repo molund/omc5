@@ -76,9 +76,7 @@ export function gantryProgress(root, complete) {
     const on = pieces.filter((p) => p.n === span),
       boxes = on.filter((p) => p.el.matches(".gi, .p")),
       decide = boxes.length ? boxes : on;
-    done =
-      !decide.length ||
-      decide.some((p) => !p.el.classList.contains("unfinished"));
+    done = !decide.length || decide.some((p) => !p.el.classList.contains("unfinished"));
   }
   const count = done ? span : span - 1;
   pieces.forEach((p) => {
@@ -98,21 +96,13 @@ export function gantryProgress(root, complete) {
         under = p.el;
       }
     });
-    if (
-      under &&
-      under.classList.contains("reached") &&
-      !under.classList.contains("unfinished")
-    )
+    if (under && under.classList.contains("reached") && !under.classList.contains("unfinished"))
       t.classList.add("on-reached");
     // an unfinished span's number gets a white outline over the aerial photo (see layerCss), so it is tagged too
-    if (under && under.classList.contains("unfinished"))
-      t.classList.add("on-unfinished");
+    if (under && under.classList.contains("unfinished")) t.classList.add("on-unfinished");
     // and its colour matches the piece it sits on, now that status.yaml may have finished it: white on a finished span, grey
     // (#767676) on an unfinished one (the steel spans' numbers, drawn without a colour, keep theirs)
-    if (under && t.style.fill)
-      t.style.fill = under.classList.contains("unfinished")
-        ? "#767676"
-        : "#ffffff";
+    if (under && t.style.fill) t.style.fill = under.classList.contains("unfinished") ? "#767676" : "#ffffff";
   });
   return {
     span: count,
@@ -143,24 +133,17 @@ function westboundAhead(root, pieces, anchors, span, toCanvas) {
       x: (at[n].x + at[n + 1].x) / 2,
       y: (at[n].y + at[n + 1].y) / 2,
     };
-    return caps.reduce((a, k) =>
-      Math.hypot(k.x - m.x, k.y - m.y) < Math.hypot(a.x - m.x, a.y - m.y)
-        ? k
-        : a,
-    );
+    return caps.reduce((a, k) => (Math.hypot(k.x - m.x, k.y - m.y) < Math.hypot(a.x - m.x, a.y - m.y) ? k : a));
   };
   const counted = new Set();
   pieces.forEach(({ el, n, c }) => {
-    if (n <= span || counted.has(n) || el.classList.contains("unfinished"))
-      return;
+    if (n <= span || counted.has(n) || el.classList.contains("unfinished")) return;
     const a = bent(n - 1),
       b = bent(n);
     if (!a || !b) return;
     const ux = b.x - a.x,
       uy = b.y - a.y,
-      side =
-        (ux * (c.y - (a.y + b.y) / 2) - uy * (c.x - (a.x + b.x) / 2)) /
-        Math.hypot(ux, uy);
+      side = (ux * (c.y - (a.y + b.y) / 2) - uy * (c.x - (a.x + b.x) / 2)) / Math.hypot(ux, uy);
     // more than a couple of units off the centre line, so a full-width box doesn't count as one track
     if (side > 2) counted.add(n);
   });

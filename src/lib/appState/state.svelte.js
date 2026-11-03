@@ -7,9 +7,7 @@ import { defaults } from "../layerSwitches.js";
  */
 export const layers = $state({
   ...defaults,
-  ...Object.fromEntries(
-    Object.entries(saved?.layers ?? {}).filter(([k]) => k in defaults),
-  ),
+  ...Object.fromEntries(Object.entries(saved?.layers ?? {}).filter(([k]) => k in defaults)),
 });
 
 /**
@@ -26,13 +24,7 @@ export const PHONE =
       };
 
 /** The view last picked (a View group key), which stays put while layers are switched on and off. */
-const view =
-  saved?.view ??
-  (defaults.progress
-    ? "progress"
-    : defaults.sfmsfDrawing
-      ? "sfmsfDrawing"
-      : "sfmsfAerial");
+const view = saved?.view ?? (defaults.progress ? "progress" : defaults.sfmsfDrawing ? "sfmsfDrawing" : "sfmsfAerial");
 
 /**
  * @typedef {object} GantryProgress

@@ -17,8 +17,8 @@ Svelte 5 + Vite site, deployed to GitHub Pages (https://clayton-clipper.olund.ca
   changed on the site (e.g. "Show Highway labels only in the two SFMSF views").
 - Make small, exact edits; change nothing that wasn't asked for, and mention other
   issues instead of fixing them.
-- Format every changed file with Prettier, default options (`prettier --write <file>`),
-  before committing — this matches VS Code's format-on-save. `.svelte` files need
+- Format every changed file with Prettier (`prettier --write <file>`; the project's options, including the 120-character
+  width, are in `.prettierrc`), before committing — this matches VS Code's format-on-save. `.svelte` files need
   `prettier-plugin-svelte`; if it isn't available, match the surrounding style by hand.
 
 ## Local server

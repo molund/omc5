@@ -21,27 +21,23 @@
 
   // the span-label switch needs Clayton Clipper spans on screen, and the direction arrows the finished spans they sit on, so
   // they fade and can't be changed without them
-  const disabled = (k) =>
-    (k === "spanLabels" && !avail) || (k === "arrows" && !layers.guideway);
+  const disabled = (k) => (k === "spanLabels" && !avail) || (k === "arrows" && !layers.guideway);
   // the buttons in the button groups: the views, the gantry's Off / style row, and Show all and Reset; and what a button
   // that can't be pressed looks like (zoom out can't go past Fit, Center has nothing to move at Fit, and Reset has nothing
   // to do until a layer is changed)
   const GROUP_BUTTON = "px-2 py-1.25";
-  const DISABLED =
-    "disabled:cursor-default disabled:border-(--line) disabled:opacity-40";
+  const DISABLED = "disabled:cursor-default disabled:border-(--line) disabled:opacity-40";
   const STEP_BUTTON =
     "rounded-none border-0 bg-transparent px-2 py-1.5 focus-visible:-outline-offset-2 [&:hover:not(:disabled)]:bg-(--bg)";
   const ICON_BUTTON = "rounded-lg p-1.5";
-  const LINK =
-    "inline-flex items-center gap-1.5 text-inherit [&_svg]:h-[1.2em] [&_svg]:w-[1.2em] [&_svg]:flex-none";
+  const LINK = "inline-flex items-center gap-1.5 text-inherit [&_svg]:h-[1.2em] [&_svg]:w-[1.2em] [&_svg]:flex-none";
   const opacity = (k) => (disabled(k) ? "0.4" : "");
   // greenbelt and creeks only in drawing mode, roads (with their labels), construction yard and walking paths in the two SFMSF
   // views (drawing mode and SFMSF zoom),
   // aerial photo everywhere but drawing mode
   function hidden(k) {
     if (k === "greenbelt" || k === "creeks") return !layers.sfmsfDrawing;
-    if (k === "roads" || k === "yard" || k === "walk")
-      return !(layers.sfmsfDrawing || layers.sfmsfAerial);
+    if (k === "roads" || k === "yard" || k === "walk") return !(layers.sfmsfDrawing || layers.sfmsfAerial);
     if (k === "aerial") return layers.sfmsfDrawing;
     if (k === "stationLabels") return layers.sfmsfDrawing || layers.sfmsfAerial;
     return false;
@@ -80,13 +76,10 @@
         title={ui.phone ? "Close the menu" : "Hide the layer panel"}
         aria-label={ui.phone ? "Close the menu" : "Hide the layer panel"}
         class="p-1.5"
-        onclick={() => (ui.collapsed = true)}
-        ><Icon kind={ui.phone ? "close" : "panel"} /></button
+        onclick={() => (ui.collapsed = true)}><Icon kind={ui.phone ? "close" : "panel"} /></button
       >
     </div>
-    <div class="mt-3.5 mb-1 text-base font-bold text-(--mute)">
-      View presets
-    </div>
+    <div class="mt-3.5 mb-1 text-base font-bold text-(--mute)">View presets</div>
     <!-- the views are presets, picked like the zoom buttons; picking the one already on does nothing to the view, as a radio button did -->
     <div class="mt-1.5 flex flex-col gap-1">
       {#each LAYERS[0][1] as [k, label]}
@@ -110,8 +103,7 @@
       ]}
       aria-expanded={ui.layersOpen}
       aria-controls="layer-list"
-      onclick={() => (ui.layersOpen = !ui.layersOpen)}
-      >Layers<Icon kind="chevron" /></button
+      onclick={() => (ui.layersOpen = !ui.layersOpen)}>Layers<Icon kind="chevron" /></button
     >
     {#if ui.layersOpen}
       <div id="layer-list" transition:slide={{ duration: 150 }}>
@@ -123,9 +115,7 @@
             <label
               class={[
                 "flex items-center gap-2.5 rounded-md px-1 py-1.5",
-                disabled(k)
-                  ? "cursor-default"
-                  : "cursor-pointer hover:bg-(--bg)",
+                disabled(k) ? "cursor-default" : "cursor-pointer hover:bg-(--bg)",
               ]}
               style:opacity={opacity(k)}
               style:display={hidden(k) ? "none" : ""}
@@ -141,9 +131,7 @@
           {/each}
         {/each}
         <div class="mt-2.5 flex flex-wrap gap-1">
-          <button class="{GROUP_BUTTON} {DISABLED}" onclick={showAll}
-            >Show all</button
-          ><button
+          <button class="{GROUP_BUTTON} {DISABLED}" onclick={showAll}>Show all</button><button
             class="{GROUP_BUTTON} {DISABLED}"
             disabled={!ui.changed}
             onclick={reset}>Reset</button
@@ -159,9 +147,7 @@
       >
     </p>
     <p class="fine-print">
-      <a class={LINK} href="{import.meta.env.BASE_URL}about/"
-        ><Icon kind="info" />About this site</a
-      >
+      <a class={LINK} href="{import.meta.env.BASE_URL}about/"><Icon kind="info" />About this site</a>
     </p>
     <p class="fine-print">
       <a class={LINK} href="https://github.com/molund/omc5"
@@ -176,9 +162,7 @@
   </div>
   <!-- the zoom controls stay pinned to the bottom of the panel; none on a phone: it pinches to zoom -->
   {#if !ui.phone}
-    <footer
-      class="flex flex-none items-center gap-1.5 border-t border-(--line) bg-(--panel) px-4 py-2.5"
-    >
+    <footer class="flex flex-none items-center gap-1.5 border-t border-(--line) bg-(--panel) px-4 py-2.5">
       <!-- zoom out, the zoom (1.0× at Fit), and zoom in, in one pill -->
       <!-- − and + inside the pill: no border of their own, a soft fill on hover;
            the zoom between hairlines, in figures of even width so it doesn't jitter as it changes -->
@@ -192,8 +176,7 @@
           title="Zoom out"
           aria-label="Zoom out"
           disabled={isFit()}
-          onclick={() => setZoom(ui.zoom / ZOOM_STEP)}
-          ><Icon kind="minus" /></button
+          onclick={() => setZoom(ui.zoom / ZOOM_STEP)}><Icon kind="minus" /></button
         >
         <output
           class="flex flex-1 items-center justify-center border-x border-(--line) text-sm text-(--mute) tabular-nums"
@@ -203,8 +186,7 @@
           class="{STEP_BUTTON} {DISABLED}"
           title="Zoom in"
           aria-label="Zoom in"
-          onclick={() => setZoom(ui.zoom * ZOOM_STEP)}
-          ><Icon kind="plus" /></button
+          onclick={() => setZoom(ui.zoom * ZOOM_STEP)}><Icon kind="plus" /></button
         >
       </div>
       <button

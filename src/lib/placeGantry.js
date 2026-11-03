@@ -40,16 +40,14 @@ export function placeGantry(root) {
   const groups = [...gantry.querySelectorAll(":scope > [data-anchor]")];
   // start from the drawn position, so placing again is safe
   groups.forEach((g) => {
-    if (g.dataset.drawnTransform == null)
-      g.dataset.drawnTransform = g.getAttribute("transform") || "";
+    if (g.dataset.drawnTransform == null) g.dataset.drawnTransform = g.getAttribute("transform") || "";
     else g.setAttribute("transform", g.dataset.drawnTransform);
   });
 
   // getScreenCTM gives an SVGMatrix in some browsers, which DOMMatrix maths won't take
   const ctm = (el) => DOMMatrix.fromMatrix(el.getScreenCTM());
   const toRoot = ctm(root).inverse();
-  const toCanvas = (el, x, y) =>
-    new DOMPoint(x, y).matrixTransform(ctm(el)).matrixTransform(toRoot);
+  const toCanvas = (el, x, y) => new DOMPoint(x, y).matrixTransform(ctm(el)).matrixTransform(toRoot);
   const add = (a, b) => ({ x: a.x + b.x, y: a.y + b.y }),
     sub = (a, b) => ({ x: a.x - b.x, y: a.y - b.y }),
     mul = (a, k) => ({ x: a.x * k, y: a.y * k }),
@@ -59,11 +57,7 @@ export function placeGantry(root) {
 
   const labels = {};
   root.querySelectorAll("text.cclabel").forEach((t) => {
-    labels[+t.textContent.trim()] = toCanvas(
-      t,
-      +t.getAttribute("x"),
-      +t.getAttribute("y"),
-    );
+    labels[+t.textContent.trim()] = toCanvas(t, +t.getAttribute("x"), +t.getAttribute("y"));
   });
   const caps = [...root.querySelectorAll("rect.g")]
     .filter((el) => !gantry.contains(el))
@@ -86,10 +80,7 @@ export function placeGantry(root) {
     });
     return [best, d];
   };
-  const joint = (n) =>
-    labels[n] && labels[n + 1]
-      ? nearest(caps, mid(labels[n], labels[n + 1]))[0]
-      : null;
+  const joint = (n) => (labels[n] && labels[n + 1] ? nearest(caps, mid(labels[n], labels[n + 1]))[0] : null);
   const boxes = [...root.querySelectorAll("polygon.gi, polygon.p")]
     .filter((el) => !gantry.contains(el))
     .map((el) => {
@@ -108,9 +99,7 @@ export function placeGantry(root) {
     if (box && d < 0.4 * Math.hypot(front.x - back.x, front.y - back.y)) {
       c = box.c;
       // the box's long edges, pointing forward
-      const edges = box.pts.map((p, i) =>
-        sub(box.pts[(i + 1) % box.pts.length], p),
-      );
+      const edges = box.pts.map((p, i) => sub(box.pts[(i + 1) % box.pts.length], p));
       edges.sort((a, b) => Math.hypot(b.x, b.y) - Math.hypot(a.x, a.y));
       const e = edges
         .slice(0, 2)
@@ -135,9 +124,7 @@ export function placeGantry(root) {
   const needed = [S - 1, S, D - 1, D];
   const spans = Object.fromEntries(needed.map((n) => [n, span(n)]));
   if (needed.some((n) => !spans[n])) {
-    console.warn(
-      `gantry: span ${S} or a span next to it has no joints; left where it is drawn`,
-    );
+    console.warn(`gantry: span ${S} or a span next to it has no joints; left where it is drawn`);
     return;
   }
   const angle = (u) => (Math.atan2(u.y, u.x) * 180) / Math.PI;
@@ -159,29 +146,19 @@ export function placeGantry(root) {
       now = spans[S + rule.span];
     let to;
     if (rule.along) {
-      const t =
-          dot(sub(from, was.back), was.u) /
-          dot(sub(was.front, was.back), was.u),
+      const t = dot(sub(from, was.back), was.u) / dot(sub(was.front, was.back), was.u),
         across = dot(sub(from, was.c), was.v);
-      to = add(
-        add(now.back, mul(sub(now.front, now.back), t)),
-        mul(now.v, across),
-      );
+      to = add(add(now.back, mul(sub(now.front, now.back), t)), mul(now.v, across));
     } else {
       const off = sub(from, was[rule.end]);
-      to = add(
-        now[rule.end],
-        add(mul(now.u, dot(off, was.u)), mul(now.v, dot(off, was.v))),
-      );
+      to = add(now[rule.end], add(mul(now.u, dot(off, was.u)), mul(now.v, dot(off, was.v))));
     }
     const turn = angle(now.u) - angle(was.u);
     if (rule.edge) {
       // the support is its beam and its walkway (the pads sit on top): the middle of its rear edge (its two corners furthest
       // back) or front edge (furthest forward), carried through the move
       const corners = [
-        ...gantry.querySelectorAll(
-          `:scope > [data-anchor="${a}"] > :not(.clipper-support-pad)`,
-        ),
+        ...gantry.querySelectorAll(`:scope > [data-anchor="${a}"] > :not(.clipper-support-pad)`),
       ].flatMap((el) => {
         const b = el.getBBox();
         return [
@@ -195,10 +172,7 @@ export function placeGantry(root) {
       // its width along the span
       const width = dot(sub(corners[corners.length - 1], corners[0]), was.u);
       const n = corners.length,
-        facing =
-          rule.edge === "rear"
-            ? mid(corners[0], corners[1])
-            : mid(corners[n - 2], corners[n - 1]);
+        facing = rule.edge === "rear" ? mid(corners[0], corners[1]) : mid(corners[n - 2], corners[n - 1]);
       const r = (turn * Math.PI) / 180,
         o = sub(facing, from),
         edge = add(to, {
@@ -206,10 +180,7 @@ export function placeGantry(root) {
           y: o.x * Math.sin(r) + o.y * Math.cos(r),
         });
       // into the span is forward from its back end, backward from its front end
-      const target = add(
-        now.ends[rule.end],
-        mul(now.u, (rule.end === "back" ? 1 : -1) * (rule.gap || 0) * width),
-      );
+      const target = add(now.ends[rule.end], mul(now.u, (rule.end === "back" ? 1 : -1) * (rule.gap || 0) * width));
       to = add(to, mul(now.u, dot(sub(target, edge), now.u)));
     }
     moves[a] = { from, to, turn };
@@ -233,10 +204,7 @@ export function placeGantry(root) {
   groups.forEach((g) => {
     const m = moves[g.dataset.anchor];
     if (!m) return;
-    const T = new DOMMatrix()
-      .translate(m.to.x, m.to.y)
-      .rotate(m.turn)
-      .translate(-m.from.x, -m.from.y);
+    const T = new DOMMatrix().translate(m.to.x, m.to.y).rotate(m.turn).translate(-m.from.x, -m.from.y);
     // the same move in the group's own (narrowed, rotated) frame
     const P = toRoot.multiply(ctm(gantry)),
       M = P.inverse().multiply(T).multiply(P);

@@ -87,15 +87,10 @@ export const PROGRESS_DEFAULTS = {
  * Opening view: Progress, as it is picked from the panel.
  * @type {Record<string, boolean>}
  */
-export const defaults = Object.assign(
-  {},
-  fullAerialDefaults,
-  PROGRESS_DEFAULTS,
-  {
-    progress: true,
-    fullAerial: false,
-  },
-);
+export const defaults = Object.assign({}, fullAerialDefaults, PROGRESS_DEFAULTS, {
+  progress: true,
+  fullAerial: false,
+});
 /**
  * The colour of the finished spans in progress-chart mode: violet, opposite the gantry's yellow on the colour wheel, so it
  * stands out and goes with it.
@@ -186,8 +181,7 @@ export const FULL_AERIAL_CSS =
  * @param {Record<string, boolean>} state The switches' state.
  * @returns {boolean}
  */
-export const labelsAvailable = (state) =>
-  state.progress || state.guideway || state.unfinished;
+export const labelsAvailable = (state) => state.progress || state.guideway || state.unfinished;
 
 /**
  * The CSS rules that show and hide the layers of map.svg for the given switch state.
@@ -202,45 +196,23 @@ export function layerCss(state) {
       const on =
         state[k] &&
         !((k === "greenbelt" || k === "creeks") && !state.sfmsfDrawing) &&
-        !(
-          ["roads", "yard", "walk"].includes(k) &&
-          !state.sfmsfDrawing &&
-          !state.sfmsfAerial
-        ) &&
+        !(["roads", "yard", "walk"].includes(k) && !state.sfmsfDrawing && !state.sfmsfAerial) &&
         !(k === "aerial" && state.sfmsfDrawing) &&
         !(k === "stationLabels" && (state.sfmsfDrawing || state.sfmsfAerial)) &&
         !(k === "spanLabels" && !avail);
-      if (
-        k === "progress" ||
-        k === "sfmsfDrawing" ||
-        k === "sfmsfAerial" ||
-        k === "fullAerial" ||
-        k === "horizontal"
-      )
+      if (k === "progress" || k === "sfmsfDrawing" || k === "sfmsfAerial" || k === "fullAerial" || k === "horizontal")
         return;
       // roads: Fraser Highway and Highway 15, with their labels (every piece is tagged "roads")
-      if (k === "roads")
-        r += ".roads{display:" + (on ? "inline" : "none") + " !important}";
-      else if (k === "spanLabels")
-        r += ".cclabel{display:" + (on ? "inline" : "none") + " !important}";
-      else if (k === "arrows")
-        r += on ? "" : "text.n.guideway{display:none !important}";
+      if (k === "roads") r += ".roads{display:" + (on ? "inline" : "none") + " !important}";
+      else if (k === "spanLabels") r += ".cclabel{display:" + (on ? "inline" : "none") + " !important}";
+      else if (k === "arrows") r += on ? "" : "text.n.guideway{display:none !important}";
       else if (k === "gantry") r += "";
-      else if (k === "supports")
-        r += on ? "" : 'rect.g,circle[fill="#D7D7D7"]{display:none !important}';
-      else if (k === "unfinished")
-        r +=
-          ".guideway.unfinished{display:" +
-          (on ? "inline" : "none") +
-          " !important}";
+      else if (k === "supports") r += on ? "" : 'rect.g,circle[fill="#D7D7D7"]{display:none !important}';
+      else if (k === "unfinished") r += ".guideway.unfinished{display:" + (on ? "inline" : "none") + " !important}";
       // finished spans, concrete and steel alike
-      else if (k === "guideway")
-        r += ".guideway{display:" + (on ? "inline" : "none") + " !important}";
-      else if (k === "yard")
-        r += ".yard{display:" + (on ? "inline" : "none") + " !important}";
-      else
-        r +=
-          "." + cls + "{display:" + (on ? "inline" : "none") + " !important}";
+      else if (k === "guideway") r += ".guideway{display:" + (on ? "inline" : "none") + " !important}";
+      else if (k === "yard") r += ".yard{display:" + (on ? "inline" : "none") + " !important}";
+      else r += "." + cls + "{display:" + (on ? "inline" : "none") + " !important}";
     }),
   );
   // over the aerial photo (every view but SFMSF drawing), the unfinished spans are 45% opaque, so the finished ones stand out,
@@ -258,9 +230,6 @@ export function layerCss(state) {
       .flatMap((sel) => [`#map ${sel}`, `#map ${sel} *`]);
     if (shows.length) r += `${shows.join(",")}{visibility:visible !important}`;
   }
-  r +=
-    'polygon.ave72[fill="#FFFFFF"]{opacity:' +
-    (state.greenbelt && state.sfmsfDrawing ? 1 : 0) +
-    " !important}";
+  r += 'polygon.ave72[fill="#FFFFFF"]{opacity:' + (state.greenbelt && state.sfmsfDrawing ? 1 : 0) + " !important}";
   return r;
 }

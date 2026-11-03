@@ -17,8 +17,7 @@ const HASHES = {
  * @returns {string|null} The view's key ("progress" for no hash), or null for a hash that names no view.
  */
 const viewOfHash = (h) =>
-  Object.keys(HASHES).find((k) => HASHES[k] === h.replace(/^#/, "")) ??
-  (h.replace(/^#/, "") ? null : "progress");
+  Object.keys(HASHES).find((k) => HASHES[k] === h.replace(/^#/, "")) ?? (h.replace(/^#/, "") ? null : "progress");
 /** The hash the page was opened with, read before anything rewrites it. */
 const openedWith = typeof location === "undefined" ? "" : location.hash;
 
@@ -38,7 +37,6 @@ $effect.root(() => {
   $effect(() => {
     if (!ui.ready || typeof location === "undefined") return;
     const h = HASHES[ui.view] ? `#${HASHES[ui.view]}` : "";
-    if (location.hash !== h)
-      history.replaceState(null, "", h || location.pathname + location.search);
+    if (location.hash !== h) history.replaceState(null, "", h || location.pathname + location.search);
   });
 });

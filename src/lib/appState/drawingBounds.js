@@ -32,8 +32,7 @@ function shown(el, root) {
 function paintedOnlyWhite(el) {
   const cs = getComputedStyle(el);
   const fill = cs.fill === "none" || cs.fillOpacity === "0" ? "none" : cs.fill,
-    stroke =
-      cs.stroke === "none" || cs.strokeOpacity === "0" ? "none" : cs.stroke;
+    stroke = cs.stroke === "none" || cs.strokeOpacity === "0" ? "none" : cs.stroke;
   return WHITE.test(fill) && WHITE.test(stroke);
 }
 
@@ -54,9 +53,7 @@ function paintedOnlyWhite(el) {
 export function drawingBounds(root, turn, cx, cy, only) {
   const toRoot = DOMMatrix.fromMatrix(root.getScreenCTM()).inverse(),
     toCanvas = (el, x, y) =>
-      new DOMPoint(x, y)
-        .matrixTransform(DOMMatrix.fromMatrix(el.getScreenCTM()))
-        .matrixTransform(toRoot);
+      new DOMPoint(x, y).matrixTransform(DOMMatrix.fromMatrix(el.getScreenCTM())).matrixTransform(toRoot);
   const r = (turn * Math.PI) / 180,
     c = Math.cos(r),
     s = Math.sin(r),
@@ -80,8 +77,7 @@ export function drawingBounds(root, turn, cx, cy, only) {
       const cp = id && root.getElementById(id[1]);
       if (!cp) continue;
       // the clip path's shapes are in the user space of the element it clips
-      const key =
-        cp.id + "|" + (e.parentElement ? e.getAttribute("transform") : "");
+      const key = cp.id + "|" + (e.parentElement ? e.getAttribute("transform") : "");
       if (!clipBox.has(key)) {
         const ctm = DOMMatrix.fromMatrix(e.getScreenCTM());
         const pts = [...cp.children].flatMap((k) => {
@@ -91,9 +87,7 @@ export function drawingBounds(root, turn, cx, cy, only) {
             [b.x + b.width, b.y],
             [b.x + b.width, b.y + b.height],
             [b.x, b.y + b.height],
-          ].map(([x, y]) =>
-            new DOMPoint(x, y).matrixTransform(ctm).matrixTransform(toRoot),
-          );
+          ].map(([x, y]) => new DOMPoint(x, y).matrixTransform(ctm).matrixTransform(toRoot));
         });
         clipBox.set(key, {
           x0: Math.min(...pts.map((p) => p.x)),
@@ -138,11 +132,7 @@ export function drawingBounds(root, turn, cx, cy, only) {
       }));
       const xs = pts.map((p) => p.x),
         ys = pts.map((p) => p.y);
-      if (
-        Math.max(...xs) - Math.min(...xs) < 1e-6 &&
-        Math.max(...ys) - Math.min(...ys) < 1e-6
-      )
-        return;
+      if (Math.max(...xs) - Math.min(...xs) < 1e-6 && Math.max(...ys) - Math.min(...ys) < 1e-6) return;
     }
     pts.map(turned).forEach((p) => {
       if (!left || p.x < left.x) left = p;
