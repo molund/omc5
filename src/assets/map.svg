@@ -1540,8 +1540,8 @@
                 y="677.255"
                 width="10.91"
                 height="49.5"
-                fill="#F5B400"
-                stroke="#9A6E00"
+                fill="#F2A51F"
+                stroke="#9B691A"
                 stroke-width="2"
                 transform="rotate(176.63 335.18 702.00)"
               />
@@ -1554,8 +1554,8 @@
                 y="481.0"
                 width="90"
                 height="6"
-                fill="#F5B400"
-                stroke="#9A6E00"
+                fill="#F2A51F"
+                stroke="#9B691A"
                 stroke-width="2"
                 transform="rotate(-1.504 307.1 484)"
               />
@@ -1568,8 +1568,8 @@
                 y="347.0"
                 width="90"
                 height="6"
-                fill="#F5B400"
-                stroke="#9A6E00"
+                fill="#F2A51F"
+                stroke="#9B691A"
                 stroke-width="2"
               />
             </g>
@@ -1581,8 +1581,8 @@
                 y="613"
                 width="63"
                 height="6"
-                fill="#F5B400"
-                stroke="#9A6E00"
+                fill="#F2A51F"
+                stroke="#9B691A"
                 stroke-width="2"
               />
             </g>
@@ -1595,7 +1595,7 @@
                 y="677.255"
                 width="6.06"
                 height="49.5"
-                fill="#2F6DB5"
+                fill="#174B83"
                 transform="rotate(176.63 335.18 702.00)"
               />
             </g>
@@ -1607,7 +1607,7 @@
                 y="477.67"
                 width="90"
                 height="3.33"
-                fill="#2F6DB5"
+                fill="#174B83"
                 transform="rotate(-1.504 307.1 484)"
               />
             </g>
@@ -1619,7 +1619,7 @@
                 y="343.67"
                 width="90"
                 height="3.33"
-                fill="#2F6DB5"
+                fill="#174B83"
               />
             </g>
             <g data-anchor="front" transform="translate(24.87 242.75)">
@@ -1630,7 +1630,7 @@
                 y="619"
                 width="63"
                 height="3.33"
-                fill="#2F6DB5"
+                fill="#174B83"
               />
             </g>
             <!-- Gantry (walkways, trusses, cross beams, tips, trolley) rotated 1.74 deg in the guideway frame about the D/E support centre (271.92, 524.00) so its centreline runs through supports 2 and 4; the matrix() groups are that rotation expressed inside the narrowed frame -->
@@ -1650,7 +1650,7 @@
                   y="470.65"
                   width="3.33"
                   height="158.7"
-                  fill="#2F6DB5"
+                  fill="#174B83"
                   transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
                 />
                 <rect
@@ -1660,7 +1660,7 @@
                   y="470.65"
                   width="3.33"
                   height="158.7"
-                  fill="#2F6DB5"
+                  fill="#174B83"
                   transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
                 />
                 <!-- Inner side walkways (blue), same length, centring and thickness (3.33) as the outer ones, on the inside face of each truss -->
@@ -1671,7 +1671,7 @@
                   y="470.65"
                   width="3.33"
                   height="158.7"
-                  fill="#2F6DB5"
+                  fill="#174B83"
                   transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
                 />
                 <rect
@@ -1681,7 +1681,7 @@
                   y="470.65"
                   width="3.33"
                   height="158.7"
-                  fill="#2F6DB5"
+                  fill="#174B83"
                   transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
                 />
                 <g
@@ -1694,7 +1694,7 @@
                   <g
                     clip-path="url(#truss-clip-273)"
                     fill="none"
-                    stroke="#F5B400"
+                    stroke="#F2A51F"
                     stroke-width="1.4"
                     stroke-linejoin="round"
                   >
@@ -1726,7 +1726,7 @@
                   <g
                     clip-path="url(#truss-clip-317)"
                     fill="none"
-                    stroke="#F5B400"
+                    stroke="#F2A51F"
                     stroke-width="1.4"
                     stroke-linejoin="round"
                   >
@@ -1753,7 +1753,7 @@
                   y="387.55"
                   width="44"
                   height="2.5"
-                  fill="#F5B400"
+                  fill="#F2A51F"
                   transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
                 />
                 <rect
@@ -1761,7 +1761,7 @@
                   y="709.95"
                   width="44"
                   height="2.5"
-                  fill="#F5B400"
+                  fill="#F2A51F"
                   transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
                 />
                 <!-- Clipper blue truss tips (end legs; solid #4D76A3 to match the pads and decks as rendered): inner half of each truss (5 wide), 11.2 long, recessed 8.6 from each truss end (trimmed by a third from the outer end); y = truss start + 8.6 and truss end - 19.8 -->
@@ -1905,7 +1905,7 @@
                   width="68"
                   height="22.95"
                   rx="2"
-                  fill="#2F6DB5"
+                  fill="#174B83"
                   transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
                 />
               </g>
