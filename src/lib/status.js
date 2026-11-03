@@ -1,10 +1,10 @@
 // The Clayton Clipper status from status.yaml: when it was last updated, the span the gantry is on, whether that span is
 // complete, and the newest of its time-stamped notes. The file is flat `key: value` lines plus the `notes:` list of
-// `  - time: "title"` lines (the title is for the note's page's <title> and Open Graph title on Trackside, and is shown only
-// on a post), each followed by its summary, the note's main text, indented under it. Its page's address comes from the title
-// ("Clayton Clipper completes span 36" is /trackside/clipper-completes-span-36/; "Clayton" is always left out), or from
+// `  - time: "title"` lines (the title is shown only on a post), each followed by its summary, the note's main text,
+// indented under it. Its `#` anchor on Trackside comes from the title
+// ("Clayton Clipper completes span 36" is #clipper-completes-span-36; "Clayton" is always left out), or from
 // `slug:` if given, which
-// keeps the address when the title is edited:
+// keeps the anchor when the title is edited:
 //     slug: clipper-completes-span-36
 //     summary: "Span 36 is complete."
 // a photo, indented under it:
@@ -57,7 +57,7 @@ import { anchor } from "./comments.js";
  * @property {Photo|null} photo The note's photo, if it has one.
  * @property {BlockItem[]} block Further paragraphs and photos, in order.
  * @property {string} title The title for the note's own Trackside page, or "".
- * @property {string} slug The last part of the note's own page's address, unique among the notes.
+ * @property {string} slug The note's `#` anchor on Trackside, unique among the notes.
  * @property {boolean} post Whether it is a post rather than a status update.
  * @property {FollowUp[]} followUps Its follow-ups, newest first.
  */
