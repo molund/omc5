@@ -6,9 +6,9 @@ span: 36
 # whether that span is complete (or at least hung)
 complete: true
 # every note, newest first. A note is its time stamp (the time of the update that added it) and its title, then its summary,
-# the main text, indented under it. The title is for its own Trackside page's <title> and link previews (not shown on any
-# page, except on a post; "" for none, and the page uses its date). The title is also the page's address
-# (/trackside/clipper-completes-span-36/, "Clayton Clipper" becomes "Clipper", and is dropped from the date titles): to keep the address when the title is edited, add `slug: words-here`
+# the main text, indented under it. The title is not shown on a status update ("" for none, and the slug comes from the time
+# stamp); a post leads with it. It is also the update's `#` anchor on
+# Trackside, as a slug (clipper-completes-span-36, "Clayton Clipper" becomes "Clipper", and is dropped from the date titles): to keep the anchor when the title is edited, add `slug: words-here`
 # under the note (the oldest note with a given title keeps the plain words, a later one gets -2). The progress card shows
 # the newest note's summary, or its
 # newest follow-up's if it has any (an empty summary shows none):

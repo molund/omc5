@@ -27,6 +27,10 @@
       d="M3.75 3h10.5a1.75 1.75 0 0 1 1.75 1.75v6.5A1.75 1.75 0 0 1 14.25 13H8.5l-3.5 3v-3H3.75A1.75 1.75 0 0 1 2 11.25v-6.5A1.75 1.75 0 0 1 3.75 3z"
       stroke-linejoin="round"
     />
+  {:else if kind === "link"}
+    <path d="M7 11 11 7" />
+    <path d="M8.25 5.25 9 4.5a3.18 3.18 0 0 1 4.5 4.5l-.75.75" />
+    <path d="m9.75 12.75-.75.75a3.18 3.18 0 0 1-4.5-4.5l.75-.75" />
   {:else if kind === "info"}
     <!-- an information icon: an "i" in a circle -->
     <circle cx="9" cy="9" r="7.25" />
