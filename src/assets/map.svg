@@ -1087,16 +1087,16 @@
           stroke-width="1.5"
           points="298.81,650.70 308.45,650.70 312.35,771.45 302.71,771.45"
         />
-        <!-- Span F eastbound precast: not lifted yet; to mark complete use fill="#888780" stroke="#5F5E5A" stroke-width="1.5", no dasharray -->
+        <!-- Span F eastbound precast -->
         <polygon
           class="gi guideway"
           points="277.23,771.45 299.43,771.45 300.89,893.45 278.69,893.45"
         />
         <polygon
-          class="guideway unfinished"
-          fill="#FFFFFF"
-          stroke="#888780"
-          stroke-width="0.825"
+          class="guideway"
+          fill="#888780"
+          stroke="#5F5E5A"
+          stroke-width="1.5"
           points="302.73,771.45 312.38,771.45 313.84,893.45 304.19,893.45"
         />
         <polygon
