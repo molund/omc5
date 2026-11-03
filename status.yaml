@@ -41,9 +41,9 @@ notes:
       - 2026-11-02T17:45-07:00:
           summary: "Post-tensioning is done on span 36, and the cables are down. The Clayton Clipper isn't going anywhere yet: all 12 hangers are still up."
           block:
-            - "Two precast concrete beams, which are probably for span 34, are sitting behind the guideway in the recently built construction works yard. The black paint on their ends means Dywidag has finished post-tensioning them too. I expect them to go in tonight or tomorrow night."
+            - "Two precast concrete girders, which are probably for span 34, are sitting behind the guideway in the recently built construction yard. The black paint on their ends means Dywidag has finished post-tensioning them too. I expect them to go in tonight or tomorrow night."
   - 2026-11-01: "The curious case of Clayton Clipper span 50"
-    summary: "While tracing the guideway near Highway 15, I noticed one pillar appears to have been shifted west, making span 50 noticeably longer than the surrounding spans. There's also a concrete pad almost exactly where the pillar seems like it would have gone."
+    summary: "While tracing the guideway near Highway 15 (176 St), I noticed one pillar appears to have been shifted west, making span 50 noticeably longer than the surrounding spans. There's also a concrete pad almost exactly where the pillar seems like it would have gone."
     post: true
     photo:
       file: 2026-11-01-span-50-pad.jpg
@@ -85,8 +85,8 @@ notes:
     follow-up:
       - 2026-10-30T20:45-07:00:
           summary: "The Clayton Clipper has moved to span 36."
-  - 2026-10-29T06:45-07:00: "Clayton Clipper finishes hanging span 35; new beam arrives"
-    summary: "All segments for span 35 are hung. A new precast beam arrived at the construction yard overnight. It will likely be installed in span 34, along with the beam that was already on site."
+  - 2026-10-29T06:45-07:00: "Clayton Clipper finishes hanging span 35; new girder arrives"
+    summary: "All segments for span 35 are hung. A new precast girder arrived at the construction yard overnight. It will likely be installed in span 34, along with the girder that was already on site."
     follow-up:
       - 2026-10-29T18:30-07:00:
           summary: "Span 35's segments are glued, and Dywidag is post-tensioning now. The night shift should finish it. That makes the Clayton Clipper one-third done: 35 of 105 spans."
@@ -100,8 +100,8 @@ notes:
     photo:
       file: 2026-10-23-clipper-span-33.jpg
       caption: "The Clayton Clipper with span 33 hung and glued below it."
-  - 2026-10-15T17:15-07:00: "Clayton Clipper crosses span 31's double precast beams"
-    summary: "After being stuck in the same place for over a month, the Clayton Clipper finally made it across the double precast beams at span 31."
+  - 2026-10-15T17:15-07:00: "Clayton Clipper crosses span 31's double precast girders"
+    summary: "After being stuck in the same place for over a month, the Clayton Clipper finally made it across the double precast girders at span 31."
     photo:
       file: 2026-10-15-clipper-crosses-span-31.jpg
       caption: "The Clayton Clipper, finally on the move again: across span 31 and ready to start lifting segments for span 32."
@@ -109,7 +109,7 @@ notes:
     summary: "This is where it all started: a late-night project on Oct 13. I sketched the guideway past the South Fraser Maintenance and Storage Facility by hand from my walks with Piper and Toby, then brought it into Claude. No aerial photos, no website, just boxes, lines and a lot of squinting."
     photo:
       file: 2026-10-13-first-drawing.jpg
-      caption: "The earliest version I still have, from soon after the hand drawing went into Claude on Oct 13, 2026: eleven gantry spans to go, a handful of precast spans done, and labels that only made sense to me."
+      caption: "The earliest version I still have, from soon after the hand drawing went into Claude on Oct 13, 2026: eleven gantry spans to go, a handful of precast girders done, and labels that only made sense to me."
     block:
       - "The plan was simple: post a picture to the SkyscraperPage forum every couple of weeks, so other people following the line could see where the Clayton Clipper was. Then I started fixing it. The spans got traced against high-resolution aerial imagery, the supports got matched to within about a foot, and the drawing grew from one stretch by the SFMSF to the Clipper's whole route."
       - "The turning point was almost an accident. I asked Claude to make me a better viewer for the SVG, and it threw in checkboxes for every layer in the drawing without being asked. I started customizing them, then kept going, and eventually decided to see if I could get the whole thing onto GitHub. On Oct 28 it became a small website: a live map, a progress card counting the Clipper's spans, and a status file behind it all. A few days later it had comments, photos, this Trackside page and its own address."
