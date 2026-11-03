@@ -39,6 +39,40 @@ for (let p = 1; p <= pages; p++)
   await write(p === 1 ? "dist/trackside" : `dist/trackside/page/${p}`, {
     page: p,
   });
+for (const [i, n] of status.history.entries()) {
+  const page = Math.floor(i / PAGE_SIZE) + 1,
+    target = `/trackside/${page === 1 ? "" : `page/${page}/`}?comments#${n.slug}`,
+    permalink = `${SITE}trackside/${n.slug}/`,
+    image = n.photo || n.block.find((m) => m.photo)?.photo;
+  const escape = (value) =>
+    String(value).replace(
+      /[&<>"']/g,
+      (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c],
+    );
+  mkdirSync(`dist/trackside/${n.slug}`, { recursive: true });
+  writeFileSync(
+    `dist/trackside/${n.slug}/index.html`,
+    `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex" />
+    <meta property="og:title" content="${escape(n.title)}" />
+    <meta property="og:description" content="${escape(n.summary)}" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="${escape(permalink)}" />
+    ${image ? `<meta property="og:image" content="${escape(new URL(image.src, SITE).href)}" />` : ""}
+    <title>Trackside permalink · Clayton Clipper Tracker</title>
+    <meta http-equiv="refresh" content="0;url=${target}" />
+    <script>location.replace(${JSON.stringify(target)});</script>
+  </head>
+  <body>
+    <noscript><a href="${target}">Open this update and its comments on Trackside.</a></noscript>
+  </body>
+</html>
+`,
+  );
+}
 
 // dist/sitemap.xml, for search engines (submitted in Google Search Console, since a project site can't have a robots.txt):
 // the map, the pages of updates and the About page, each with when it last changed (a page of updates, at its newest update

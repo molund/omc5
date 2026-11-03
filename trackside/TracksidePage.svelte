@@ -6,6 +6,7 @@
   import { onMount } from "svelte";
   import { status, asOf, followUpTime } from "../src/lib/status.js";
   import { term, fetchCounts, SITE } from "../src/lib/comments.js";
+  import Icon from "../src/Icon.svelte";
 
   let { view = { page: 1 } } = $props();
 
@@ -61,6 +62,18 @@
   // wrap an update object in a proxy that never equals the original. ?comments with an update's slug
   // (?comments#clipper-completes-span-36, the progress card's Comments button) opens its comments.
   let open = $state(null);
+  let copied = $state(false);
+  let copyTimer;
+  async function copyPermalink(n) {
+    try {
+      await navigator.clipboard.writeText(full(`${TRACKSIDE}${n.slug}/`));
+      copied = true;
+      clearTimeout(copyTimer);
+      copyTimer = setTimeout(() => (copied = false), 1800);
+    } catch (error) {
+      console.error("Could not copy permalink", error);
+    }
+  }
   onMount(() => {
     const params = new URLSearchParams(location.search),
       id = location.hash.slice(1);
@@ -138,11 +151,20 @@
     <article id={n.slug} class="scroll-mt-[calc(var(--spacing)*19_+_env(safe-area-inset-top,0px))] [article+&]:mt-9">
       <!-- the date links to the update's own anchor on the page, drawn as plain heading text; with a title, screen readers
            hear the date and the title (the date first, so the visible text is in the name, for voice control) -->
-      <h2 class="mt-7 mb-2 border-b border-(--line) pb-1.25 text-xl leading-tight font-bold">
+      <h2
+        class="mt-7 mb-2 flex items-center justify-between gap-2 border-b border-(--line) pb-1.25 text-xl leading-tight font-bold"
+      >
         <a
           class="text-inherit no-underline"
           href="#{n.slug}"
           aria-label={n.title && !n.post ? `${heading(n.time)}: ${n.title}` : undefined}>{label(n)}</a
+        >
+        <button
+          class="shrink-0 border-0 bg-transparent p-1 text-(--mute) hover:text-(--accent)"
+          type="button"
+          title="Copy permalink"
+          aria-label="Copy permalink"
+          onclick={() => copyPermalink(n)}><Icon kind="link" /></button
         >
       </h2>
       <!-- a post leads with its title, with just its date under it -->
@@ -234,4 +256,11 @@
     <p class="mx-0 mt-0 mb-1">A hobby project by Mike, not affiliated with TransLink.</p>
     <a class="text-(--accent)" href="{MAP}about/">About this site</a>
   </footer>
+  {#if copied}<div
+      class="fixed inset-x-0 bottom-5 z-20 mx-auto w-fit rounded-md bg-(--ink) px-3 py-2 text-sm text-(--panel) shadow-card"
+      role="status"
+      aria-live="polite"
+    >
+      Permalink copied
+    </div>{/if}
 </main>

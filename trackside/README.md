@@ -12,7 +12,11 @@ the real text, and then Svelte takes over in the browser for the comments and co
 ## Pages
 
 - `/trackside/` — the newest 10 updates, then `/trackside/page/2/`, `/trackside/page/3/` and so on.
-  Every update is on one of these pages; there are no pages of their own for single updates.
+  Every update is on one of these pages; there are no individual content pages.
+- `/trackside/<slug>/` — a permanent permalink for an update. Its generated page redirects to the page and
+  anchor where the update currently appears, with its comments open. That destination can change as new updates
+  are added, but the permalink stays the same. Its Open Graph title and description use the update's title and
+  summary; when the update has a photo, the first one is used as the preview image.
 - An update's `#` anchor is its slug (`/trackside/#clipper-completes-span-36`), and its date heading links
   to it. Add `?comments` to open its comments too.
 
