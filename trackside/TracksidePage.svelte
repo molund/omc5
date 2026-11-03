@@ -222,7 +222,7 @@
       {/each}
       {#if n.followUps.length}
         <h3 class="mt-3.5 mb-1 text-base font-bold">Follow-ups</h3>
-        <ul class="m-0 list-disc pl-5.5 [&>li+li]:mt-1">
+        <ul class="mx-0 mt-0 mb-2 list-disc pl-5.5 [&>li+li]:mt-2.5">
           <!-- oldest first, in the order they happened (the card shows the newest first) -->
           {#each [...n.followUps].reverse() as m}<li>
               <code
