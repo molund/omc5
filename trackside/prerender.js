@@ -2,7 +2,7 @@
 // Open Graph tags in the HTML, for search engines and link previews:
 //   dist/trackside/index.html            the newest 10 updates
 //   dist/trackside/page/2/index.html …   the older ones, 10 a page
-//   dist/trackside/<anchor>/index.html   each update on its own, e.g. /trackside/2026-10-31T16-30/
+//   dist/trackside/<slug>/index.html    each update on its own, e.g. /trackside/clayton-clipper-completes-span-36/
 // dist/sitemap.xml, every page for search engines, and dist-ssr/threads.json, each update's comment thread title and
 // body, for .github/scripts/sync_discussions.py, so status.yaml is read in one place (lib/status.js).
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
@@ -11,7 +11,7 @@ import { render } from "svelte/server";
 import { format } from "prettier";
 import TracksidePage from "./TracksidePage.svelte";
 import { status, followUpTime } from "../src/lib/status.js";
-import { anchor, term, SITE } from "../src/lib/comments.js";
+import { term, SITE } from "../src/lib/comments.js";
 
 const PAGE_SIZE = 10;
 
@@ -44,7 +44,7 @@ for (let p = 1; p <= pages; p++)
     page: p,
   });
 for (const n of status.history)
-  await write(`dist/trackside/${anchor(n.time)}`, { post: anchor(n.time) });
+  await write(`dist/trackside/${n.slug}`, { post: n.slug });
 
 // dist/sitemap.xml, for search engines (submitted in Google Search Console, since a project site can't have a robots.txt):
 // the map, the pages of updates, each update's own page and the About page, each with when it last changed (an update, at its newest
@@ -57,10 +57,7 @@ const urls = [
     i === 0 ? `${SITE}trackside/` : `${SITE}trackside/page/${i + 1}/`,
     newest(status.history.slice(i * PAGE_SIZE, (i + 1) * PAGE_SIZE)),
   ]),
-  ...status.history.map((n) => [
-    `${SITE}trackside/${anchor(n.time)}/`,
-    changed(n),
-  ]),
+  ...status.history.map((n) => [`${SITE}trackside/${n.slug}/`, changed(n)]),
   // the About page, which has no date of its own
   [`${SITE}about/`, null],
 ];
@@ -111,7 +108,7 @@ function threadBody(n) {
     );
   }
   parts.push(
-    `[See it on the Clayton Clipper Tracker](${SITE}trackside/${anchor(n.time)}/)`,
+    `[See it on the Clayton Clipper Tracker](${SITE}trackside/${n.slug}/)`,
   );
   parts.push(
     `<!-- sha1: ${createHash("sha1").update(term(n.time)).digest("hex")} -->`,

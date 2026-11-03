@@ -5,7 +5,7 @@
   import { PROGRESS_COLOUR } from "./lib/layerSwitches.js";
   import { ui } from "./lib/appState/appState.svelte.js";
   import { status, asOf } from "./lib/status.js";
-  import { anchor, term, fetchCounts } from "./lib/comments.js";
+  import { term, fetchCounts } from "./lib/comments.js";
   import Icon from "./Icon.svelte";
 
   // "today" or "yesterday" on the card (Trackside keeps full dates)
@@ -16,9 +16,7 @@
   // the Comments button opens the newest update on Trackside with its comments open, and shows its comment and reaction
   // counts once GitHub has sent them
   const TRACKSIDE = `${import.meta.env.BASE_URL}trackside/`;
-  const COMMENTS = newest
-    ? `${TRACKSIDE}?comments#${anchor(newest.time)}`
-    : TRACKSIDE;
+  const COMMENTS = newest ? `${TRACKSIDE}${newest.slug}/?comments` : TRACKSIDE;
   let activity = $state(null);
   if (newest)
     fetchCounts().then((c) => (activity = c[term(newest.time)] ?? null));

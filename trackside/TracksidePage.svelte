@@ -1,11 +1,11 @@
 <script>
-  // The Trackside page: every status note, newest first, each with an id from its time stamp (e.g. #2026-10-30T20-45). It
-  // is prerendered at build time (trackside/prerender.js) as pages of 10 (/trackside/, /trackside/page/2/, …) and a
-  // page per update (/trackside/2026-10-30T20-45/), each with its own title, description and Open Graph photo; view says
-  // which one this is
+  // The Trackside page: every status note, newest first, each with its slug as its id (e.g.
+  // #clayton-clipper-completes-span-36). It is prerendered at build time (trackside/prerender.js) as pages of 10
+  // (/trackside/, /trackside/page/2/, …) and a page per update (/trackside/clayton-clipper-completes-span-36/), each with
+  // its own title, description and Open Graph photo; view says which one this is
   import { onMount } from "svelte";
   import { status, asOf, followUpTime } from "../src/lib/status.js";
-  import { anchor, term, fetchCounts, SITE } from "../src/lib/comments.js";
+  import { term, fetchCounts, SITE } from "../src/lib/comments.js";
 
   let { view = { page: 1 } } = $props();
 
@@ -38,7 +38,7 @@
   // what an update's heading says: a post's title, or a status update's date and time
   const label = (n) => (n.post && n.title ? n.title : heading(n.time));
   // the addresses of an update's own page and of a page of updates, and either in full, for the Open Graph tags
-  const postUrl = (n) => `${TRACKSIDE}${anchor(n.time)}/`;
+  const postUrl = (n) => `${TRACKSIDE}${n.slug}/`;
   const pageUrl = (p) => (p === 1 ? TRACKSIDE : `${TRACKSIDE}page/${p}/`);
   const full = (path) => new URL(path, SITE).href;
   let counts = $state({});
@@ -47,7 +47,7 @@
   const PAGE_SIZE = 10;
   const pages = Math.max(1, Math.ceil(status.history.length / PAGE_SIZE));
   const post = $derived(
-    view.post ? status.history.find((n) => anchor(n.time) === view.post) : null,
+    view.post ? status.history.find((n) => n.slug === view.post) : null,
   );
   const page = $derived(
     post ? null : Math.min(Math.max(1, view.page || 1), pages),
@@ -56,6 +56,10 @@
     post
       ? [post]
       : status.history.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE),
+  );
+  // the page of updates an update's own page goes back to: the one it is listed on
+  const listPage = $derived(
+    post ? Math.floor(status.history.indexOf(post) / PAGE_SIZE) + 1 : 1,
   );
 
   // what search engines and link previews show: a post's title (else its date) and note, and its photo (or the first among
@@ -86,16 +90,16 @@
   );
   const url = $derived(full(post ? postUrl(post) : pageUrl(page)));
 
-  // the anchor of the update whose comments are open (one at a time, so the page stays light); a string, since $state would
+  // the slug of the update whose comments are open (one at a time, so the page stays light); a string, since $state would
   // wrap an update object in a proxy that never equals the original. ?comments opens an update's comments: on its own page,
-  // or with its anchor (?comments#2026-10-31T16-30, the progress card's Comments button) on a page of updates.
+  // or with its slug (?comments#clayton-clipper-completes-span-36) on a page of updates.
   let open = $state(null);
   onMount(() => {
     const params = new URLSearchParams(location.search),
       id = location.hash.slice(1);
     fetchCounts().then((c) => (counts = c));
     if (post) {
-      if (params.has("comments")) open = view.post;
+      if (params.has("comments")) open = post.slug;
       return;
     }
     if (id) {
@@ -184,15 +188,17 @@
     >
     <h1 class="page-header-title">Trackside</h1>
     <nav class="page-header-nav">
-      {#if post}<a class="btn btn-grey" href={TRACKSIDE}>← All updates</a>{/if}
+      {#if post}<a class="btn btn-grey" href={pageUrl(listPage)}
+          >← All updates</a
+        >{/if}
       <a class="btn btn-grey" href={MAP}>← Map</a>
     </nav>
   </header>
-  {#each shown as n (anchor(n.time))}
+  {#each shown as n (n.slug)}
     <!-- an update a link jumps to lands below the bar, not under it; a wide gap separates one update from the next, so
          the comments link reads as the end of its own update rather than the start of the next -->
     <article
-      id={anchor(n.time)}
+      id={n.slug}
       class="scroll-mt-[calc(var(--spacing)*19_+_env(safe-area-inset-top,0px))] [article+&]:mt-9"
     >
       <!-- on a page of updates, the date links to the update's own page, drawn as plain heading text; with a title,
@@ -245,11 +251,10 @@
         <!-- the comments link, in the link colour -->
         <button
           class="cursor-pointer border-0 bg-transparent p-0 text-sm text-(--accent)"
-          aria-expanded={open === anchor(n.time)}
-          onclick={() =>
-            (open = open === anchor(n.time) ? null : anchor(n.time))}
+          aria-expanded={open === n.slug}
+          onclick={() => (open = open === n.slug ? null : n.slug)}
           ><span aria-hidden="true">💬</span>
-          {open === anchor(n.time)
+          {open === n.slug
             ? "Hide comments"
             : counts[term(n.time)]?.comments
               ? `Comments (${counts[term(n.time)].comments})`
@@ -271,7 +276,7 @@
         {/if}
       </div>
       <!-- the giscus thread, set off from the update by a dashed line -->
-      {#if open === anchor(n.time)}<div
+      {#if open === n.slug}<div
           class="mt-2.5 border-t border-dashed border-(--line) pt-3"
           use:giscus={n.time}
         ></div>{/if}

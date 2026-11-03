@@ -1,13 +1,16 @@
 # Clayton Clipper status. The site reads it (src/lib/status.js); running the deploy workflow by hand or through the API updates
 # it (see .github/workflows/deploy.yml). Times are BC time (UTC−7), rounded to the nearest quarter hour.
-updated: 2026-11-02T17:45-07:00
+updated: 2026-11-02T20:30-07:00
 # the span the gantry is working on (Clayton Clipper span numbers, 3-104)
 span: 36
 # whether that span is complete (or at least hung)
 complete: true
 # every note, newest first. A note is its time stamp (the time of the update that added it) and its title, then its summary,
 # the main text, indented under it. The title is for its own Trackside page's <title> and link previews (not shown on any
-# page, except on a post; "" for none, and the page uses its date). The progress card shows the newest note's summary, or its
+# page, except on a post; "" for none, and the page uses its date). The title is also the page's address
+# (/trackside/clayton-clipper-completes-span-36/): to keep the address when the title is edited, add `slug: words-here`
+# under the note (the oldest note with a given title keeps the plain words, a later one gets -2). The progress card shows
+# the newest note's summary, or its
 # newest follow-up's if it has any (an empty summary shows none):
 #   - 2026-10-31T14:00-07:00: "Clayton Clipper completes span 36"
 #     summary: "Span 36 is complete."
@@ -42,8 +45,10 @@ notes:
           summary: "Post-tensioning is done on span 36, and the cables are down. The Clayton Clipper isn't going anywhere yet: all 12 hangers are still up."
           block:
             - "Two precast concrete girders, which are probably for span 34, are sitting behind the guideway in the recently built construction yard. The black paint on their ends means Dywidag has finished post-tensioning them too. I expect them to go in tonight or tomorrow night."
+      - 2026-11-02T20:30-07:00:
+          summary: "The eastbound mainline girder for span 34 is in place. Six out of twelve hangers are down from the gantry."
   - 2026-11-01: "The curious case of Clayton Clipper span 50"
-    summary: "While tracing the guideway near Highway 15 (176 St), I noticed one pillar appears to have been shifted west, making span 50 noticeably longer than the surrounding spans. There's also a concrete pad almost exactly where the pillar seems like it would have gone."
+    summary: "While tracing the guideway near Highway 15, I noticed one pillar appears to have been shifted west, making span 50 noticeably longer than the surrounding spans. There's also a concrete pad almost exactly where the pillar seems like it would have gone."
     post: true
     photo:
       file: 2026-11-01-span-50-pad.jpg
