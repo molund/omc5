@@ -2,7 +2,7 @@
 // Open Graph tags in the HTML, for search engines and link previews:
 //   dist/trackside/index.html            the newest 10 updates
 //   dist/trackside/page/2/index.html …   the older ones, 10 a page
-//   dist/trackside/<slug>/index.html    each update on its own, e.g. /trackside/clayton-clipper-completes-span-36/
+//   dist/trackside/<slug>/index.html    each update on its own, e.g. /trackside/clipper-completes-span-36/
 // dist/sitemap.xml, every page for search engines, and dist-ssr/threads.json, each update's comment thread title and
 // body, for .github/scripts/sync_discussions.py, so status.yaml is read in one place (lib/status.js).
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
