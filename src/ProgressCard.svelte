@@ -18,17 +18,14 @@
   const TRACKSIDE = `${import.meta.env.BASE_URL}trackside/`;
   const COMMENTS = newest ? `${TRACKSIDE}${newest.slug}/?comments` : TRACKSIDE;
   let activity = $state(null);
-  if (newest)
-    fetchCounts().then((c) => (activity = c[term(newest.time)] ?? null));
+  if (newest) fetchCounts().then((c) => (activity = c[term(newest.time)] ?? null));
 
   // what each number counts, shown when it is hovered or clicked with a mouse, tapped (tap again to hide) or pressed with
   // Enter/Space
   const TIPS = $derived({
     span: "<strong>Reached by the Clayton Clipper.</strong> The current span is marked as complete once all segments are hung.",
-    ahead:
-      "<strong>Built ahead by mobile cranes.</strong> Counted when the gantry passes.",
-    total:
-      "<strong>Route total.</strong> Parallel guideways count as one position.",
+    ahead: "<strong>Built ahead by mobile cranes.</strong> Counted when the gantry passes.",
+    total: "<strong>Route total.</strong> Parallel guideways count as one position.",
     percent: ui.gantry
       ? `<strong>${ui.gantry.span} \u00f7 ${ui.gantry.total}.</strong> Excludes the ${ui.gantry.ahead} built ahead.`
       : "",
@@ -79,22 +76,15 @@
     data-num
     class={[
       "relative cursor-help rounded-sm border-0 px-0.75 py-0.5 font-semibold underline decoration-dotted underline-offset-4 after:absolute after:-inset-x-1.75 after:inset-y-0 after:content-['']",
-      bar
-        ? "min-h-6 text-xs text-white decoration-white"
-        : "min-h-9 text-(--ink) decoration-(--mute)",
+      bar ? "min-h-6 text-xs text-white decoration-white" : "min-h-9 text-(--ink) decoration-(--mute)",
       !bar && (big ? "text-3xl" : "[font-size:inherit]"),
-      bar
-        ? "bg-transparent hover:bg-transparent"
-        : tip === k
-          ? "bg-(--bg)"
-          : "bg-transparent hover:bg-(--bg)",
+      bar ? "bg-transparent hover:bg-transparent" : tip === k ? "bg-(--bg)" : "bg-transparent hover:bg-(--bg)",
     ]}
     aria-describedby={tip === k ? "progress-tip" : undefined}
     aria-label="{value}: {stripHtml(TIPS[k])}"
     onclick={(e) => (e.pointerType === "mouse" ? (tip = k) : toggle(k))}
     onpointerenter={(e) => e.pointerType === "mouse" && (tip = k)}
-    onpointerleave={(e) =>
-      e.pointerType === "mouse" && tip === k && (tip = null)}
+    onpointerleave={(e) => e.pointerType === "mouse" && tip === k && (tip = null)}
     onblur={() => tip === k && (tip = null)}>{value}</button
   >
 {/snippet}
@@ -134,13 +124,8 @@
     >
     <!-- "36 (+8) / 105": the spans done, the spans ahead built by cranes, and the total (non-breaking spaces, which the flex
          row keeps) -->
-    <div
-      class="mt-0.5 mb-2 flex flex-wrap items-baseline text-base text-(--mute)"
-    >
-      {@render num("span", span, true)}&nbsp;(+{@render num(
-        "ahead",
-        ahead,
-      )})&nbsp;/&nbsp;{@render num("total", total)}
+    <div class="mt-0.5 mb-2 flex flex-wrap items-baseline text-base text-(--mute)">
+      {@render num("span", span, true)}&nbsp;(+{@render num("ahead", ahead)})&nbsp;/&nbsp;{@render num("total", total)}
     </div>
     <!-- floats over the progress bar (no top: it sits where it would have started, just under the figure), in the card's
          colours reversed so it stands out from the card in light and dark mode -->
@@ -163,11 +148,7 @@
         aria-valuemax={total}
         aria-valuenow={span}
       >
-        <div
-          class="h-full rounded-md"
-          style:width="{percent}%"
-          style:background={PROGRESS_COLOUR}
-        ></div>
+        <div class="h-full rounded-md" style:width="{percent}%" style:background={PROGRESS_COLOUR}></div>
       </div>
       <div
         class="absolute inset-y-0 left-0 flex min-w-12 max-w-full items-center justify-center"
@@ -182,12 +163,9 @@
       <a
         class="btn mt-2.5 flex min-h-8 gap-1.5 border-(--line) bg-(--panel) px-2.5 text-sm font-normal text-(--ink) hover:bg-(--bg)"
         href={COMMENTS}
-        ><Icon kind="comment" /><span
-          >Comments{activity?.comments ? ` (${activity.comments})` : ""}</span
-        >{#if activity?.reactions.length}<span
-            class="ml-auto flex gap-2 text-(--mute)"
-            >{#each activity.reactions as [e, c]}<span>{e} {c}</span
-              >{/each}</span
+        ><Icon kind="comment" /><span>Comments{activity?.comments ? ` (${activity.comments})` : ""}</span
+        >{#if activity?.reactions.length}<span class="ml-auto flex gap-2 text-(--mute)"
+            >{#each activity.reactions as [e, c]}<span>{e} {c}</span>{/each}</span
           >{/if}</a
       >
     {/if}
