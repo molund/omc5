@@ -11,15 +11,20 @@ import {
   PROGRESS_MIN_LAST_SPAN,
 } from "../layerSwitches.js";
 
+let fitBounds = null;
+
 /**
- * The zoom that fits the whole canvas in the stage: the full width, or less when the canvas is taller than the stage
- * allows.
+ * The zoom that fits the view's Fit area in the stage, independently of its panning canvas.
  * @returns {number} A percentage of the stage width.
  */
 export function fitZoom() {
   const r = els.stage.getBoundingClientRect(),
-    vb = els.svg.viewBox.baseVal;
-  return Math.min(100, (100 * r.height * vb.width) / (r.width * vb.height));
+    vb = els.svg.viewBox.baseVal,
+    bounds = fitBounds ?? vb;
+  return Math.min(
+    (100 * vb.width) / bounds.width,
+    (100 * r.height * vb.width) / (r.width * bounds.height),
+  );
 }
 /**
  * Whether the map is zoomed to Fit.
@@ -27,14 +32,17 @@ export function fitZoom() {
  */
 export const isFit = () => Math.abs(ui.zoom - ui.fit) < 0.5;
 /**
- * The zoom that fills the stage with the canvas, so nothing blank shows: the full width, or more when the canvas is too
- * short to fill the stage's height at that width.
+ * The zoom that fills the stage with the view's Fit area, so nothing blank shows.
  * @returns {number} A percentage of the stage width.
  */
 export function fillZoom() {
   const r = els.stage.getBoundingClientRect(),
-    vb = els.svg.viewBox.baseVal;
-  return Math.max(100, (100 * r.height * vb.width) / (r.width * vb.height));
+    vb = els.svg.viewBox.baseVal,
+    bounds = fitBounds ?? vb;
+  return Math.max(
+    (100 * vb.width) / bounds.width,
+    (100 * r.height * vb.width) / (r.width * bounds.height),
+  );
 }
 /**
  * Fills the stage with the canvas and centres it. Views open this way; `ui.filled` keeps them so when the stage changes
@@ -56,10 +64,16 @@ const [fx0, fy0, fw, fh] = FULL_VB.split(" ").map(Number),
  * Shows the canvas area `vb`, with the drawing turned by `turn` degrees.
  * @param {string} vb The area to show, as an SVG viewBox string.
  * @param {number} [turn=0] Degrees to turn the drawing by (0, upright, for every view but Horizontal).
+ * @param {string|null} [fitVb=null] A separate Fit area, or the whole canvas when omitted.
  * @returns {void}
  */
-export function setView(vb, turn = 0) {
+export function setView(vb, turn = 0, fitVb = null) {
   const wasFit = isFit();
+  if (fitVb) {
+    const [x, y, width, height] = fitVb.split(" ").map(Number);
+    fitBounds = { x, y, width, height };
+  } else fitBounds = null;
+  els.svg.style.margin = "";
   if (els.turn) {
     if (turn)
       els.turn.setAttribute("transform", `rotate(${turn} ${TURN_X} ${TURN_Y})`);
@@ -74,7 +88,7 @@ export function setView(vb, turn = 0) {
 }
 
 /**
- * Shows progress-chart mode's canvas, the Clayton Clipper built so far (see canvasProgress). It starts zoomed so
+ * Shows progress-chart mode with the full aerial for panning and the built route for Fit (see canvasProgress). It starts zoomed so
  * PROGRESS_VIEW_WIDTH fills the stage's width and scrolled so the gantry's span sits at PROGRESS_SPAN_AT across and down
  * the stage; from there it zooms and pans like any other view, and Fit shows everything built.
  * @returns {void}
@@ -100,7 +114,7 @@ export function progressView() {
 const BUILT = ".guideway.cc.reached:not(.unfinished), .gantry";
 
 /**
- * Fits the canvas to progress-chart mode: the Clayton Clipper's finished spans the gantry has reached, and the gantry (not
+ * Sets progress-chart mode's Fit area: the Clayton Clipper's finished spans the gantry has reached, and the gantry (not
  * the unfinished spans ahead of it, which run almost the whole width of the aerial), upright, with a margin on every side
  * of HORIZONTAL_MARGIN times their diagonal, but no wider than the overview aerial; the whole canvas when there is
  * nothing to measure. Span PROGRESS_MIN_LAST_SPAN, built or not, is always taken in whole, even past the aerial's edge; it is a floor, so the canvas still grows past it with the built spans.
@@ -163,7 +177,7 @@ function canvasProgress() {
     y = Math.min(y, last.top.y - pad);
     y1 = Math.max(y1, last.bottom.y + pad);
   }
-  setView(`${x} ${y} ${x1 - x} ${y1 - y}`);
+  setView(FULL_VB, 0, `${x} ${y} ${x1 - x} ${y1 - y}`);
 }
 
 /**
@@ -248,11 +262,29 @@ function turnedFullView() {
 }
 
 /**
- * Scrolls so the middle of the canvas is in the middle of the stage, keeping the zoom.
+ * Centres the view's Fit area without changing zoom; at Fit, preserves its top-aligned framing.
  * @returns {void}
  */
 export function centreView() {
   const stage = els.stage;
+  if (fitBounds) {
+    const vb = els.svg.viewBox.baseVal;
+    const box = els.svg.getBoundingClientRect();
+    const frame = stage.getBoundingClientRect();
+    stage.scrollLeft +=
+      box.left -
+      frame.left +
+      ((fitBounds.x + fitBounds.width / 2 - vb.x) / vb.width) * box.width -
+      stage.clientWidth / 2;
+    stage.scrollTop +=
+      box.top -
+      frame.top +
+      ((fitBounds.y + (isFit() ? 0 : fitBounds.height / 2) - vb.y) /
+        vb.height) *
+        box.height -
+      (isFit() ? 0 : stage.clientHeight / 2);
+    return;
+  }
   stage.scrollLeft = (stage.scrollWidth - stage.clientWidth) / 2;
   stage.scrollTop = (stage.scrollHeight - stage.clientHeight) / 2;
 }
@@ -272,10 +304,37 @@ export function setZoom(p, cx, cy) {
   const r = stage.getBoundingClientRect();
   const x = (cx == null ? r.left + r.width / 2 : cx) - r.left,
     y = (cy == null ? r.top + r.height / 2 : cy) - r.top;
-  const fx = (stage.scrollLeft + x) / stage.scrollWidth,
-    fy = (stage.scrollTop + y) / stage.scrollHeight;
+  const previousBox = fitBounds ? els.svg.getBoundingClientRect() : null;
+  const fx = previousBox
+      ? (r.left + x - previousBox.left) / previousBox.width
+      : (stage.scrollLeft + x) / stage.scrollWidth,
+    fy = previousBox
+      ? (r.top + y - previousBox.top) / previousBox.height
+      : (stage.scrollTop + y) / stage.scrollHeight;
   ui.zoom = p;
   els.svg.style.width = p + "%";
-  stage.scrollLeft = fx * stage.scrollWidth - x;
-  stage.scrollTop = fy * stage.scrollHeight - y;
+  if (fitBounds) {
+    const vb = els.svg.viewBox.baseVal;
+    const box = els.svg.getBoundingClientRect();
+    const scale = box.width / vb.width;
+    const left =
+      (fitBounds.x - vb.x) * scale -
+      Math.max(0, (stage.clientWidth - fitBounds.width * scale) / 2);
+    const top = (fitBounds.y - vb.y) * scale;
+    els.svg.style.marginLeft = Math.max(0, -left) + "px";
+    els.svg.style.marginRight =
+      Math.max(0, left + stage.clientWidth - box.width) + "px";
+    els.svg.style.marginTop = Math.max(0, -top) + "px";
+    els.svg.style.marginBottom =
+      Math.max(0, top + stage.clientHeight - box.height) + "px";
+  }
+  if (fitBounds) {
+    const box = els.svg.getBoundingClientRect();
+    stage.scrollLeft += box.left - r.left + fx * box.width - x;
+    stage.scrollTop += box.top - r.top + fy * box.height - y;
+  } else {
+    stage.scrollLeft = fx * stage.scrollWidth - x;
+    stage.scrollTop = fy * stage.scrollHeight - y;
+  }
+  if (fitBounds && isFit()) centreView();
 }

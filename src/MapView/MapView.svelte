@@ -23,6 +23,53 @@
 
   let stage;
   let drag = $state(null);
+  let touchDrag = null;
+  let edgeTimer;
+
+  function startDrag(clientX, clientY) {
+    clearTimeout(edgeTimer);
+    els.svg.style.transition = "";
+    els.svg.style.translate = "";
+    return {
+      x: clientX,
+      y: clientY,
+      l: stage.scrollLeft,
+      t: stage.scrollTop,
+      maxLeft: stage.scrollWidth - stage.clientWidth,
+      maxTop: stage.scrollHeight - stage.clientHeight,
+    };
+  }
+
+  function pan(origin, clientX, clientY) {
+    const left = origin.l - (clientX - origin.x);
+    const top = origin.t - (clientY - origin.y);
+    const boundedLeft = Math.max(0, Math.min(origin.maxLeft, left));
+    const boundedTop = Math.max(0, Math.min(origin.maxTop, top));
+    stage.scrollLeft = boundedLeft;
+    stage.scrollTop = boundedTop;
+    const box = els.svg.getBoundingClientRect();
+    const marginX = box.width * 0.05;
+    const marginY = box.height * 0.05;
+    const offsetX = marginX * Math.tanh((boundedLeft - left) / marginX);
+    const offsetY = marginY * Math.tanh((boundedTop - top) / marginY);
+    els.svg.style.translate = `${offsetX}px ${offsetY}px`;
+  }
+
+  function settleEdge() {
+    const svg = els.svg;
+    const reducedMotion = matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    svg.style.transition = reducedMotion ? "" : "translate 180ms ease-out";
+    svg.style.translate = "";
+    clearTimeout(edgeTimer);
+    edgeTimer = setTimeout(
+      () => {
+        svg.style.transition = "";
+      },
+      reducedMotion ? 0 : 180,
+    );
+  }
 
   onMount(() => {
     const svg = stage.querySelector("svg");
@@ -102,6 +149,26 @@
     stage.addEventListener("wheel", wheel, { passive: false });
     stage.addEventListener("gesturestart", gesturestart);
     stage.addEventListener("gesturechange", gesturechange);
+    const touchstart = (event) => {
+      touchDrag =
+        event.touches.length === 1
+          ? startDrag(event.touches[0].clientX, event.touches[0].clientY)
+          : null;
+      if (!touchDrag) settleEdge();
+    };
+    const touchmove = (event) => {
+      if (!touchDrag || event.touches.length !== 1) return;
+      event.preventDefault();
+      pan(touchDrag, event.touches[0].clientX, event.touches[0].clientY);
+    };
+    const touchend = () => {
+      touchDrag = null;
+      settleEdge();
+    };
+    stage.addEventListener("touchstart", touchstart, { passive: true });
+    stage.addEventListener("touchmove", touchmove, { passive: false });
+    stage.addEventListener("touchend", touchend);
+    stage.addEventListener("touchcancel", touchend);
     document.addEventListener("gesturestart", noPageZoom, { passive: false });
     document.addEventListener("gesturechange", noPageZoom, { passive: false });
     // a filled or fitted map stays so when the window or the layer panel changes the stage size
@@ -112,11 +179,16 @@
     });
     resize.observe(stage);
     return () => {
+      clearTimeout(edgeTimer);
       resize.disconnect();
       removeEventListener("hashchange", onHash);
       stage.removeEventListener("wheel", wheel);
       stage.removeEventListener("gesturestart", gesturestart);
       stage.removeEventListener("gesturechange", gesturechange);
+      stage.removeEventListener("touchstart", touchstart);
+      stage.removeEventListener("touchmove", touchmove);
+      stage.removeEventListener("touchend", touchend);
+      stage.removeEventListener("touchcancel", touchend);
       document.removeEventListener("gesturestart", noPageZoom);
       document.removeEventListener("gesturechange", noPageZoom);
     };
@@ -124,21 +196,19 @@
 
   // drag to pan
   function pointerdown(e) {
-    if (e.pointerType === "touch") return;
-    drag = {
-      x: e.clientX,
-      y: e.clientY,
-      l: stage.scrollLeft,
-      t: stage.scrollTop,
-    };
+    if (e.pointerType === "touch" || e.button !== 0) return;
+    drag = startDrag(e.clientX, e.clientY);
     stage.setPointerCapture(e.pointerId);
   }
   function pointermove(e) {
     if (!drag) return;
-    stage.scrollLeft = drag.l - (e.clientX - drag.x);
-    stage.scrollTop = drag.t - (e.clientY - drag.y);
+    pan(drag, e.clientX, e.clientY);
   }
-  const end = () => (drag = null);
+  const end = (event) => {
+    if (event.pointerType === "touch" || !drag) return;
+    drag = null;
+    settleEdge();
+  };
   // Safari (iPhone, iPad, Mac) sends pinches as gesture events, which the map zooms with itself
   const safariPinch = "GestureEvent" in window;
 </script>
@@ -149,9 +219,10 @@
   <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
   <main
     class={[
-      "relative h-full min-w-0 touch-pan-x touch-pan-y overflow-auto select-none [-webkit-tap-highlight-color:transparent]",
+      "relative h-full min-w-0 touch-pan-x touch-pan-y overflow-auto overscroll-none bg-black select-none [-webkit-tap-highlight-color:transparent]",
       "[&_*]:[-webkit-tap-highlight-color:transparent] [&_*]:select-none",
       "[&_svg]:mx-auto [&_svg]:block [&_svg]:h-auto [&_svg]:w-full [&_svg]:max-w-none",
+      "[&_#canvas-backing]:fill-black",
       drag ? "cursor-grabbing" : "cursor-grab",
       !safariPinch && "touch-pinch-zoom",
       layers.horizontal && "[&_#canvas-backing]:hidden",
@@ -161,6 +232,7 @@
     onpointermove={pointermove}
     onpointerup={end}
     onpointercancel={end}
+    onlostpointercapture={end}
   >
     {@html mapSvg}
   </main>
