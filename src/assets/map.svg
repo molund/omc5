@@ -2152,11 +2152,11 @@
       <!-- Span 32 direction arrow (eastbound precast) -->
       <text
         class="n guideway"
-        x="-631.63"
-        y="-63.33"
+        x="-624.33"
+        y="-59.42"
         text-anchor="middle"
         style="font-size: 17.6px; fill: #eeeeee"
-        transform="rotate(28.8 -631.63 -70.33)"
+        transform="rotate(28.8 -624.33 -66.42)"
       >
         &#x2192;
       </text>
@@ -2164,11 +2164,23 @@
       <!-- Span 33 direction arrow (eastbound precast) -->
       <text
         class="n guideway"
-        x="-736.51"
-        y="-123.53"
+        x="-730.66"
+        y="-119.85"
         text-anchor="middle"
         style="font-size: 17.6px; fill: #eeeeee"
-        transform="rotate(32.2 -736.51 -130.53)"
+        transform="rotate(32.2 -730.66 -126.85)"
+      >
+        &#x2192;
+      </text>
+      <!-- eastbound -->
+      <!-- Span 34 direction arrow (eastbound precast) -->
+      <text
+        class="n guideway"
+        x="-833.20"
+        y="-184.91"
+        text-anchor="middle"
+        style="font-size: 17.6px; fill: #eeeeee"
+        transform="rotate(33.4 -833.20 -191.91)"
       >
         &#x2192;
       </text>
