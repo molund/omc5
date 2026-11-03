@@ -1,0 +1,28 @@
+name: Sync the comment threads
+
+# Run by hand (Actions > Sync the comment threads > Run workflow): creates missing threads and updates changed bodies.
+# It does not delete discussions; the normal sync may close and lock threads older than the newest 30 updates.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      discussions: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Create or update the comment threads
+        env:
+          GITHUB_TOKEN: ${{ secrets.DISCUSSION_TOKEN || secrets.GITHUB_TOKEN }}
+        run: python3 .github/scripts/sync_discussions.py
