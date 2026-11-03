@@ -24,9 +24,16 @@ complete: true
 #       - photo:
 #           file: span-36-close-up.jpg
 #           caption: "What the photo shows"
-# and follow-ups, indented under it (no photo, no comments thread or entry of their own; set `updated` to the newest):
+# and follow-ups, indented under it, each with its own summary, photo and block like a note (no comments thread or entry of
+# their own; set `updated` to the newest). The card shows only the newest follow-up's summary:
 #     follow-up:
-#       - 2026-10-31T11:45-07:00: "What changed"
+#       - 2026-10-31T11:45-07:00:
+#           summary: "What changed"
+#           photo:
+#             file: span-36-later.jpg
+#             caption: "What the photo shows"
+#           block:
+#             - "Another paragraph"
 notes:
   - 2026-11-02T09:15-07:00: "Clayton Clipper construction update for Monday, Nov. 2, 2026"
     summary: "The Night Shift must’ve worked Sunday night. Span 36 is fully glued. Crews have begun post-tensioning."
@@ -48,8 +55,10 @@ notes:
     block:
       - "From here to the end of the Expo Line is only 12 more spans. The Sprinter is responsible for seven of them. The rest will be built by cranes."
     follow-up:
-      - 2026-10-31T16:15-07:00: "Rode past the Clayton Clipper on the way home: the crews have packed up for the Sunday shutdown, and the gantry is sitting quietly over span 36 until Monday. Nothing moving out there but the ghosts. Happy Halloween!"
-      - 2026-10-31T15:45-07:00: "The Fleetwood Flyer has been parked at 152 St since finishing its run a few weeks ago. The walkways are off its trusses, but with no big cranes on site, nobody seems in a hurry to take it apart."
+      - 2026-10-31T16:15-07:00:
+          summary: "Rode past the Clayton Clipper on the way home: the crews have packed up for the Sunday shutdown, and the gantry is sitting quietly over span 36 until Monday. Nothing moving out there but the ghosts. Happy Halloween!"
+      - 2026-10-31T15:45-07:00:
+          summary: "The Fleetwood Flyer has been parked at 152 St since finishing its run a few weeks ago. The walkways are off its trusses, but with no big cranes on site, nobody seems in a hurry to take it apart."
   - 2026-10-31T14:00-07:00: "Clayton Clipper completes span 36; tulip at 70/71 built"
     summary: "Check-in from the bike: all the segments are hung and span 36 is marked as complete. Now pedalling west of 176 St to see what the rest of the line is up to."
     block:
@@ -64,15 +73,18 @@ notes:
       file: 2026-10-31-piper-and-toby.jpg
       caption: "My two trusty assistants on our way to look at cranes. Piper on the left is a four-year-old Bernedoodle. Toby on the right is an 11-year-old mini Australian Shepherd."
     follow-up:
-      - 2026-10-31T11:45-07:00: "Six segments have been hung. There is a long line of semi trucks carrying the rest of the segments."
+      - 2026-10-31T11:45-07:00:
+          summary: "Six segments have been hung. There is a long line of semi trucks carrying the rest of the segments."
   - 2026-10-30T12:45-07:00: "Clayton Clipper construction update for Friday, Oct. 30, 2026"
     summary: "The Clayton Clipper has started moving its supports, getting ready to move from span 35 to span 36."
     follow-up:
-      - 2026-10-30T20:45-07:00: "The Clayton Clipper has moved to span 36."
+      - 2026-10-30T20:45-07:00:
+          summary: "The Clayton Clipper has moved to span 36."
   - 2026-10-29T06:45-07:00: "Clayton Clipper finishes hanging span 35; new beam arrives"
     summary: "All segments for span 35 are hung. A new precast beam arrived at the construction yard overnight. It will likely be installed in span 34, along with the beam that was already on site."
     follow-up:
-      - 2026-10-29T18:30-07:00: "Span 35's segments are glued, and Dywidag is post-tensioning now. The night shift should finish it. That makes the Clayton Clipper one-third done: 35 of 105 spans."
+      - 2026-10-29T18:30-07:00:
+          summary: "Span 35's segments are glued, and Dywidag is post-tensioning now. The night shift should finish it. That makes the Clayton Clipper one-third done: 35 of 105 spans."
   - 2026-10-26T20:00-07:00: "Clayton Clipper construction update for Monday, Oct. 26, 2026"
     summary: "The Clayton Clipper is about to lift the last segment for span 34."
     photo:

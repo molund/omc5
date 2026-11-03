@@ -12,7 +12,7 @@
   const when = asOf(status.updated, true);
   // the newest update's latest word: its newest follow-up if it has any, else its note
   const newest = status.latest;
-  const note = status.followUps[0]?.text ?? status.note;
+  const note = status.followUps[0]?.summary || status.note;
   // the Comments button opens the newest update on Trackside with its comments open, and shows its comment and reaction
   // counts once GitHub has sent them
   const TRACKSIDE = `${import.meta.env.BASE_URL}trackside/`;
