@@ -147,6 +147,12 @@
       points="2345.74,1707.32 2267.94,1626.68 2251.02,1643.50 2328.63,1723.85"
     />
   </clipPath>
+  <polygon
+    id="aerial-backing"
+    points="0,0 2795,0 2795,1968 0,1968"
+    transform="matrix(4.445894 0.000119 -0.000119 4.445894 -6875.705 -5447.095)"
+    fill="#FFFFFF"
+  />
   <g id="baseoverview" class="aerial">
     <!-- the wide overview aerial: the lowest layer, registered to the low-res screenshots -->
     <image

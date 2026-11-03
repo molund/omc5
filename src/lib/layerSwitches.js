@@ -109,7 +109,7 @@ export const PROGRESS_COLOUR = "#6D28D9";
  */
 const PROGRESS_CSS =
   "#map polygon,#map path,#map line,#map polyline,#map rect,#map circle,#map ellipse,#map text{visibility:hidden !important}" +
-  "#map mask *,#map clipPath *,#map defs *{visibility:visible !important}" +
+  "#map #aerial-backing,#map mask *,#map clipPath *,#map defs *{visibility:visible !important}" +
   "#map polygon.guideway.cc.reached:not(.unfinished){fill:" +
   PROGRESS_COLOUR +
   " !important}" +
