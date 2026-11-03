@@ -139,7 +139,7 @@
     fill="#FFFFFF"
   />
   <!-- Aerial photo base layer (summer imagery, before most guideway work): unstretched, north-up, uniform scale 1.0785 units per photo pixel. The photo is the reference; the drawing is to be adjusted to it -->
-  <!-- View zoom: photo and drawing enlarged 1.11x about the left edge at y 1200, so the tulip at the east end of A falls just past the right edge -->
+  <!-- View zoom: photo and drawing enlarged 1.11x about the left edge at y 1200, so the tulip at the east end of span 28 falls just past the right edge -->
   <!-- Canvas 0 -140 2153 1839; everything is clipped to the aerial photo outline, so drawing that runs past the photo stays in the file but is never shown -->
   <clipPath id="base-photo-frame">
     <rect x="-202.41" y="-116.73" width="2848.56" height="1822.66" />
@@ -403,7 +403,7 @@
         points="-429.7,138.3 -399.9,160.2 -344.6,214.7 -310.1,167.4 -317.1,159.7 -324.1,152.1 -331.3,144.4 -338.3,136.9 -345.5,129.2 -383.7,88.0"
         fill="url(#trees)"
       />
-      <!-- Greenbelt between the yard fence and the Fraser Hwy south curb, B/C area -->
+      <!-- Greenbelt between the yard fence and the Fraser Hwy south curb, 29/30 area -->
       <!-- Fence ends one dash past the 72 Ave north edge -->
       <polyline
         class="greenbelt"
@@ -488,7 +488,7 @@
           d="M-4000 -4000 L4000 -4000 L4000 4000 L-4000 4000 Z M-2300 444.7 L-1600 444.7 L-1600 513.3 L-2300 513.3 Z"
         />
       </clipPath>
-      <!-- North Creek hidden where it passes under 72 Ave; south part ends at the south edge of span Q -->
+      <!-- North Creek hidden where it passes under 72 Ave; south part ends at the south edge of span 44 -->
       <path
         clip-path="url(#creek-under-72)"
         class="creeks"
@@ -508,7 +508,7 @@
         stroke-linecap="round"
         stroke-linejoin="round"
       />
-      <!-- Ditch/creek along the south side of the Fraser Hwy walking path from the fence corner east (COSMOS drainage layer), ending south-west of the second tulip east of A -->
+      <!-- Ditch/creek along the south side of the Fraser Hwy walking path from the fence corner east (COSMOS drainage layer), ending south-west of the second tulip east of span 28 -->
       <!-- 72 Ave shoulder: white band ~9 units wider each side than the road; faint dashed outer edge where it meets textured ground north of Fraser -->
       <clipPath id="northOfFraser">
         <polygon
@@ -526,7 +526,7 @@
           transform="rotate(124)"
         />
       </clipPath>
-      <!-- 72 Ave ends at the yard fence line near B/C -->
+      <!-- 72 Ave ends at the yard fence line near 29/30 -->
       <mask
         id="ave72-outline-mask"
         maskUnits="userSpaceOnUse"
@@ -605,7 +605,7 @@
           fill-opacity="0.3"
         />
       </g>
-      <!-- 72 Ave bend north-east of the yard (by the A spans): radius 80, turning onto the existing paved road heading east, as in the West Clayton NCP --><!-- 72 Ave dotted shoulder lines: two plain offset lines (28.12 each side of the centre line), so every viewer shows both -->
+      <!-- 72 Ave bend north-east of the yard (by span 28): radius 80, turning onto the existing paved road heading east, as in the West Clayton NCP --><!-- 72 Ave dotted shoulder lines: two plain offset lines (28.12 each side of the centre line), so every viewer shows both -->
       <g clip-path="url(#ave72-fence-clip)">
         <path
           class="ave72"
@@ -651,7 +651,7 @@
           </textPath>
         </text>
       </g>
-      <!-- Road-side greenbelt between Fraser Hwy and the SFMSF fence (fence just south of the walking path at C; east of the B/C jog it runs straight, parallel to the Fraser Hwy south shoulder; yard ends at the fence); drawn over Future 72 Ave so the road ends at the fence -->
+      <!-- Road-side greenbelt between Fraser Hwy and the SFMSF fence (fence just south of the walking path at span 30; east of the 29/30 jog it runs straight, parallel to the Fraser Hwy south shoulder; yard ends at the fence); drawn over Future 72 Ave so the road ends at the fence -->
       <mask
         id="hwy15-bg-no-fraser"
         maskUnits="userSpaceOnUse"
@@ -816,7 +816,7 @@
           fill="#C0C0C0"
           fill-opacity="0.75"
         />
-        <!-- Fraser Hwy centre line passes the A east and A/B tulips and the north pillars at B/C, C/D and D/E (on the median), curving smoothly between the straight line east of A and the straight line west from D/E --><!-- Fraser Hwy curbs are equidistant from the centre line (width 53.3, wider at the A/B bend), blending into the traced curbs between 1900 and 2060 on the approach to Hwy 15 -->
+        <!-- Fraser Hwy centre line passes span 28's east tulip and the 28/29 tulip and the north pillars at 29/30, 30/31 and 31/32 (on the median), curving smoothly between the straight line east of span 28 and the straight line west from 31/32 --><!-- Fraser Hwy curbs are equidistant from the centre line (width 53.3, wider at the 28/29 bend), blending into the traced curbs between 1900 and 2060 on the approach to Hwy 15 -->
         <polyline
           class="roads"
           points="459.8,-775.5 457.8,-765.5 455.7,-755.5 453.6,-745.5 451.6,-735.5 449.5,-725.5 447.4,-715.5 445.4,-705.5 443.3,-695.5 441.3,-685.5 439.2,-675.5 437.1,-665.5 435.1,-655.5 433.0,-645.5 431.0,-635.5 428.9,-625.5 426.8,-615.5 424.8,-605.5 422.7,-595.5 420.7,-585.5 418.6,-575.5 416.5,-565.5 414.5,-555.5 412.4,-545.5 410.4,-535.5 408.3,-525.5 406.2,-515.5 404.2,-505.5 402.1,-495.5 400.1,-485.5 398.0,-475.5 395.9,-465.5 393.9,-455.5 391.8,-445.5 389.7,-435.5 387.7,-425.5 385.6,-415.5 383.6,-405.5 381.5,-395.5 379.4,-385.5 377.4,-375.5 375.3,-365.5 373.3,-355.5 371.2,-345.5 369.1,-335.5 367.1,-325.5 365.0,-315.5 362.9,-305.5 360.9,-295.5 358.8,-285.5 356.7,-275.5 354.6,-265.5 352.6,-255.5 350.5,-245.5 348.4,-235.5 346.3,-225.5 344.2,-215.5 342.1,-205.5 340.0,-195.5 337.9,-185.5 335.8,-175.5 333.7,-165.5 331.6,-155.5 329.6,-145.5 327.5,-135.5 325.4,-125.5 323.3,-115.6 321.3,-105.6 319.2,-95.6 317.2,-85.5 315.1,-75.5 313.1,-65.5 311.1,-55.5 309.0,-45.5 307.0,-35.5 305.0,-25.5 303.0,-15.5 300.9,-5.5 298.9,4.5 296.8,14.5 294.7,24.5 292.7,34.5 290.6,44.5 288.5,54.5 286.4,64.6 284.4,74.6 282.3,84.6 280.2,94.6 278.0,104.6 275.9,114.6 273.9,124.6 271.8,134.7 269.7,144.7 267.7,154.7 265.7,164.8 263.6,174.8 261.6,184.9 259.7,194.9 257.7,205.0 255.9,215.0 254.0,225.1 252.2,235.2 250.5,245.3 248.8,255.4 247.2,265.5 245.7,275.7 244.2,285.8 242.8,295.9 241.5,306.1 240.2,316.2 239.1,326.4 238.0,336.6 237.0,346.7 236.1,356.9 235.3,367.1 234.5,377.2 233.7,387.4 233.0,397.6 232.3,407.8 231.7,417.9 231.1,428.1 230.5,438.3 230.0,448.5 229.5,458.7 229.1,468.8 228.7,479.0 228.4,489.2 228.1,499.4 227.9,509.7 227.8,519.9 227.8,530.1 227.9,540.1 227.9,550.1 227.9,560.1 228.0,570.1 228.0,580.1 228.1,590.1 228.1,600.1 228.1,610.1 228.2,620.1 228.2,630.1 228.2,640.1 228.3,650.1 228.3,660.1 228.3,670.1 228.4,680.1 228.4,690.1 228.5,700.1 228.5,710.1 228.5,720.1 228.6,730.1 228.6,740.1 228.7,750.1 228.7,760.1 228.7,770.1 228.8,780.1 228.8,790.1 228.8,800.1 228.9,810.1 228.9,820.1 228.9,830.1 229.0,840.1 229.0,850.1 229.1,860.1 229.1,870.1 229.1,880.1 229.2,890.1 229.2,900.1 229.2,910.1 229.3,920.1 229.3,930.1 229.4,940.1 229.4,950.1 229.4,960.1 229.5,970.1 229.5,980.1 229.5,990.1 229.6,1000.1 229.6,1010.1 229.7,1020.1 229.7,1030.1 229.7,1040.1 229.8,1050.1 229.8,1060.1 229.9,1070.1 229.9,1080.1 229.9,1090.1 230.0,1100.1 230.0,1110.1 230.1,1120.1 230.1,1130.1 230.1,1140.1 230.2,1150.1 230.2,1160.1 230.2,1170.1 230.3,1180.1 230.3,1190.1 230.3,1200.1 230.4,1210.1 230.4,1220.1 230.5,1230.1 230.5,1240.1 230.5,1250.1 230.6,1260.1 230.6,1270.1 230.6,1280.1 230.7,1290.1 230.7,1300.1 230.7,1310.1 230.8,1320.1 230.8,1330.1 230.9,1340.1 230.9,1350.1 230.9,1360.1 231.0,1370.1 231.0,1380.1 231.0,1390.1 231.1,1400.1 231.1,1410.1 231.2,1420.1 231.2,1430.1 231.2,1440.1 231.3,1450.1 231.3,1460.1 231.3,1470.1 231.4,1480.1 231.4,1490.1 231.5,1500.1 231.5,1510.1 231.5,1520.1 231.6,1530.1 231.6,1540.1 231.6,1550.1 231.7,1560.1 231.7,1570.1 231.8,1580.1 231.8,1590.1 231.8,1600.1 231.9,1610.1 231.9,1620.1 231.9,1630.1 232.0,1640.1 232.0,1650.1 232.1,1660.1 232.1,1670.1 232.1,1680.1 232.2,1690.1 232.2,1700.1 232.2,1710.1 232.3,1720.1 232.3,1730.1 232.4,1740.1 232.4,1750.1 232.4,1760.1 232.5,1770.1 232.5,1780.1 232.5,1790.1 232.6,1800.1 232.6,1810.1 232.7,1820.1 232.7,1830.1 232.7,1840.1 232.8,1850.1 232.8,1860.1 232.8,1870.1 232.9,1880.1 232.9,1890.1 233.0,1900.1 233.0,1910.0 233.1,1920.0 233.2,1930.0 233.3,1940.0 233.4,1950.0 233.5,1960.0 233.7,1970.0 233.8,1980.0 233.9,1990.0 234.0,2000.0 234.2,2010.0 234.2,2020.0 234.3,2030.0 234.4,2040.0 234.4,2050.0 234.5,2060.0 233.9,2069.9 233.8,2070.5"
@@ -857,7 +857,7 @@
           data-note="centre line: through the A east tulip, A/B tulip and the north pillars of the B/C, C/D and D/E bents (on the median); straight from the D/E pillar west"
           stroke-dasharray="14 10"
         />
-        <!-- Mike's daily walking route (out and back from the east end). Inner frame. Starts on the south shoulder just west of the second tulip east of A; beside B; outside the B/C pillar; along the yard fence to span E (D end); across under E to the road; along the open eastbound lanes just south of the centre line to the crosswalk at span G; north side of Fraser Hwy, straight across the mouth of Harvie Rd, then along the path in front of the Honeybee Centre, ending near the 176 St corner -->
+        <!-- Mike's daily walking route (out and back from the east end). Inner frame. Starts on the south shoulder just west of the second tulip east of span 28; beside span 29; outside the 29/30 pillar; along the yard fence to span 32 (the 31 end); across under 32 to the road; along the open eastbound lanes just south of the centre line to the crosswalk at span 34; north side of Fraser Hwy, straight across the mouth of Harvie Rd, then along the path in front of the Honeybee Centre, ending near the 176 St corner -->
         <path
           id="walking-route"
           class="walk-paths"
@@ -868,7 +868,7 @@
           stroke-linecap="round"
           stroke-linejoin="round"
         />
-        <!-- MUP along the east side of 176 Street (from Apple Maps imagery): same treatment as walking-route; outer-frame coordinates (rotate(-124) cancels the inner frame). Runs south past 72 Ave off the bottom edge; at the north end it crosses the slip lane on the marked crosswalk, then goes straight to the centre of the R/S pillar (the cross frame under the steel spans) -->
+        <!-- MUP along the east side of 176 Street (from Apple Maps imagery): same treatment as walking-route; outer-frame coordinates (rotate(-124) cancels the inner frame). Runs south past 72 Ave off the bottom edge; at the north end it crosses the slip lane on the marked crosswalk, then goes straight to the centre of the 45/46 pillar (the cross frame under the steel spans) -->
         <path
           id="mup-176-st"
           class="walk-paths"
@@ -935,7 +935,7 @@
           stroke-width="1.5"
           points="312.28,650.70 321.92,650.70 324.96,771.45 315.32,771.45"
         />
-        <!-- Span H off-ramp, first span (the ramp's centre line was 320.14,771.45 to 323.21,893.45; 9.64 wide) -->
+        <!-- Span 35 off-ramp, first span (the ramp's centre line was 320.14,771.45 to 323.21,893.45; 9.64 wide) -->
         <polygon
           class="guideway unfinished"
           fill="#FFFFFF"
@@ -943,7 +943,7 @@
           stroke-width="0.825"
           points="328.03,893.53 324.96,771.45 315.32,771.45 318.39,893.37"
         />
-        <!-- Span H off-ramp, second span, including the part that merges into the I eastbound track (a guess until it is built) -->
+        <!-- Span 35 off-ramp, second span, including the part that merges into the 36 eastbound track (a guess until it is built) -->
         <polygon
           class="guideway unfinished"
           fill="#FFFFFF"
@@ -951,8 +951,8 @@
           stroke-width="0.825"
           points="315.23,1014.30 314.82,1014.30 315.53,1075.43 317.28,1075.53 328.03,893.53 318.39,893.37 314.74,955.09"
         />
-        <!-- H off-ramp ends on the centre of the I eastbound track at mid-span I, like the L on-ramp in K --><!-- Span L: yard on-ramp joining eastbound (mirror of the Span H off-ramp) -->
-        <!-- Span L on-ramp, including the part that merges into the K eastbound track (centre line was 308.92,1297.50 to 326.73,1480.20; 9.64 wide) -->
+        <!-- The span 35 off-ramp ends on the centre of the 36 eastbound track at mid-span 36, like the span 39 on-ramp in span 38 --><!-- Span 39: yard on-ramp joining eastbound (mirror of the span 35 off-ramp) -->
+        <!-- Span 39 on-ramp, including the part that merges into the 38 eastbound track (centre line was 308.92,1297.50 to 326.73,1480.20; 9.64 wide) -->
         <polygon
           class="guideway unfinished"
           fill="#FFFFFF"
@@ -960,7 +960,7 @@
           stroke-width="0.825"
           points="316.50,1424.98 321.93,1480.67 331.53,1479.73 316.44,1324.93 316.17,1358.80 316.21,1358.80"
         />
-        <!-- Precast spans and steel girders: 10.40 wide (borders 12.05, ramp white cores 8.20) --><!-- Border for spans P and Q (darker stroke under the fill, as on D) -->
+        <!-- Precast spans and steel girders: 10.40 wide (borders 12.05, ramp white cores 8.20) --><!-- Border for spans 43 and 44 (darker stroke under the fill, as on 31) -->
         <polygon
           class="guideway"
           fill="#888780"
@@ -990,7 +990,7 @@
           points="319.28,1937.00 328.92,1937.00 329.14,2057.97 319.50,2057.97"
         />
         <!-- Steel spans traced from a high-resolution aerial of the Hwy 15 crossing: two trusses that spread apart going east, three spans between the end frames and the two cross frames -->
-        <!-- Steel girders over Hwy 15 drawn as full-width top caps on the traced girder centre lines; span R outer edges meet the Q outer edges at Q/R -->
+        <!-- Steel girders over Hwy 15 drawn as full-width top caps on the traced girder centre lines; span 45 outer edges meet the 44 outer edges at 44/45 -->
         <polygon
           class="guideway steel-hwy15"
           fill="#E3D3B2"
@@ -1033,7 +1033,7 @@
           stroke-width="1.5"
           points="318.46,2361.36 318.38,2381.34 318.31,2401.40 318.26,2421.45 318.22,2441.51 318.19,2461.57 318.18,2481.62 318.18,2501.75 327.82,2501.75 327.82,2481.30 327.83,2461.25 327.85,2441.19 327.89,2421.13 327.95,2401.08 328.02,2381.02 328.10,2361.36"
         />
-        <!-- Span ends follow the bents (any four-sided shape with parallel sides); B: east end unchanged, west end cut to the B/C bent edge -->
+        <!-- Span ends follow the bents (any four-sided shape with parallel sides); Span 29: east end unchanged, west end cut to the 29/30 bent edge -->
         <polygon
           class="gi guideway"
           points="288.49,138.11 309.65,146.29 290.95,285.41 270.46,283.97"
@@ -1042,7 +1042,7 @@
           class="gi guideway"
           points="270.46,283.97 290.95,285.41 285.35,406.00 263.35,406.00"
         />
-        <!-- Walking route where it crosses under span E: drawn under span 1 (gantry box) and the eastbound precast -->
+        <!-- Walking route where it crosses under span 32: drawn under its gantry box and the eastbound precast -->
         <path
           id="walking-route-old-yale-road"
           class="walk-paths"
@@ -1067,7 +1067,7 @@
           class="gi guideway"
           points="264.07,530.00 286.25,530.00 296.11,650.70 273.82,650.70"
         />
-        <!-- Span 1 (gantry, span E): all segments hung, not yet glued or post-tensioned -->
+        <!-- Span 32 (gantry): all segments hung, not yet glued or post-tensioned -->
         <polygon
           class="guideway"
           points="287.13,530.00 296.76,530.00 309.11,650.70 299.47,650.70"
@@ -1075,7 +1075,7 @@
           stroke="#5F5E5A"
           stroke-width="1.5"
         />
-        <!-- E eastbound precast: east end slid 4.4 north along the D/E bent (~14 in gap to gantry span 1 there, ~5 ft at the E/F end) -->
+        <!-- Span 32 eastbound precast: east end slid 4.4 north along the 31/32 bent (~14 in gap to gantry span 32 there, ~5 ft at the 32/33 end) -->
         <polygon
           class="gi guideway"
           points="273.30,650.70 295.52,650.70 299.42,771.45 277.20,771.45"
@@ -1087,7 +1087,7 @@
           stroke-width="1.5"
           points="298.81,650.70 308.45,650.70 312.35,771.45 302.71,771.45"
         />
-        <!-- Span F eastbound precast -->
+        <!-- Span 33 eastbound precast -->
         <polygon
           class="gi guideway"
           points="277.23,771.45 299.43,771.45 300.89,893.45 278.69,893.45"
@@ -1187,12 +1187,12 @@
           stroke-width="1.5"
           points="317.33,1724.40 326.98,1724.40 329.41,1845.00 319.77,1845.00"
         />
-        <!-- Span A: parallel sides, centreline from the A/B tulip to the A east tulip centre (321.11, 31.48) -->
+        <!-- Span 28: parallel sides, centreline from the 28/29 tulip to span 28's east tulip centre (321.11, 31.48) -->
         <polygon
           class="gi guideway"
           points="310.41,28.43 331.81,34.53 309.65,146.29 288.49,138.11"
         />
-        <!-- The five spans east of A (tulip to tulip, same style as A: parallel sides 24.54 wide, centred on the tulips, ends meeting on a shared line at each tulip), then the start of the next span, cut at the edge of the aerial photo -->
+        <!-- The five spans east of span 28 (tulip to tulip, same style as span 28: parallel sides 24.54 wide, centred on the tulips, ends meeting on a shared line at each tulip), then the start of the next span, cut at the edge of the aerial photo -->
         <polygon
           class="gi guideway"
           points="336.40,-90.66 358.14,-86.12 331.81,34.53 310.41,28.43"
@@ -1226,7 +1226,7 @@
           rx="2"
           transform="rotate(11.63 321.11 31.48)"
         />
-        <!-- Tulips east of the A east tulip sit on the white tulip heads at the base of their pillar shadows in the aerial (spacing about 123, 111, 102, 102, 110) -->
+        <!-- Tulips east of span 28's east tulip sit on the white tulip heads at the base of their pillar shadows in the aerial (spacing about 123, 111, 102, 102, 110) -->
         <rect
           class="g"
           x="341.88"
@@ -1281,7 +1281,7 @@
           rx="2"
           transform="rotate(11.63 298.84 142.20)"
         />
-        <!-- B/C, C/D and D/E bent caps follow the cap shapes traced on the aerial; south column dots 9.10 from the south end -->
+        <!-- 29/30, 30/31 and 31/32 bent caps follow the cap shapes traced on the aerial; south column dots 9.10 from the south end -->
         <rect
           class="g"
           x="266.42"
@@ -1323,7 +1323,7 @@
           height="9.45"
           rx="2"
         />
-        <!-- F/G cap and column sized to the hammerhead shapes traced on the aerial -->
+        <!-- 33/34 cap and column sized to the hammerhead shapes traced on the aerial -->
         <rect
           class="g"
           x="279.50"
@@ -1481,7 +1481,7 @@
         <circle cx="296.55" cy="1238.00" r="2.5" fill="#D7D7D7" />
         <circle cx="304.54" cy="1601.80" r="2.5" fill="#D7D7D7" />
         <circle cx="306.56" cy="1724.40" r="2.5" fill="#D7D7D7" />
-        <!-- Hammerhead pillars from O/P west are centred on their caps (no 40/60 offset) -->
+        <!-- Hammerhead pillars from 42/43 west are centred on their caps (no 40/60 offset) -->
         <circle cx="310.57" cy="1845.00" r="2.5" fill="#D7D7D7" />
         <circle cx="310.77" cy="1937.00" r="2.5" fill="#D7D7D7" />
         <circle cx="314.46" cy="2057.97" r="2.5" fill="#D7D7D7" />
@@ -1519,7 +1519,7 @@
         <circle cx="409.68" cy="-397.05" r="2.5" fill="#D7D7D7" />
         <circle cx="432.63" cy="-504.87" r="2.5" fill="#D7D7D7" />
         <!-- Clipper: no group opacity; every piece is 65% on its own, so each layer blends with everything beneath it down to the solid track -->
-        <!-- Gantry pivoted where it crosses the D/E support; centreline x = 307.1; shortened 3.5% about its centre y=550 (scale(1 0.965)) -->
+        <!-- Gantry pivoted where it crosses the 31/32 support; centreline x = 307.1; shortened 3.5% about its centre y=550 (scale(1 0.965)) -->
         <g
           transform="translate(278.16 0) scale(0.55 1) translate(-278.16 0)"
         >
@@ -1531,7 +1531,7 @@
           >
             <!-- Layers (bottom to top): supports + their walkways; trusses, cross beams and side walkways; blue tips; trolley. Labels are drawn later, above everything. -->
             <!-- Anchoring: the gantry works on the span set in status.yaml (the Clayton Clipper span numbers, 1-105), which the page puts in data-span here; to move it, change status.yaml. Everything below is drawn for span data-drawn-at, and src/lib/placeGantry.js moves each data-anchor group from there to data-span when the page loads. front: the short support, just ahead of the span, its rear edge flush with the span's front end; second: just behind the span, its front edge flush with the span's back end; rear: fully on the span behind, its rear edge (beam and walkway) a third of its width in from that span's back end; fourth: the lengthwise support on the span behind, at the same fraction of the way along it; body: the trusses, walkways and trolley, centred on the span midpoint between its outer edges and parallel to them. The supports keep the along and across offsets they are drawn with. -->
-            <!-- Clipper centreline over span 1: x = 300.5 + 0.0732*(y - 400) -->
+            <!-- Clipper centreline over span 32: x = 300.5 + 0.0732*(y - 400) -->
             <g data-anchor="fourth" transform="translate(-0.24 -4.16)">
               <rect
                 opacity="1"
@@ -1633,7 +1633,7 @@
                 fill="#174B83"
               />
             </g>
-            <!-- Gantry (walkways, trusses, cross beams, tips, trolley) rotated 1.74 deg in the guideway frame about the D/E support centre (271.92, 524.00) so its centreline runs through supports 2 and 4; the matrix() groups are that rotation expressed inside the narrowed frame -->
+            <!-- Gantry (walkways, trusses, cross beams, tips, trolley) rotated 1.74 deg in the guideway frame about the 31/32 support centre (271.92, 524.00) so its centreline runs through supports 2 and 4; the matrix() groups are that rotation expressed inside the narrowed frame -->
             <g
               class="gantry-body"
               data-anchor="body"
@@ -1955,8 +1955,8 @@
       >
         Fraser Hwy (1A)
       </text>
-      <!-- Span A direction arrows, same across-span placement as C (13 in from the north edge westbound, 11 in from the south edge eastbound); the canvas edge crops them where they run off -->
-      <!-- Span A arrows parallel to span A and 5.54 in from their edges; rotated about their own centres (y - 6.25) -->
+      <!-- Span 28 direction arrows, same across-span placement as span 30 (13 in from the north edge westbound, 11 in from the south edge eastbound); the canvas edge crops them where they run off -->
+      <!-- Span 28 arrows parallel to span 28 and 5.54 in from their edges; rotated about their own centres (y - 6.25) -->
       <text
         class="n guideway"
         x="-219.11"
@@ -1978,7 +1978,7 @@
       >
         &#x2192;
       </text>
-      <!-- Arrows for the five spans east of A, placed as on A -->
+      <!-- Arrows for the five spans east of span 28, placed as on span 28 -->
       <text
         class="n guideway"
         x="-135.64"
@@ -2080,7 +2080,7 @@
         &#x2192;
       </text>
       <!-- centre track, eastbound -->
-      <!-- Span B direction arrows (gantry span: westbound + centre track) -->
+      <!-- Span 29 direction arrows (gantry span: westbound + centre track) -->
       <text
         class="n guideway"
         x="-305.12"
@@ -2103,7 +2103,7 @@
         &#x2192;
       </text>
       <!-- centre track, eastbound -->
-      <!-- Span 1 (gantry, span E) westbound arrow, same placement as B and C -->
+      <!-- Span 32 (gantry) westbound arrow, same placement as spans 29 and 30 -->
       <text
         class="n guideway"
         x="-614.18"
@@ -2125,7 +2125,7 @@
       >
         &#x2192;
       </text>
-      <!-- span 3 westbound arrow (the south-west half of the one-way wide spans 1-3 is a storage track): same left-pointing placement as the two-way wide spans -->
+      <!-- span 34 westbound arrow (the south-west half of the one-way wide spans 32-34 is a storage track): same left-pointing placement as the two-way wide spans -->
       <text
         class="n guideway"
         x="-820.65"
@@ -2137,7 +2137,7 @@
         &#x2192;
       </text>
       <!-- westbound -->
-      <!-- Span D eastbound arrow (eastbound precast), same spacing from the east end as E -->
+      <!-- Span 31 eastbound arrow (eastbound precast), same spacing from the east end as 32 -->
       <text
         class="n guideway"
         x="-518.54"
@@ -2149,7 +2149,7 @@
         &#x2192;
       </text>
       <!-- eastbound -->
-      <!-- Span E direction arrow (eastbound precast) -->
+      <!-- Span 32 direction arrow (eastbound precast) -->
       <text
         class="n guideway"
         x="-631.63"
@@ -2161,7 +2161,7 @@
         &#x2192;
       </text>
       <!-- eastbound -->
-      <!-- Span F direction arrow (eastbound precast) -->
+      <!-- Span 33 direction arrow (eastbound precast) -->
       <text
         class="n guideway"
         x="-736.51"
@@ -2173,8 +2173,8 @@
         &#x2192;
       </text>
       <!-- eastbound -->
-      <!-- Arrow placement rule for completed spans: eastbound precast arrow centred between the long edges of its span, 27.4 units from the east end of the span (same spacing as E, M, N, O), rotated to the span direction (about 34 deg; angle adjusted for slanted spans); westbound gantry arrows on the north side, same distance from the east end -->
-      <!-- Span M direction arrow (eastbound precast) -->
+      <!-- Arrow placement rule for completed spans: eastbound precast arrow centred between the long edges of its span, 27.4 units from the east end of the span (same spacing as 32, 40, 41, 42), rotated to the span direction (about 34 deg; angle adjusted for slanted spans); westbound gantry arrows on the north side, same distance from the east end -->
+      <!-- Span 40 direction arrow (eastbound precast) -->
       <text
         class="n guideway"
         x="-1429.36"
@@ -2186,7 +2186,7 @@
         &#x2192;
       </text>
       <!-- eastbound -->
-      <!-- Span N direction arrow (eastbound precast) -->
+      <!-- Span 41 direction arrow (eastbound precast) -->
       <text
         class="n guideway"
         x="-1533.57"
@@ -2198,7 +2198,7 @@
         &#x2192;
       </text>
       <!-- eastbound -->
-      <!-- Span O direction arrow (eastbound precast) -->
+      <!-- Span 42 direction arrow (eastbound precast) -->
       <text
         class="n guideway"
         x="-1637.22"
@@ -2210,7 +2210,7 @@
         &#x2192;
       </text>
       <!-- eastbound -->
-      <!-- Span C direction arrows (gantry span: westbound + centre track) -->
+      <!-- Span 30 direction arrows (gantry span: westbound + centre track) -->
       <text
         class="n guideway"
         x="-413.76"
@@ -2233,7 +2233,7 @@
         &#x2192;
       </text>
       <!-- centre track, eastbound -->
-      <!-- Span D westbound arrow -->
+      <!-- Span 31 westbound arrow -->
       <text
         class="n guideway"
         x="-512.37"
@@ -2245,7 +2245,7 @@
         &#x2192;
       </text>
       <!-- westbound -->
-      <!-- Span P direction arrows -->
+      <!-- Span 43 direction arrows -->
       <text
         class="n guideway"
         x="-1714.20"
@@ -2268,7 +2268,7 @@
         &#x2192;
       </text>
       <!-- eastbound -->
-      <!-- Span R direction arrows -->
+      <!-- Span 45 direction arrows -->
       <text
         style="font-size: 17.6px"
         class="n guideway steel-hwy15"
@@ -2291,7 +2291,7 @@
         &#x2192;
       </text>
       <!-- eastbound -->
-      <!-- Span S direction arrows -->
+      <!-- Span 46 direction arrows -->
       <text
         style="font-size: 17.6px"
         class="n guideway steel-hwy15"
@@ -2395,7 +2395,7 @@
         &#x2192;
       </text>
       <!-- eastbound -->
-      <!-- Span Q direction arrows (U+2192, rotated to the track) -->
+      <!-- Span 44 direction arrows (U+2192, rotated to the track) -->
       <text
         class="n guideway"
         x="-1792.10"
