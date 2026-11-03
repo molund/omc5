@@ -12,23 +12,21 @@ the real text, and then Svelte takes over in the browser for the comments and co
 ## Pages
 
 - `/trackside/` — the newest 10 updates, then `/trackside/page/2/`, `/trackside/page/3/` and so on.
-- `/trackside/clipper-completes-span-36/` — each update on its own page. The name is the
-  update's `slug:` or, without one, its title in lowercase words (see below). This is the page to
-  share: it has the update's own title, description and photo for search results and link previews.
-  On the list pages, the date heading links to it, and each update's slug is its `#` anchor there.
+  Every update is on one of these pages; there are no pages of their own for single updates.
+- An update's `#` anchor is its slug (`/trackside/#clipper-completes-span-36`), and its date heading links
+  to it. Add `?comments` to open its comments too.
 
-The progress card's Comments button goes to `/trackside/clipper-completes-span-36/?comments`,
-which opens that update's comments. `?comments` works on the list pages too, with the slug
-(`/trackside/?comments#clipper-completes-span-36`).
+The progress card's Comments button goes to `/trackside/?comments#clipper-completes-span-36`: the first
+page, scrolled to the newest update, with its comments open.
 
 ## Files
 
-| File                   | What it does                                                                                                                    |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| `index.html`           | The HTML shell. Vite builds `/trackside/` from it, so where it sits sets the address.                                           |
-| `main.js`              | The browser entry. Takes over the built page, or draws it from scratch in `npm run dev`.                                        |
-| `TracksidePage.svelte` | The page itself: list pages and each update's own page, the head tags, the redirects for old links, the pager and the comments. |
-| `prerender.js`         | The build step: writes every page, the sitemap and the comment-thread text.                                                     |
+| File                   | What it does                                                                             |
+| ---------------------- | ---------------------------------------------------------------------------------------- |
+| `index.html`           | The HTML shell. Vite builds `/trackside/` from it, so where it sits sets the address.    |
+| `main.js`              | The browser entry. Takes over the built page, or draws it from scratch in `npm run dev`. |
+| `TracksidePage.svelte` | The page itself: the list pages, the head tags, the pager and the comments.              |
+| `prerender.js`         | The build step: writes every page, the sitemap and the comment-thread text.              |
 
 Shared with the map, in `src/`:
 
@@ -47,8 +45,8 @@ Shared with the map, in `src/`:
 1. `vite build` — the normal build of the map and of `index.html` here.
 2. `vite build --ssr trackside/prerender.js` — builds the prerender step itself, so it can import
    the Svelte page and `status.yaml` the way the site does.
-3. `node dist-ssr/prerender.js` — renders `TracksidePage.svelte` for every list page and every
-   update, using the built `dist/trackside/index.html` as the template. It writes:
+3. `node dist-ssr/prerender.js` — renders `TracksidePage.svelte` for every list page, using the built
+   `dist/trackside/index.html` as the template. It writes:
    - `dist/trackside/…/index.html` — the pages
    - `dist/sitemap.xml` — every page on the site, with when it last changed
    - `dist-ssr/threads.json` — each update's thread title and text, for the comment threads
@@ -64,37 +62,34 @@ or the head tags, run `npm run build` and then `npm run preview` (http://localho
 
 Each update is a note: its time stamp and its title on one line, then indented under it:
 
-- The title (the value after the time stamp) — a short headline for the update's own page: its
-  `<title>` and its link-preview title. It isn't shown on a page, except on a post. `""` for none:
-  the page uses the date.
-- `slug:` — the last part of the update's address. Optional: without it the address is the title in
-  lowercase words, cut at a word to 80 characters (a title that is only a date gives a long address,
-  so a short `slug:` can help). The oldest update with a given title keeps the plain words and a later
-  one gets `-2`, so adding an update never changes an old address. **Editing a title changes its
-  address**, so once an update has been shared, add its current address as `slug:` before changing
-  the title.
-- `summary:` — the update's main text, in a sentence or two. The progress card shows it on its own, link previews and
-  search results use it, and Trackside leads with it.
+- The title (the value after the time stamp) — a short headline. It leads a post, and it is where the
+  update's slug comes from (below). It isn't shown on a status update. `""` for none: the slug comes
+  from the time stamp.
+- `slug:` — the update's `#` anchor on its page. Optional: without it the slug is the title in
+  lowercase words ("Clayton Clipper" becomes "Clipper", and is dropped from the date titles), cut at a
+  word to 80 characters. The oldest update with a given title keeps the plain words and a later one
+  gets `-2`, so adding an update never changes an old slug. **Editing a title changes its slug**, so
+  once an update has been linked to, add its current slug as `slug:` before changing the title.
+- `summary:` — the update's main text, in a sentence or two. The progress card shows it on its own, and Trackside
+  leads with it.
 - `photo:` — a photo and its caption, shown under the summary.
 - `block:` — more paragraphs and photos, after the summary.
 - `follow-up:` — later, time-stamped additions, shown as a list under the update. Each has its own
   `summary:`, `photo:` and `block:`, like the update. The card shows only the newest follow-up's
   summary. They get no
-  page, title or thread of their own.
+  anchor, title or thread of their own.
 
 The comment at the top of `status.yaml` shows the exact format. Photos go in
 `public/images/sorry-im-a-shitty-photographer/`.
 
 ## Search and link previews
 
-Each page gets its own `<title>`, description, canonical link, and Open Graph and Twitter tags.
+Each page of updates gets its own `<title>`, description, canonical link, and Open Graph and Twitter tags.
 
-- An update's own page uses its title (or its date), its note cut to about 155 characters, and its
-  photo, or the first photo under `more:`. An update with no photo gets a text-only preview.
-- The list pages use a fixed description and the newest photo.
+- The pages use a fixed description and the newest photo; an update gets no preview of its own.
 - `sitemap.xml` is for search engines: submit https://clayton-clipper.olund.ca/sitemap.xml once
   in Google Search Console, and Google rereads it from then on.
-- On the list pages, the date links carry an `aria-label` with the date and the title, for screen
+- On the pages, the date links carry an `aria-label` with the date and the title, for screen
   readers.
 
 ## Comments
@@ -106,7 +101,8 @@ Comments use [giscus](https://giscus.app): each update has its own GitHub Discus
   `src/lib/comments.js`.
 - The deploy workflow creates and updates the threads with
   `.github/scripts/sync_discussions.py`, from `dist-ssr/threads.json`. A thread's text shows the
-  update itself, and links back to its page. A thread that giscus started itself, before the
+  update itself, and links to it on its page of updates (made again at every deploy, since updates move down the
+  pages). A thread that giscus started itself, before the
   workflow made one, is left alone.
 - Threads older than the newest 30 are closed and locked, to keep spam out of old threads.
 - The comment and reaction counts come from one GitHub API call, which returns at most 100

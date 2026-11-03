@@ -2,7 +2,6 @@
 // Open Graph tags in the HTML, for search engines and link previews:
 //   dist/trackside/index.html            the newest 10 updates
 //   dist/trackside/page/2/index.html …   the older ones, 10 a page
-//   dist/trackside/<slug>/index.html    each update on its own, e.g. /trackside/clipper-completes-span-36/
 // dist/sitemap.xml, every page for search engines, and dist-ssr/threads.json, each update's comment thread title and
 // body, for .github/scripts/sync_discussions.py, so status.yaml is read in one place (lib/status.js).
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
@@ -40,11 +39,10 @@ for (let p = 1; p <= pages; p++)
   await write(p === 1 ? "dist/trackside" : `dist/trackside/page/${p}`, {
     page: p,
   });
-for (const n of status.history) await write(`dist/trackside/${n.slug}`, { post: n.slug });
 
 // dist/sitemap.xml, for search engines (submitted in Google Search Console, since a project site can't have a robots.txt):
-// the map, the pages of updates, each update's own page and the About page, each with when it last changed (an update, at its newest
-// follow-up; a page of updates, at its newest update; the map, at status.yaml's `updated`)
+// the map, the pages of updates and the About page, each with when it last changed (a page of updates, at its newest update
+// or follow-up; the map, at status.yaml's `updated`)
 const changed = (n) => n.followUps[0]?.time ?? n.time;
 const newest = (list) => new Date(Math.max(...list.map(changed)));
 const urls = [
@@ -53,7 +51,6 @@ const urls = [
     i === 0 ? `${SITE}trackside/` : `${SITE}trackside/page/${i + 1}/`,
     newest(status.history.slice(i * PAGE_SIZE, (i + 1) * PAGE_SIZE)),
   ]),
-  ...status.history.map((n) => [`${SITE}trackside/${n.slug}/`, changed(n)]),
   // the About page, which has no date of its own
   [`${SITE}about/`, null],
 ];
@@ -69,7 +66,8 @@ ${urls
 );
 
 // A thread's body shows the update itself, as on the Trackside page: the summary, its photo and caption, its further
-// paragraphs and photos, its follow-ups (oldest first), a link to the update's own page, and giscus's strict-mode marker,
+// paragraphs and photos, its follow-ups (oldest first), a link to the update on its page of updates, and giscus's
+// strict-mode marker,
 // the sha1 of the title it asks for. No date line: the thread's title already has it.
 function threadBody(n) {
   const parts = [n.summary];
@@ -95,7 +93,9 @@ function threadBody(n) {
         .join("\n"),
     );
   }
-  parts.push(`[See it on the Clayton Clipper Tracker](${SITE}trackside/${n.slug}/)`);
+  // the update on the page of updates it is listed on (made again at every deploy, as updates move down the pages)
+  const at = Math.floor(status.history.indexOf(n) / PAGE_SIZE) + 1;
+  parts.push(`[See it on the Clayton Clipper Tracker](${SITE}trackside/${at === 1 ? "" : `page/${at}/`}#${n.slug})`);
   parts.push(`<!-- sha1: ${createHash("sha1").update(term(n.time)).digest("hex")} -->`);
   return parts.join("\n\n");
 }

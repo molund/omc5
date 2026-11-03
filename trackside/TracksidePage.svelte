@@ -1,8 +1,8 @@
 <script>
   // The Trackside page: every status note, newest first, each with its slug as its id (e.g.
   // #clipper-completes-span-36). It is prerendered at build time (trackside/prerender.js) as pages of 10
-  // (/trackside/, /trackside/page/2/, …) and a page per update (/trackside/clipper-completes-span-36/), each with
-  // its own title, description and Open Graph photo; view says which one this is
+  // (/trackside/, /trackside/page/2/, …), each with its own title, description and Open Graph photo; view says which one
+  // this is
   import { onMount } from "svelte";
   import { status, asOf, followUpTime } from "../src/lib/status.js";
   import { term, fetchCounts, SITE } from "../src/lib/comments.js";
@@ -37,57 +37,34 @@
   const dateOnly = (t) => asOf(t).split(" on ")[1];
   // what an update's heading says: a post's title, or a status update's date and time
   const label = (n) => (n.post && n.title ? n.title : heading(n.time));
-  // the addresses of an update's own page and of a page of updates, and either in full, for the Open Graph tags
-  const postUrl = (n) => `${TRACKSIDE}${n.slug}/`;
+  // the addresses of a page of updates, and in full, for the Open Graph tags
   const pageUrl = (p) => (p === 1 ? TRACKSIDE : `${TRACKSIDE}page/${p}/`);
   const full = (path) => new URL(path, SITE).href;
   let counts = $state({});
 
-  // Pages of 10 updates, newest first, or the one update this page is for
+  // Pages of 10 updates, newest first
   const PAGE_SIZE = 10;
   const pages = Math.max(1, Math.ceil(status.history.length / PAGE_SIZE));
-  const post = $derived(view.post ? status.history.find((n) => n.slug === view.post) : null);
-  const page = $derived(post ? null : Math.min(Math.max(1, view.page || 1), pages));
-  const shown = $derived(post ? [post] : status.history.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE));
-  // the page of updates an update's own page goes back to: the one it is listed on
-  const listPage = $derived(post ? Math.floor(status.history.indexOf(post) / PAGE_SIZE) + 1 : 1);
+  const page = $derived(Math.min(Math.max(1, view.page || 1), pages));
+  const shown = $derived(status.history.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE));
 
-  // what search engines and link previews show: a post's title (else its date) and note, and its photo (or the first among
-  // its further photos); a page of updates, the newest photo
+  // what search engines and link previews show: the page's title, a fixed description, and the newest photo
   const title = $derived(
-    post
-      ? post.title
-        ? `${post.title} · Clayton Clipper Tracker`
-        : `${heading(post.time)} · Trackside · Clayton Clipper Tracker`
-      : page > 1
-        ? `Trackside, page ${page} · Clayton Clipper Tracker`
-        : "Trackside · Clayton Clipper Tracker",
+    page > 1 ? `Trackside, page ${page} · Clayton Clipper Tracker` : "Trackside · Clayton Clipper Tracker",
   );
-  // a note cut at a word to about 155 characters, the length search results show
-  const clip = (s, n = 155) =>
-    s.length <= n ? s : s.slice(0, s.lastIndexOf(" ", n - 1)).replace(/[\s,.;:]+$/, "") + "…";
-  const description = $derived(
-    post
-      ? clip(post.summary)
-      : "Updates and photos from along the Surrey Langley SkyTrain guideway, following the Clayton Clipper gantry span by span.",
-  );
-  const image = $derived(
-    post ? post.photo || post.block.find((m) => m.photo)?.photo : status.history.find((n) => n.photo)?.photo,
-  );
-  const url = $derived(full(post ? postUrl(post) : pageUrl(page)));
+  const description =
+    "Updates and photos from along the Surrey Langley SkyTrain guideway, following the Clayton Clipper gantry span by span.";
+  const image = status.history.find((n) => n.photo)?.photo;
+  const url = $derived(full(pageUrl(page)));
 
   // the slug of the update whose comments are open (one at a time, so the page stays light); a string, since $state would
-  // wrap an update object in a proxy that never equals the original. ?comments opens an update's comments: on its own page,
-  // or with its slug (?comments#clipper-completes-span-36) on a page of updates.
+  // wrap an update object in a proxy that never equals the original. ?comments with an update's slug
+  // (?comments#clipper-completes-span-36, the progress card's Comments button) opens its comments.
   let open = $state(null);
   onMount(() => {
     const params = new URLSearchParams(location.search),
       id = location.hash.slice(1);
     fetchCounts().then((c) => (counts = c));
-    if (post) {
-      if (params.has("comments")) open = post.slug;
-      return;
-    }
     if (id) {
       if (params.has("comments")) open = id;
       document.getElementById(id)?.scrollIntoView();
@@ -110,8 +87,8 @@
   <meta name="description" content={description} />
   <link rel="canonical" href={url} />
   <meta property="og:site_name" content="Clayton Clipper Tracker" />
-  <meta property="og:type" content={post ? "article" : "website"} />
-  <meta property="og:title" content={post ? post.title || `${heading(post.time)} · Trackside` : "Trackside"} />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Trackside" />
   <meta property="og:description" content={description} />
   <meta property="og:url" content={url} />
   {#if image}
@@ -121,7 +98,6 @@
   {:else}
     <meta name="twitter:card" content="summary" />
   {/if}
-  {#if post}<meta property="article:published_time" content={post.time.toISOString()} />{/if}
 </svelte:head>
 
 <!-- a photo and its caption, under a note or among its further paragraphs -->
@@ -144,17 +120,15 @@
 <!-- laid out like a README on GitHub: a heading per update, the note, its photo, its follow-ups as a list with code-style
      times, then its comments -->
 <main class="page-column">
-  <!-- a slim bar: the Clayton Clipper logo (back to the top of Trackside) and the page's name on the left, buttons back to
-       the map (and, on an update's own page, to all updates) on the right. It stays at the top of the screen while the
-       updates scroll under it, clear of the iPhone's notch; its own top padding takes the place of the page's space above
-       it, so it sits where it did before scrolling -->
+  <!-- a slim bar: the Clayton Clipper logo (back to the top of Trackside) and the page's name on the left, a button back to
+       the map on the right. It stays at the top of the screen while the updates scroll under it, clear of the iPhone's
+       notch; its own top padding takes the place of the page's space above it, so it sits where it did before scrolling -->
   <header class="page-header">
     <a class="block leading-[0]" href={TRACKSIDE}
       ><img class="h-10 w-auto" src="{MAP}images/logo.png" alt="Clayton Clipper" width="625" height="351" /></a
     >
     <h1 class="page-header-title">Trackside</h1>
     <nav class="page-header-nav">
-      {#if post}<a class="btn btn-grey" href={pageUrl(listPage)}>← All updates</a>{/if}
       <a class="btn btn-grey" href={MAP}>← Map</a>
     </nav>
   </header>
@@ -162,15 +136,14 @@
     <!-- an update a link jumps to lands below the bar, not under it; a wide gap separates one update from the next, so
          the comments link reads as the end of its own update rather than the start of the next -->
     <article id={n.slug} class="scroll-mt-[calc(var(--spacing)*19_+_env(safe-area-inset-top,0px))] [article+&]:mt-9">
-      <!-- on a page of updates, the date links to the update's own page, drawn as plain heading text; with a title,
-           screen readers hear the date and the title (the date first, so the visible text is in the name, for voice
-           control) -->
+      <!-- the date links to the update's own anchor on the page, drawn as plain heading text; with a title, screen readers
+           hear the date and the title (the date first, so the visible text is in the name, for voice control) -->
       <h2 class="mt-7 mb-2 border-b border-(--line) pb-1.25 text-xl leading-tight font-bold">
-        {#if post}{label(n)}{:else}<a
-            class="text-inherit no-underline"
-            href={postUrl(n)}
-            aria-label={n.title && !n.post ? `${heading(n.time)}: ${n.title}` : undefined}>{label(n)}</a
-          >{/if}
+        <a
+          class="text-inherit no-underline"
+          href="#{n.slug}"
+          aria-label={n.title && !n.post ? `${heading(n.time)}: ${n.title}` : undefined}>{label(n)}</a
+        >
       </h2>
       <!-- a post leads with its title, with just its date under it -->
       {#if n.post && n.title}<p class="mx-0 -mt-1 mb-2 text-sm text-(--mute)">
@@ -240,7 +213,7 @@
        bold text, a button you can't press flat and faded, in GitHub's own colours, light and dark. On a phone: the
        buttons share the full width with a gap and are tall enough to tap, with no track behind them (a button you can't
        press keeps the track colour). -->
-  {#if !post && pages > 1}
+  {#if pages > 1}
     <nav
       class="mx-auto mt-6 flex w-fit rounded-md bg-(--button-bg) phone:w-auto phone:gap-2 phone:bg-transparent"
       aria-label="Pages of updates"

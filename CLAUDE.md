@@ -39,15 +39,16 @@ Svelte 5 + Vite site, deployed to GitHub Pages (https://clayton-clipper.olund.ca
 - `trackside/` — Trackside (`/trackside/`), the updates page; read `trackside/README.md` before changing it.
 - `status.yaml` — gantry span / complete / time-stamped notes (all on Trackside; the progress card shows the newest update's latest text). Site news
   only: update this file, don't change the drawing unless asked. Follow-ups get no title.
-  Titles (the value after a note's time stamp, for its page's `<title>` and link preview; see the format in `status.yaml`):
+  Titles (the value after a note's time stamp; it leads a post and is the source of the update's `#` anchor on Trackside; see the format in `status.yaml`):
   - A day with one note, and a note whose title would be completely boring as written (a routine step: hung, glued, moved,
     about to lift), gets the date title, "Clayton Clipper construction update for Monday, Nov. 2, 2026" (weekday, month
     abbreviated with a period, day, year; BC time).
-  - Otherwise write a short headline of what the note says, under 60 characters, in plain words people would search for
-    (span numbers, places, gantry names), nothing the note doesn't say. Never a bare span number: name the gantry the span
-    belongs to (e.g. "Clayton Clipper completes span 36"), even when the note doesn't, so the title makes sense on its own in
-    a search result.
-  - A day with more than one note never gets a date title, since the titles would be identical: each gets a headline.
+  - Otherwise write a short headline of what the note says, under 60 characters, in plain words (span numbers, places,
+    gantry names), nothing the note doesn't say. Never a bare span number: name the gantry the span belongs to (e.g.
+    "Clayton Clipper completes span 36"), even when the note doesn't, so the title, and the anchor made from it, make
+    sense on their own.
+  - A day with more than one note never gets a date title, since the titles (and anchors) would be identical: each gets a
+    headline.
   - When a second note lands on a day whose first note has a date title, give that first note a headline too.
 - `public/images/` — aerial photos.
 - `public/images/sorry-im-a-shitty-photographer/` — update photos (see the `photo:` format in `status.yaml`). Resize every
