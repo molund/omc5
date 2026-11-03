@@ -2,7 +2,7 @@
 
 A hand-drawn (later corrected against aerial photos) map tracking construction of the Surrey Langley SkyTrain guideway
 along the Clayton Clipper's route in Surrey, BC. It shows progress as the Clipper gantry
-and mobile-crane-lifted precast spans build the guideway, updated from regular walks along the
+and mobile cranes build the guideway, updated from regular walks along the
 line.
 
 The project started as a drawing of the stretch past the South Fraser Maintenance

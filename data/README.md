@@ -1,8 +1,8 @@
 # Fraser Highway SkyTrain guideway: supports and spans
 
 Positions of the elevated guideway supports (pillars and bents) and spans of the Surrey Langley SkyTrain extension along
-Fraser Highway in Surrey, BC, from 166 Street to 184 Street (about 4 km). This is an independent, unofficial dataset
-compiled by Mike Olund. It is not from TransLink or the Province of BC.
+Fraser Highway in Surrey, BC, from 166 St to 184 St (about 4 km). This is an independent, unofficial dataset compiled by
+Mike Olund. It is not from TransLink or the Province of BC.
 
 | File                                          | Contents                                                                                                             |
 | --------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
@@ -23,8 +23,8 @@ repository's site shows (`src/assets/map.svg`). `data/generate-data.js` converts
 
 Scale, rotation and position come from two control points, one at each end of the line, placed by Mike Olund on very
 high-resolution Apple Maps aerial imagery in the Maps app for macOS: where Clayton Clipper spans 13 and 14 meet (near 182
-Street), matched to the finished tulip before the gantry reached it, and where spans 92 and 93 meet (near 168 Street),
-matched to its foundation hole.
+St), matched to the finished tulip before the gantry reached it, and where spans 92 and 93 meet (near 168 St), matched to
+its foundation hole.
 
 ## Other sources
 
@@ -35,7 +35,7 @@ historic railway line, which came from these sources:
   desktop screenshot, also used for detailed pillar placement. Apple Maps was used instead of Google Maps because its
   imagery was more up to date at the time. Roads, paths and other background features were traced on it unless listed
   below.
-- **Future 72 Avenue:** north of Fraser Highway, the City of Surrey's
+- **Future 72 Ave:** north of Fraser Highway, the City of Surrey's
   [West Clayton NCP](https://www.surrey.ca/renovating-building-development/land-planning-development/land-use-planning/cloverdale-land-use-plans/west-clayton-ncp)
   Stage 2 Land Use Concept; south of it, the City of Surrey's
   [72 Avenue Improvements & Extensions](https://www.surrey.ca/about-surrey/capital-projects/72-avenue-improvements-extensions)
