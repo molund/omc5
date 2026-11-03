@@ -229,7 +229,15 @@
                 class="rounded-md bg-[rgba(129,139,152,0.18)] px-[0.4em] py-[0.15em] font-[family-name:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace] text-[85%]"
                 >{followUpTime(m.time, n.time)}</code
               >
-              {m.text}
+              {m.summary}
+              {#if m.photo}{@render photo(m.photo)}{/if}
+              {#each m.block as b}
+                {#if b.photo}{@render photo(b.photo)}{:else}<p
+                    class="m-0 mt-2.5"
+                  >
+                    {b.text}
+                  </p>{/if}
+              {/each}
             </li>{/each}
         </ul>
       {/if}

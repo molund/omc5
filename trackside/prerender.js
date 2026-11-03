@@ -83,20 +83,30 @@ ${urls
 // the sha1 of the title it asks for. No date line: the thread's title already has it.
 function threadBody(n) {
   const parts = [n.summary];
-  const photo = (p) => {
+  const photo = (p, parts) => {
     parts.push(
       `![${p.caption || "Photo for this update"}](${new URL(p.src, SITE).href})`,
     );
     if (p.caption) parts.push(`_${p.caption}_`);
   };
-  if (n.photo) photo(n.photo);
-  n.block.forEach((m) => (m.photo ? photo(m.photo) : parts.push(m.text)));
+  const blocks = (list, parts) =>
+    list.forEach((m) => (m.photo ? photo(m.photo, parts) : parts.push(m.text)));
+  if (n.photo) photo(n.photo, parts);
+  blocks(n.block, parts);
   if (n.followUps.length) {
     parts.push("### Follow-ups");
     parts.push(
       [...n.followUps]
         .reverse()
-        .map((m) => `- \`${followUpTime(m.time, n.time)}\` ${m.text}`)
+        .map((m) => {
+          const item = [
+            `\`${followUpTime(m.time, n.time)}\` ${m.summary}`.trim(),
+          ];
+          if (m.photo) photo(m.photo, item);
+          blocks(m.block, item);
+          // later paragraphs are indented to stay inside the list item
+          return "- " + item.join("\n\n  ");
+        })
         .join("\n"),
     );
   }
