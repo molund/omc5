@@ -2,7 +2,8 @@
 // complete, and the newest of its time-stamped notes. The file is flat `key: value` lines plus the `notes:` list of
 // `  - time: "title"` lines (the title is for the note's page's <title> and Open Graph title on Trackside, and is shown only
 // on a post), each followed by its summary, the note's main text, indented under it. Its page's address comes from the title
-// ("Clayton Clipper completes span 36" is /trackside/clayton-clipper-completes-span-36/), or from `slug:` if given, which
+// ("Clayton Clipper completes span 36" is /trackside/clipper-completes-span-36/; "Clayton" is always left out), or from
+// `slug:` if given, which
 // keeps the address when the title is edited:
 //     slug: clipper-completes-span-36
 //     summary: "Span 36 is complete."
@@ -89,8 +90,10 @@ function unquote(v) {
 }
 
 /**
- * A title as a piece of web address: lowercase words joined by hyphens, cut at a word to 80 characters at most, e.g.
- * "Clayton Clipper completes span 36; tulip at 70/71 built" becomes "clayton-clipper-completes-span-36-tulip-at-70-71-built".
+ * A title as a piece of web address: lowercase words joined by hyphens, cut at a word to 80 characters at most, with
+ * "Clayton Clipper" shortened to "Clipper" (the site's address already says Clayton), e.g. "Clayton Clipper completes span 36;
+ * tulip at 70/71 built" becomes "clipper-completes-span-36-tulip-at-70-71-built". The date titles ("Clayton Clipper
+ * construction update for Monday, Nov. 2, 2026") lose it altogether: "construction-update-for-monday-nov-2-2026".
  * @param {string} s
  * @returns {string} "" if nothing is left.
  */
@@ -100,6 +103,8 @@ function slugify(s) {
     .replace(/[\u0300-\u036f'\u2019]/g, "")
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^clayton-clipper-(?=construction-update-for-)/, "")
+    .replace(/(^|-)clayton-(clippers?)(?=-|$)/g, "$1$2")
     .replace(/^-+|-+$/g, "");
   const cut = slug.slice(0, 81),
     i = cut.lastIndexOf("-");

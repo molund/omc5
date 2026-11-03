@@ -12,14 +12,14 @@ the real text, and then Svelte takes over in the browser for the comments and co
 ## Pages
 
 - `/trackside/` — the newest 10 updates, then `/trackside/page/2/`, `/trackside/page/3/` and so on.
-- `/trackside/clayton-clipper-completes-span-36/` — each update on its own page. The name is the
+- `/trackside/clipper-completes-span-36/` — each update on its own page. The name is the
   update's `slug:` or, without one, its title in lowercase words (see below). This is the page to
   share: it has the update's own title, description and photo for search results and link previews.
   On the list pages, the date heading links to it, and each update's slug is its `#` anchor there.
 
-The progress card's Comments button goes to `/trackside/clayton-clipper-completes-span-36/?comments`,
+The progress card's Comments button goes to `/trackside/clipper-completes-span-36/?comments`,
 which opens that update's comments. `?comments` works on the list pages too, with the slug
-(`/trackside/?comments#clayton-clipper-completes-span-36`).
+(`/trackside/?comments#clipper-completes-span-36`).
 
 ## Files
 

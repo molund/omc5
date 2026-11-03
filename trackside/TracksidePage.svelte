@@ -1,7 +1,7 @@
 <script>
   // The Trackside page: every status note, newest first, each with its slug as its id (e.g.
-  // #clayton-clipper-completes-span-36). It is prerendered at build time (trackside/prerender.js) as pages of 10
-  // (/trackside/, /trackside/page/2/, …) and a page per update (/trackside/clayton-clipper-completes-span-36/), each with
+  // #clipper-completes-span-36). It is prerendered at build time (trackside/prerender.js) as pages of 10
+  // (/trackside/, /trackside/page/2/, …) and a page per update (/trackside/clipper-completes-span-36/), each with
   // its own title, description and Open Graph photo; view says which one this is
   import { onMount } from "svelte";
   import { status, asOf, followUpTime } from "../src/lib/status.js";
@@ -92,7 +92,7 @@
 
   // the slug of the update whose comments are open (one at a time, so the page stays light); a string, since $state would
   // wrap an update object in a proxy that never equals the original. ?comments opens an update's comments: on its own page,
-  // or with its slug (?comments#clayton-clipper-completes-span-36) on a page of updates.
+  // or with its slug (?comments#clipper-completes-span-36) on a page of updates.
   let open = $state(null);
   onMount(() => {
     const params = new URLSearchParams(location.search),
