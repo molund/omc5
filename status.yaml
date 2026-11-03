@@ -1,6 +1,6 @@
 # Clayton Clipper status. The site reads it (src/lib/status.js); running the deploy workflow by hand or through the API updates
 # it (see .github/workflows/deploy.yml). Times are BC time (UTC−7), rounded to the nearest quarter hour.
-updated: 2026-10-31T16:15-07:00
+updated: 2026-11-02T09:15-07:00
 # the span the gantry is working on (Clayton Clipper span numbers, 3-104)
 span: 36
 # whether that span is complete (or at least hung)
@@ -28,6 +28,8 @@ complete: true
 #     follow-up:
 #       - 2026-10-31T11:45-07:00: "What changed"
 notes:
+  - 2026-11-02T09:15-07:00: "Clayton Clipper construction update for Monday, Nov. 2, 2026"
+    summary: "The Night Shift must’ve worked Sunday night. Span 36 is fully glued. Crews have begun post-tensioning."
   - 2026-11-01: "The curious case of Clayton Clipper span 50"
     summary: "While tracing the guideway near Highway 15, I noticed one pillar appears to have been shifted west, making span 50 noticeably longer than the surrounding spans. There's also a concrete pad almost exactly where the pillar seems like it would have gone."
     post: true
