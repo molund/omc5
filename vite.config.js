@@ -9,10 +9,7 @@ const googleTag = {
   name: "google-tag",
   apply: "build",
   transformIndexHtml: (html) =>
-    html.replace(
-      "<head>",
-      `<head>\n${readFileSync(new URL(".google/gtag.html", import.meta.url), "utf8")}`,
-    ),
+    html.replace("<head>", `<head>\n${readFileSync(new URL(".google/gtag.html", import.meta.url), "utf8")}`),
 };
 
 export default defineConfig(({ isSsrBuild }) => ({

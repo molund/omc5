@@ -57,9 +57,7 @@
 
   function settleEdge() {
     const svg = els.svg;
-    const reducedMotion = matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
+    const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
     svg.style.transition = reducedMotion ? "" : "translate 180ms ease-out";
     svg.style.translate = "";
     clearTimeout(edgeTimer);
@@ -84,9 +82,7 @@
     // the turn that levels the Clayton Clipper route: the line from span 105's label to span 1's, turned flat
     const toRoot = DOMMatrix.fromMatrix(svg.getScreenCTM()).inverse(),
       label = (n) => {
-        const t = [...svg.querySelectorAll("text.cclabel")].find(
-          (t) => t.textContent.trim() === String(n),
-        );
+        const t = [...svg.querySelectorAll("text.cclabel")].find((t) => t.textContent.trim() === String(n));
         return (
           t &&
           new DOMPoint(+t.getAttribute("x"), +t.getAttribute("y"))
@@ -96,9 +92,7 @@
       },
       first = label(1),
       last = label(ui.gantry ? ui.gantry.total : 105);
-    if (first && last)
-      els.routeAngle =
-        (-Math.atan2(first.y - last.y, first.x - last.x) * 180) / Math.PI;
+    if (first && last) els.routeAngle = (-Math.atan2(first.y - last.y, first.x - last.x) * 180) / Math.PI;
     // everything in the drawing goes in one group, so Horizontal can turn it all
     const turn = document.createElementNS("http://www.w3.org/2000/svg", "g");
     turn.id = "map-turn";
@@ -150,10 +144,7 @@
     stage.addEventListener("gesturestart", gesturestart);
     stage.addEventListener("gesturechange", gesturechange);
     const touchstart = (event) => {
-      touchDrag =
-        event.touches.length === 1
-          ? startDrag(event.touches[0].clientX, event.touches[0].clientY)
-          : null;
+      touchDrag = event.touches.length === 1 ? startDrag(event.touches[0].clientX, event.touches[0].clientY) : null;
       if (!touchDrag) settleEdge();
     };
     const touchmove = (event) => {

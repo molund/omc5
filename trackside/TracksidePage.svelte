@@ -46,21 +46,11 @@
   // Pages of 10 updates, newest first, or the one update this page is for
   const PAGE_SIZE = 10;
   const pages = Math.max(1, Math.ceil(status.history.length / PAGE_SIZE));
-  const post = $derived(
-    view.post ? status.history.find((n) => n.slug === view.post) : null,
-  );
-  const page = $derived(
-    post ? null : Math.min(Math.max(1, view.page || 1), pages),
-  );
-  const shown = $derived(
-    post
-      ? [post]
-      : status.history.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE),
-  );
+  const post = $derived(view.post ? status.history.find((n) => n.slug === view.post) : null);
+  const page = $derived(post ? null : Math.min(Math.max(1, view.page || 1), pages));
+  const shown = $derived(post ? [post] : status.history.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE));
   // the page of updates an update's own page goes back to: the one it is listed on
-  const listPage = $derived(
-    post ? Math.floor(status.history.indexOf(post) / PAGE_SIZE) + 1 : 1,
-  );
+  const listPage = $derived(post ? Math.floor(status.history.indexOf(post) / PAGE_SIZE) + 1 : 1);
 
   // what search engines and link previews show: a post's title (else its date) and note, and its photo (or the first among
   // its further photos); a page of updates, the newest photo
@@ -75,18 +65,14 @@
   );
   // a note cut at a word to about 155 characters, the length search results show
   const clip = (s, n = 155) =>
-    s.length <= n
-      ? s
-      : s.slice(0, s.lastIndexOf(" ", n - 1)).replace(/[\s,.;:]+$/, "") + "…";
+    s.length <= n ? s : s.slice(0, s.lastIndexOf(" ", n - 1)).replace(/[\s,.;:]+$/, "") + "…";
   const description = $derived(
     post
       ? clip(post.summary)
       : "Updates and photos from along the Surrey Langley SkyTrain guideway, following the Clayton Clipper gantry span by span.",
   );
   const image = $derived(
-    post
-      ? post.photo || post.block.find((m) => m.photo)?.photo
-      : status.history.find((n) => n.photo)?.photo,
+    post ? post.photo || post.block.find((m) => m.photo)?.photo : status.history.find((n) => n.photo)?.photo,
   );
   const url = $derived(full(post ? postUrl(post) : pageUrl(page)));
 
@@ -113,10 +99,7 @@
     s.src = "https://giscus.app/client.js";
     Object.entries(GISCUS).forEach(([k, v]) => s.setAttribute(k, v));
     // GitHub light / dark as before, minus the upvote arrows (public/giscus.css)
-    s.setAttribute(
-      "data-theme",
-      new URL(`${import.meta.env.BASE_URL}giscus.css`, location.origin).href,
-    );
+    s.setAttribute("data-theme", new URL(`${import.meta.env.BASE_URL}giscus.css`, location.origin).href);
     s.setAttribute("data-term", term(t));
     el.appendChild(s);
   }
@@ -128,28 +111,17 @@
   <link rel="canonical" href={url} />
   <meta property="og:site_name" content="Clayton Clipper Tracker" />
   <meta property="og:type" content={post ? "article" : "website"} />
-  <meta
-    property="og:title"
-    content={post
-      ? post.title || `${heading(post.time)} · Trackside`
-      : "Trackside"}
-  />
+  <meta property="og:title" content={post ? post.title || `${heading(post.time)} · Trackside` : "Trackside"} />
   <meta property="og:description" content={description} />
   <meta property="og:url" content={url} />
   {#if image}
     <meta property="og:image" content={full(image.src)} />
-    {#if image.caption}<meta
-        property="og:image:alt"
-        content={image.caption}
-      />{/if}
+    {#if image.caption}<meta property="og:image:alt" content={image.caption} />{/if}
     <meta name="twitter:card" content="summary_large_image" />
   {:else}
     <meta name="twitter:card" content="summary" />
   {/if}
-  {#if post}<meta
-      property="article:published_time"
-      content={post.time.toISOString()}
-    />{/if}
+  {#if post}<meta property="article:published_time" content={post.time.toISOString()} />{/if}
 </svelte:head>
 
 <!-- a photo and its caption, under a note or among its further paragraphs -->
@@ -178,41 +150,26 @@
        it, so it sits where it did before scrolling -->
   <header class="page-header">
     <a class="block leading-[0]" href={TRACKSIDE}
-      ><img
-        class="h-10 w-auto"
-        src="{MAP}images/logo.png"
-        alt="Clayton Clipper"
-        width="625"
-        height="351"
-      /></a
+      ><img class="h-10 w-auto" src="{MAP}images/logo.png" alt="Clayton Clipper" width="625" height="351" /></a
     >
     <h1 class="page-header-title">Trackside</h1>
     <nav class="page-header-nav">
-      {#if post}<a class="btn btn-grey" href={pageUrl(listPage)}
-          >← All updates</a
-        >{/if}
+      {#if post}<a class="btn btn-grey" href={pageUrl(listPage)}>← All updates</a>{/if}
       <a class="btn btn-grey" href={MAP}>← Map</a>
     </nav>
   </header>
   {#each shown as n (n.slug)}
     <!-- an update a link jumps to lands below the bar, not under it; a wide gap separates one update from the next, so
          the comments link reads as the end of its own update rather than the start of the next -->
-    <article
-      id={n.slug}
-      class="scroll-mt-[calc(var(--spacing)*19_+_env(safe-area-inset-top,0px))] [article+&]:mt-9"
-    >
+    <article id={n.slug} class="scroll-mt-[calc(var(--spacing)*19_+_env(safe-area-inset-top,0px))] [article+&]:mt-9">
       <!-- on a page of updates, the date links to the update's own page, drawn as plain heading text; with a title,
            screen readers hear the date and the title (the date first, so the visible text is in the name, for voice
            control) -->
-      <h2
-        class="mt-7 mb-2 border-b border-(--line) pb-1.25 text-xl leading-tight font-bold"
-      >
+      <h2 class="mt-7 mb-2 border-b border-(--line) pb-1.25 text-xl leading-tight font-bold">
         {#if post}{label(n)}{:else}<a
             class="text-inherit no-underline"
             href={postUrl(n)}
-            aria-label={n.title && !n.post
-              ? `${heading(n.time)}: ${n.title}`
-              : undefined}>{label(n)}</a
+            aria-label={n.title && !n.post ? `${heading(n.time)}: ${n.title}` : undefined}>{label(n)}</a
           >{/if}
       </h2>
       <!-- a post leads with its title, with just its date under it -->
@@ -238,9 +195,7 @@
               {m.summary}
               {#if m.photo}{@render photo(m.photo)}{/if}
               {#each m.block as b}
-                {#if b.photo}{@render photo(b.photo)}{:else}<p
-                    class="m-0 mt-2.5"
-                  >
+                {#if b.photo}{@render photo(b.photo)}{:else}<p class="m-0 mt-2.5">
                     {b.text}
                   </p>{/if}
               {/each}
@@ -264,13 +219,10 @@
           <!-- the reactions as GitHub's pills -->
           <span
             class="inline-flex gap-1.5"
-            aria-label="Reactions: {counts[term(n.time)].reactions
-              .map(([e, c]) => `${e} ${c}`)
-              .join(', ')}"
+            aria-label="Reactions: {counts[term(n.time)].reactions.map(([e, c]) => `${e} ${c}`).join(', ')}"
           >
             {#each counts[term(n.time)].reactions as [e, c]}<span
-                class="rounded-full border border-(--line) bg-(--bg) px-2 text-xs"
-                >{e} {c}</span
+                class="rounded-full border border-(--line) bg-(--bg) px-2 text-xs">{e} {c}</span
               >{/each}
           </span>
         {/if}
@@ -297,22 +249,16 @@
         <a class="pager-link" href={pageUrl(2)} rel="next">Show older</a>
       {:else}
         <a class="pager-link" href={pageUrl(page - 1)} rel="prev">Previous</a>
-        {#if page < pages}<a
-            class="pager-link"
-            href={pageUrl(page + 1)}
-            rel="next">Next</a
-          >{:else}<span class="pager-link pager-link-off">Next</span>{/if}
+        {#if page < pages}<a class="pager-link" href={pageUrl(page + 1)} rel="next">Next</a>{:else}<span
+            class="pager-link pager-link-off">Next</span
+          >{/if}
       {/if}
     </nav>
   {/if}
   <!-- the footer, at the very bottom of every Trackside page: who's behind this, and a link to the About page; small and
        muted, centred under a thin line, with the link on its own line -->
-  <footer
-    class="mt-10 border-t border-(--line) pt-3.5 pb-1 text-center text-xs text-(--mute)"
-  >
-    <p class="mx-0 mt-0 mb-1">
-      A hobby project by Mike, not affiliated with TransLink.
-    </p>
+  <footer class="mt-10 border-t border-(--line) pt-3.5 pb-1 text-center text-xs text-(--mute)">
+    <p class="mx-0 mt-0 mb-1">A hobby project by Mike, not affiliated with TransLink.</p>
     <a class="text-(--accent)" href="{MAP}about/">About this site</a>
   </footer>
 </main>

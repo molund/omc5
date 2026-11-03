@@ -26,10 +26,7 @@ const mul = ([a1, b1, c1, d1, e1, f1], [a2, b2, c2, d2, e2, f2]) => [
   a1 * e2 + c1 * f2 + e1,
   b1 * e2 + d1 * f2 + f1,
 ];
-const apply = ([a, b, c, d, e, f], [x, y]) => [
-  a * x + c * y + e,
-  b * x + d * y + f,
-];
+const apply = ([a, b, c, d, e, f], [x, y]) => [a * x + c * y + e, b * x + d * y + f];
 const ID = [1, 0, 0, 1, 0, 0];
 
 function parseTransform(s) {
@@ -76,10 +73,7 @@ function elements(xml) {
           .map((c) => ({
             tag: tagOf(c),
             attrs: c[":@"] || {},
-            ctm: mul(
-              parseTransform(attrs.transform),
-              parseTransform((c[":@"] || {}).transform),
-            ),
+            ctm: mul(parseTransform(attrs.transform), parseTransform((c[":@"] || {}).transform)),
           }));
       else if (!tag.startsWith("#")) find(n[tag]);
     }
@@ -88,29 +82,14 @@ function elements(xml) {
   (function walk(nodes, ctm, parents, clips) {
     for (const n of nodes) {
       const tag = tagOf(n);
-      if (
-        tag.startsWith("#") ||
-        tag === "defs" ||
-        tag === "clipPath" ||
-        tag === "mask"
-      )
-        continue;
+      if (tag.startsWith("#") || tag === "defs" || tag === "clipPath" || tag === "mask") continue;
       const attrs = n[":@"] || {},
         m = mul(ctm, parseTransform(attrs.transform)),
         classes = (attrs.class || "").split(/\s+/).filter(Boolean),
-        clip =
-          clipPaths[
-            (/url\(#([^)]+)\)/.exec(attrs["clip-path"] || "") || [])[1]
-          ],
+        clip = clipPaths[(/url\(#([^)]+)\)/.exec(attrs["clip-path"] || "") || [])[1]],
         polys = clip && clip.map((c) => outline({ ...c, ctm: mul(m, c.ctm) }));
-      const own =
-        polys && polys.every((p) => p && p.length > 2)
-          ? [...clips, polys]
-          : clips;
-      const text =
-        tag === "text"
-          ? (n[tag].find((k) => "#text" in k) || {})["#text"]
-          : undefined;
+      const own = polys && polys.every((p) => p && p.length > 2) ? [...clips, polys] : clips;
+      const text = tag === "text" ? (n[tag].find((k) => "#text" in k) || {})["#text"] : undefined;
       out.push({ tag, attrs, classes, ctm: m, parents, text, clips: own });
       walk(n[tag], m, [...parents, { id: attrs.id, classes }], own);
     }
@@ -123,15 +102,8 @@ const points = (s) =>
     .trim()
     .split(/[\s,]+/)
     .map(Number)
-    .reduce(
-      (a, v, i) => (i % 2 ? (a[a.length - 1].push(v), a) : (a.push([v]), a)),
-      [],
-    );
-const centroid = (ps) =>
-  ps.reduce(
-    ([x, y], [px, py]) => [x + px / ps.length, y + py / ps.length],
-    [0, 0],
-  );
+    .reduce((a, v, i) => (i % 2 ? (a[a.length - 1].push(v), a) : (a.push([v]), a)), []);
+const centroid = (ps) => ps.reduce(([x, y], [px, py]) => [x + px / ps.length, y + py / ps.length], [0, 0]);
 const outline = (el) => {
   const { tag, attrs: a, ctm } = el;
   if (tag === "polygon") return points(a.points).map((p) => apply(ctm, p));
@@ -165,21 +137,15 @@ const nearest = (list, q, max) => {
 const inside = (ps, [x, y]) =>
   ps.reduce((c, [x1, y1], i) => {
     const [x2, y2] = ps[(i + 1) % ps.length];
-    return y1 > y !== y2 > y && x < x1 + ((y - y1) * (x2 - x1)) / (y2 - y1)
-      ? !c
-      : c;
+    return y1 > y !== y2 > y && x < x1 + ((y - y1) * (x2 - x1)) / (y2 - y1) ? !c : c;
   }, false);
 // whether point q of element e is shown, not clipped away
-const shown = (e, q) =>
-  e.clips.every((polys) => polys.some((p) => inside(p, q)));
+const shown = (e, q) => e.clips.every((polys) => polys.some((p) => inside(p, q)));
 
 // Canvas to lon/lat. Canvas y points south, so points are taken as complex numbers x - iy.
 function georeference(control) {
   const z = ([x, y]) => [x, -y],
-    merc = ({ lon, lat }) => [
-      (R * lon * Math.PI) / 180,
-      R * Math.log(Math.tan(Math.PI / 4 + (lat * Math.PI) / 360)),
-    ];
+    merc = ({ lon, lat }) => [(R * lon * Math.PI) / 180, R * Math.log(Math.tan(Math.PI / 4 + (lat * Math.PI) / 360))];
   // least squares for w = s z + t (s, t complex) over the pins (exact for two)
   const pins = control.pins,
     m = pins.map((p) => [z(p.canvas), merc(p)]),
@@ -207,10 +173,7 @@ function georeference(control) {
       const [u, v] = toMerc(c);
       return [
         +((u / R) * (180 / Math.PI)).toFixed(7),
-        +(
-          (2 * Math.atan(Math.exp(v / R)) - Math.PI / 2) *
-          (180 / Math.PI)
-        ).toFixed(7),
+        +((2 * Math.atan(Math.exp(v / R)) - Math.PI / 2) * (180 / Math.PI)).toFixed(7),
       ];
     };
   return toLonLat;
@@ -219,12 +182,8 @@ function georeference(control) {
 function exportGeojson() {
   // everything but the gantry, and only what isn't clipped away (the drawing keeps shapes that run past the photo outline)
   const centre = (e) =>
-      e.tag === "text"
-        ? apply(e.ctm, [+e.attrs.x, +e.attrs.y])
-        : outline(e) && centroid(outline(e)),
-    els = elements(fs.readFileSync(SVG, "utf8")).filter(
-      (e) => !inGantry(e) && (!centre(e) || shown(e, centre(e))),
-    ),
+      e.tag === "text" ? apply(e.ctm, [+e.attrs.x, +e.attrs.y]) : outline(e) && centroid(outline(e)),
+    els = elements(fs.readFileSync(SVG, "utf8")).filter((e) => !inGantry(e) && (!centre(e) || shown(e, centre(e)))),
     toLonLat = georeference(JSON.parse(fs.readFileSync(CONTROL, "utf8")));
   const labels = (cls) =>
     els
@@ -236,17 +195,14 @@ function exportGeojson() {
   const cc = labels("cclabel").map((l) => ({ ...l, n: +l.t }));
 
   // supports: one per bent cap, with the pillar circles nearest it (shapes drawn twice in the same place count once)
-  const once = (list) =>
-    list.filter((a, i) => !list.slice(0, i).some((b) => dist(a.q, b.q) < 1));
+  const once = (list) => list.filter((a, i) => !list.slice(0, i).some((b) => dist(a.q, b.q) < 1));
   const caps = once(
     els
       .filter((e) => e.tag === "rect" && e.classes.includes("g"))
       .map((e) => ({ box: outline(e), q: centroid(outline(e)), pillars: [] })),
   );
   const pillars = once(
-    els
-      .filter((e) => e.tag === "circle" && e.attrs.fill === "#D7D7D7")
-      .map((e) => ({ q: outline(e)[0] })),
+    els.filter((e) => e.tag === "circle" && e.attrs.fill === "#D7D7D7").map((e) => ({ q: outline(e)[0] })),
   );
   for (const p of pillars) {
     p.cap = caps.find((c) => inside(c.box, p.q)) || nearest(caps, p.q, 60);
@@ -256,11 +212,7 @@ function exportGeojson() {
   for (const a of cc) {
     const b = cc.find((l) => l.n === a.n + 1);
     if (!b) continue;
-    const cap = nearest(
-      caps,
-      [(a.q[0] + b.q[0]) / 2, (a.q[1] + b.q[1]) / 2],
-      200,
-    );
+    const cap = nearest(caps, [(a.q[0] + b.q[0]) / 2, (a.q[1] + b.q[1]) / 2], 200);
     if (cap) cap.joint = `${a.n}/${b.n}`;
   }
   const along = (q) => toLonLat(q)[0]; // west to east
@@ -271,13 +223,7 @@ function exportGeojson() {
       [q, s] = [c.box[1], c.box[2]],
       long = dist(p, r) > dist(q, s) ? [p, r] : [q, s],
       [a, b] = long.map(toLonLat),
-      bearing =
-        (Math.atan2(
-          (b[0] - a[0]) * Math.cos((a[1] * Math.PI) / 180),
-          b[1] - a[1],
-        ) *
-          180) /
-        Math.PI;
+      bearing = (Math.atan2((b[0] - a[0]) * Math.cos((a[1] * Math.PI) / 180), b[1] - a[1]) * 180) / Math.PI;
     return feature(
       { type: "Polygon", coordinates: [[...c.box, c.box[0]].map(toLonLat)] },
       {
@@ -291,10 +237,7 @@ function exportGeojson() {
 
   pillars.sort((a, b) => along(a.q) - along(b.q));
   const pillarFeatures = pillars.map((p, i) =>
-    feature(
-      { type: "Point", coordinates: toLonLat(p.q) },
-      { id: i + 1, support: p.cap ? p.cap.id : null },
-    ),
+    feature({ type: "Point", coordinates: toLonLat(p.q) }, { id: i + 1, support: p.cap ? p.cap.id : null }),
   );
 
   // spans: guideway polygons. finished: as drawn (not class "unfinished"), except the Clayton Clipper's gantry boxes, which
@@ -332,8 +275,7 @@ function exportGeojson() {
     .map((s, i) => feature(s.geometry, { id: i + 1, ...s.properties }));
 
   const meta = {
-    source:
-      "Traced on aerial imagery and checked on site visits; see data/README.md",
+    source: "Traced on aerial imagery and checked on site visits; see data/README.md",
   };
   write(`${OUT}supports.geojson`, supports, meta);
   write(`${OUT}pillars.geojson`, pillarFeatures, meta);
@@ -341,12 +283,7 @@ function exportGeojson() {
   // the same three layers as KML, one file each, so the spans can be re-imported into My Maps on their own; the spans twice,
   // as built so far (progress) and with every span shown finished (full, without the finished field, which would be wrong)
   fs.mkdirSync("data/kml", { recursive: true });
-  writeKml(
-    "data/kml/sls-hillcrest-to-bakerview-supports.kml",
-    "SLS Hillcrest to Bakerview supports",
-    supports,
-    meta,
-  );
+  writeKml("data/kml/sls-hillcrest-to-bakerview-supports.kml", "SLS Hillcrest to Bakerview supports", supports, meta);
   writeKml(
     "data/kml/sls-hillcrest-to-bakerview-pillars.kml",
     "SLS Hillcrest to Bakerview pillars",
@@ -368,9 +305,7 @@ function exportGeojson() {
     }),
     meta,
   );
-  console.log(
-    `${supports.length} supports, ${pillarFeatures.length} pillars, ${spans.length} spans`,
-  );
+  console.log(`${supports.length} supports, ${pillarFeatures.length} pillars, ${spans.length} spans`);
 }
 
 const feature = (geometry, properties) => ({
@@ -384,10 +319,7 @@ function write(file, features, meta) {
     type: "FeatureCollection",
     metadata: meta,
   }).slice(0, -1);
-  fs.writeFileSync(
-    file,
-    `${head},"features":[\n${features.map((f) => JSON.stringify(f)).join(",\n")}\n]}\n`,
-  );
+  fs.writeFileSync(file, `${head},"features":[\n${features.map((f) => JSON.stringify(f)).join(",\n")}\n]}\n`);
 }
 
 exportGeojson();

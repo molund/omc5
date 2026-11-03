@@ -7,6 +7,4 @@ import TracksidePage from "./TracksidePage.svelte";
 const target = document.getElementById("app");
 const props = { view: JSON.parse(target.dataset.view || '{"page":1}') };
 
-export default target.firstChild
-  ? hydrate(TracksidePage, { target, props })
-  : mount(TracksidePage, { target, props });
+export default target.firstChild ? hydrate(TracksidePage, { target, props }) : mount(TracksidePage, { target, props });

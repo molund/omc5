@@ -132,9 +132,7 @@ function parse(src) {
     if (n) {
       notes.push({
         // a post can have just a date ("2026-11-01"), taken as the start of that day in BC time
-        time: new Date(
-          /^\d{4}-\d\d-\d\d$/.test(n[1]) ? `${n[1]}T00:00-07:00` : n[1],
-        ),
+        time: new Date(/^\d{4}-\d\d-\d\d$/.test(n[1]) ? `${n[1]}T00:00-07:00` : n[1]),
         title: unquote(n[2]),
         slug: "",
         summary: "",
@@ -251,9 +249,7 @@ function parse(src) {
       .filter((m) => (m.summary || m.photo || m.block.length) && !isNaN(m.time))
       .sort((a, b) => b.time - a.time);
   });
-  const sorted = notes
-    .filter((n) => !isNaN(n.time))
-    .sort((a, b) => b.time - a.time);
+  const sorted = notes.filter((n) => !isNaN(n.time)).sort((a, b) => b.time - a.time);
   // each note's address: its `slug:`, else its title's, made unique. Those given are kept first, then the oldest notes take
   // the plain words and a later note with the same title gets "-2", so adding an update never changes an old address.
   // "page" is taken by /trackside/page/2/; a note with no title uses its time stamp.
@@ -300,10 +296,7 @@ export const status = parse(text);
  * @param {Date|number} t
  * @returns {string}
  */
-const dayOf = (t) =>
-  new Intl.DateTimeFormat("en-CA", { timeZone: "America/Dawson_Creek" }).format(
-    t,
-  );
+const dayOf = (t) => new Intl.DateTimeFormat("en-CA", { timeZone: "America/Dawson_Creek" }).format(t);
 
 /**
  * A time as "6:45 a.m. on Oct 29, 2026", BC time, rounded to the nearest quarter hour. With `relative`, a time today or
@@ -330,9 +323,7 @@ export function asOf(date, relative = false) {
       .formatToParts(d)
       .map((p) => [p.type, p.value]),
   );
-  const period = parts.dayPeriod.toLowerCase().startsWith("a")
-    ? "a.m."
-    : "p.m.";
+  const period = parts.dayPeriod.toLowerCase().startsWith("a") ? "a.m." : "p.m.";
   const time = `${parts.hour}:${parts.minute} ${period}`;
   if (relative) {
     // BC time has no daylight saving changes, so a day back is always 24 hours

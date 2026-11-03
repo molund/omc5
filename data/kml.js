@@ -24,17 +24,11 @@ const STYLES = {
     "<IconStyle><scale>0.6</scale><color>ff333333</color><Icon><href>https://maps.google.com/mapfiles/kml/shapes/placemark_circle.png</href></Icon></IconStyle><LabelStyle><scale>0</scale></LabelStyle>",
 };
 
-const esc = (s) =>
-  String(s)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
+const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const coords = (ring) => ring.map(([lon, lat]) => `${lon},${lat}`).join(" ");
 
 function geometry(g) {
-  if (g.type === "Point")
-    return `<Point><coordinates>${coords([g.coordinates])}</coordinates></Point>`;
+  if (g.type === "Point") return `<Point><coordinates>${coords([g.coordinates])}</coordinates></Point>`;
   if (g.type === "Polygon")
     return (
       "<Polygon>" +
@@ -52,8 +46,7 @@ function geometry(g) {
 // the name shown on the map and in My Maps' list
 function nameOf(p) {
   if ("cc_span" in p) return p.cc_span ? `Span ${p.cc_span}` : `Span #${p.id}`;
-  if ("cc_joint" in p)
-    return p.cc_joint ? `Support ${p.cc_joint}` : `Support #${p.id}`;
+  if ("cc_joint" in p) return p.cc_joint ? `Support ${p.cc_joint}` : `Support #${p.id}`;
   return `Pillar #${p.id}`;
 }
 
@@ -76,9 +69,7 @@ export function writeKml(file, title, features, meta) {
   const styles = [
     ...new Set(
       features.flatMap((f) =>
-        "cc_span" in f.properties
-          ? ["finished", "unfinished", styleOf(f.properties)]
-          : [styleOf(f.properties)],
+        "cc_span" in f.properties ? ["finished", "unfinished", styleOf(f.properties)] : [styleOf(f.properties)],
       ),
     ),
   ];

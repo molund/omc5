@@ -7,11 +7,7 @@
   import { layers, ui, PHONE } from "./lib/appState/appState.svelte.js";
 
   // the layer rules wait until MapView has tagged the drawing, which needs it laid out as map.svg draws it on its own
-  const css = $derived(
-    ui.ready
-      ? layerCss(layers) + (ui.view === "fullAerial" ? FULL_AERIAL_CSS : "")
-      : "",
-  );
+  const css = $derived(ui.ready ? layerCss(layers) + (ui.view === "fullAerial" ? FULL_AERIAL_CSS : "") : "");
   // turning a tablet or resizing the window across the phone width: the panel opens beside the map, or the menu closes
   $effect(() => {
     const changed = (e) => {
@@ -63,7 +59,6 @@
     title={ui.phone ? "Open the menu" : "Show the layer panel"}
     aria-label={ui.phone ? "Open the menu" : "Show the layer panel"}
     aria-expanded="false"
-    onclick={() => (ui.collapsed = false)}
-    ><Icon kind={ui.phone ? "menu" : "panel"} /></button
+    onclick={() => (ui.collapsed = false)}><Icon kind={ui.phone ? "menu" : "panel"} /></button
   >
 {/if}
