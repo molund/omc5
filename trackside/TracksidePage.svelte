@@ -163,8 +163,10 @@
 
 <!-- update text with its span numbers linked to the map, the first time each appears in an update (the giscus threads and
      the headings stay plain) -->
-{#snippet linked(pieces)}{#each pieces as p}{#if p.span}<a class="text-(--accent)" href="{MAP}?span={p.span}"
-        >{p.text}</a
+{#snippet linked(pieces)}{#each pieces as p}{#if p.span}<a
+        class="text-(--accent)"
+        href="{MAP}?span={p.span}"
+        title="Zoom to span {p.span} on the map">{p.text}</a
       >{:else}{p.text}{/if}{/each}{/snippet}
 
 <!-- a photo and its caption, under a note or among its further paragraphs -->
