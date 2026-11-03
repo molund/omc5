@@ -13,10 +13,10 @@
   // the newest update's latest word: its newest follow-up if it has any, else its note
   const newest = status.latest;
   const note = status.followUps[0]?.summary || status.note;
-  // the Comments button opens the newest update on Trackside with its comments open, and shows its comment and reaction
-  // counts once GitHub has sent them
+  // the Comments button opens Trackside's first page, scrolled to the newest update (a post can sit above it) with its
+  // comments open, and shows its comment and reaction counts once GitHub has sent them
   const TRACKSIDE = `${import.meta.env.BASE_URL}trackside/`;
-  const COMMENTS = newest ? `${TRACKSIDE}${newest.slug}/?comments` : TRACKSIDE;
+  const COMMENTS = newest ? `${TRACKSIDE}?comments#${newest.slug}` : TRACKSIDE;
   let activity = $state(null);
   if (newest) fetchCounts().then((c) => (activity = c[term(newest.time)] ?? null));
 
