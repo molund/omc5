@@ -73,7 +73,7 @@ def check_count(limit=100):
 def main():
     have = existing()
     threads = json.load(open(THREADS))
-    for n in threads:
+    for n in reversed(threads):
         t, b = n["title"], n["body"]
         if t not in have:
             graphql(
