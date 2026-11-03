@@ -1,6 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import mapSvg from "../assets/map.svg?raw";
+  import { loadAerialImages } from "./aerialImages.js";
   import { DRAW_VB, SFMSF_AERIAL_VB, FULL_VB } from "../lib/layerSwitches.js";
   import { tagBuiltBy } from "./builtBy.js";
   import { gantryProgress } from "./gantryProgress.js";
@@ -73,6 +74,7 @@
     const svg = stage.querySelector("svg");
     els.stage = stage;
     els.svg = svg;
+    loadAerialImages(svg);
     tagBuiltBy(svg);
     // the gantry's span and whether it is complete come from status.yaml
     const gantry = svg.querySelector("#clayton-clipper");
