@@ -25,13 +25,16 @@
 
   // what each number counts, shown when it is hovered or clicked with a mouse, tapped (tap again to hide) or pressed with
   // Enter/Space
-  const TIPS = {
-    span: "<strong>Completed span positions at or behind the Clayton Clipper.</strong> The current span position counts after all segments are hung.",
+  const TIPS = $derived({
+    span: "<strong>Reached by the Clayton Clipper.</strong> The current span is marked as complete once all segments are hung.",
     ahead:
-      "<strong>Completed span positions ahead of the Clayton Clipper.</strong> These positions were built by mobile cranes and will count toward progress after the gantry passes over them.",
+      "<strong>Built ahead by mobile cranes.</strong> Counted when the gantry passes.",
     total:
-      "<strong>Total span positions on the Clayton Clipper route.</strong> Parallel guideways at the same location count as a single span position.",
-  };
+      "<strong>Route total.</strong> Parallel guideways count as one position.",
+    percent: ui.gantry
+      ? `<strong>${ui.gantry.span} \u00f7 ${ui.gantry.total}.</strong> Excludes the ${ui.gantry.ahead} built ahead.`
+      : "",
+  });
   let tip = $state(null);
   const toggle = (k) => (tip = tip === k ? null : k);
   // a tap anywhere else, or Escape, closes the tip
@@ -70,16 +73,23 @@
 
 <svelte:window onpointerdown={outside} onkeydown={keydown} />
 
-{#snippet num(k, value, big)}
+{#snippet num(k, value, big, bar = false)}
   <!-- the numbers are buttons, with room to tap, that look like plain figures with a dotted underline hinting at the tip;
        the ::after is an invisible extension of the tap area over the brackets and signs, so even the "8" is a comfortable
        target while the figure stays tight -->
   <button
     data-num
     class={[
-      "relative min-h-9 cursor-help rounded-sm border-0 px-0.75 py-0.5 font-semibold text-(--ink) underline decoration-(--mute) decoration-dotted underline-offset-4 after:absolute after:-inset-x-1.75 after:inset-y-0 after:content-['']",
-      big ? "text-3xl" : "[font-size:inherit]",
-      tip === k ? "bg-(--bg)" : "bg-transparent hover:bg-(--bg)",
+      "relative cursor-help rounded-sm border-0 px-0.75 py-0.5 font-semibold underline decoration-dotted underline-offset-4 after:absolute after:-inset-x-1.75 after:inset-y-0 after:content-['']",
+      bar
+        ? "min-h-6 text-xs text-white decoration-white"
+        : "min-h-9 text-(--ink) decoration-(--mute)",
+      !bar && (big ? "text-3xl" : "[font-size:inherit]"),
+      bar
+        ? "bg-transparent hover:bg-transparent"
+        : tip === k
+          ? "bg-(--bg)"
+          : "bg-transparent hover:bg-(--bg)",
     ]}
     aria-describedby={tip === k ? "progress-tip" : undefined}
     aria-label="{value}: {stripHtml(TIPS[k])}"
@@ -102,6 +112,7 @@
   >
 {:else if ui.gantry}
   {@const { span, ahead, total } = ui.gantry}
+  {@const percent = (span / total) * 100}
   <div
     bind:this={card}
     out:genie
@@ -136,25 +147,36 @@
     <!-- floats over the progress bar (no top: it sits where it would have started, just under the figure), in the card's
          colours reversed so it stands out from the card in light and dark mode -->
     {#if tip}<div
-        class="absolute inset-x-2 z-1 -mt-0.5 rounded-md bg-(--ink) px-2.25 py-1.75 text-xs leading-snug text-(--panel) shadow-tip"
+        class={[
+          "absolute inset-x-2 z-1 rounded-md bg-(--ink) px-2.25 py-1.75 text-xs leading-snug text-(--panel) shadow-tip",
+          tip === "percent" ? "mt-7" : "-mt-0.5",
+        ]}
         id="progress-tip"
         role="tooltip"
       >
         {@html TIPS[tip]}
       </div>{/if}
-    <div
-      class="h-2.5 overflow-hidden rounded-md bg-(--line)"
-      role="progressbar"
-      aria-label="Clayton Clipper progress"
-      aria-valuemin="0"
-      aria-valuemax={total}
-      aria-valuenow={span}
-    >
+    <div class="relative h-6 overflow-hidden rounded-md bg-(--line)">
       <div
-        class="h-full rounded-md"
-        style:width="{(span / total) * 100}%"
-        style:background={PROGRESS_COLOUR}
-      ></div>
+        class="absolute inset-0"
+        role="progressbar"
+        aria-label="Clayton Clipper progress"
+        aria-valuemin="0"
+        aria-valuemax={total}
+        aria-valuenow={span}
+      >
+        <div
+          class="h-full rounded-md"
+          style:width="{percent}%"
+          style:background={PROGRESS_COLOUR}
+        ></div>
+      </div>
+      <div
+        class="absolute inset-y-0 left-0 flex min-w-12 max-w-full items-center justify-center"
+        style:width="{percent}%"
+      >
+        {@render num("percent", `${Math.round(percent)}%`, false, true)}
+      </div>
     </div>
     {#if when}<div class="mt-2 text-xs text-(--mute)">As of {when}</div>{/if}
     {#if note}<div class="mt-2 text-sm">{note}</div>{/if}
