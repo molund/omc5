@@ -50,7 +50,7 @@ const view = saved?.view ?? (defaults.progress ? "progress" : defaults.sfmsfDraw
  *   gantry: GantryProgress|null,
  * }}
  * - view: the view last picked (a View group key).
- * - span: the span a #span-N link opened the map on, until another view is picked.
+ * - span: the span a ?span=N link opened the map on, until another view is picked.
  * - zoom: a percentage of the stage width; fit: the zoom at which the whole canvas fits the stage.
  * - phone: PHONE, kept up to date by App.svelte; collapsed: whether the panel is hidden (a phone opens on the map, with
  *   the menu closed).

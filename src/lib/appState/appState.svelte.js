@@ -192,7 +192,7 @@ export function setSwitch(k, on) {
 const SPAN_ZOOM = 20;
 
 /**
- * Opens a span link (#span-N): the Full aerial view with the gantry on, zoomed to SPAN_ZOOM times Fit and centred on the span.
+ * Opens a span link (?span=N): the Full aerial view with the gantry on, zoomed to SPAN_ZOOM times Fit and centred on the span.
  * @param {number} n The span number, 1 to 105.
  * @returns {void}
  */
