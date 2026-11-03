@@ -12,13 +12,14 @@ the real text, and then Svelte takes over in the browser for the comments and co
 ## Pages
 
 - `/trackside/` — the newest 10 updates, then `/trackside/page/2/`, `/trackside/page/3/` and so on.
-- `/trackside/2026-10-31T21-00/` — each update on its own page. The name is the update's time
-  stamp in UTC, the same as its `#2026-10-31T21-00` anchor on the list pages. This is the page to
+- `/trackside/clayton-clipper-completes-span-36/` — each update on its own page. The name is the
+  update's `slug:` or, without one, its title in lowercase words (see below). This is the page to
   share: it has the update's own title, description and photo for search results and link previews.
-  On the list pages, the date heading links to it.
+  On the list pages, the date heading links to it, and each update's slug is its `#` anchor there.
 
-The progress card's Comments button goes to `/trackside/?comments#2026-10-31T22-15`,
-which opens that update's comments. `?comments` works on an update's own page too.
+The progress card's Comments button goes to `/trackside/clayton-clipper-completes-span-36/?comments`,
+which opens that update's comments. `?comments` works on the list pages too, with the slug
+(`/trackside/?comments#clayton-clipper-completes-span-36`).
 
 ## Files
 
@@ -33,7 +34,7 @@ Shared with the map, in `src/`:
 
 - `src/lib/status.js` — reads `status.yaml`. It's the only reader: the map, Trackside and the
   comment threads all go through it.
-- `src/lib/comments.js` — each update's anchor and thread title, the comment and reaction counts,
+- `src/lib/comments.js` — each update's thread title, the comment and reaction counts,
   and `SITE`, the site's address.
 - `src/app.css` — colours, base styles and Tailwind. Trackside is styled with Tailwind classes in
   `TracksidePage.svelte`; sizes are Tailwind's standard ones, in rem, so they follow the iPhone's Text
@@ -66,6 +67,12 @@ Each update is a note: its time stamp and its title on one line, then indented u
 - The title (the value after the time stamp) — a short headline for the update's own page: its
   `<title>` and its link-preview title. It isn't shown on a page, except on a post. `""` for none:
   the page uses the date.
+- `slug:` — the last part of the update's address. Optional: without it the address is the title in
+  lowercase words, cut at a word to 80 characters (a title that is only a date gives a long address,
+  so a short `slug:` can help). The oldest update with a given title keeps the plain words and a later
+  one gets `-2`, so adding an update never changes an old address. **Editing a title changes its
+  address**, so once an update has been shared, add its current address as `slug:` before changing
+  the title.
 - `summary:` — the update's main text, in a sentence or two. The progress card shows it on its own, link previews and
   search results use it, and Trackside leads with it.
 - `photo:` — a photo and its caption, shown under the summary.

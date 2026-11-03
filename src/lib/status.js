@@ -1,7 +1,10 @@
 // The Clayton Clipper status from status.yaml: when it was last updated, the span the gantry is on, whether that span is
 // complete, and the newest of its time-stamped notes. The file is flat `key: value` lines plus the `notes:` list of
 // `  - time: "title"` lines (the title is for the note's page's <title> and Open Graph title on Trackside, and is shown only
-// on a post), each followed by its summary, the note's main text, indented under it:
+// on a post), each followed by its summary, the note's main text, indented under it. Its page's address comes from the title
+// ("Clayton Clipper completes span 36" is /trackside/clayton-clipper-completes-span-36/), or from `slug:` if given, which
+// keeps the address when the title is edited:
+//     slug: clipper-completes-span-36
 //     summary: "Span 36 is complete."
 // a photo, indented under it:
 //     photo:
@@ -26,6 +29,7 @@
 //             - "Another paragraph"
 // so a small reader does instead of a YAML library.
 import text from "../../status.yaml?raw";
+import { anchor } from "./comments.js";
 
 /**
  * @typedef {object} Photo
@@ -52,6 +56,7 @@ import text from "../../status.yaml?raw";
  * @property {Photo|null} photo The note's photo, if it has one.
  * @property {BlockItem[]} block Further paragraphs and photos, in order.
  * @property {string} title The title for the note's own Trackside page, or "".
+ * @property {string} slug The last part of the note's own page's address, unique among the notes.
  * @property {boolean} post Whether it is a post rather than a status update.
  * @property {FollowUp[]} followUps Its follow-ups, newest first.
  */
@@ -84,6 +89,24 @@ function unquote(v) {
 }
 
 /**
+ * A title as a piece of web address: lowercase words joined by hyphens, cut at a word to 80 characters at most, e.g.
+ * "Clayton Clipper completes span 36; tulip at 70/71 built" becomes "clayton-clipper-completes-span-36-tulip-at-70-71-built".
+ * @param {string} s
+ * @returns {string} "" if nothing is left.
+ */
+function slugify(s) {
+  const slug = s
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f'\u2019]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  const cut = slug.slice(0, 81),
+    i = cut.lastIndexOf("-");
+  return cut.length <= 80 ? cut : cut.slice(0, i > 0 ? i : 80);
+}
+
+/**
  * Reads status.yaml's flat `key: value` lines and its list of notes.
  * @param {string} src The file's text.
  * @returns {Status}
@@ -108,6 +131,7 @@ function parse(src) {
           /^\d{4}-\d\d-\d\d$/.test(n[1]) ? `${n[1]}T00:00-07:00` : n[1],
         ),
         title: unquote(n[2]),
+        slug: "",
         summary: "",
         photo: null,
         block: [],
@@ -173,6 +197,14 @@ function parse(src) {
       if (last) last.post = po[1] === "true";
       return;
     }
+    // "    slug: words-for-the-address": a note's own address, instead of its title's
+    const sl = line.match(/^ {4}slug:\s*(.*?)\s*$/);
+    if (sl) {
+      list = null;
+      photo = null;
+      if (last) last.slug = slugify(unquote(sl[1]));
+      return;
+    }
     // the note's summary, four spaces in
     const ti = line.match(/^ {4}summary:\s*(.*?)\s*$/);
     if (ti) {
@@ -217,6 +249,20 @@ function parse(src) {
   const sorted = notes
     .filter((n) => !isNaN(n.time))
     .sort((a, b) => b.time - a.time);
+  // each note's address: its `slug:`, else its title's, made unique. Those given are kept first, then the oldest notes take
+  // the plain words and a later note with the same title gets "-2", so adding an update never changes an old address.
+  // "page" is taken by /trackside/page/2/; a note with no title uses its time stamp.
+  const taken = new Set(["page"]);
+  sorted.forEach((n) => n.slug && taken.add(n.slug));
+  [...sorted].reverse().forEach((n) => {
+    if (n.slug) return;
+    const base = slugify(n.title) || anchor(n.time).toLowerCase();
+    let s = base,
+      i = 2;
+    while (taken.has(s)) s = `${base}-${i++}`;
+    taken.add(s);
+    n.slug = s;
+  });
   // the newest status update; posts are left out
   const latest = sorted.find((n) => n.summary && !n.post) ?? null;
   return {
