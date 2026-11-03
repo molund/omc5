@@ -1,6 +1,7 @@
 import { saved, autosave } from "./persist.svelte.js";
 import { layers, ui } from "./state.svelte.js";
-import { setView, fillView, progressView, horizontalView } from "./viewport.svelte.js";
+import { setView, fillView, progressView, horizontalView, setZoom, centreOn } from "./viewport.svelte.js";
+import { SPAN_CENTRES } from "../spanCentres.js";
 import {
   defaults,
   sfmsfAerialDefaults,
@@ -121,6 +122,7 @@ export function setSwitch(k, on) {
   ui.changed = !VIEWS.includes(k);
   if (on && VIEWS.includes(k)) {
     ui.view = k;
+    ui.span = null;
     // the progress card opens every time Progress is picked, even if it was closed before; no other view opens it
     ui.cardHidden = k !== "progress";
   }
@@ -184,6 +186,26 @@ export function setSwitch(k, on) {
     }
   }
   refresh();
+}
+
+/** The zoom a span link opens at, as the number the zoom readout shows (a multiple of Fit). */
+const SPAN_ZOOM = 20;
+
+/**
+ * Opens a span link (#span-N): the Full aerial view with the gantry on, zoomed to SPAN_ZOOM times Fit and centred on the span.
+ * @param {number} n The span number, 1 to 105.
+ * @returns {void}
+ */
+export function showSpan(n) {
+  const c = SPAN_CENTRES[n];
+  if (!c) return;
+  setSwitch("fullAerial", true);
+  layers.gantry = true;
+  ui.changed = true;
+  refresh();
+  setZoom(ui.fit * SPAN_ZOOM);
+  centreOn(c[0], c[1]);
+  ui.span = n;
 }
 
 /**

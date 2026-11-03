@@ -1,4 +1,4 @@
-import { ui, setSwitch } from "./appState.svelte.js";
+import { ui, setSwitch, showSpan } from "./appState.svelte.js";
 
 /**
  * Bookmarkable views: each view but Progress has its own address hash, so a link or bookmark opens on that view; Progress
@@ -18,6 +18,15 @@ const HASHES = {
  */
 const viewOfHash = (h) =>
   Object.keys(HASHES).find((k) => HASHES[k] === h.replace(/^#/, "")) ?? (h.replace(/^#/, "") ? null : "progress");
+/**
+ * The span an address hash names (#span-36).
+ * @param {string} h The hash, with or without the "#".
+ * @returns {number|null} The span number, or null for a hash that is not a span link.
+ */
+const spanOfHash = (h) => {
+  const m = /^#?span-(\d{1,3})$/.exec(h);
+  return m ? Number(m[1]) : null;
+};
 /** The hash the page was opened with, read before anything rewrites it. */
 const openedWith = typeof location === "undefined" ? "" : location.hash;
 
@@ -28,6 +37,11 @@ const openedWith = typeof location === "undefined" ? "" : location.hash;
  * @returns {void}
  */
 export function applyHash(h = openedWith) {
+  const span = spanOfHash(h);
+  if (span) {
+    if (ui.span !== span) showSpan(span);
+    return;
+  }
   const v = viewOfHash(h);
   if (v && ui.view !== v) setSwitch(v, true);
 }
@@ -36,7 +50,7 @@ export function applyHash(h = openedWith) {
 $effect.root(() => {
   $effect(() => {
     if (!ui.ready || typeof location === "undefined") return;
-    const h = HASHES[ui.view] ? `#${HASHES[ui.view]}` : "";
+    const h = ui.span ? `#span-${ui.span}` : HASHES[ui.view] ? `#${HASHES[ui.view]}` : "";
     if (location.hash !== h) history.replaceState(null, "", h || location.pathname + location.search);
   });
 });
