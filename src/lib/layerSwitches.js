@@ -26,7 +26,7 @@ export const LAYERS = [
       ["guideway", "Finished spans", "guideway", true],
       ["unfinished", "Unfinished spans", "unfinished", true],
       ["supports", "Supports", "supports", true],
-      ["spanNumbers", "Span numbers", "cclabel", true],
+      ["spanNumbers", "Span numbers", "ccnumber", true],
       ["arrows", "Direction arrows", "arrows", false],
       ["stationLabels", "Station labels", "stationlabel", true],
     ],
@@ -109,7 +109,7 @@ const PROGRESS_CSS =
   PROGRESS_COLOUR +
   " !important}" +
   // white where the number sits on a span in the progress colour; every other number looks as it does in the other views
-  "#map text.cclabel.cc.on-reached{fill:#ffffff !important}" +
+  "#map text.ccnumber.cc.on-reached{fill:#ffffff !important}" +
   // only the Clayton Clipper's spans: the other launchers' stay hidden
   "#map .ll.ll.ll,#map .ff.ff.ff{display:none !important}";
 /**
@@ -125,7 +125,7 @@ const PROGRESS_SHOWS = {
   yard: [".yard"],
   ave72: [".ave72"],
   railway: [".railway"],
-  spanNumbers: [".cclabel"],
+  spanNumbers: [".ccnumber"],
   arrows: ["text.n.guideway"],
   stationLabels: [".stationlabel"],
   gantry: [".gantry"],
@@ -204,7 +204,7 @@ export function layerCss(state) {
         return;
       // roads: Fraser Highway and Highway 15, with their labels (every piece is tagged "roads")
       if (k === "roads") r += ".roads{display:" + (on ? "inline" : "none") + " !important}";
-      else if (k === "spanNumbers") r += ".cclabel{display:" + (on ? "inline" : "none") + " !important}";
+      else if (k === "spanNumbers") r += ".ccnumber{display:" + (on ? "inline" : "none") + " !important}";
       else if (k === "arrows") r += on ? "" : "text.n.guideway{display:none !important}";
       else if (k === "gantry") r += "";
       else if (k === "supports") r += on ? "" : 'rect.g,circle[fill="#D7D7D7"]{display:none !important}';
@@ -220,7 +220,7 @@ export function layerCss(state) {
   if (state.aerial && !state.sfmsfDrawing)
     r +=
       "#map .guideway.unfinished{opacity:0.45 !important}" +
-      "#map text.cclabel.on-unfinished{fill:#000000 !important;stroke:#ffffff !important;stroke-width:1.5 !important;stroke-linejoin:round !important;paint-order:stroke !important}";
+      "#map text.ccnumber.on-unfinished{fill:#000000 !important;stroke:#ffffff !important;stroke-width:1.5 !important;stroke-linejoin:round !important;paint-order:stroke !important}";
   r += ".gantry{display:" + (state.gantry ? "inline" : "none") + " !important}";
   if (state.progress) {
     r += PROGRESS_CSS;
