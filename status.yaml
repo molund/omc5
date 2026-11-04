@@ -12,7 +12,9 @@ complete: true
 # Trackside, as a slug (clipper-completes-span-36, "Clayton Clipper" becomes "Clipper", and is dropped from the date titles): to keep the anchor when the title is edited, add `slug: words-here`
 # under the note (the oldest note with a given title keeps the plain words, a later one gets -2). The progress card shows
 # the newest note's summary, or its
-# newest follow-up's if it has any (an empty summary shows none):
+# newest follow-up's if it has any (an empty summary shows none), only when that note's or follow-up's time stamp is
+# `updated`; otherwise the card has no text and a Trackside button in place of Comments (a position-only change to
+# `updated`, span and complete):
 #   - 2026-10-31T14:00-07:00: "Clayton Clipper completes span 36"
 #     summary: "Span 36 is complete."
 # A note can be a post instead of a status update: "post: true" under it. A post leads with its title on Trackside, with

@@ -22,7 +22,9 @@ the real text, and then Svelte takes over in the browser for the comments and co
   its comments too. The old `#slug` links still work.
 
 The progress card's Comments button goes to `/trackside/?post=clipper-completes-span-36&comments`: the first
-page, scrolled to the newest update, with its comments open.
+page, scrolled to the newest update, with its comments open. The card shows that text and button only while the newest
+update's (or its newest follow-up's) time stamp is the file's `updated`. After a change to the span or Complete with no
+text, `updated` is later than every note, and the card shows no text and a Trackside button to `/trackside/` instead.
 
 ## Files
 
