@@ -6,7 +6,7 @@
 // - Supports: each bent cap (rect.g) is one support, exported as the cap's outline; its pillars are the support circles inside
 //   it (or nearest it).
 // - Pillars: each support circle, exactly where it is drawn, with the id of its support.
-// - Spans: the guideway polygons, numbered from the nearest Clayton Clipper (cclabel) labels.
+// - Spans: the guideway polygons, numbered from the nearest Clayton Clipper (ccnumber) labels.
 import fs from "node:fs";
 import { XMLParser } from "fast-xml-parser";
 import { writeKml } from "./kml.js";
@@ -192,7 +192,7 @@ function exportGeojson() {
         t: e.text.trim(),
         q: apply(e.ctm, [+e.attrs.x, +e.attrs.y]),
       }));
-  const cc = labels("cclabel").map((l) => ({ ...l, n: +l.t }));
+  const cc = labels("ccnumber").map((l) => ({ ...l, n: +l.t }));
 
   // supports: one per bent cap, with the pillar circles nearest it (shapes drawn twice in the same place count once)
   const once = (list) => list.filter((a, i) => !list.slice(0, i).some((b) => dist(a.q, b.q) < 1));

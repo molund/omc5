@@ -177,7 +177,7 @@ export function setSwitch(k, on) {
       layers.progress = false;
       setView(SFMSF_AERIAL_VB);
       fillView();
-      layers.spanLabels = true;
+      layers.spanNumbers = true;
       // every Reference switch on, with the aerial photo (it is an aerial view) instead of the greenbelt
       Object.assign(layers, sfmsfAerialReference());
     } else {

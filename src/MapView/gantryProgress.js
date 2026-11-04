@@ -1,4 +1,4 @@
-// How far the Clayton Clipper gantry has got on its journey: the numbered span (the cclabel span numbers, 1-105) it is working on,
+// How far the Clayton Clipper gantry has got on its journey: the numbered span (the ccnumber span numbers, 1-105) it is working on,
 // from data-span on the #clayton-clipper group (set from status.yaml), counted only once that span is complete (or at least
 // hung); until then the count is the span behind it.
 // Every Clayton Clipper guideway span is also given the number of its nearest label. With `complete` given (status.yaml), the
@@ -7,7 +7,7 @@
 export function gantryProgress(root, complete) {
   const gantry = root.querySelector("#clayton-clipper"),
     body = gantry && gantry.querySelector(".gantry-body"),
-    labels = [...root.querySelectorAll("text.cclabel")];
+    labels = [...root.querySelectorAll("text.ccnumber")];
   if (!body || !labels.length) return null;
   const inv = root.getScreenCTM().inverse();
   const toCanvas = (el, x, y) => {
