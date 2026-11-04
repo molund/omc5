@@ -1100,7 +1100,7 @@
           points="302.73,771.45 312.38,771.45 313.84,893.45 304.19,893.45"
         />
         <polygon
-          class="p guideway unfinished"
+          class="gi guideway"
           points="279.08,893.45 301.28,893.45 301.87,1014.30 279.67,1014.30"
         />
         <polygon
@@ -1111,7 +1111,7 @@
           points="304.58,893.45 314.23,893.45 314.82,1014.30 305.17,1014.30"
         />
         <polygon
-          class="p guideway unfinished"
+          class="gi guideway"
           points="280.08,1014.30 302.28,1014.30 303.30,1136.20 281.09,1136.20"
         />
         <polygon
@@ -1122,7 +1122,7 @@
           points="305.58,1014.30 315.23,1014.30 316.24,1136.20 306.60,1136.20"
         />
         <polygon
-          class="p guideway unfinished"
+          class="gi guideway"
           points="281.10,1136.20 303.31,1136.20 304.15,1238.00 281.95,1238.00"
         />
         <polygon
@@ -1526,13 +1526,13 @@
           <g
             id="clayton-clipper"
             class="gantry"
-            data-drawn-at="34"
+            data-drawn-at="37"
             transform="translate(-40.29 40.00)"
           >
             <!-- Layers (bottom to top): supports + their walkways; trusses, cross beams and side walkways; blue tips; trolley. Labels are drawn later, above everything. -->
             <!-- Anchoring: the gantry works on the span set in status.yaml (the Clayton Clipper span numbers, 1-105), which the page puts in data-span here; to move it, change status.yaml. Everything below is drawn for span data-drawn-at, and src/lib/placeGantry.js moves each data-anchor group from there to data-span when the page loads. front: the short support, just ahead of the span, its rear edge flush with the span's front end; second: just behind the span, its front edge flush with the span's back end; rear: fully on the span behind, its rear edge (beam and walkway) a third of its width in from that span's back end; fourth: the lengthwise support on the span behind, at the same fraction of the way along it; body: the trusses, walkways and trolley, centred on the span midpoint between its outer edges and parallel to them. The supports keep the along and across offsets they are drawn with. -->
             <!-- Clipper centreline over span 32: x = 300.5 + 0.0732*(y - 400) -->
-            <g data-anchor="fourth" transform="translate(-0.24 -4.16)">
+            <g data-anchor="fourth" transform="matrix(0.999713 0.013177 -0.043561 0.999713 38.95772 355.921894)">
               <rect
                 opacity="1"
                 id="clipper-support-1"
@@ -1546,7 +1546,7 @@
                 transform="rotate(176.63 335.18 702.00)"
               />
             </g>
-            <g data-anchor="rear" transform="translate(22.99 120.70)">
+            <g data-anchor="rear" transform="matrix(0.999713 0.013177 -0.043561 0.999713 56.969543 496.079776)">
               <rect
                 opacity="1"
                 id="clipper-support-2"
@@ -1560,7 +1560,7 @@
                 transform="rotate(-1.504 307.1 484)"
               />
             </g>
-            <g data-anchor="second" transform="translate(31.65 381.45)">
+            <g data-anchor="second" transform="matrix(0.999993 0.002016 -0.006666 0.999993 40.98533 742.588772)">
               <rect
                 opacity="1"
                 id="clipper-support-3"
@@ -1573,7 +1573,7 @@
                 stroke-width="2"
               />
             </g>
-            <g data-anchor="front" transform="translate(24.87 242.75)">
+            <g data-anchor="front" transform="matrix(0.999993 0.002016 -0.006666 0.999993 34.835558 584.371764)">
               <rect
                 opacity="1"
                 id="clipper-support-4-short"
@@ -1587,7 +1587,7 @@
               />
             </g>
             <!-- Support walkways (blue, 2/3 the side-walkway thickness, full length of their support beam, same x and width as the beam): east side of the long supports, west side of the short one; move with their support -->
-            <g data-anchor="fourth" transform="translate(-0.24 -4.16)">
+            <g data-anchor="fourth" transform="matrix(0.999713 0.013177 -0.043561 0.999713 38.95772 355.921894)">
               <rect
                 opacity="0.65"
                 class="clipper-support-walkway"
@@ -1599,7 +1599,7 @@
                 transform="rotate(176.63 335.18 702.00)"
               />
             </g>
-            <g data-anchor="rear" transform="translate(22.99 120.70)">
+            <g data-anchor="rear" transform="matrix(0.999713 0.013177 -0.043561 0.999713 56.969543 496.079776)">
               <rect
                 opacity="0.65"
                 class="clipper-support-walkway"
@@ -1611,7 +1611,7 @@
                 transform="rotate(-1.504 307.1 484)"
               />
             </g>
-            <g data-anchor="second" transform="translate(31.65 381.45)">
+            <g data-anchor="second" transform="matrix(0.999993 0.002016 -0.006666 0.999993 40.98533 742.588772)">
               <rect
                 opacity="0.65"
                 class="clipper-support-walkway"
@@ -1622,7 +1622,7 @@
                 fill="#174B83"
               />
             </g>
-            <g data-anchor="front" transform="translate(24.87 242.75)">
+            <g data-anchor="front" transform="matrix(0.999993 0.002016 -0.006666 0.999993 34.835558 584.371764)">
               <rect
                 opacity="0.65"
                 class="clipper-support-walkway"
@@ -1637,7 +1637,7 @@
             <g
               class="gantry-body"
               data-anchor="body"
-              transform="matrix(1.000000 0.000000 -0.027667 1.000000 24.0975 0.0000) translate(2.65 122.00) matrix(0.999995 0.001766 -0.005838 0.999995 25.8164 120.2096)"
+              transform="matrix(0.999927 0.003782 -0.040171 0.99992 56.138264 596.963444)"
             >
               <g
                 transform="matrix(0.999538 -0.016711 0.055243 0.999538 -26.5959 5.3554)"
@@ -1804,7 +1804,7 @@
               </g>
             </g>
             <!-- Support pads (solid #4D76A3 = the deck blue as it renders over the grey track, no opacity): two per support beam, 8.4 wide x 12.6 long along the guideway, centred on the beam, evenly spaced (equal gaps: end, pad, gap, pad, end); move with their support; drawn above the ladder (below the trolley) so they stay solid -->
-            <g data-anchor="fourth" transform="translate(-0.24 -4.16)">
+            <g data-anchor="fourth" transform="matrix(0.999713 0.013177 -0.043561 0.999713 38.95772 355.921894)">
               <rect
                 class="clipper-support-pad"
                 x="327.50"
@@ -1815,7 +1815,7 @@
                 transform="rotate(176.63 335.18 702.00)"
               />
             </g>
-            <g data-anchor="fourth" transform="translate(-0.24 -4.16)">
+            <g data-anchor="fourth" transform="matrix(0.999713 0.013177 -0.043561 0.999713 38.95772 355.921894)">
               <rect
                 class="clipper-support-pad"
                 x="327.50"
@@ -1826,7 +1826,7 @@
                 transform="rotate(176.63 335.18 702.00)"
               />
             </g>
-            <g data-anchor="rear" transform="translate(22.99 120.70)">
+            <g data-anchor="rear" transform="matrix(0.999713 0.013177 -0.043561 0.999713 56.969543 496.079776)">
               <rect
                 class="clipper-support-pad"
                 x="287.786"
@@ -1837,7 +1837,7 @@
                 transform="rotate(-1.504 307.1 484)"
               />
             </g>
-            <g data-anchor="rear" transform="translate(22.99 120.70)">
+            <g data-anchor="rear" transform="matrix(0.999713 0.013177 -0.043561 0.999713 56.969543 496.079776)">
               <rect
                 class="clipper-support-pad"
                 x="320.786"
@@ -1848,7 +1848,7 @@
                 transform="rotate(-1.504 307.1 484)"
               />
             </g>
-            <g data-anchor="second" transform="translate(31.65 381.45)">
+            <g data-anchor="second" transform="matrix(0.999993 0.002016 -0.006666 0.999993 40.98533 742.588772)">
               <rect
                 class="clipper-support-pad"
                 x="288.636"
@@ -1858,7 +1858,7 @@
                 fill="#4D76A3"
               />
             </g>
-            <g data-anchor="second" transform="translate(31.65 381.45)">
+            <g data-anchor="second" transform="matrix(0.999993 0.002016 -0.006666 0.999993 40.98533 742.588772)">
               <rect
                 class="clipper-support-pad"
                 x="315.736"
@@ -1868,7 +1868,7 @@
                 fill="#4D76A3"
               />
             </g>
-            <g data-anchor="front" transform="translate(24.87 242.75)">
+            <g data-anchor="front" transform="matrix(0.999993 0.002016 -0.006666 0.999993 34.835558 584.371764)">
               <rect
                 class="clipper-support-pad"
                 x="289.581"
@@ -1878,7 +1878,7 @@
                 fill="#4D76A3"
               />
             </g>
-            <g data-anchor="front" transform="translate(24.87 242.75)">
+            <g data-anchor="front" transform="matrix(0.999993 0.002016 -0.006666 0.999993 34.835558 584.371764)">
               <rect
                 class="clipper-support-pad"
                 x="333.451"
@@ -1892,7 +1892,7 @@
             <g
               class="gantry-body"
               data-anchor="body"
-              transform="matrix(1.000000 0.000000 -0.027667 1.000000 24.0975 0.0000) translate(2.65 122.00) matrix(0.999995 0.001766 -0.005838 0.999995 25.8164 120.2096)"
+              transform="matrix(0.999927 0.003782 -0.040171 0.99992 56.138264 596.963444)"
             >
               <g
                 transform="matrix(0.999538 -0.016711 0.055243 0.999538 -26.5959 5.3554)"
@@ -2133,6 +2133,36 @@
         text-anchor="middle"
         style="font-size: 17.6px; fill: #eeeeee"
         transform="rotate(-146.7 -820.65 -211.01)"
+      >
+        &#x2192;
+      </text>
+      <text
+        class="n guideway"
+        x="-922.72"
+        y="-271.86"
+        text-anchor="middle"
+        style="font-size: 17.6px; fill: #eeeeee"
+        transform="rotate(-146.3 -922.72 -277.86)"
+      >
+        &#x2192;
+      </text>
+      <text
+        class="n guideway"
+        x="-1023.52"
+        y="-338.53"
+        text-anchor="middle"
+        style="font-size: 17.6px; fill: #eeeeee"
+        transform="rotate(-146.5 -1023.52 -344.53)"
+      >
+        &#x2192;
+      </text>
+      <text
+        class="n guideway"
+        x="-1125.15"
+        y="-405.85"
+        text-anchor="middle"
+        style="font-size: 17.6px; fill: #eeeeee"
+        transform="rotate(-146.5 -1125.15 -411.85)"
       >
         &#x2192;
       </text>
