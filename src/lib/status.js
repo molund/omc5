@@ -11,6 +11,8 @@
 //     photo:
 //       file: span-36.jpg
 //       caption: "Its own caption, separate from the note"
+// a note to self, indented under it, one line that is only for whoever reads the file; this reader skips it, so it is never shown:
+//     note-to-self: "Ask about the girders"
 // optionally more blocks, paragraphs and photos, indented under it (shown after the summary and its photo on the Trackside page
 // and in its thread; the card shows only the summary):
 //     block:
