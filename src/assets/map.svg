@@ -1633,6 +1633,91 @@
                 fill="#174B83"
               />
             </g>
+            <!-- Support pads: solid blue, above their beams and walkways but below the trusses; move with their support. -->
+            <g data-anchor="fourth" transform="matrix(0.999713 0.013177 -0.043561 0.999713 38.95772 355.921894)">
+              <rect
+                class="clipper-support-pad"
+                x="327.50"
+                y="688.371"
+                width="15.35"
+                height="3.10"
+                fill="#4D76A3"
+                transform="rotate(176.63 335.18 702.00)"
+              />
+            </g>
+            <g data-anchor="fourth" transform="matrix(0.999713 0.013177 -0.043561 0.999713 38.95772 355.921894)">
+              <rect
+                class="clipper-support-pad"
+                x="327.50"
+                y="712.529"
+                width="15.35"
+                height="3.10"
+                fill="#4D76A3"
+                transform="rotate(176.63 335.18 702.00)"
+              />
+            </g>
+            <g data-anchor="rear" transform="matrix(0.999713 0.013177 -0.043561 0.999713 56.969543 496.079776)">
+              <rect
+                class="clipper-support-pad"
+                x="282.368"
+                y="479.779"
+                width="5.628"
+                height="8.442"
+                fill="#4D76A3"
+                transform="rotate(-1.504 307.1 484)"
+              />
+            </g>
+            <g data-anchor="rear" transform="matrix(0.999713 0.013177 -0.043561 0.999713 56.969543 496.079776)">
+              <rect
+                class="clipper-support-pad"
+                x="326.204"
+                y="479.779"
+                width="5.628"
+                height="8.442"
+                fill="#4D76A3"
+                transform="rotate(-1.504 307.1 484)"
+              />
+            </g>
+            <g data-anchor="second" transform="matrix(0.999993 0.002016 -0.006666 0.999993 40.98533 742.588772)">
+              <rect
+                class="clipper-support-pad"
+                x="280.251"
+                y="345.779"
+                width="5.628"
+                height="8.442"
+                fill="#4D76A3"
+              />
+            </g>
+            <g data-anchor="second" transform="matrix(0.999993 0.002016 -0.006666 0.999993 40.98533 742.588772)">
+              <rect
+                class="clipper-support-pad"
+                x="324.121"
+                y="345.779"
+                width="5.628"
+                height="8.442"
+                fill="#4D76A3"
+              />
+            </g>
+            <g data-anchor="front" transform="matrix(0.999993 0.002016 -0.006666 0.999993 34.835558 584.371764)">
+              <rect
+                class="clipper-support-pad"
+                x="289.581"
+                y="611.779"
+                width="5.628"
+                height="8.442"
+                fill="#4D76A3"
+              />
+            </g>
+            <g data-anchor="front" transform="matrix(0.999993 0.002016 -0.006666 0.999993 34.835558 584.371764)">
+              <rect
+                class="clipper-support-pad"
+                x="333.451"
+                y="611.779"
+                width="5.628"
+                height="8.442"
+                fill="#4D76A3"
+              />
+            </g>
             <!-- Gantry (walkways, trusses, cross beams, tips, trolley) rotated 1.74 deg in the guideway frame about the 31/32 support centre (271.92, 524.00) so its centreline runs through supports 2 and 4; the matrix() groups are that rotation expressed inside the narrowed frame -->
             <g
               class="gantry-body"
@@ -1802,91 +1887,6 @@
                   transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
                 />
               </g>
-            </g>
-            <!-- Support pads (solid #4D76A3 = the deck blue as it renders over the grey track, no opacity): two per support beam, 8.4 wide x 12.6 long along the guideway, centred on the beam, evenly spaced (equal gaps: end, pad, gap, pad, end); move with their support; drawn above the ladder (below the trolley) so they stay solid -->
-            <g data-anchor="fourth" transform="matrix(0.999713 0.013177 -0.043561 0.999713 38.95772 355.921894)">
-              <rect
-                class="clipper-support-pad"
-                x="327.50"
-                y="693.05"
-                width="15.35"
-                height="3.10"
-                fill="#4D76A3"
-                transform="rotate(176.63 335.18 702.00)"
-              />
-            </g>
-            <g data-anchor="fourth" transform="matrix(0.999713 0.013177 -0.043561 0.999713 38.95772 355.921894)">
-              <rect
-                class="clipper-support-pad"
-                x="327.50"
-                y="707.85"
-                width="15.35"
-                height="3.10"
-                fill="#4D76A3"
-                transform="rotate(176.63 335.18 702.00)"
-              />
-            </g>
-            <g data-anchor="rear" transform="matrix(0.999713 0.013177 -0.043561 0.999713 56.969543 496.079776)">
-              <rect
-                class="clipper-support-pad"
-                x="287.786"
-                y="479.779"
-                width="5.628"
-                height="8.442"
-                fill="#4D76A3"
-                transform="rotate(-1.504 307.1 484)"
-              />
-            </g>
-            <g data-anchor="rear" transform="matrix(0.999713 0.013177 -0.043561 0.999713 56.969543 496.079776)">
-              <rect
-                class="clipper-support-pad"
-                x="320.786"
-                y="479.779"
-                width="5.628"
-                height="8.442"
-                fill="#4D76A3"
-                transform="rotate(-1.504 307.1 484)"
-              />
-            </g>
-            <g data-anchor="second" transform="matrix(0.999993 0.002016 -0.006666 0.999993 40.98533 742.588772)">
-              <rect
-                class="clipper-support-pad"
-                x="288.636"
-                y="345.779"
-                width="5.628"
-                height="8.442"
-                fill="#4D76A3"
-              />
-            </g>
-            <g data-anchor="second" transform="matrix(0.999993 0.002016 -0.006666 0.999993 40.98533 742.588772)">
-              <rect
-                class="clipper-support-pad"
-                x="315.736"
-                y="345.779"
-                width="5.628"
-                height="8.442"
-                fill="#4D76A3"
-              />
-            </g>
-            <g data-anchor="front" transform="matrix(0.999993 0.002016 -0.006666 0.999993 34.835558 584.371764)">
-              <rect
-                class="clipper-support-pad"
-                x="289.581"
-                y="611.779"
-                width="5.628"
-                height="8.442"
-                fill="#4D76A3"
-              />
-            </g>
-            <g data-anchor="front" transform="matrix(0.999993 0.002016 -0.006666 0.999993 34.835558 584.371764)">
-              <rect
-                class="clipper-support-pad"
-                x="333.451"
-                y="611.779"
-                width="5.628"
-                height="8.442"
-                fill="#4D76A3"
-              />
             </g>
             <!-- Clipper trolley crane (blue): centred on the trusses, height 22.95 -->
             <g
