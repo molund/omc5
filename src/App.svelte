@@ -18,6 +18,8 @@
     return () => PHONE.removeEventListener("change", changed);
   });
   const closeMenu = () => (ui.collapsed = true);
+  // the notice shows only in a browser where the ga_optout cookie is set
+  let showOptOut = $state(typeof document !== "undefined" && document.cookie.split("; ").includes("ga_optout=1"));
 </script>
 
 <svelte:window
@@ -52,6 +54,15 @@
     transition:fade={{ duration: 150 }}
     onclick={closeMenu}
   ></div>
+{/if}
+{#if showOptOut}
+  <div
+    role="status"
+    class="fixed inset-x-2.5 bottom-2.5 z-30 flex items-center gap-3 rounded-lg border border-(--line) bg-(--panel) p-3 text-sm text-(--ink) shadow-card"
+  >
+    <span class="flex-1">The analytics opt-out cookie is set in this browser.</span>
+    <button type="button" class="btn btn-grey" onclick={() => (showOptOut = false)}>Dismiss</button>
+  </div>
 {/if}
 {#if ui.collapsed}
   <button
