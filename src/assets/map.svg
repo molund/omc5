@@ -124,6 +124,11 @@
     .guideway.unfinished {
       display: inline;
     }
+    /* Exit ramps (spans 35 and 39): two readings of where they fork from the eastbound track. This hides .ramp-current (forks
+       mid-span) and shows .ramp-alt (forks at the 36/37 and 37/38 hammers); change .ramp-current to .ramp-alt to switch */
+    #map .ramp-current {
+      display: none !important;
+    }
     /* Old New Westminster Southern Railway line: change display:inline to display:none to hide it */
     .railway {
       display: inline;
@@ -945,20 +950,36 @@
         />
         <!-- Span 35 off-ramp, second span, including the part that merges into the 36 eastbound track (a guess until it is built) -->
         <polygon
-          class="guideway unfinished"
+          class="guideway unfinished ramp-current"
           fill="#FFFFFF"
           stroke="#888780"
           stroke-width="0.825"
           points="315.23,1014.30 314.82,1014.30 315.53,1075.43 317.28,1075.53 328.03,893.53 318.39,893.37 314.74,955.09"
         />
+        <!-- Alternate: the span 35 off-ramp forks from the eastbound track at the 36/37 hammer, aimed at a point past the cap's far edge by the cap's width (35.09) and cut off at the cap's far edge, so the tip is blunt; two girders, span 35 and span 36, meeting on the centre of the 35/36 bent, moved south-west so they sit clear of the eastbound girders there (a slight bend where they meet). Span 35 here; span 36 is one wide deck with the eastbound track (see eastbound span 36) -->
+        <polygon
+          class="guideway unfinished ramp-alt"
+          fill="#FFFFFF"
+          stroke="#888780"
+          stroke-width="0.825"
+          points="318.39,893.37 328.03,893.53 324.88,1014.30 315.23,1014.30"
+        />
         <!-- The span 35 off-ramp ends on the centre of the 36 eastbound track at mid-span 36, like the span 39 on-ramp in span 38 --><!-- Span 39: yard on-ramp joining eastbound (mirror of the span 35 off-ramp) -->
         <!-- Span 39 on-ramp, including the part that merges into the 38 eastbound track (centre line was 308.92,1297.50 to 326.73,1480.20; 9.64 wide) -->
         <polygon
-          class="guideway unfinished"
+          class="guideway unfinished ramp-current"
           fill="#FFFFFF"
           stroke="#888780"
           stroke-width="0.825"
           points="316.50,1424.98 321.93,1480.67 331.53,1479.73 316.44,1324.93 316.17,1358.80 316.21,1358.80"
+        />
+        <!-- Alternate: the span 39 on-ramp forks from the eastbound track at the 37/38 hammer, aimed at a point past the cap's far edge by the cap's width (33.59) and cut off at the cap's far edge, so the tip is blunt; two girders, span 38 and span 39, meeting on the centre of the 38/39 bent, moved south-west so they sit clear of the eastbound girders there (a slight bend where they meet). Span 39 here; span 38 is one wide deck with the eastbound track (see eastbound span 38) -->
+        <polygon
+          class="guideway unfinished ramp-alt"
+          fill="#FFFFFF"
+          stroke="#888780"
+          stroke-width="0.825"
+          points="316.21,1358.80 325.85,1358.80 331.53,1479.73 321.93,1480.67"
         />
         <!-- Precast spans and steel girders: 10.40 wide (borders 12.05, ramp white cores 8.20) --><!-- Border for spans 43 and 44 (darker stroke under the fill, as on 31) -->
         <polygon
@@ -1115,11 +1136,19 @@
           points="280.08,1014.30 302.28,1014.30 303.30,1136.20 281.09,1136.20"
         />
         <polygon
-          class="guideway unfinished"
+          class="guideway unfinished ramp-current"
           fill="#FFFFFF"
           stroke="#888780"
           stroke-width="0.825"
           points="305.58,1014.30 315.23,1014.30 316.24,1136.20 306.60,1136.20"
+        />
+        <!-- Alternate: span 36 as one wide deck carrying the eastbound track and the span 35 off-ramp, from the 35/36 bent to the 36/37 hammer (narrowing to the span 37 track's width at the hammer) -->
+        <polygon
+          class="guideway unfinished ramp-alt"
+          fill="#FFFFFF"
+          stroke="#888780"
+          stroke-width="0.825"
+          points="305.58,1014.30 324.88,1014.30 316.25,1136.20 306.60,1136.20"
         />
         <polygon
           class="gi guideway"
@@ -1137,11 +1166,19 @@
           points="281.98,1238.00 304.18,1238.00 303.23,1358.80 281.03,1358.80"
         />
         <polygon
-          class="guideway unfinished"
+          class="guideway unfinished ramp-current"
           fill="#FFFFFF"
           stroke="#888780"
           stroke-width="0.825"
           points="307.48,1238.00 317.12,1238.00 316.17,1358.80 306.53,1358.80"
+        />
+        <!-- Alternate: span 38 as one wide deck carrying the eastbound track and the span 39 on-ramp, from the 37/38 hammer to the 38/39 bent (narrowing to the span 37 track's width at the hammer) -->
+        <polygon
+          class="guideway unfinished ramp-alt"
+          fill="#FFFFFF"
+          stroke="#888780"
+          stroke-width="0.825"
+          points="307.45,1238.00 317.09,1238.00 325.85,1358.80 306.53,1358.80"
         />
         <polygon
           class="p guideway unfinished"
