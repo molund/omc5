@@ -39,7 +39,7 @@ Svelte 5 + Vite site, deployed to GitHub Pages (https://clayton-clipper.olund.ca
 - `trackside/` — Trackside (`/trackside/`), the updates page; read `trackside/README.md` before changing it.
 - `status.yaml` — gantry span / complete / time-stamped notes (all on Trackside; the progress card shows the newest update's latest text). Site news
   only: update this file, don't change the drawing unless asked. Follow-ups get no title.
-  Titles (the value after a note's time stamp; it leads a post and is the source of the update's `#` anchor on Trackside; see the format in `status.yaml`):
+  Titles (the value after a note's time stamp; it leads a post and is the source of the update's `?post=` slug on Trackside; see the format in `status.yaml`):
   - A day with one note, and a note whose title would be completely boring as written (a routine step: hung, glued, moved,
     about to lift), gets the date title, "Clayton Clipper construction update for Monday, Nov. 2, 2026" (weekday, month
     abbreviated with a period, day, year; BC time).

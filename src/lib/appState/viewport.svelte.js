@@ -251,6 +251,21 @@ export function centreView() {
 }
 
 /**
+ * Scrolls the map so the canvas point (x, y) is in the middle of the stage, without changing zoom.
+ * @param {number} x The canvas x (viewBox units).
+ * @param {number} y The canvas y (viewBox units).
+ * @returns {void}
+ */
+export function centreOn(x, y) {
+  const stage = els.stage;
+  const vb = els.svg.viewBox.baseVal;
+  const box = els.svg.getBoundingClientRect();
+  const frame = stage.getBoundingClientRect();
+  stage.scrollLeft += box.left - frame.left + ((x - vb.x) / vb.width) * box.width - stage.clientWidth / 2;
+  stage.scrollTop += box.top - frame.top + ((y - vb.y) / vb.height) * box.height - stage.clientHeight / 2;
+}
+
+/**
  * Zooms the map, keeping the point (cx, cy) where it is on the screen. Never less than Fit, never more than 16000%.
  * @param {number} p The zoom, a percentage of the stage width.
  * @param {number} [cx] The screen x to zoom about; the middle of the stage by default.
