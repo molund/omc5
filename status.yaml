@@ -1,6 +1,6 @@
 # Clayton Clipper status. The site reads it (src/lib/status.js); running the deploy workflow by hand or through the API updates
 # it (see .github/workflows/deploy.yml). Times are BC time (UTC−7), rounded to the nearest quarter hour.
-updated: 2026-11-02T20:30-07:00
+updated: 2026-11-04T12:30-07:00
 # the span the gantry is working on (Clayton Clipper span numbers, 3-104)
 span: 37
 # whether that span is complete (or at least hung)
@@ -45,6 +45,8 @@ complete: true
 #           block:
 #             - "Another paragraph"
 notes:
+  - 2026-11-04T12:30-07:00: ""
+    note-to-self: "Fully glued. Hangers and cables are still up. Post tensioning in progress."
   - 2026-11-03T07:15-07:00: "Clayton Clipper construction update for Tuesday, Nov. 3, 2026"
     summary: "Both precast girders for span 34 were installed overnight by mobile cranes. The Clayton Clipper is beginning the move to the next span."
     follow-up:
