@@ -14,7 +14,7 @@ const SUPPORTS = {
 
 /**
  * Anchors the Clayton Clipper gantry to the span it is working on. #clayton-clipper is drawn for span data-drawn-at; this
- * moves each of its data-anchor groups to span data-span (the cclabel span numbers, 1-105). Spans are found from the
+ * moves each of its data-anchor groups to span data-span (the ccnumber span numbers, 1-105). Spans are found from the
  * drawing:
  * - the joint between spans n and n+1 is the bent cap (rect.g) nearest the midpoint of their two labels
  * - span n runs from joint n-1/n to joint n/n+1, centred on its gantry box (a gi or p polygon) where it has one, so the
@@ -56,7 +56,7 @@ export function placeGantry(root) {
     mid = (a, b) => mul(add(a, b), 0.5);
 
   const labels = {};
-  root.querySelectorAll("text.cclabel").forEach((t) => {
+  root.querySelectorAll("text.ccnumber").forEach((t) => {
     labels[+t.textContent.trim()] = toCanvas(t, +t.getAttribute("x"), +t.getAttribute("y"));
   });
   const caps = [...root.querySelectorAll("rect.g")]

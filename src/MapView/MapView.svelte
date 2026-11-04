@@ -84,7 +84,7 @@
     // the turn that levels the Clayton Clipper route: the line from span 105's label to span 1's, turned flat
     const toRoot = DOMMatrix.fromMatrix(svg.getScreenCTM()).inverse(),
       label = (n) => {
-        const t = [...svg.querySelectorAll("text.cclabel")].find((t) => t.textContent.trim() === String(n));
+        const t = [...svg.querySelectorAll("text.ccnumber")].find((t) => t.textContent.trim() === String(n));
         return (
           t &&
           new DOMPoint(+t.getAttribute("x"), +t.getAttribute("y"))
