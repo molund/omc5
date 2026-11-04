@@ -1,5 +1,5 @@
 <script>
-  import { LAYERS, labelsAvailable } from "./lib/layerSwitches.js";
+  import { LAYERS, spanNumbersAvailable } from "./lib/layerSwitches.js";
   import Icon from "./Icon.svelte";
   import { fly, slide } from "svelte/transition";
   import {
@@ -17,9 +17,9 @@
   // each press of zoom in or out changes the zoom by this factor, about the middle of the stage; Fit's zoom depends on the
   // stage and canvas shape, so it is worked out when pressed
   const ZOOM_STEP = 1.5;
-  const avail = $derived(labelsAvailable(layers));
+  const avail = $derived(spanNumbersAvailable(layers));
 
-  // the span-label switch needs Clayton Clipper spans on screen, and the direction arrows the finished spans they sit on, so
+  // the span number switch needs Clayton Clipper spans on screen, and the direction arrows the finished spans they sit on, so
   // they fade and can't be changed without them
   const disabled = (k) => (k === "spanNumbers" && !avail) || (k === "arrows" && !layers.guideway);
   // the buttons in the button groups: the views, the gantry's Off / style row, and Show all and Reset; and what a button

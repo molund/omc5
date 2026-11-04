@@ -181,7 +181,7 @@ export const FULL_AERIAL_CSS =
  * @param {Record<string, boolean>} state The switches' state.
  * @returns {boolean}
  */
-export const labelsAvailable = (state) => state.progress || state.guideway || state.unfinished;
+export const spanNumbersAvailable = (state) => state.progress || state.guideway || state.unfinished;
 
 /**
  * The CSS rules that show and hide the layers of map.svg for the given switch state.
@@ -190,7 +190,7 @@ export const labelsAvailable = (state) => state.progress || state.guideway || st
  */
 export function layerCss(state) {
   let r = "";
-  const avail = labelsAvailable(state);
+  const avail = spanNumbersAvailable(state);
   LAYERS.forEach((g) =>
     g[1].forEach(([k, , cls]) => {
       const on =
