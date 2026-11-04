@@ -26,7 +26,7 @@ export const LAYERS = [
       ["guideway", "Finished spans", "guideway", true],
       ["unfinished", "Unfinished spans", "unfinished", true],
       ["supports", "Supports", "supports", true],
-      ["spanLabels", "Span numbers", "cclabel", true],
+      ["spanNumbers", "Span numbers", "cclabel", true],
       ["arrows", "Direction arrows", "arrows", false],
       ["stationLabels", "Station labels", "stationlabel", true],
     ],
@@ -78,7 +78,7 @@ export const PROGRESS_DEFAULTS = {
   yard: false,
   ave72: false,
   railway: false,
-  spanLabels: true,
+  spanNumbers: true,
   arrows: false,
   stationLabels: false,
   gantry: true,
@@ -125,7 +125,7 @@ const PROGRESS_SHOWS = {
   yard: [".yard"],
   ave72: [".ave72"],
   railway: [".railway"],
-  spanLabels: [".cclabel"],
+  spanNumbers: [".cclabel"],
   arrows: ["text.n.guideway"],
   stationLabels: [".stationlabel"],
   gantry: [".gantry"],
@@ -176,7 +176,7 @@ export const FULL_AERIAL_CSS =
   "#railway-extension path:last-of-type,#railway-extension-north path:last-of-type{stroke-dasharray:3.33 14.43 !important}";
 
 /**
- * Whether the span labels can show: they need Clayton Clipper spans on screen, so Progress, or at least one type of span
+ * Whether the span numbers can show: they need Clayton Clipper spans on screen, so Progress, or at least one type of span
  * on.
  * @param {Record<string, boolean>} state The switches' state.
  * @returns {boolean}
@@ -199,12 +199,12 @@ export function layerCss(state) {
         !(["roads", "yard", "walk"].includes(k) && !state.sfmsfDrawing && !state.sfmsfAerial) &&
         !(k === "aerial" && state.sfmsfDrawing) &&
         !(k === "stationLabels" && (state.sfmsfDrawing || state.sfmsfAerial)) &&
-        !(k === "spanLabels" && !avail);
+        !(k === "spanNumbers" && !avail);
       if (k === "progress" || k === "sfmsfDrawing" || k === "sfmsfAerial" || k === "fullAerial" || k === "horizontal")
         return;
       // roads: Fraser Highway and Highway 15, with their labels (every piece is tagged "roads")
       if (k === "roads") r += ".roads{display:" + (on ? "inline" : "none") + " !important}";
-      else if (k === "spanLabels") r += ".cclabel{display:" + (on ? "inline" : "none") + " !important}";
+      else if (k === "spanNumbers") r += ".cclabel{display:" + (on ? "inline" : "none") + " !important}";
       else if (k === "arrows") r += on ? "" : "text.n.guideway{display:none !important}";
       else if (k === "gantry") r += "";
       else if (k === "supports") r += on ? "" : 'rect.g,circle[fill="#D7D7D7"]{display:none !important}';
