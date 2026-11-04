@@ -10,15 +10,19 @@
 
   // "today" or "yesterday" on the card (Trackside keeps full dates)
   const when = asOf(status.updated, true);
-  // the newest update's latest word: its newest follow-up if it has any, else its note
+  // the newest update's latest word: its newest follow-up if it has any, else its note. It shows only when it is from the
+  // time the card was last updated (a position-only check-in leaves `updated` later than every note), otherwise the card has
+  // no text and a Trackside button instead of Comments
   const newest = status.latest;
-  const note = status.followUps[0]?.summary || status.note;
+  const word = status.followUps[0] ?? newest;
+  const current = !!word && +word.time === +status.updated;
+  const note = current ? status.followUps[0]?.summary || status.note : "";
   // the Comments button opens Trackside's first page, scrolled to the newest update (a post can sit above it) with its
   // comments open, and shows its comment and reaction counts once GitHub has sent them
   const TRACKSIDE = `${import.meta.env.BASE_URL}trackside/`;
   const COMMENTS = newest ? `${TRACKSIDE}?post=${newest.slug}&comments` : TRACKSIDE;
   let activity = $state(null);
-  if (newest) fetchCounts().then((c) => (activity = c[term(newest.time)] ?? null));
+  if (newest && current) fetchCounts().then((c) => (activity = c[term(newest.time)] ?? null));
 
   // what each number counts, shown when it is hovered or clicked with a mouse, tapped (tap again to hide) or pressed with
   // Enter/Space
@@ -159,7 +163,12 @@
     </div>
     {#if when}<div class="mt-2 text-xs text-(--mute)">As of {when}</div>{/if}
     {#if note}<div class="mt-2 text-sm">{note}</div>{/if}
-    {#if newest}
+    {#if newest && !current}
+      <a
+        class="btn mt-2.5 flex min-h-8 justify-center gap-1.5 border-(--button-line) bg-(--button-bg) px-2.5 text-sm font-semibold text-(--button-ink) hover:bg-(--bg)"
+        href={TRACKSIDE}><span>Trackside</span><span aria-hidden="true">→</span></a
+      >
+    {:else if newest}
       <a
         class="btn mt-2.5 flex min-h-8 gap-1.5 border-(--line) bg-(--panel) px-2.5 text-sm font-normal text-(--ink) hover:bg-(--bg)"
         href={COMMENTS}
