@@ -1142,13 +1142,13 @@
           stroke-width="0.825"
           points="305.58,1014.30 315.23,1014.30 316.24,1136.20 306.60,1136.20"
         />
-        <!-- Alternate: span 36 as one wide deck carrying the eastbound track and the span 35 off-ramp, from the 35/36 bent to the 36/37 hammer (the ramp's outer edge as aimed, cut at the joint) -->
+        <!-- Alternate: span 36 as one wide deck carrying the eastbound track and the span 35 off-ramp, from the 35/36 bent to the 36/37 hammer (narrowing to the span 37 track's width at the hammer) -->
         <polygon
           class="guideway unfinished ramp-alt"
           fill="#FFFFFF"
           stroke="#888780"
           stroke-width="0.825"
-          points="305.58,1014.30 324.88,1014.30 318.27,1136.20 306.60,1136.20"
+          points="305.58,1014.30 324.88,1014.30 316.25,1136.20 306.60,1136.20"
         />
         <polygon
           class="gi guideway"
@@ -1172,13 +1172,13 @@
           stroke-width="0.825"
           points="307.48,1238.00 317.12,1238.00 316.17,1358.80 306.53,1358.80"
         />
-        <!-- Alternate: span 38 as one wide deck carrying the eastbound track and the span 39 on-ramp, from the 37/38 hammer to the 38/39 bent (the ramp's outer edge as aimed, cut at the joint) -->
+        <!-- Alternate: span 38 as one wide deck carrying the eastbound track and the span 39 on-ramp, from the 37/38 hammer to the 38/39 bent (narrowing to the span 37 track's width at the hammer) -->
         <polygon
           class="guideway unfinished ramp-alt"
           fill="#FFFFFF"
           stroke="#888780"
           stroke-width="0.825"
-          points="307.48,1238.00 318.83,1238.00 325.85,1358.80 306.53,1358.80"
+          points="307.45,1238.00 317.09,1238.00 325.85,1358.80 306.53,1358.80"
         />
         <polygon
           class="p guideway unfinished"
