@@ -1518,400 +1518,6 @@
         <circle cx="391.23" cy="-296.58" r="2.5" fill="#D7D7D7" />
         <circle cx="409.68" cy="-397.05" r="2.5" fill="#D7D7D7" />
         <circle cx="432.63" cy="-504.87" r="2.5" fill="#D7D7D7" />
-        <!-- Clipper: no group opacity; every piece is 65% on its own, so each layer blends with everything beneath it down to the solid track -->
-        <!-- Gantry pivoted where it crosses the 31/32 support; centreline x = 307.1; shortened 3.5% about its centre y=550 (scale(1 0.965)) -->
-        <g
-          transform="translate(278.16 0) scale(0.55 1) translate(-278.16 0)"
-        >
-          <g
-            id="clayton-clipper"
-            class="gantry"
-            data-drawn-at="37"
-            transform="translate(-40.29 40.00)"
-          >
-            <!-- Layers (bottom to top): supports + their walkways; trusses, cross beams and side walkways; blue tips; trolley. Labels are drawn later, above everything. -->
-            <!-- Anchoring: the gantry works on the span set in status.yaml (the Clayton Clipper span numbers, 1-105), which the page puts in data-span here; to move it, change status.yaml. Everything below is drawn for span data-drawn-at, and src/lib/placeGantry.js moves each data-anchor group from there to data-span when the page loads. front: the short support, just ahead of the span, its rear edge flush with the span's front end; second: just behind the span, its front edge flush with the span's back end; rear: fully on the span behind, its rear edge (beam and walkway) a third of its width in from that span's back end; fourth: the lengthwise support on the span behind, at the same fraction of the way along it; body: the trusses, walkways and trolley, centred on the span midpoint between its outer edges and parallel to them. The supports keep the along and across offsets they are drawn with. -->
-            <!-- Clipper centreline over span 32: x = 300.5 + 0.0732*(y - 400) -->
-            <g data-anchor="fourth" transform="matrix(0.999713 0.013177 -0.043561 0.999713 38.95772 355.921894)">
-              <rect
-                opacity="1"
-                id="clipper-support-1"
-                x="329.73"
-                y="677.255"
-                width="10.91"
-                height="49.5"
-                fill="#F2A51F"
-                stroke="#9B691A"
-                stroke-width="2"
-                transform="rotate(176.63 335.18 702.00)"
-              />
-            </g>
-            <g data-anchor="rear" transform="matrix(0.999713 0.013177 -0.043561 0.999713 56.969543 496.079776)">
-              <rect
-                opacity="1"
-                id="clipper-support-2"
-                x="262.1"
-                y="481.0"
-                width="90"
-                height="6"
-                fill="#F2A51F"
-                stroke="#9B691A"
-                stroke-width="2"
-                transform="rotate(-1.504 307.1 484)"
-              />
-            </g>
-            <g data-anchor="second" transform="matrix(0.999993 0.002016 -0.006666 0.999993 40.98533 742.588772)">
-              <rect
-                opacity="1"
-                id="clipper-support-3"
-                x="260.0"
-                y="347.0"
-                width="90"
-                height="6"
-                fill="#F2A51F"
-                stroke="#9B691A"
-                stroke-width="2"
-              />
-            </g>
-            <g data-anchor="front" transform="matrix(0.999993 0.002016 -0.006666 0.999993 34.835558 584.371764)">
-              <rect
-                opacity="1"
-                id="clipper-support-4-short"
-                x="282.895"
-                y="613"
-                width="63"
-                height="6"
-                fill="#F2A51F"
-                stroke="#9B691A"
-                stroke-width="2"
-              />
-            </g>
-            <!-- Support walkways (blue, 2/3 the side-walkway thickness, full length of their support beam, same x and width as the beam): east side of the long supports, west side of the short one; move with their support -->
-            <g data-anchor="fourth" transform="matrix(0.999713 0.013177 -0.043561 0.999713 38.95772 355.921894)">
-              <rect
-                opacity="0.65"
-                class="clipper-support-walkway"
-                x="323.67"
-                y="677.255"
-                width="6.06"
-                height="49.5"
-                fill="#174B83"
-                transform="rotate(176.63 335.18 702.00)"
-              />
-            </g>
-            <g data-anchor="rear" transform="matrix(0.999713 0.013177 -0.043561 0.999713 56.969543 496.079776)">
-              <rect
-                opacity="0.65"
-                class="clipper-support-walkway"
-                x="262.1"
-                y="477.67"
-                width="90"
-                height="3.33"
-                fill="#174B83"
-                transform="rotate(-1.504 307.1 484)"
-              />
-            </g>
-            <g data-anchor="second" transform="matrix(0.999993 0.002016 -0.006666 0.999993 40.98533 742.588772)">
-              <rect
-                opacity="0.65"
-                class="clipper-support-walkway"
-                x="260.0"
-                y="343.67"
-                width="90"
-                height="3.33"
-                fill="#174B83"
-              />
-            </g>
-            <g data-anchor="front" transform="matrix(0.999993 0.002016 -0.006666 0.999993 34.835558 584.371764)">
-              <rect
-                opacity="0.65"
-                class="clipper-support-walkway"
-                x="282.895"
-                y="619"
-                width="63"
-                height="3.33"
-                fill="#174B83"
-              />
-            </g>
-            <!-- Support pads: solid blue, above their beams and walkways but below the trusses; move with their support. -->
-            <g data-anchor="fourth" transform="matrix(0.999713 0.013177 -0.043561 0.999713 38.95772 355.921894)">
-              <rect
-                class="clipper-support-pad"
-                x="327.50"
-                y="688.371"
-                width="15.35"
-                height="3.10"
-                fill="#4D76A3"
-                transform="rotate(176.63 335.18 702.00)"
-              />
-            </g>
-            <g data-anchor="fourth" transform="matrix(0.999713 0.013177 -0.043561 0.999713 38.95772 355.921894)">
-              <rect
-                class="clipper-support-pad"
-                x="327.50"
-                y="712.529"
-                width="15.35"
-                height="3.10"
-                fill="#4D76A3"
-                transform="rotate(176.63 335.18 702.00)"
-              />
-            </g>
-            <g data-anchor="rear" transform="matrix(0.999713 0.013177 -0.043561 0.999713 56.969543 496.079776)">
-              <rect
-                class="clipper-support-pad"
-                x="282.368"
-                y="479.779"
-                width="5.628"
-                height="8.442"
-                fill="#4D76A3"
-                transform="rotate(-1.504 307.1 484)"
-              />
-            </g>
-            <g data-anchor="rear" transform="matrix(0.999713 0.013177 -0.043561 0.999713 56.969543 496.079776)">
-              <rect
-                class="clipper-support-pad"
-                x="326.204"
-                y="479.779"
-                width="5.628"
-                height="8.442"
-                fill="#4D76A3"
-                transform="rotate(-1.504 307.1 484)"
-              />
-            </g>
-            <g data-anchor="second" transform="matrix(0.999993 0.002016 -0.006666 0.999993 40.98533 742.588772)">
-              <rect
-                class="clipper-support-pad"
-                x="280.251"
-                y="345.779"
-                width="5.628"
-                height="8.442"
-                fill="#4D76A3"
-              />
-            </g>
-            <g data-anchor="second" transform="matrix(0.999993 0.002016 -0.006666 0.999993 40.98533 742.588772)">
-              <rect
-                class="clipper-support-pad"
-                x="324.121"
-                y="345.779"
-                width="5.628"
-                height="8.442"
-                fill="#4D76A3"
-              />
-            </g>
-            <g data-anchor="front" transform="matrix(0.999993 0.002016 -0.006666 0.999993 34.835558 584.371764)">
-              <rect
-                class="clipper-support-pad"
-                x="289.581"
-                y="611.779"
-                width="5.628"
-                height="8.442"
-                fill="#4D76A3"
-              />
-            </g>
-            <g data-anchor="front" transform="matrix(0.999993 0.002016 -0.006666 0.999993 34.835558 584.371764)">
-              <rect
-                class="clipper-support-pad"
-                x="333.451"
-                y="611.779"
-                width="5.628"
-                height="8.442"
-                fill="#4D76A3"
-              />
-            </g>
-            <!-- Gantry (walkways, trusses, cross beams, tips, trolley) rotated 1.74 deg in the guideway frame about the 31/32 support centre (271.92, 524.00) so its centreline runs through supports 2 and 4; the matrix() groups are that rotation expressed inside the narrowed frame -->
-            <g
-              class="gantry-body"
-              data-anchor="body"
-              transform="matrix(0.999927 0.003782 -0.040171 0.99992 56.138264 596.963444)"
-            >
-              <g
-                transform="matrix(0.999538 -0.016711 0.055243 0.999538 -26.5959 5.3554)"
-              >
-                <!-- Clipper side walkways (blue), one typical span plus 32% long (158.7), centred on the trusses like the trolley -->
-                <rect
-                  opacity="0.65"
-                  class="clipper-walkway"
-                  x="270.17"
-                  y="470.65"
-                  width="3.33"
-                  height="158.7"
-                  fill="#174B83"
-                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
-                />
-                <rect
-                  opacity="0.65"
-                  class="clipper-walkway"
-                  x="327.5"
-                  y="470.65"
-                  width="3.33"
-                  height="158.7"
-                  fill="#174B83"
-                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
-                />
-                <!-- Inner side walkways (blue), same length, centring and thickness (3.33) as the outer ones, on the inside face of each truss -->
-                <rect
-                  opacity="0.65"
-                  class="clipper-walkway-inner"
-                  x="283.5"
-                  y="470.65"
-                  width="3.33"
-                  height="158.7"
-                  fill="#174B83"
-                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
-                />
-                <rect
-                  opacity="0.65"
-                  class="clipper-walkway-inner"
-                  x="314.17"
-                  y="470.65"
-                  width="3.33"
-                  height="158.7"
-                  fill="#174B83"
-                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
-                />
-                <g
-                  class="clipper-truss"
-                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
-                >
-                  <clipPath id="truss-clip-273">
-                    <rect x="273.5" y="371.5" width="10" height="357" />
-                  </clipPath>
-                  <g
-                    clip-path="url(#truss-clip-273)"
-                    fill="none"
-                    stroke="#F2A51F"
-                    stroke-width="1.4"
-                    stroke-linejoin="round"
-                  >
-                    <line x1="274.2" y1="371.5" x2="274.2" y2="728.5" />
-                    <line
-                      x1="278.5"
-                      y1="371.5"
-                      x2="278.5"
-                      y2="728.5"
-                      stroke-width="2.1"
-                    />
-                    <line x1="282.8" y1="371.5" x2="282.8" y2="728.5" />
-                    <polyline
-                      points="274.2,361.5 278.5,366.5 274.2,371.5 278.5,376.5 274.2,381.5 278.5,386.5 274.2,391.5 278.5,396.5 274.2,401.5 278.5,406.5 274.2,411.5 278.5,416.5 274.2,421.5 278.5,426.5 274.2,431.5 278.5,436.5 274.2,441.5 278.5,446.5 274.2,451.5 278.5,456.5 274.2,461.5 278.5,466.5 274.2,471.5 278.5,476.5 274.2,481.5 278.5,486.5 274.2,491.5 278.5,496.5 274.2,501.5 278.5,506.5 274.2,511.5 278.5,516.5 274.2,521.5 278.5,526.5 274.2,531.5 278.5,536.5 274.2,541.5 278.5,546.5 274.2,551.5 278.5,556.5 274.2,561.5 278.5,566.5 274.2,571.5 278.5,576.5 274.2,581.5 278.5,586.5 274.2,591.5 278.5,596.5 274.2,601.5 278.5,606.5 274.2,611.5 278.5,616.5 274.2,621.5 278.5,626.5 274.2,631.5 278.5,636.5 274.2,641.5 278.5,646.5 274.2,651.5 278.5,656.5 274.2,661.5 278.5,666.5 274.2,671.5 278.5,676.5 274.2,681.5 278.5,686.5 274.2,691.5 278.5,696.5 274.2,701.5 278.5,706.5 274.2,711.5 278.5,716.5 274.2,721.5 278.5,726.5 274.2,731.5 278.5,736.5"
-                    />
-                    <polyline
-                      points="282.8,361.5 278.5,366.5 282.8,371.5 278.5,376.5 282.8,381.5 278.5,386.5 282.8,391.5 278.5,396.5 282.8,401.5 278.5,406.5 282.8,411.5 278.5,416.5 282.8,421.5 278.5,426.5 282.8,431.5 278.5,436.5 282.8,441.5 278.5,446.5 282.8,451.5 278.5,456.5 282.8,461.5 278.5,466.5 282.8,471.5 278.5,476.5 282.8,481.5 278.5,486.5 282.8,491.5 278.5,496.5 282.8,501.5 278.5,506.5 282.8,511.5 278.5,516.5 282.8,521.5 278.5,526.5 282.8,531.5 278.5,536.5 282.8,541.5 278.5,546.5 282.8,551.5 278.5,556.5 282.8,561.5 278.5,566.5 282.8,571.5 278.5,576.5 282.8,581.5 278.5,586.5 282.8,591.5 278.5,596.5 282.8,601.5 278.5,606.5 282.8,611.5 278.5,616.5 282.8,621.5 278.5,626.5 282.8,631.5 278.5,636.5 282.8,641.5 278.5,646.5 282.8,651.5 278.5,656.5 282.8,661.5 278.5,666.5 282.8,671.5 278.5,676.5 282.8,681.5 278.5,686.5 282.8,691.5 278.5,696.5 282.8,701.5 278.5,706.5 282.8,711.5 278.5,716.5 282.8,721.5 278.5,726.5 282.8,731.5 278.5,736.5"
-                    />
-                  </g>
-                </g>
-                <!-- truss lattice: three chords + diamond diagonals, yellow, 100% opacity, no fill -->
-                <g
-                  class="clipper-truss"
-                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
-                >
-                  <clipPath id="truss-clip-317">
-                    <rect x="317.5" y="371.5" width="10" height="357" />
-                  </clipPath>
-                  <g
-                    clip-path="url(#truss-clip-317)"
-                    fill="none"
-                    stroke="#F2A51F"
-                    stroke-width="1.4"
-                    stroke-linejoin="round"
-                  >
-                    <line x1="318.2" y1="371.5" x2="318.2" y2="728.5" />
-                    <line
-                      x1="322.5"
-                      y1="371.5"
-                      x2="322.5"
-                      y2="728.5"
-                      stroke-width="2.1"
-                    />
-                    <line x1="326.8" y1="371.5" x2="326.8" y2="728.5" />
-                    <polyline
-                      points="318.2,361.5 322.5,366.5 318.2,371.5 322.5,376.5 318.2,381.5 322.5,386.5 318.2,391.5 322.5,396.5 318.2,401.5 322.5,406.5 318.2,411.5 322.5,416.5 318.2,421.5 322.5,426.5 318.2,431.5 322.5,436.5 318.2,441.5 322.5,446.5 318.2,451.5 322.5,456.5 318.2,461.5 322.5,466.5 318.2,471.5 322.5,476.5 318.2,481.5 322.5,486.5 318.2,491.5 322.5,496.5 318.2,501.5 322.5,506.5 318.2,511.5 322.5,516.5 318.2,521.5 322.5,526.5 318.2,531.5 322.5,536.5 318.2,541.5 322.5,546.5 318.2,551.5 322.5,556.5 318.2,561.5 322.5,566.5 318.2,571.5 322.5,576.5 318.2,581.5 322.5,586.5 318.2,591.5 322.5,596.5 318.2,601.5 322.5,606.5 318.2,611.5 322.5,616.5 318.2,621.5 322.5,626.5 318.2,631.5 322.5,636.5 318.2,641.5 322.5,646.5 318.2,651.5 322.5,656.5 318.2,661.5 322.5,666.5 318.2,671.5 322.5,676.5 318.2,681.5 322.5,686.5 318.2,691.5 322.5,696.5 318.2,701.5 322.5,706.5 318.2,711.5 322.5,716.5 318.2,721.5 322.5,726.5 318.2,731.5 322.5,736.5"
-                    />
-                    <polyline
-                      points="326.8,361.5 322.5,366.5 326.8,371.5 322.5,376.5 326.8,381.5 322.5,386.5 326.8,391.5 322.5,396.5 326.8,401.5 322.5,406.5 326.8,411.5 322.5,416.5 326.8,421.5 322.5,426.5 326.8,431.5 322.5,436.5 326.8,441.5 322.5,446.5 326.8,451.5 322.5,456.5 326.8,461.5 322.5,466.5 326.8,471.5 322.5,476.5 326.8,481.5 322.5,486.5 326.8,491.5 322.5,496.5 326.8,501.5 322.5,506.5 326.8,511.5 322.5,516.5 326.8,521.5 322.5,526.5 326.8,531.5 322.5,536.5 326.8,541.5 322.5,546.5 326.8,551.5 322.5,556.5 326.8,561.5 322.5,566.5 326.8,571.5 322.5,576.5 326.8,581.5 322.5,586.5 326.8,591.5 322.5,596.5 326.8,601.5 322.5,606.5 326.8,611.5 322.5,616.5 326.8,621.5 322.5,626.5 326.8,631.5 322.5,636.5 326.8,641.5 322.5,646.5 326.8,651.5 322.5,656.5 326.8,661.5 322.5,666.5 326.8,671.5 322.5,676.5 326.8,681.5 322.5,686.5 326.8,691.5 322.5,696.5 326.8,701.5 322.5,706.5 326.8,711.5 322.5,716.5 326.8,721.5 322.5,726.5 326.8,731.5 322.5,736.5"
-                    />
-                  </g>
-                </g>
-                <!-- truss lattice: three chords + diamond diagonals, yellow, 100% opacity, no fill -->
-                <rect
-                  x="278.5"
-                  y="387.55"
-                  width="44"
-                  height="2.5"
-                  fill="#F2A51F"
-                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
-                />
-                <rect
-                  x="278.5"
-                  y="709.95"
-                  width="44"
-                  height="2.5"
-                  fill="#F2A51F"
-                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
-                />
-                <!-- Clipper blue truss tips (end legs; solid #4D76A3 to match the pads and decks as rendered): inner half of each truss (5 wide), 11.2 long, recessed 8.6 from each truss end (trimmed by a third from the outer end); y = truss start + 8.6 and truss end - 19.8 -->
-                <rect
-                  class="clipper-tip"
-                  x="278.5"
-                  y="380.1"
-                  width="5"
-                  height="11.2"
-                  fill="#4D76A3"
-                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
-                />
-                <rect
-                  class="clipper-tip"
-                  x="278.5"
-                  y="708.7"
-                  width="5"
-                  height="11.2"
-                  fill="#4D76A3"
-                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
-                />
-                <rect
-                  class="clipper-tip"
-                  x="317.5"
-                  y="380.1"
-                  width="5"
-                  height="11.2"
-                  fill="#4D76A3"
-                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
-                />
-                <rect
-                  class="clipper-tip"
-                  x="317.5"
-                  y="708.7"
-                  width="5"
-                  height="11.2"
-                  fill="#4D76A3"
-                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
-                />
-              </g>
-            </g>
-            <!-- Clipper trolley crane (blue): centred on the trusses, height 22.95 -->
-            <g
-              class="gantry-body"
-              data-anchor="body"
-              transform="matrix(0.999927 0.003782 -0.040171 0.99992 56.138264 596.963444)"
-            >
-              <g
-                transform="matrix(0.999538 -0.016711 0.055243 0.999538 -26.5959 5.3554)"
-              >
-                <rect
-                  opacity="0.43"
-                  id="clipper-trolley"
-                  x="266.5"
-                  y="522.13"
-                  width="68"
-                  height="22.95"
-                  rx="2"
-                  fill="#174B83"
-                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
-                />
-              </g>
-            </g>
-          </g>
-        </g>
       </g>
       <text
         class="road roads"
@@ -6251,5 +5857,406 @@
       fill="#D7D7D7"
       transform="matrix(-0.620704 0.920232 -0.920232 -0.620704 2397.600031 1060.140015)"
     />
+  </g>
+  <g
+    clip-path="url(#base-photo-frame)"
+    transform="translate(0 1200) scale(1.11) translate(0 -1200)"
+  >
+    <g transform="translate(2160 1074) rotate(124)">
+        <!-- Clipper: no group opacity; every piece is 65% on its own, so each layer blends with everything beneath it down to the solid track -->
+        <!-- Gantry pivoted where it crosses the 31/32 support; centreline x = 307.1; shortened 3.5% about its centre y=550 (scale(1 0.965)) -->
+        <g
+          transform="translate(278.16 0) scale(0.55 1) translate(-278.16 0)"
+        >
+          <g
+            id="clayton-clipper"
+            class="gantry"
+            data-drawn-at="37"
+            transform="translate(-40.29 40.00)"
+          >
+            <!-- Layers (bottom to top): supports + their walkways; trusses, cross beams and side walkways; blue tips; trolley. Labels are drawn later, above everything. -->
+            <!-- Anchoring: the gantry works on the span set in status.yaml (the Clayton Clipper span numbers, 1-105), which the page puts in data-span here; to move it, change status.yaml. Everything below is drawn for span data-drawn-at, and src/lib/placeGantry.js moves each data-anchor group from there to data-span when the page loads. front: the short support, just ahead of the span, its rear edge flush with the span's front end; second: just behind the span, its front edge flush with the span's back end; rear: fully on the span behind, its rear edge (beam and walkway) a third of its width in from that span's back end; fourth: the lengthwise support on the span behind, at the same fraction of the way along it; body: the trusses, walkways and trolley, centred on the span midpoint between its outer edges and parallel to them. The supports keep the along and across offsets they are drawn with. -->
+            <!-- Clipper centreline over span 32: x = 300.5 + 0.0732*(y - 400) -->
+            <g data-anchor="fourth" transform="matrix(0.999713 0.013177 -0.043561 0.999713 38.95772 355.921894)">
+              <rect
+                opacity="1"
+                id="clipper-support-1"
+                x="329.73"
+                y="677.255"
+                width="10.91"
+                height="49.5"
+                fill="#F2A51F"
+                stroke="#9B691A"
+                stroke-width="2"
+                transform="rotate(176.63 335.18 702.00)"
+              />
+            </g>
+            <g data-anchor="rear" transform="matrix(0.999713 0.013177 -0.043561 0.999713 56.969543 496.079776)">
+              <rect
+                opacity="1"
+                id="clipper-support-2"
+                x="262.1"
+                y="481.0"
+                width="90"
+                height="6"
+                fill="#F2A51F"
+                stroke="#9B691A"
+                stroke-width="2"
+                transform="rotate(-1.504 307.1 484)"
+              />
+            </g>
+            <g data-anchor="second" transform="matrix(0.999993 0.002016 -0.006666 0.999993 40.98533 742.588772)">
+              <rect
+                opacity="1"
+                id="clipper-support-3"
+                x="260.0"
+                y="347.0"
+                width="90"
+                height="6"
+                fill="#F2A51F"
+                stroke="#9B691A"
+                stroke-width="2"
+              />
+            </g>
+            <g data-anchor="front" transform="matrix(0.999993 0.002016 -0.006666 0.999993 34.835558 584.371764)">
+              <rect
+                opacity="1"
+                id="clipper-support-4-short"
+                x="282.895"
+                y="613"
+                width="63"
+                height="6"
+                fill="#F2A51F"
+                stroke="#9B691A"
+                stroke-width="2"
+              />
+            </g>
+            <!-- Support walkways (blue, 2/3 the side-walkway thickness, full length of their support beam, same x and width as the beam): east side of the long supports, west side of the short one; move with their support -->
+            <g data-anchor="fourth" transform="matrix(0.999713 0.013177 -0.043561 0.999713 38.95772 355.921894)">
+              <rect
+                opacity="0.65"
+                class="clipper-support-walkway"
+                x="323.67"
+                y="677.255"
+                width="6.06"
+                height="49.5"
+                fill="#174B83"
+                transform="rotate(176.63 335.18 702.00)"
+              />
+            </g>
+            <g data-anchor="rear" transform="matrix(0.999713 0.013177 -0.043561 0.999713 56.969543 496.079776)">
+              <rect
+                opacity="0.65"
+                class="clipper-support-walkway"
+                x="262.1"
+                y="477.67"
+                width="90"
+                height="3.33"
+                fill="#174B83"
+                transform="rotate(-1.504 307.1 484)"
+              />
+            </g>
+            <g data-anchor="second" transform="matrix(0.999993 0.002016 -0.006666 0.999993 40.98533 742.588772)">
+              <rect
+                opacity="0.65"
+                class="clipper-support-walkway"
+                x="260.0"
+                y="343.67"
+                width="90"
+                height="3.33"
+                fill="#174B83"
+              />
+            </g>
+            <g data-anchor="front" transform="matrix(0.999993 0.002016 -0.006666 0.999993 34.835558 584.371764)">
+              <rect
+                opacity="0.65"
+                class="clipper-support-walkway"
+                x="282.895"
+                y="619"
+                width="63"
+                height="3.33"
+                fill="#174B83"
+              />
+            </g>
+            <!-- Support pads: solid blue, above their beams and walkways but below the trusses; move with their support. -->
+            <g data-anchor="fourth" transform="matrix(0.999713 0.013177 -0.043561 0.999713 38.95772 355.921894)">
+              <rect
+                class="clipper-support-pad"
+                x="327.50"
+                y="688.371"
+                width="15.35"
+                height="3.10"
+                fill="#4D76A3"
+                transform="rotate(176.63 335.18 702.00)"
+              />
+            </g>
+            <g data-anchor="fourth" transform="matrix(0.999713 0.013177 -0.043561 0.999713 38.95772 355.921894)">
+              <rect
+                class="clipper-support-pad"
+                x="327.50"
+                y="712.529"
+                width="15.35"
+                height="3.10"
+                fill="#4D76A3"
+                transform="rotate(176.63 335.18 702.00)"
+              />
+            </g>
+            <g data-anchor="rear" transform="matrix(0.999713 0.013177 -0.043561 0.999713 56.969543 496.079776)">
+              <rect
+                class="clipper-support-pad"
+                x="282.368"
+                y="479.779"
+                width="5.628"
+                height="8.442"
+                fill="#4D76A3"
+                transform="rotate(-1.504 307.1 484)"
+              />
+            </g>
+            <g data-anchor="rear" transform="matrix(0.999713 0.013177 -0.043561 0.999713 56.969543 496.079776)">
+              <rect
+                class="clipper-support-pad"
+                x="326.204"
+                y="479.779"
+                width="5.628"
+                height="8.442"
+                fill="#4D76A3"
+                transform="rotate(-1.504 307.1 484)"
+              />
+            </g>
+            <g data-anchor="second" transform="matrix(0.999993 0.002016 -0.006666 0.999993 40.98533 742.588772)">
+              <rect
+                class="clipper-support-pad"
+                x="280.251"
+                y="345.779"
+                width="5.628"
+                height="8.442"
+                fill="#4D76A3"
+              />
+            </g>
+            <g data-anchor="second" transform="matrix(0.999993 0.002016 -0.006666 0.999993 40.98533 742.588772)">
+              <rect
+                class="clipper-support-pad"
+                x="324.121"
+                y="345.779"
+                width="5.628"
+                height="8.442"
+                fill="#4D76A3"
+              />
+            </g>
+            <g data-anchor="front" transform="matrix(0.999993 0.002016 -0.006666 0.999993 34.835558 584.371764)">
+              <rect
+                class="clipper-support-pad"
+                x="289.581"
+                y="611.779"
+                width="5.628"
+                height="8.442"
+                fill="#4D76A3"
+              />
+            </g>
+            <g data-anchor="front" transform="matrix(0.999993 0.002016 -0.006666 0.999993 34.835558 584.371764)">
+              <rect
+                class="clipper-support-pad"
+                x="333.451"
+                y="611.779"
+                width="5.628"
+                height="8.442"
+                fill="#4D76A3"
+              />
+            </g>
+            <!-- Gantry (walkways, trusses, cross beams, tips, trolley) rotated 1.74 deg in the guideway frame about the 31/32 support centre (271.92, 524.00) so its centreline runs through supports 2 and 4; the matrix() groups are that rotation expressed inside the narrowed frame -->
+            <g
+              class="gantry-body"
+              data-anchor="body"
+              transform="matrix(0.999927 0.003782 -0.040171 0.99992 56.138264 596.963444)"
+            >
+              <g
+                transform="matrix(0.999538 -0.016711 0.055243 0.999538 -26.5959 5.3554)"
+              >
+                <!-- Clipper side walkways (blue), one typical span plus 32% long (158.7), centred on the trusses like the trolley -->
+                <rect
+                  opacity="0.65"
+                  class="clipper-walkway"
+                  x="270.17"
+                  y="470.65"
+                  width="3.33"
+                  height="158.7"
+                  fill="#174B83"
+                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
+                />
+                <rect
+                  opacity="0.65"
+                  class="clipper-walkway"
+                  x="327.5"
+                  y="470.65"
+                  width="3.33"
+                  height="158.7"
+                  fill="#174B83"
+                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
+                />
+                <!-- Inner side walkways (blue), same length, centring and thickness (3.33) as the outer ones, on the inside face of each truss -->
+                <rect
+                  opacity="0.65"
+                  class="clipper-walkway-inner"
+                  x="283.5"
+                  y="470.65"
+                  width="3.33"
+                  height="158.7"
+                  fill="#174B83"
+                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
+                />
+                <rect
+                  opacity="0.65"
+                  class="clipper-walkway-inner"
+                  x="314.17"
+                  y="470.65"
+                  width="3.33"
+                  height="158.7"
+                  fill="#174B83"
+                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
+                />
+                <g
+                  class="clipper-truss"
+                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
+                >
+                  <clipPath id="truss-clip-273">
+                    <rect x="273.5" y="371.5" width="10" height="357" />
+                  </clipPath>
+                  <g
+                    clip-path="url(#truss-clip-273)"
+                    fill="none"
+                    stroke="#F2A51F"
+                    stroke-width="1.4"
+                    stroke-linejoin="round"
+                  >
+                    <line x1="274.2" y1="371.5" x2="274.2" y2="728.5" />
+                    <line
+                      x1="278.5"
+                      y1="371.5"
+                      x2="278.5"
+                      y2="728.5"
+                      stroke-width="2.1"
+                    />
+                    <line x1="282.8" y1="371.5" x2="282.8" y2="728.5" />
+                    <polyline
+                      points="274.2,361.5 278.5,366.5 274.2,371.5 278.5,376.5 274.2,381.5 278.5,386.5 274.2,391.5 278.5,396.5 274.2,401.5 278.5,406.5 274.2,411.5 278.5,416.5 274.2,421.5 278.5,426.5 274.2,431.5 278.5,436.5 274.2,441.5 278.5,446.5 274.2,451.5 278.5,456.5 274.2,461.5 278.5,466.5 274.2,471.5 278.5,476.5 274.2,481.5 278.5,486.5 274.2,491.5 278.5,496.5 274.2,501.5 278.5,506.5 274.2,511.5 278.5,516.5 274.2,521.5 278.5,526.5 274.2,531.5 278.5,536.5 274.2,541.5 278.5,546.5 274.2,551.5 278.5,556.5 274.2,561.5 278.5,566.5 274.2,571.5 278.5,576.5 274.2,581.5 278.5,586.5 274.2,591.5 278.5,596.5 274.2,601.5 278.5,606.5 274.2,611.5 278.5,616.5 274.2,621.5 278.5,626.5 274.2,631.5 278.5,636.5 274.2,641.5 278.5,646.5 274.2,651.5 278.5,656.5 274.2,661.5 278.5,666.5 274.2,671.5 278.5,676.5 274.2,681.5 278.5,686.5 274.2,691.5 278.5,696.5 274.2,701.5 278.5,706.5 274.2,711.5 278.5,716.5 274.2,721.5 278.5,726.5 274.2,731.5 278.5,736.5"
+                    />
+                    <polyline
+                      points="282.8,361.5 278.5,366.5 282.8,371.5 278.5,376.5 282.8,381.5 278.5,386.5 282.8,391.5 278.5,396.5 282.8,401.5 278.5,406.5 282.8,411.5 278.5,416.5 282.8,421.5 278.5,426.5 282.8,431.5 278.5,436.5 282.8,441.5 278.5,446.5 282.8,451.5 278.5,456.5 282.8,461.5 278.5,466.5 282.8,471.5 278.5,476.5 282.8,481.5 278.5,486.5 282.8,491.5 278.5,496.5 282.8,501.5 278.5,506.5 282.8,511.5 278.5,516.5 282.8,521.5 278.5,526.5 282.8,531.5 278.5,536.5 282.8,541.5 278.5,546.5 282.8,551.5 278.5,556.5 282.8,561.5 278.5,566.5 282.8,571.5 278.5,576.5 282.8,581.5 278.5,586.5 282.8,591.5 278.5,596.5 282.8,601.5 278.5,606.5 282.8,611.5 278.5,616.5 282.8,621.5 278.5,626.5 282.8,631.5 278.5,636.5 282.8,641.5 278.5,646.5 282.8,651.5 278.5,656.5 282.8,661.5 278.5,666.5 282.8,671.5 278.5,676.5 282.8,681.5 278.5,686.5 282.8,691.5 278.5,696.5 282.8,701.5 278.5,706.5 282.8,711.5 278.5,716.5 282.8,721.5 278.5,726.5 282.8,731.5 278.5,736.5"
+                    />
+                  </g>
+                </g>
+                <!-- truss lattice: three chords + diamond diagonals, yellow, 100% opacity, no fill -->
+                <g
+                  class="clipper-truss"
+                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
+                >
+                  <clipPath id="truss-clip-317">
+                    <rect x="317.5" y="371.5" width="10" height="357" />
+                  </clipPath>
+                  <g
+                    clip-path="url(#truss-clip-317)"
+                    fill="none"
+                    stroke="#F2A51F"
+                    stroke-width="1.4"
+                    stroke-linejoin="round"
+                  >
+                    <line x1="318.2" y1="371.5" x2="318.2" y2="728.5" />
+                    <line
+                      x1="322.5"
+                      y1="371.5"
+                      x2="322.5"
+                      y2="728.5"
+                      stroke-width="2.1"
+                    />
+                    <line x1="326.8" y1="371.5" x2="326.8" y2="728.5" />
+                    <polyline
+                      points="318.2,361.5 322.5,366.5 318.2,371.5 322.5,376.5 318.2,381.5 322.5,386.5 318.2,391.5 322.5,396.5 318.2,401.5 322.5,406.5 318.2,411.5 322.5,416.5 318.2,421.5 322.5,426.5 318.2,431.5 322.5,436.5 318.2,441.5 322.5,446.5 318.2,451.5 322.5,456.5 318.2,461.5 322.5,466.5 318.2,471.5 322.5,476.5 318.2,481.5 322.5,486.5 318.2,491.5 322.5,496.5 318.2,501.5 322.5,506.5 318.2,511.5 322.5,516.5 318.2,521.5 322.5,526.5 318.2,531.5 322.5,536.5 318.2,541.5 322.5,546.5 318.2,551.5 322.5,556.5 318.2,561.5 322.5,566.5 318.2,571.5 322.5,576.5 318.2,581.5 322.5,586.5 318.2,591.5 322.5,596.5 318.2,601.5 322.5,606.5 318.2,611.5 322.5,616.5 318.2,621.5 322.5,626.5 318.2,631.5 322.5,636.5 318.2,641.5 322.5,646.5 318.2,651.5 322.5,656.5 318.2,661.5 322.5,666.5 318.2,671.5 322.5,676.5 318.2,681.5 322.5,686.5 318.2,691.5 322.5,696.5 318.2,701.5 322.5,706.5 318.2,711.5 322.5,716.5 318.2,721.5 322.5,726.5 318.2,731.5 322.5,736.5"
+                    />
+                    <polyline
+                      points="326.8,361.5 322.5,366.5 326.8,371.5 322.5,376.5 326.8,381.5 322.5,386.5 326.8,391.5 322.5,396.5 326.8,401.5 322.5,406.5 326.8,411.5 322.5,416.5 326.8,421.5 322.5,426.5 326.8,431.5 322.5,436.5 326.8,441.5 322.5,446.5 326.8,451.5 322.5,456.5 326.8,461.5 322.5,466.5 326.8,471.5 322.5,476.5 326.8,481.5 322.5,486.5 326.8,491.5 322.5,496.5 326.8,501.5 322.5,506.5 326.8,511.5 322.5,516.5 326.8,521.5 322.5,526.5 326.8,531.5 322.5,536.5 326.8,541.5 322.5,546.5 326.8,551.5 322.5,556.5 326.8,561.5 322.5,566.5 326.8,571.5 322.5,576.5 326.8,581.5 322.5,586.5 326.8,591.5 322.5,596.5 326.8,601.5 322.5,606.5 326.8,611.5 322.5,616.5 326.8,621.5 322.5,626.5 326.8,631.5 322.5,636.5 326.8,641.5 322.5,646.5 326.8,651.5 322.5,656.5 326.8,661.5 322.5,666.5 326.8,671.5 322.5,676.5 326.8,681.5 322.5,686.5 326.8,691.5 322.5,696.5 326.8,701.5 322.5,706.5 326.8,711.5 322.5,716.5 326.8,721.5 322.5,726.5 326.8,731.5 322.5,736.5"
+                    />
+                  </g>
+                </g>
+                <!-- truss lattice: three chords + diamond diagonals, yellow, 100% opacity, no fill -->
+                <rect
+                  x="278.5"
+                  y="387.55"
+                  width="44"
+                  height="2.5"
+                  fill="#F2A51F"
+                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
+                />
+                <rect
+                  x="278.5"
+                  y="709.95"
+                  width="44"
+                  height="2.5"
+                  fill="#F2A51F"
+                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
+                />
+                <!-- Clipper blue truss tips (end legs; solid #4D76A3 to match the pads and decks as rendered): inner half of each truss (5 wide), 11.2 long, recessed 8.6 from each truss end (trimmed by a third from the outer end); y = truss start + 8.6 and truss end - 19.8 -->
+                <rect
+                  class="clipper-tip"
+                  x="278.5"
+                  y="380.1"
+                  width="5"
+                  height="11.2"
+                  fill="#4D76A3"
+                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
+                />
+                <rect
+                  class="clipper-tip"
+                  x="278.5"
+                  y="708.7"
+                  width="5"
+                  height="11.2"
+                  fill="#4D76A3"
+                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
+                />
+                <rect
+                  class="clipper-tip"
+                  x="317.5"
+                  y="380.1"
+                  width="5"
+                  height="11.2"
+                  fill="#4D76A3"
+                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
+                />
+                <rect
+                  class="clipper-tip"
+                  x="317.5"
+                  y="708.7"
+                  width="5"
+                  height="11.2"
+                  fill="#4D76A3"
+                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
+                />
+              </g>
+            </g>
+            <!-- Clipper trolley crane (blue): centred on the trusses, height 22.95 -->
+            <g
+              class="gantry-body"
+              data-anchor="body"
+              transform="matrix(0.999927 0.003782 -0.040171 0.99992 56.138264 596.963444)"
+            >
+              <g
+                transform="matrix(0.999538 -0.016711 0.055243 0.999538 -26.5959 5.3554)"
+              >
+                <rect
+                  opacity="0.43"
+                  id="clipper-trolley"
+                  x="266.5"
+                  y="522.13"
+                  width="68"
+                  height="22.95"
+                  rx="2"
+                  fill="#174B83"
+                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
+                />
+              </g>
+            </g>
+          </g>
+        </g>
+    </g>
   </g>
 </svg>
