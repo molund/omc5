@@ -13,14 +13,15 @@ the real text, and then Svelte takes over in the browser for the comments and co
 
 - `/trackside/` — the newest 10 updates, then `/trackside/page/2/`, `/trackside/page/3/` and so on.
   Every update is on one of these pages; there are no individual content pages.
-- `/trackside/<slug>/` — a permanent permalink for an update. Its generated page redirects to the page and
-  anchor where the update currently appears, with its comments open. That destination can change as new updates
+- `/trackside/<slug>/` — a permanent permalink for an update. Its generated page redirects to the page
+  where the update currently appears, with its comments open. That destination can change as new updates
   are added, but the permalink stays the same. Its Open Graph title and description use the update's title and
   summary; when the update has a photo, the first one is used as the preview image.
-- An update's `#` anchor is its slug (`/trackside/#clipper-completes-span-36`), and its date heading links
-  to it. Add `?comments` to open its comments too.
+- An update is addressed by its slug: `/trackside/?post=clipper-completes-span-36` scrolls to it (the page's script
+  calls `scrollIntoView()`, there are no hash anchors), and its date heading does the same. Add `&comments` to open
+  its comments too. The old `#slug` links still work.
 
-The progress card's Comments button goes to `/trackside/?comments#clipper-completes-span-36`: the first
+The progress card's Comments button goes to `/trackside/?post=clipper-completes-span-36&comments`: the first
 page, scrolled to the newest update, with its comments open.
 
 ## Files
@@ -69,7 +70,7 @@ Each update is a note: its time stamp and its title on one line, then indented u
 - The title (the value after the time stamp) — a short headline. It leads a post, and it is where the
   update's slug comes from (below). It isn't shown on a status update. `""` for none: the slug comes
   from the time stamp.
-- `slug:` — the update's `#` anchor on its page. Optional: without it the slug is the title in
+- `slug:` — the update's `?post=` slug on its page. Optional: without it the slug is the title in
   lowercase words ("Clayton Clipper" becomes "Clipper", and is dropped from the date titles), cut at a
   word to 80 characters. The oldest update with a given title keeps the plain words and a later one
   gets `-2`, so adding an update never changes an old slug. **Editing a title changes its slug**, so

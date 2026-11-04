@@ -41,7 +41,7 @@ for (let p = 1; p <= pages; p++)
   });
 for (const [i, n] of status.history.entries()) {
   const page = Math.floor(i / PAGE_SIZE) + 1,
-    target = `/trackside/${page === 1 ? "" : `page/${page}/`}?comments#${n.slug}`,
+    target = `/trackside/${page === 1 ? "" : `page/${page}/`}?post=${n.slug}&comments`,
     permalink = `${SITE}trackside/${n.slug}/`,
     image = n.photo || n.block.find((m) => m.photo)?.photo;
   const escape = (value) =>
@@ -129,7 +129,9 @@ function threadBody(n) {
   }
   // the update on the page of updates it is listed on (made again at every deploy, as updates move down the pages)
   const at = Math.floor(status.history.indexOf(n) / PAGE_SIZE) + 1;
-  parts.push(`[See it on the Clayton Clipper Tracker](${SITE}trackside/${at === 1 ? "" : `page/${at}/`}#${n.slug})`);
+  parts.push(
+    `[See it on the Clayton Clipper Tracker](${SITE}trackside/${at === 1 ? "" : `page/${at}/`}?post=${n.slug})`,
+  );
   parts.push(`<!-- sha1: ${createHash("sha1").update(term(n.time)).digest("hex")} -->`);
   return parts.join("\n\n");
 }

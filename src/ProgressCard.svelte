@@ -16,7 +16,7 @@
   // the Comments button opens Trackside's first page, scrolled to the newest update (a post can sit above it) with its
   // comments open, and shows its comment and reaction counts once GitHub has sent them
   const TRACKSIDE = `${import.meta.env.BASE_URL}trackside/`;
-  const COMMENTS = newest ? `${TRACKSIDE}?comments#${newest.slug}` : TRACKSIDE;
+  const COMMENTS = newest ? `${TRACKSIDE}?post=${newest.slug}&comments` : TRACKSIDE;
   let activity = $state(null);
   if (newest) fetchCounts().then((c) => (activity = c[term(newest.time)] ?? null));
 

@@ -1,6 +1,6 @@
 <script>
   // The Trackside page: every status note, newest first, each with its slug as its id (e.g.
-  // #clipper-completes-span-36). It is prerendered at build time (trackside/prerender.js) as pages of 10
+  // ?post=clipper-completes-span-36). It is prerendered at build time (trackside/prerender.js) as pages of 10
   // (/trackside/, /trackside/page/2/, …), each with its own title, description and Open Graph photo; view says which one
   // this is
   import { onMount } from "svelte";
@@ -41,6 +41,44 @@
   // the addresses of a page of updates, and in full, for the Open Graph tags
   const pageUrl = (p) => (p === 1 ? TRACKSIDE : `${TRACKSIDE}page/${p}/`);
   const full = (path) => new URL(path, SITE).href;
+  // update text cut into plain pieces and span numbers ('span 36', 'spans 70 and 71') that link to the map's ?span=N view;
+  // a span already in `seen` (linked earlier in the same update) stays plain
+  const SPANS = /\b[Ss]pans? \d+(?:(?:, and |, | and )\d+)*/g;
+  function parts(text, seen) {
+    const out = [];
+    let last = 0;
+    for (const m of text.matchAll(SPANS)) {
+      if (m.index > last) out.push({ text: text.slice(last, m.index) });
+      const nums = m[0].match(/\d+/g);
+      if (nums.length === 1) out.push({ text: m[0], span: +nums[0] });
+      else m[0].split(/(\d+)/).forEach((s, i) => s && out.push(i % 2 ? { text: s, span: +s } : { text: s }));
+      last = m.index + m[0].length;
+    }
+    if (last < text.length) out.push({ text: text.slice(last) });
+    return out.map((p) => {
+      if (!(p.span >= 1 && p.span <= 105) || seen.has(p.span)) return { text: p.text };
+      seen.add(p.span);
+      return p;
+    });
+  }
+  // the linked pieces of every text in an update (summaries, paragraphs, photo captions), in the order they show, keyed by
+  // the note, follow-up, paragraph or photo
+  function linkPlan(n) {
+    const seen = new Set(),
+      plan = new Map();
+    const add = (key, text) => plan.set(key, parts(text, seen));
+    const addPhoto = (p) => p?.caption && add(p, p.caption);
+    const addBlock = (list) => list.forEach((m) => (m.photo ? addPhoto(m.photo) : m.text && add(m, m.text)));
+    add(n, n.summary);
+    addPhoto(n.photo);
+    addBlock(n.block);
+    [...n.followUps].reverse().forEach((f) => {
+      add(f, f.summary);
+      addPhoto(f.photo);
+      addBlock(f.block);
+    });
+    return plan;
+  }
   let counts = $state({});
 
   // Pages of 10 updates, newest first
@@ -59,8 +97,8 @@
   const url = $derived(full(pageUrl(page)));
 
   // the slug of the update whose comments are open (one at a time, so the page stays light); a string, since $state would
-  // wrap an update object in a proxy that never equals the original. ?comments with an update's slug
-  // (?comments#clipper-completes-span-36, the progress card's Comments button) opens its comments.
+  // wrap an update object in a proxy that never equals the original. ?post=<slug>&comments (the progress card's Comments
+  // button) scrolls to that update and opens its comments; ?post=<slug> alone just scrolls to it.
   let open = $state(null);
   let copied = $state(false);
   let copyTimer;
@@ -74,9 +112,19 @@
       console.error("Could not copy permalink", error);
     }
   }
+  // a date heading's click: the address becomes ?post=<slug> and the update scrolls into view, with no hash anchor
+  function jumpTo(e, slug) {
+    e.preventDefault();
+    const params = new URLSearchParams(location.search);
+    params.set("post", slug);
+    params.delete("comments");
+    history.replaceState(null, "", `${location.pathname}?${params}`);
+    document.getElementById(slug)?.scrollIntoView();
+  }
   onMount(() => {
     const params = new URLSearchParams(location.search),
-      id = location.hash.slice(1);
+      // the old #slug links still work
+      id = params.get("post") ?? location.hash.slice(1);
     fetchCounts().then((c) => (counts = c));
     if (id) {
       if (params.has("comments")) open = id;
@@ -113,8 +161,16 @@
   {/if}
 </svelte:head>
 
+<!-- update text with its span numbers linked to the map, the first time each appears in an update (the giscus threads and
+     the headings stay plain) -->
+{#snippet linked(pieces)}{#each pieces as p}{#if p.span}<a
+        class="text-(--accent)"
+        href="{MAP}?span={p.span}"
+        title="Zoom to span {p.span} on the map">{p.text}</a
+      >{:else}{p.text}{/if}{/each}{/snippet}
+
 <!-- a photo and its caption, under a note or among its further paragraphs -->
-{#snippet photo(p)}
+{#snippet photo(p, plan)}
   <figure class="mx-0 mt-2.5 mb-0">
     <a href={p.src}
       ><img
@@ -125,7 +181,7 @@
       /></a
     >
     {#if p.caption}<figcaption class="mt-1 mb-5 text-sm text-(--mute) italic">
-        {p.caption}
+        {@render linked(plan.get(p))}
       </figcaption>{/if}
   </figure>
 {/snippet}
@@ -146,6 +202,7 @@
     </nav>
   </header>
   {#each shown as n (n.slug)}
+    {@const plan = linkPlan(n)}
     <!-- an update a link jumps to lands below the bar, not under it; a wide gap separates one update from the next, so
          the comments link reads as the end of its own update rather than the start of the next -->
     <article id={n.slug} class="scroll-mt-[calc(var(--spacing)*19_+_env(safe-area-inset-top,0px))] [article+&]:mt-9">
@@ -156,7 +213,8 @@
       >
         <a
           class="text-inherit no-underline"
-          href="#{n.slug}"
+          href="?post={n.slug}"
+          onclick={(e) => jumpTo(e, n.slug)}
           aria-label={n.title && !n.post ? `${heading(n.time)}: ${n.title}` : undefined}>{label(n)}</a
         >
         <button
@@ -171,11 +229,11 @@
       {#if n.post && n.title}<p class="mx-0 -mt-1 mb-2 text-sm text-(--mute)">
           {dateOnly(n.time)}
         </p>{/if}
-      <p class="m-0">{n.summary}</p>
-      {#if n.photo}{@render photo(n.photo)}{/if}
+      <p class="m-0">{@render linked(plan.get(n))}</p>
+      {#if n.photo}{@render photo(n.photo, plan)}{/if}
       {#each n.block as m}
-        {#if m.photo}{@render photo(m.photo)}{:else}<p class="m-0 mt-2.5">
-            {m.text}
+        {#if m.photo}{@render photo(m.photo, plan)}{:else}<p class="m-0 mt-2.5">
+            {@render linked(plan.get(m))}
           </p>{/if}
       {/each}
       {#if n.followUps.length}
@@ -187,11 +245,11 @@
                 class="rounded-md bg-[rgba(129,139,152,0.18)] px-[0.4em] py-[0.15em] font-[family-name:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace] text-[85%]"
                 >{followUpTime(m.time, n.time)}</code
               >
-              {m.summary}
-              {#if m.photo}{@render photo(m.photo)}{/if}
+              {@render linked(plan.get(m))}
+              {#if m.photo}{@render photo(m.photo, plan)}{/if}
               {#each m.block as b}
-                {#if b.photo}{@render photo(b.photo)}{:else}<p class="m-0 mt-2.5">
-                    {b.text}
+                {#if b.photo}{@render photo(b.photo, plan)}{:else}<p class="m-0 mt-2.5">
+                    {@render linked(plan.get(b))}
                   </p>{/if}
               {/each}
             </li>{/each}
