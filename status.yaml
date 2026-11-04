@@ -2,8 +2,9 @@
 # it (see .github/workflows/deploy.yml). Times are BC time (UTC−7), rounded to the nearest quarter hour.
 updated: 2026-11-02T20:30-07:00
 # the span the gantry is working on (Clayton Clipper span numbers, 3-104)
-span: 36
+span: 37
 # whether that span is complete (or at least hung)
+# Track completed spans instead of current gantry position so the drawn guideway actually looks like a bar graph.
 complete: true
 # every note, newest first. A note is its time stamp (the time of the update that added it) and its title, then its summary,
 # the main text, indented under it. The title is not shown on a status update ("" for none, and the slug comes from the time
@@ -40,6 +41,11 @@ complete: true
 notes:
   - 2026-11-03T07:15-07:00: "Clayton Clipper construction update for Tuesday, Nov. 3, 2026"
     summary: "Both precast girders for span 34 were installed overnight by mobile cranes. The Clayton Clipper is beginning the move to the next span."
+    follow-up:
+      - 2026-11-03T13:30-07:00:
+          summary: "The Clayton Clipper has moved to span 37."
+      - 2026-11-03T20:30-07:00:
+          summary: "All the segments for span 37 are now in place."
   - 2026-11-02T09:15-07:00: "Clayton Clipper construction update for Monday, Nov. 2, 2026"
     summary: "The Night Shift must’ve worked Sunday night. Span 36 is fully glued. Crews have begun post-tensioning."
     follow-up:
