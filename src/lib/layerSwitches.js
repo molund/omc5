@@ -26,7 +26,7 @@ export const LAYERS = [
       ["guideway", "Finished spans", "guideway", true],
       ["unfinished", "Unfinished spans", "unfinished", true],
       ["supports", "Supports", "supports", true],
-      ["spanLabels", "Span labels", "cclabel", true],
+      ["spanLabels", "Span numbers", "cclabel", true],
       ["arrows", "Direction arrows", "arrows", false],
       ["stationLabels", "Station labels", "stationlabel", true],
     ],
