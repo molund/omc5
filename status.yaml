@@ -5,7 +5,7 @@ updated: 2026-11-02T20:30-07:00
 span: 37
 # whether that span is complete (or at least hung)
 # Track completed spans instead of current gantry position so the drawn guideway actually looks like a bar graph.
-complete: false
+complete: true
 # every note, newest first. A note is its time stamp (the time of the update that added it) and its title, then its summary,
 # the main text, indented under it. The title is not shown on a status update ("" for none, and the slug comes from the time
 # stamp); a post leads with it. It is also the update's `?post=` slug on
@@ -44,6 +44,8 @@ notes:
     follow-up:
       - 2026-11-03T13:30-07:00:
           summary: "The Clayton Clipper has moved to span 37."
+      - 2026-11-03T13:30-20:30:
+          summary: "All the segments for span 37 are now in place."
   - 2026-11-02T09:15-07:00: "Clayton Clipper construction update for Monday, Nov. 2, 2026"
     summary: "The Night Shift must’ve worked Sunday night. Span 36 is fully glued. Crews have begun post-tensioning."
     follow-up:
