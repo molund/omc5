@@ -194,7 +194,7 @@
        notch; its own top padding takes the place of the page's space above it, so it sits where it did before scrolling -->
   <header class="page-header">
     <a class="block leading-[0]" href={TRACKSIDE}
-      ><img class="h-10 w-auto" src="{MAP}images/logo.png" alt="Clayton Clipper" width="625" height="351" /></a
+      ><img class="h-10 w-auto logo" src="{MAP}images/logo.png" alt="Clayton Clipper" width="625" height="351" /></a
     >
     <h1 class="page-header-title">Trackside</h1>
     <nav class="page-header-nav">

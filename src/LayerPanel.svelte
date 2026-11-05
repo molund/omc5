@@ -65,7 +65,7 @@
       <!-- the title: the Clayton Clipper logo with "Map" beside it, small and spaced out, as on the progress card and Trackside -->
       <h1 class="eyebrow flex items-center gap-2.5 text-xs">
         <img
-          class="h-9 w-auto"
+          class="h-9 w-auto logo"
           src="{import.meta.env.BASE_URL}images/logo.png"
           alt="Clayton Clipper"
           width="625"
