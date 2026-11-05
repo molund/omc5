@@ -29,7 +29,7 @@ Svelte 5 + Vite site, deployed to GitHub Pages (https://clayton-clipper.olund.ca
 ## Layout
 
 - `src/assets/map.svg` — the map.
-- `src/MapView/` — `MapView.svelte` and the code only it uses (`builtBy.js`, `gantryProgress.js`, `aerialImages.js`, which loads the aerial photos in a set order); code shared by more
+- `src/MapView/` — `MapView.svelte` and the code only it uses (`builtBy.js`, `gantryProgress.js`, `esriTiles.js`, which draws the Esri World Imagery base aerial, and `aerialImages.js`, which shows the close-up photos past Esri's recent imagery); code shared by more
   than one place stays in `src/lib/`.
 - `src/lib/appState/` — the shared state and view code, imported from `appState.svelte.js`: `state.svelte.js` (layers, ui,
   els), `viewport.svelte.js` (zoom and the canvas views), the layer switch logic (`appState.svelte.js` itself),

@@ -159,13 +159,13 @@
     fill="#FFFFFF"
   />
   <g id="baseoverview" class="aerial">
-    <!-- the wide overview aerial: the lowest layer, registered to the low-res screenshots -->
+    <!-- the lowest layer, where esriTiles.js adds the aerial tiles. The empty image is the old overview photo's outline, which
+         the views are still framed to (see viewport.svelte.js) -->
     <image
       width="2795"
       height="1968"
       preserveAspectRatio="none"
       transform="matrix(4.445894 0.000119 -0.000119 4.445894 -6875.705 -5447.095)"
-      href="/images/aerial-base.jpg"
     />
   </g>
   <g id="landmarks" class="aerial">

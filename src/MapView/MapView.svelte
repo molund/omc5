@@ -1,7 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import mapSvg from "../assets/map.svg?raw";
-  import { loadAerialImages } from "./aerialImages.js";
+  import { startEsriTiles, esriCredit, DEFAULT_CREDIT } from "./esriTiles.js";
   import { DRAW_VB, SFMSF_AERIAL_VB, FULL_VB } from "../lib/layerSwitches.js";
   import { tagBuiltBy } from "./builtBy.js";
   import { gantryProgress } from "./gantryProgress.js";
@@ -26,6 +26,14 @@
   let drag = $state(null);
   let touchDrag = null;
   let edgeTimer;
+  let esriTiles = $state(null);
+  let credit = $state(DEFAULT_CREDIT);
+  const aerialShown = $derived(layers.aerial && !layers.sfmsfDrawing);
+
+  // the aerial coming on again may need tiles
+  $effect(() => {
+    if (aerialShown) esriTiles?.refresh();
+  });
 
   function startDrag(clientX, clientY) {
     clearTimeout(edgeTimer);
@@ -74,7 +82,6 @@
     const svg = stage.querySelector("svg");
     els.stage = stage;
     els.svg = svg;
-    loadAerialImages(svg);
     tagBuiltBy(svg);
     // the gantry's span and whether it is complete come from status.yaml
     const gantry = svg.querySelector("#clayton-clipper");
@@ -101,6 +108,8 @@
     turn.append(...svg.childNodes);
     svg.append(turn);
     els.turn = turn;
+    esriTiles = startEsriTiles(svg, stage);
+    esriCredit().then((text) => (credit = text));
     ui.ready = true;
     svg.style.width = ui.zoom + "%";
     if (layers.progress) progressView();
@@ -172,6 +181,7 @@
     resize.observe(stage);
     return () => {
       clearTimeout(edgeTimer);
+      esriTiles?.stop();
       resize.disconnect();
       stage.removeEventListener("wheel", wheel);
       stage.removeEventListener("gesturestart", gesturestart);
@@ -227,5 +237,13 @@
   >
     {@html mapSvg}
   </main>
+  {#if aerialShown}
+    <!-- Esri requires both credits, in view and not covered, wherever its imagery shows -->
+    <div
+      class="absolute right-0 bottom-0 z-5 max-w-full rounded-tl-md bg-(--panel) px-1.5 py-0.5 text-xs text-(--mute)"
+    >
+      Powered by <a class="text-(--ink) underline" href="https://www.esri.com">Esri</a> | {credit}
+    </div>
+  {/if}
   <ProgressCard />
 </div>

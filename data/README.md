@@ -31,10 +31,10 @@ its foundation hole.
 The GeoJSON files hold only the supports, pillars and spans. The map also shows roads, paths, a creek and a
 historic railway line, which came from these sources:
 
-- **Aerial imagery:** Apple Maps satellite screenshots, from a phone and a desktop. The site's background aerial is a
-  desktop screenshot, also used for detailed pillar placement. Apple Maps was used instead of Google Maps because its
-  imagery was more up to date at the time. Roads, paths and other background features were traced on it unless listed
-  below.
+- **Aerial imagery:** Apple Maps satellite screenshots, from a phone and a desktop. The site's background aerial was a
+  desktop screenshot, also used for detailed pillar placement; the site now shows Esri World Imagery instead, with the
+  screenshots only when zoomed in closest. Apple Maps was used instead of Google Maps because its imagery was more up to
+  date at the time. Roads, paths and other background features were traced on it unless listed below.
 - **Future 72 Ave:** north of Fraser Highway, the City of Surrey's
   [West Clayton NCP](https://www.surrey.ca/renovating-building-development/land-planning-development/land-use-planning/cloverdale-land-use-plans/west-clayton-ncp)
   Stage 2 Land Use Concept; south of it, the City of Surrey's
