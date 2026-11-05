@@ -1,11 +1,11 @@
 # Clayton Clipper status. The site reads it (src/lib/status.js); running the deploy workflow by hand or through the API updates
 # it (see .github/workflows/deploy.yml). Times are BC time (UTC−7), rounded to the nearest quarter hour.
-updated: 2026-11-05T08:30-07:00
+updated: 2026-11-05T10:00-07:00
 # the span the gantry is working on (Clayton Clipper span numbers, 3-104)
-span: 37
+span: 38
 # whether that span is complete (or at least hung)
 # Track completed spans instead of current gantry position so the drawn guideway actually looks like a bar graph.
-complete: true
+complete: false
 # every note, newest first. A note is its time stamp (the time of the update that added it) and its title, then its summary,
 # the main text, indented under it. The title is not shown on a status update ("" for none, and the slug comes from the time
 # stamp); a post leads with it. It is also the update's `?post=` slug on
@@ -45,8 +45,8 @@ complete: true
 #           block:
 #             - "Another paragraph"
 notes:
-  - 2026-11-05T08:30-07:00: "Clayton Clipper construction update for Thursday, Nov. 5, 2026"
-    summary: "The Clayton Clipper has almost finished its move to span 38, with a bit more repositioning still to do. It's getting faster: the crews are working 24/6, and the last span took just two days."
+  - 2026-11-05T10:00-07:00: "Clayton Clipper construction update for Thursday, Nov. 5, 2026"
+    summary: "The Clayton Clipper has moved to span 38. It's getting faster: the crews are working 24/6, and the last span took just two days."
   - 2026-11-04T12:30-07:00: ""
     note-to-self: "Fully glued. Hangers and cables are still up. Post tensioning in progress."
   - 2026-11-03T07:15-07:00: "Clayton Clipper construction update for Tuesday, Nov. 3, 2026"
