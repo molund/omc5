@@ -14,6 +14,8 @@ const KEY =
 /** The closest level with the recent imagery at Surrey: level 20 and up is an older photo from before construction. */
 const MAX_LEVEL = 19;
 const MIN_LEVEL = 10;
+/** Whether the close-up photos take over past MAX_LEVEL; off for now, so the Esri imagery just stretches. */
+const CLOSE_UP_PHOTOS = false;
 /** Half the width of the Web Mercator world, in metres. */
 const WORLD = Math.PI * R;
 /** How long the map has to sit still before tiles are asked for, in milliseconds. */
@@ -165,7 +167,7 @@ export function startEsriTiles(svg, stage) {
         Math.min(service.maxLevel, levelFor(cssPerCanvas * Math.min(devicePixelRatio || 1, MAX_PIXEL_RATIO))),
       );
     // in CSS pixels, so a sharper screen doesn't swap to the older photos any sooner; they only go with the aerial basemap
-    showAerialPhotos(svg, basemap === "aerial" && levelFor(cssPerCanvas) > service.maxLevel);
+    showAerialPhotos(svg, CLOSE_UP_PHOTOS && basemap === "aerial" && levelFor(cssPerCanvas) > service.maxLevel);
 
     const size = (2 * WORLD) / 2 ** level,
       screen = ([x, y]) => new DOMPoint(x, y).matrixTransform(ctm),
