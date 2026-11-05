@@ -1,0 +1,50 @@
+name: Land Status Desk changes
+
+# The Status Desk (molund/omc5-admin) pushes its changes to the desk branch, with Mike's fine-grained token (Contents: read
+# and write on this repo only): one commit per change, by "Mike Olund (Status Desk)", on top of main. This checks that the
+# commits only change status.yaml and add photos (.github/scripts/check_desk.py), formats and builds the site, then moves
+# main up to the branch (a fast-forward, so the commits land as they are). A push made with the built-in token doesn't
+# start other workflows, so it then starts the deploy with a "desk-pushed" repository_dispatch, which deploy.yml runs
+# without changing status.yaml.
+on:
+  push:
+    branches: [desk]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: desk
+  cancel-in-progress: false
+
+jobs:
+  land:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check the commits
+        id: check
+        run: python3 .github/scripts/check_desk.py
+      - uses: actions/setup-node@v4
+        if: steps.check.outputs.count != '0'
+        with:
+          node-version: 22
+          cache: npm
+      - if: steps.check.outputs.count != '0'
+        run: npm ci
+      - name: Check the formatting of status.yaml
+        if: steps.check.outputs.count != '0'
+        run: npx prettier --check status.yaml
+      - if: steps.check.outputs.count != '0'
+        run: npm run build
+      # refused if main has moved on since the desk pushed: the desk then pushes again on top of the new main
+      - name: Move main up to the desk branch
+        if: steps.check.outputs.count != '0'
+        run: git push origin HEAD:refs/heads/main
+      - name: Start the deploy
+        if: steps.check.outputs.count != '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh api "repos/${{ github.repository }}/dispatches" -f event_type=desk-pushed
