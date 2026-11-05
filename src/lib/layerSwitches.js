@@ -95,7 +95,7 @@ export const defaults = Object.assign({}, fullAerialDefaults, PROGRESS_DEFAULTS,
  * The colour of the finished spans in progress-chart mode: violet, opposite the gantry's yellow on the colour wheel, so it
  * stands out and goes with it.
  */
-export const PROGRESS_COLOUR = "#6D28D9";
+export const PROGRESS_COLOUR = "#8473a8";
 /**
  * Progress-chart mode's own CSS: it hides everything (with visibility, which leaves the masks and clip paths the drawing
  * relies on untouched) and then lets through what its switched-on layers show (see PROGRESS_SHOWS), so the base drawing,
