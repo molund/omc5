@@ -29,10 +29,9 @@
   --ink: light-dark(#1f2933, #e6eaed);
   --mute: light-dark(#5b6670, #a3adb5);
   --line: light-dark(#cbd2d9, #39424b);
-  --accent: light-dark(#0b5fa5, #6cb4f0);
+  --accent: light-dark(#6280a0, #84a1c5);
+  --link: light-dark(#486d95, #a8c4ea);
   --accent-ink: light-dark(#ffffff, #0c1117);
-  /* the green primary buttons on the progress card; the same in light and dark */
-  --primary-button: #3c904b;
   /* the grey buttons (GitHub's segmented control, as in the giscus comments): the Map buttons, the pager and the progress
      card's secondary button; the pager's raised buttons and greyed-out Next have colours of their own */
   --button-bg: light-dark(#eff2f5, #212830);
