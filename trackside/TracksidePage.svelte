@@ -164,7 +164,7 @@
 <!-- update text with its span numbers linked to the map, the first time each appears in an update (the giscus threads and
      the headings stay plain) -->
 {#snippet linked(pieces)}{#each pieces as p}{#if p.span}<a
-        class="text-(--accent)"
+        class="text-(--link)"
         href="{MAP}?span={p.span}"
         title="Zoom to span {p.span} on the map">{p.text}</a
       >{:else}{p.text}{/if}{/each}{/snippet}
@@ -258,7 +258,7 @@
       <div class="mt-2 flex flex-wrap items-center gap-2.5">
         <!-- the comments link, in the link colour -->
         <button
-          class="cursor-pointer border-0 bg-transparent p-0 text-sm text-(--accent)"
+          class="cursor-pointer border-0 bg-transparent p-0 text-sm text-(--link)"
           aria-expanded={open === n.slug}
           onclick={() => (open = open === n.slug ? null : n.slug)}
           ><span aria-hidden="true">💬</span>
@@ -312,7 +312,7 @@
        muted, centred under a thin line, with the link on its own line -->
   <footer class="mt-10 border-t border-(--line) pt-3.5 pb-1 text-center text-xs text-(--mute)">
     <p class="mx-0 mt-0 mb-1">A hobby project by Mike, not affiliated with TransLink.</p>
-    <a class="text-(--accent)" href="{MAP}about/">About this site</a>
+    <a class="text-(--link)" href="{MAP}about/">About this site</a>
   </footer>
   {#if copied}<div
       class="fixed inset-x-0 bottom-5 z-20 mx-auto w-fit rounded-md bg-(--ink) px-3 py-2 text-sm text-(--panel) shadow-card"
