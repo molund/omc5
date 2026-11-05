@@ -113,7 +113,7 @@
     <!-- the title: the Clayton Clipper logo with "Progress" beside it, small and spaced out, as in Trackside's header -->
     <div class="eyebrow flex items-center gap-2 pr-6 text-xs">
       <img
-        class="h-7.5 w-auto"
+        class="h-7.5 w-auto logo"
         src="{import.meta.env.BASE_URL}images/logo.png"
         alt="Clayton Clipper"
         width="625"

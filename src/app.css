@@ -86,6 +86,11 @@ body::before {
   background: var(--bg);
   z-index: 10;
 }
+.logo {
+  width: 70px !important;
+  height: auto !important;
+  margin: -5px 0 5px -3px;
+}
 /* the base button look sits in the base layer, so Tailwind utilities on a button override it */
 @layer base {
   /* links keep the browser's underline, which Tailwind's preflight takes away */
@@ -136,6 +141,10 @@ body::before {
   }
   .page-header-title {
     @apply m-0 text-sm font-bold tracking-[0.3em] text-(--mute) uppercase;
+  }
+  .eyebrow span,
+  .page-header-title {
+    color: #b8944a !important;
   }
   /* a heading over a group of switches or buttons in the layer panel */
   .group-label {
