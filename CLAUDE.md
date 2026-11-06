@@ -29,7 +29,7 @@ Svelte 5 + Vite site, deployed to GitHub Pages (https://clayton-clipper.olund.ca
 ## Layout
 
 - `src/assets/map.svg` — the map.
-- `src/MapView/` — `MapView.svelte` and the code only it uses (`builtBy.js`, `gantryProgress.js`, `esriTiles.js`, which draws the Esri basemaps, and `aerialImages.js`, which shows the Apple Maps basemap: the overview aerial and the close-up photos. Every aerial view starts on Apple Maps and has a dropdown for the Esri ones, one basemap at a time); code shared by more
+- `src/MapView/` — `MapView.svelte` and the code only it uses (`builtBy.js`, `gantryProgress.js`, `esriTiles.js`, which draws the Esri basemaps, and `aerialImages.js`, which shows the Apple Maps basemap: the overview aerial and the close-up photos. Every aerial view has a dropdown for the basemap, one at a time: Full and Horizontal aerial start on Esri aerial, the others on Apple Maps); code shared by more
   than one place stays in `src/lib/`.
 - `src/lib/appState/` — the shared state and view code, imported from `appState.svelte.js`: `state.svelte.js` (layers, ui,
   els), `viewport.svelte.js` (zoom and the canvas views), the layer switch logic (`appState.svelte.js` itself),

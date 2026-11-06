@@ -28,7 +28,7 @@
   let touchDrag = null;
   let edgeTimer;
   let esriTiles = $state(null);
-  // the basemap shown: the dropdown's pick, in every aerial view (each view starts on Apple). One at a time, whatever the zoom
+  // the basemap shown: the dropdown's pick, in every aerial view (each view starts on its own: basemapFor). One at a time, whatever the zoom
   const basemap = $derived(ui.basemap);
   let credit = $state(defaultCredit(basemap));
   const basemapShown = $derived(layers.aerial && !layers.sfmsfDrawing);

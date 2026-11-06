@@ -4,7 +4,7 @@ import { setView, fillView, progressView, horizontalView, setZoom, centreOn } fr
 import { SPAN_CENTRES } from "../spanCentres.js";
 import {
   defaults,
-  DEFAULT_BASEMAP,
+  basemapFor,
   sfmsfAerialDefaults,
   fullAerialDefaults,
   FULL_VB,
@@ -124,8 +124,9 @@ export function setSwitch(k, on) {
   if (on && VIEWS.includes(k)) {
     ui.view = k;
     ui.span = null;
-    // every view starts on the default basemap, Apple; each aerial view's dropdown can change it
-    ui.basemap = DEFAULT_BASEMAP;
+    // every view starts on its own basemap (basemapFor): Esri aerial in Full and Horizontal aerial, Apple in the others;
+    // each aerial view's dropdown can change it
+    ui.basemap = basemapFor(k);
     // the progress card opens every time Progress is picked, even if it was closed before; no other view opens it
     ui.cardHidden = k !== "progress";
   }
@@ -262,7 +263,7 @@ function viewSwitches(view) {
  */
 export function reset() {
   Object.assign(layers, viewSwitches(ui.view));
-  ui.basemap = DEFAULT_BASEMAP;
+  ui.basemap = basemapFor(ui.view);
   ui.changed = false;
   refresh();
 }
