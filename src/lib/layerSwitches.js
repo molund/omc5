@@ -81,14 +81,14 @@ export const fullAerialDefaults = Object.assign({}, sfmsfAerialDefaults, {
 });
 /**
  * Switches that progress-chart mode starts with, which match what it shows: the Clayton Clipper's spans (finished and
- * unfinished) with their span numbers, the aerial photo and the full gantry. Every
+ * unfinished) with their supports and span numbers, the aerial photo and the full gantry. Every
  * switch works in it, as in Full image.
  * @type {Record<string, boolean>}
  */
 export const PROGRESS_DEFAULTS = {
   guideway: true,
   unfinished: true,
-  supports: false,
+  supports: true,
   aerial: true,
   yard: false,
   ave72: false,
