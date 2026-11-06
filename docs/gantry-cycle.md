@@ -9,15 +9,15 @@ refined into stages; the words are his where the writing style in `CLAUDE.md` sa
 Each stage starts when the one before it ends. The **marker** is what can be seen from the ground, and what a note in
 `status.yaml` usually says, to tell that the stage has started or ended.
 
-| #   | Stage                   | What happens                                                                                                                                                  | Ends when (marker)                                             | How long  |
-| --- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- | --------- |
-| 0   | **Arrival**             | The gantry rests on its own forward support at the next guideway support. The cycle starts here.                                                              | "The Clayton Clipper has moved to span N."                     | (instant) |
-| 1   | **Hanging**             | The segments arrive on trucks and the trolley crane hangs them, usually 11 or 12 for a span.                                                                  | All the segments are hung. The span is **marked as complete**. | hours     |
-| 2   | **Gluing**              | Plastic is laid over the road. Epoxy joins all the segments together. The plastic stays down until the crews finish scraping the excess glue off the outside. | The plastic is lifted off the road.                            | not known |
-| 3   | **Post-tensioning**     | The span is post-tensioned.                                                                                                                                   | Post-tensioning is complete.                                   | hours     |
-| 4   | **Hangers down**        | The cables attached to the hangers come down first. Then the trolley crane lifts the hangers down, stacked on top of each other, two at a time.               | All the hangers are down.                                      | not known |
-| 5   | **Moving the supports** | The gantry's supports are moved forward (the order is below).                                                                                                 | The last support is placed lengthwise between the other two.   | not known |
-| 6   | **Launch**              | The gantry moves to the next guideway support and rests on its own forward support.                                                                           | Arrival at the next span: stage 0 of the next cycle.           | not known |
+| #   | Stage                   | What happens                                                                                                                                                  | Ends when (marker)                                           | How long  |
+| --- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ | --------- |
+| 0   | **Arrival**             | The gantry rests on its own forward support at the next guideway support. The cycle starts here.                                                              | "The Clayton Clipper has moved to span N."                   | (instant) |
+| 1   | **Hanging**             | The segments arrive on trucks and the trolley crane hangs them, usually 11 or 12 for a span.                                                                  | All the segments are hung (`hung:` in `status.yaml`).        | hours     |
+| 2   | **Gluing**              | Plastic is laid over the road. Epoxy joins all the segments together. The plastic stays down until the crews finish scraping the excess glue off the outside. | The plastic is lifted off the road.                          | not known |
+| 3   | **Post-tensioning**     | The span is post-tensioned.                                                                                                                                   | Post-tensioning is done.                                     | hours     |
+| 4   | **Hangers down**        | The cables attached to the hangers come down first. Then the trolley crane lifts the hangers down, stacked on top of each other, two at a time.               | All the hangers are down.                                    | not known |
+| 5   | **Moving the supports** | The gantry's supports are moved forward (the order is below).                                                                                                 | The last support is placed lengthwise between the other two. | not known |
+| 6   | **Launch**              | The gantry moves to the next guideway support and rests on its own forward support.                                                                           | Arrival at the next span: stage 0 of the next cycle.         | not known |
 
 "Hours" is Mike's "several hours". Nothing has been timed yet; see Open questions.
 
@@ -36,15 +36,16 @@ Then stage 6: the gantry launches.
 The Status Desk tags each step it sees in `desk.yaml`, by time stamp: `arrived`, `hanging started`, `hung`,
 `gluing started`, `glued`, `post-tensioning started`, `post-tensioned`, `cables down`, `hangers down`,
 `supports started`, `supports moved`. A tag means the step had happened by that time, so the earliest tag for a span is
-the best time known for it. The desk logs every move of the gantry (`arrived`) and every span marked as complete (`hung`)
+the best time known for it. The desk logs every move of the gantry (`arrived`) and every span marked as hung (`hung`)
 itself, so a missed report doesn't leave a hole. Its velocity is the average of the last two spans' cycles.
 
 - **A cycle is arrival to arrival** (stage 0 to the next stage 0). The time between two "moved to span N" notes is one
   cycle, whatever happened in between.
 - **Working time, not calendar time.** The crews work 24/6. The Sunday shutdown runs from 6 p.m. Saturday to 8 p.m.
   Sunday (26 hours) and is taken out of any cycle it falls in.
-- **Complete is mid-cycle.** A span is marked as complete at the end of stage 1, well before the gantry leaves it. The
-  progress card counts the span the gantry is on (stage 0), so the card moves at arrival, not at complete.
+- **No step means "complete".** Hung is the end of stage 1, well before the gantry leaves the span; the hangers coming
+  down (stage 4) is the nearest thing to done. The progress card counts the span the gantry is on (stage 0), so the card
+  moves at arrival.
 - **Other markers give partial times.** Notes about gluing, post-tensioning, the hangers or the supports moving split a
   cycle into stages, so a slow cycle can be traced to the stage that was slow (a night shift off during hanging, girders
   being installed before the gantry can move, and so on).

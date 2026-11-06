@@ -270,7 +270,8 @@ function parse(src) {
   return {
     updated: out.updated ? new Date(out.updated) : null,
     span: out.span ? +out.span : null,
-    complete: out.complete === "true",
+    // `hung:` in status.yaml (`complete:` before Nov. 6, 2026, still read)
+    complete: (out.hung ?? out.complete) === "true",
     // the newest status update (not a post), or null
     latest,
     note: latest ? latest.summary : "",

@@ -1,10 +1,11 @@
 name: Deploy to GitHub Pages
 
-# Runs on every push to main. It can also be run by hand (Actions > Deploy to GitHub Pages > Run workflow) or through the API
-# (a repository_dispatch "set-status" event, with any of span, complete and note in client_payload). Those runs update
-# status.yaml: the time is set to now (BC time, UTC−7, nearest quarter hour) and any values given override the file's. The
-# change is committed to main, and the site is rebuilt and deployed. A "desk-pushed" repository_dispatch, sent by desk.yml
-# after it lands the Status Desk's commits on main, only rebuilds and deploys.
+# Runs on every push to main. It can also be run by hand (Actions > Deploy to GitHub Pages > Run workflow) or through
+# the API (a repository_dispatch "set-status" event, with any of span, hung and note in client_payload; complete, hung's
+# old name, still works). Those runs update status.yaml: the time is set to now (BC time, UTC−7, nearest quarter hour)
+# and any values given override the file's. The change is committed to main, and the site is rebuilt and deployed. A
+# "desk-pushed" repository_dispatch, sent by desk.yml after it lands the Status Desk's commits on main, only rebuilds
+# and deploys.
 on:
   push:
     branches: [main]
@@ -14,8 +15,8 @@ on:
         description: "The span the Clayton Clipper gantry is working on (3-104); leave empty to keep status.yaml's"
         required: false
         type: string
-      complete:
-        description: "Is that span complete (or at least hung)? Leave empty to keep status.yaml's (a new span starts not complete)"
+      hung:
+        description: "Are all that span's segments hung? Leave empty to keep status.yaml's (a new span starts not hung)"
         required: false
         type: choice
         options: ["", "true", "false"]
@@ -47,7 +48,7 @@ jobs:
         if: github.event_name != 'push' && github.event.action != 'desk-pushed'
         env:
           SPAN: ${{ inputs.span || github.event.client_payload.span }}
-          COMPLETE: ${{ inputs.complete || github.event.client_payload.complete }}
+          HUNG: ${{ inputs.hung || github.event.client_payload.hung || github.event.client_payload.complete }}
           NOTE: ${{ inputs.note || github.event.client_payload.note }}
         run: |
           msg=$(python3 .github/scripts/update_status.py)

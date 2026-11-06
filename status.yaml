@@ -1,10 +1,10 @@
 # Clayton Clipper status. The site reads it (src/lib/status.js); running the deploy workflow by hand or through the API updates
 # it (see .github/workflows/deploy.yml). Times are BC time (UTC−7), rounded to the nearest quarter hour.
-updated: 2026-11-05T10:00-07:00
+updated: 2026-11-05T17:15-07:00
 # the span the gantry is working on (Clayton Clipper span numbers, 3-104)
 span: 38
-# whether that span is complete (all its segments hung). The map draws it complete; the progress card counts the span either way.
-complete: false
+# whether all that span's segments are hung. The map draws it hung; the progress card counts the span either way.
+hung: true
 # every note, newest first. A note is its time stamp (the time of the update that added it) and its title, then its summary,
 # the main text, indented under it. The title is not shown on a status update ("" for none, and the slug comes from the time
 # stamp); a post leads with it. It is also the update's `?post=` slug on
@@ -13,7 +13,7 @@ complete: false
 # the newest note's summary, or its
 # newest follow-up's if it has any (an empty summary shows none), only when that note's or follow-up's time stamp is
 # `updated`; otherwise the card has no text and a Trackside button in place of Comments (a position-only change to
-# `updated`, span and complete):
+# `updated`, span and hung):
 #   - 2026-10-31T14:00-07:00: "Clayton Clipper completes span 36"
 #     summary: "Span 36 is complete."
 # A note can be a post instead of a status update: "post: true" under it. A post leads with its title on Trackside, with
