@@ -2467,21 +2467,21 @@
     />
     <text
       class="n guideway"
-      x="5149.23"
-      y="3062.43"
+      x="5135.28"
+      y="3053.52"
       text-anchor="middle"
       style="font-size: 19.54px; fill: #eeeeee"
-      transform="rotate(32.6 5149.23 3054.66)"
+      transform="rotate(32.6 5135.28 3045.75)"
     >
       →
     </text>
     <text
       class="n guideway"
-      x="5155.34"
-      y="3053.99"
+      x="5140.88"
+      y="3044.75"
       text-anchor="middle"
       style="font-size: 19.54px; fill: #eeeeee"
-      transform="rotate(-147.4 5155.34 3046.22)"
+      transform="rotate(-147.4 5140.88 3036.98)"
     >
       →
     </text>
@@ -2492,21 +2492,21 @@
     />
     <text
       class="n guideway"
-      x="5205.63"
-      y="3097.89"
+      x="5191.62"
+      y="3089.12"
       text-anchor="middle"
       style="font-size: 19.54px; fill: #eeeeee"
-      transform="rotate(32.0 5205.63 3090.12)"
+      transform="rotate(32.0 5191.62 3081.35)"
     >
       →
     </text>
     <text
       class="n guideway"
-      x="5211.65"
-      y="3089.40"
+      x="5197.13"
+      y="3080.31"
       text-anchor="middle"
       style="font-size: 19.54px; fill: #eeeeee"
-      transform="rotate(-148.0 5211.65 3081.63)"
+      transform="rotate(-148.0 5197.13 3072.54)"
     >
       →
     </text>
@@ -2517,21 +2517,21 @@
     />
     <text
       class="n guideway"
-      x="5262.12"
-      y="3133.05"
+      x="5248.10"
+      y="3124.34"
       text-anchor="middle"
       style="font-size: 19.54px; fill: #eeeeee"
-      transform="rotate(31.9 5262.12 3125.28)"
+      transform="rotate(31.9 5248.10 3116.57)"
     >
       →
     </text>
     <text
       class="n guideway"
-      x="5268.11"
-      y="3124.53"
+      x="5253.58"
+      y="3115.50"
       text-anchor="middle"
       style="font-size: 19.54px; fill: #eeeeee"
-      transform="rotate(-148.1 5268.11 3116.76)"
+      transform="rotate(-148.1 5253.58 3107.73)"
     >
       →
     </text>
@@ -2542,21 +2542,21 @@
     />
     <text
       class="n guideway"
-      x="5318.62"
-      y="3168.15"
+      x="5304.60"
+      y="3159.44"
       text-anchor="middle"
       style="font-size: 19.54px; fill: #eeeeee"
-      transform="rotate(31.9 5318.62 3160.38)"
+      transform="rotate(31.9 5304.60 3151.67)"
     >
       →
     </text>
     <text
       class="n guideway"
-      x="5324.61"
-      y="3159.63"
+      x="5310.08"
+      y="3150.60"
       text-anchor="middle"
       style="font-size: 19.54px; fill: #eeeeee"
-      transform="rotate(-148.1 5324.61 3151.86)"
+      transform="rotate(-148.1 5310.08 3142.83)"
     >
       →
     </text>
