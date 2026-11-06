@@ -81,10 +81,8 @@ Each update is a note: its time stamp and its title on one line, then indented u
   leads with it.
 - `photo:` — a photo and its caption, shown under the summary.
 - `block:` — more paragraphs and photos, after the summary.
-- `note-to-self:` — one line for whoever reads the file. It is never shown: not on Trackside, the card, a comment thread or
-  the sitemap. (The file's text is bundled into the site's script like the rest of it, so it is in the repo and in view-source,
-  but on no page.) A note has one; follow-ups and blocks don't. A note with an empty title, no summary and a `note-to-self:`
-  appears nowhere either, since only notes with a summary are listed.
+- Notes to self aren't here: they're in `desk.yaml`, the Status Desk's file, which the site doesn't read. (The reader
+  still skips a `note-to-self:` line, so an old one would never be shown.)
 - `follow-up:` — later, time-stamped additions, shown as a list under the update. Each has its own
   `summary:`, `photo:` and `block:`, like the update. The card shows only the newest follow-up's
   summary. They get no
