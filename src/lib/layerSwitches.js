@@ -130,9 +130,7 @@ const PROGRESS_CSS =
   PROGRESS_COLOUR +
   " !important}" +
   // white where the number sits on a span in the progress colour; every other number looks as it does in the other views
-  "#map text.ccnumber.cc.on-reached{fill:#ffffff !important}" +
-  // only the Clayton Clipper's spans: the other launchers' stay hidden
-  "#map .ll.ll.ll,#map .ff.ff.ff{display:none !important}";
+  "#map text.ccnumber.cc.on-reached{fill:#ffffff !important}";
 /**
  * What each switch shows in progress-chart mode, as CSS selectors (whether it shows is still up to the layer's own
  * display rule).
