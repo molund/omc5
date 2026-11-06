@@ -247,9 +247,9 @@
     {@html mapSvg}
   </main>
   {#if basemapShown}
-    <!-- Esri requires both credits, in view and not covered, wherever its basemaps show -->
+    <!-- Esri requires both credits, in view and not covered, wherever its basemaps show; a fixed 12px, not the Text Size -->
     <div
-      class="absolute right-0 bottom-0 z-5 max-w-full rounded-tl-md bg-(--panel) px-1.5 py-0.5 text-xs text-(--mute)"
+      class="absolute right-0 bottom-0 z-5 max-w-full rounded-tl-md bg-(--panel) px-1.5 py-0.5 text-[12px] text-(--mute)"
     >
       Powered by <a class="text-(--ink) underline" href="https://www.esri.com">Esri</a> | {credit}
     </div>
