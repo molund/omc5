@@ -34,7 +34,9 @@ export function showAerialPhotos(root, show) {
       photo?.setAttribute("href", photo.dataset.href);
     });
   }
+  // hidden, not taken out of the layout: the views are framed to the overview photo's outline (viewport.svelte.js), which
+  // can't be measured with display: none
   root.querySelectorAll("image[data-href]").forEach((photo) => {
-    photo.style.display = show ? "" : "none";
+    photo.style.visibility = show ? "" : "hidden";
   });
 }
