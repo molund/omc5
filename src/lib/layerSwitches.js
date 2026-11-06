@@ -52,11 +52,11 @@ export const LAYERS = [
  * @type {Array<[string, string]>}
  */
 export const BASEMAPS = [
+  ["aerial", "Esri aerial"],
   ["streets", "Streets"],
   ["navigation", "Navigation"],
-  ["aerial", "Esri aerial"],
   ["outdoor", "Outdoor"],
-  ["apple", "Apple"],
+  ["apple", "Apple aerial"],
 ];
 /** The basemap every view starts with. */
 export const DEFAULT_BASEMAP = "aerial";
