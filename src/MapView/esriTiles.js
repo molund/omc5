@@ -1,10 +1,10 @@
-// The basemaps: Esri tiles (World Imagery for Aerial, Static Basemap Tiles for the rest) drawn as <image>s inside the map's
-// <svg>, so they zoom, pan and turn with the drawing. Each tile is billed (2 million a month are free), so only tiles in view are asked for, once the map has settled,
-// and each only once per page load. Esri's terms don't allow keeping tiles, so they always load from Esri.
+// The Esri basemaps: Esri tiles (World Imagery for Esri aerial, Static Basemap Tiles for the rest) drawn as <image>s
+// inside the map's <svg>, so they zoom, pan and turn with the drawing. Each tile is billed (2 million a month are
+// free), so only tiles in view are asked for, once the map has settled, and each only once per page load. Esri's terms
+// don't allow keeping tiles, so they always load from Esri.
 import control from "../../data/control-points.json";
 import { georeference, R } from "../lib/georeference.js";
 import { DEFAULT_BASEMAP } from "../lib/layerSwitches.js";
-import { showAerialPhotos } from "./aerialImages.js";
 
 const IMAGERY = "https://ibasemaps-api.arcgis.com/arcgis/rest/services/World_Imagery/MapServer";
 const STATIC = "https://static-map-tiles-api.arcgis.com/arcgis/rest/services/static-basemap-tiles-service/v1/arcgis";
@@ -14,8 +14,6 @@ const KEY =
 /** The closest level with the recent imagery at Surrey: level 20 and up is an older photo from before construction. */
 const MAX_LEVEL = 19;
 const MIN_LEVEL = 10;
-/** Whether the close-up photos take over past MAX_LEVEL; off for now, so the Esri imagery just stretches. */
-const CLOSE_UP_PHOTOS = false;
 /** Half the width of the Web Mercator world, in metres. */
 const WORLD = Math.PI * R;
 /** How long the map has to sit still before tiles are asked for, in milliseconds. */
@@ -68,7 +66,14 @@ const SERVICES = {
  * @param {string} basemap A basemap's key.
  * @returns {string} The credit.
  */
-export const defaultCredit = (basemap) => SERVICES[basemap].credit;
+export const defaultCredit = (basemap) => SERVICES[basemap]?.credit ?? "";
+
+/**
+ * Whether a basemap is one of Esri's (the Apple Maps one isn't: see aerialImages.js).
+ * @param {string} basemap A basemap's key.
+ * @returns {boolean}
+ */
+export const isEsri = (basemap) => basemap in SERVICES;
 
 /** The credits read so far, by basemap. */
 const credits = new Map();
@@ -142,8 +147,8 @@ export function startEsriTiles(svg, stage) {
   };
 
   const update = () => {
-    // nothing to pay for while the basemap is off
-    if (getComputedStyle(base).display === "none") return;
+    // nothing to pay for while the basemaps are off, or the Apple Maps one is shown
+    if (getComputedStyle(base).display === "none" || !isEsri(basemap)) return;
     const ctm = DOMMatrix.fromMatrix(layer.getScreenCTM()),
       toCanvas = ctm.inverse(),
       s = stage.getBoundingClientRect(),
@@ -166,8 +171,6 @@ export function startEsriTiles(svg, stage) {
         MIN_LEVEL,
         Math.min(service.maxLevel, levelFor(cssPerCanvas * Math.min(devicePixelRatio || 1, MAX_PIXEL_RATIO))),
       );
-    // in CSS pixels, so a sharper screen doesn't swap to the older photos any sooner; they only go with the aerial basemap
-    showAerialPhotos(svg, CLOSE_UP_PHOTOS && basemap === "aerial" && levelFor(cssPerCanvas) > service.maxLevel);
 
     const size = (2 * WORLD) / 2 ** level,
       screen = ([x, y]) => new DOMPoint(x, y).matrixTransform(ctm),

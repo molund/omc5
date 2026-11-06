@@ -159,13 +159,15 @@
     fill="#FFFFFF"
   />
   <g id="baseoverview" class="aerial">
-    <!-- the lowest layer, where esriTiles.js adds the aerial tiles. The empty image is the old overview photo's outline, which
-         the views are still framed to (see viewport.svelte.js) -->
+    <!-- the lowest layer: the Apple Maps overview aerial (aerialImages.js gives it its href while the Apple Maps basemap is
+         shown), with esriTiles.js's tiles above it for the Esri basemaps. The views are framed to its outline (see
+         viewport.svelte.js) -->
     <image
       width="2795"
       height="1968"
       preserveAspectRatio="none"
       transform="matrix(4.445894 0.000119 -0.000119 4.445894 -6875.705 -5447.095)"
+      data-href="/images/aerial-base.jpg"
     />
   </g>
   <g id="landmarks" class="aerial">
