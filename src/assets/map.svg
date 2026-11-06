@@ -1568,24 +1568,24 @@
       >
         Pacific Hwy (15)
       </text>
-      <!-- Yard ramp direction arrows (eastbound train direction), same style as the other arrows -->
+      <!-- Span 35 and 39 exit ramp direction arrows (eastbound train direction), placed like the arrows on the span 33, 34 and 35 eastbound girders: 26.6 from the east end of the span, rotated to the span direction; grey while the ramps are unfinished -->
       <text
         class="n guideway"
-        x="-989.93"
-        y="-277.59"
+        x="-942.49"
+        y="-240.96"
         text-anchor="middle"
         style="font-size: 17.6px; fill: #767676"
-        transform="rotate(37.4 -989.93 -284.59)"
+        transform="rotate(35.5 -942.49 -247.96)"
       >
         &#x2192;
       </text>
       <text
         class="n guideway"
-        x="-1350.11"
-        y="-518.68"
+        x="-1328.19"
+        y="-501.41"
         text-anchor="middle"
         style="font-size: 17.6px; fill: #767676"
-        transform="rotate(24.1 -1350.11 -525.68)"
+        transform="rotate(31.3 -1328.19 -508.41)"
       >
         &#x2192;
       </text>
