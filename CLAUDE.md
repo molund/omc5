@@ -41,7 +41,7 @@ Svelte 5 + Vite site, deployed to GitHub Pages (https://clayton-clipper.olund.ca
 - `desk.yaml` — the Status Desk's own records (molund/omc5-admin): notes to self, and the steps of the cycle seen at each
   time stamp, which the desk turns into the velocity. The site doesn't read it. Keep a note's or follow-up's time stamp in
   step with it when one changes.
-- `status.yaml` — gantry span / complete / time-stamped notes (all on Trackside; the progress card shows the newest update's latest text). Site news
+- `status.yaml` — gantry span / hung / time-stamped notes (all on Trackside; the progress card shows the newest update's latest text). Site news
   only: update this file, don't change the drawing unless asked. Follow-ups get no title.
   Titles (the value after a note's time stamp; it leads a post and is the source of the update's `?post=` slug on Trackside; see the format in `status.yaml`):
   - A note gets the date title by default, "Clayton Clipper construction update for Monday, Nov. 2, 2026" (weekday, month
