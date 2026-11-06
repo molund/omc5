@@ -3,8 +3,7 @@
 updated: 2026-11-05T10:00-07:00
 # the span the gantry is working on (Clayton Clipper span numbers, 3-104)
 span: 38
-# whether that span is complete (or at least hung)
-# Track completed spans instead of current gantry position so the drawn guideway actually looks like a bar graph.
+# whether that span is complete (all its segments hung). The map draws it complete; the progress card counts the span either way.
 complete: false
 # every note, newest first. A note is its time stamp (the time of the update that added it) and its title, then its summary,
 # the main text, indented under it. The title is not shown on a status update ("" for none, and the slug comes from the time
@@ -112,7 +111,7 @@ notes:
     summary: "All segments for span 35 are hung. A new precast girder arrived at the construction yard overnight. It will likely be installed in span 34, along with the girder that was already on site."
     follow-up:
       - 2026-10-29T18:30-07:00:
-          summary: "Span 35's segments are glued, and Dywidag is post-tensioning now. The night shift should finish it. That makes the Clayton Clipper one-third done: 35 of 105 spans."
+          summary: "Span 35's segments are glued, and Dywidag is post-tensioning now. The night shift should finish it. That puts the Clayton Clipper a third of the way along its route: span 35 of 105."
   - 2026-10-26T20:00-07:00: "Clayton Clipper construction update for Monday, Oct. 26, 2026"
     summary: "The Clayton Clipper is about to lift the last segment for span 34."
     photo:

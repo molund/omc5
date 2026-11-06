@@ -92,15 +92,15 @@ export const defaults = Object.assign({}, fullAerialDefaults, PROGRESS_DEFAULTS,
   fullAerial: false,
 });
 /**
- * The colour of the finished spans in progress-chart mode: violet, opposite the gantry's yellow on the colour wheel, so it
- * stands out and goes with it.
+ * The colour of the Clayton Clipper's complete spans in progress-chart mode.
  */
 export const PROGRESS_COLOUR = "#8473a8";
 /**
  * Progress-chart mode's own CSS: it hides everything (with visibility, which leaves the masks and clip paths the drawing
  * relies on untouched) and then lets through what its switched-on layers show (see PROGRESS_SHOWS), so the base drawing,
- * which has no switch, stays hidden. The Clayton Clipper's finished spans are violet up to the span the gantry has reached,
- * their usual colour past it, and its span numbers are white on violet and as in the other views everywhere else.
+ * which has no switch, stays hidden. The Clayton Clipper's complete spans are in the progress colour up to the gantry's span,
+ * their usual colour past it, and its span numbers are white on the progress colour and as in the other views everywhere
+ * else.
  */
 const PROGRESS_CSS =
   "#map polygon,#map path,#map line,#map polyline,#map rect,#map circle,#map ellipse,#map text{visibility:hidden !important}" +
