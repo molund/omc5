@@ -1,8 +1,8 @@
 # The Clayton Clipper's cycle
 
-One cycle is everything the Clayton Clipper does for one span: from arriving at a new position to arriving at the next one.
-It's the unit for the gantry's velocity (days per span). This is Mike's description from watching the gantry, refined
-into stages; the words are his where the writing style in `CLAUDE.md` says to use the word as written.
+One cycle is everything the Clayton Clipper does for one span: from arriving at a new position to arriving at the next
+one. It's the unit for the gantry's velocity (days per span). This is Mike's description from watching the gantry,
+refined into stages; the words are his where the writing style in `CLAUDE.md` says to use the word as written.
 
 ## The stages
 
@@ -33,6 +33,12 @@ Then stage 6: the gantry launches.
 
 ## For the velocity
 
+The Status Desk tags each step it sees in `desk.yaml`, by time stamp: `arrived`, `hanging started`, `hung`,
+`gluing started`, `glued`, `post-tensioning started`, `post-tensioned`, `cables down`, `hangers down`,
+`supports started`, `supports moved`. A tag means the step had happened by that time, so the earliest tag for a span is
+the best time known for it. The desk logs every move of the gantry (`arrived`) and every span marked as complete (`hung`)
+itself, so a missed report doesn't leave a hole. Its velocity is the average of the last two spans' cycles.
+
 - **A cycle is arrival to arrival** (stage 0 to the next stage 0). The time between two "moved to span N" notes is one
   cycle, whatever happened in between.
 - **Working time, not calendar time.** The crews work 24/6. The Sunday shutdown runs from 6 p.m. Saturday to 8 p.m.
@@ -46,8 +52,8 @@ Then stage 6: the gantry launches.
 ## Open questions
 
 - **Which support is which.** The gantry has three supports, and the steps name them by where they are at the time
-  ("sitting sideways on the span", "second-farthest-back", "farthest-back"). A name for each (for example forward, middle
-  and rear) would make the order easier to follow from cycle to cycle.
+  ("sitting sideways on the span", "second-farthest-back", "farthest-back"). A name for each (for example forward,
+  middle and rear) would make the order easier to follow from cycle to cycle.
 - **Step 2's support.** Is "the gantry support" in step 2 the forward gantry support, or the one just placed behind it
   in step 1?
 - **Durations.** Stages 2, 4, 5 and 6 have no time yet, and stages 1 and 3 only "several hours". Time-stamped notes at

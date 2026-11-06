@@ -19,10 +19,8 @@ complete: false
 # A note can be a post instead of a status update: "post: true" under it. A post leads with its title on Trackside, with
 # just its date under it (its key can be a date alone, "2026-11-01"), and never shows on the progress card.
 #     post: true
-# a note to self, indented under a note: one line, for whoever reads this file. The site never shows it (it is not in any page, the
-# card or a comment thread), though the file's text is in the site's script like the rest of it. A follow-up has none: it is its note's.
-# A note with a note to self and no title or summary shows nowhere at all (it is how a position-only change leaves a memo):
-#     note-to-self: "Ask about the girders"
+# Notes to self, and the steps of the gantry's cycle seen at each time stamp, are in desk.yaml (the Status Desk's file), not
+# here.
 # a photo, indented under it, with its own caption:
 #     photo:
 #       file: span-36.jpg (in public/images/sorry-im-a-shitty-photographer/)
@@ -46,8 +44,6 @@ complete: false
 notes:
   - 2026-11-05T10:00-07:00: "Clayton Clipper construction update for Thursday, Nov. 5, 2026"
     summary: "The Clayton Clipper has moved to span 38. It's getting faster: the crews are working 24/6, and the last span took just two days."
-  - 2026-11-04T12:30-07:00: ""
-    note-to-self: "Fully glued. Hangers and cables are still up. Post tensioning in progress."
   - 2026-11-03T07:15-07:00: "Clayton Clipper construction update for Tuesday, Nov. 3, 2026"
     summary: "Both precast girders for span 34 were installed overnight by mobile cranes. The Clayton Clipper is beginning the move to the next span."
     follow-up:

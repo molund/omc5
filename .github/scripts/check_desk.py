@@ -1,9 +1,10 @@
 """Check the Status Desk's commits on the desk branch before they land on main (see .github/workflows/desk.yml).
 
-The branch must be main plus one or more commits, none of them a merge, each of which only changes status.yaml or adds or
-replaces photos in public/images/sorry-im-a-shitty-photographer/. Every photo it touches must be a JPEG at most 800 pixels
-wide, with no metadata (no EXIF, XMP or comment segments), under 1 MB. Run from the repo root with origin/main fetched.
-Writes count=<number of commits> to $GITHUB_OUTPUT (0 when the branch is already main) and exits 1 on the first problem.
+The branch must be main plus one or more commits, none of them a merge, each of which only changes status.yaml or
+desk.yaml, or adds or replaces photos in public/images/sorry-im-a-shitty-photographer/. Every photo it touches must be a
+JPEG at most 800 pixels wide, with no metadata (no EXIF, XMP or comment segments), under 1 MB. Run from the repo root
+with origin/main fetched. Writes count=<number of commits> to $GITHUB_OUTPUT (0 when the branch is already main) and
+exits 1 on the first problem.
 """
 
 import os
@@ -12,7 +13,7 @@ import subprocess
 import sys
 
 BASE = "origin/main"
-STATUS = "status.yaml"
+FILES = ("status.yaml", "desk.yaml")
 PHOTO = re.compile(r"^public/images/sorry-im-a-shitty-photographer/[a-z0-9][a-z0-9._-]*\.jpg$")
 MAX_WIDTH = 800
 MAX_BYTES = 1_000_000
@@ -68,12 +69,12 @@ for sha in commits:
         fail(f"{subject}: a merge commit; the desk makes one plain commit per change")
     for line in git("diff-tree", "--no-commit-id", "--name-status", "-r", sha).splitlines():
         status, path = line.split("\t", 1)
-        if path == STATUS and status == "M":
+        if path in FILES and status in ("A", "M"):
             continue
         if PHOTO.match(path) and status in ("A", "M"):
             photos.add(path)
             continue
-        fail(f"{subject}: changes {path} ({status}); the desk may only change {STATUS} and add photos")
+        fail(f"{subject}: changes {path} ({status}); the desk may only change {' and '.join(FILES)} and add photos")
 
 for path in sorted(photos):
     data = subprocess.run(["git", "show", f"HEAD:{path}"], check=True, capture_output=True).stdout
