@@ -8,6 +8,10 @@
 # Every entry about the gantry has a stage, and one that marks its span hung is at "hung" or later. A time stamp can match a
 # note or follow-up in status.yaml, or stand alone (a step seen with no post about it).
 entries:
+  - 2026-11-05T21:30-07:00:
+      span: 38
+      stage: gluing started
+      note-to-self: "6/12 segments glued"
   - 2026-11-05T17:15-07:00:
       span: 38
       stage: hung
