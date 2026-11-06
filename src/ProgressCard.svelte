@@ -27,7 +27,7 @@
   // what each number counts, shown when it is hovered or clicked with a mouse, tapped (tap again to hide) or pressed with
   // Enter/Space
   const TIPS = $derived({
-    span: "<strong>The span the Clayton Clipper is on.</strong> On the map, its colour is updated once all its segments are hung.",
+    span: "<strong>The span the Clayton Clipper is currently working on.</strong> Its colour changes on the map once all the segments are hung.",
     ahead: "<strong>Built ahead by mobile cranes.</strong> Counted when the gantry passes.",
     total: "<strong>Route total.</strong> Parallel guideways count as one position.",
     percent: ui.gantry
