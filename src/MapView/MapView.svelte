@@ -1,7 +1,8 @@
 <script>
   import { onMount } from "svelte";
   import mapSvg from "../assets/map.svg?raw";
-  import { startEsriTiles, esriCredit, defaultCredit } from "./esriTiles.js";
+  import { startEsriTiles, esriCredit, defaultCredit, isEsri } from "./esriTiles.js";
+  import { showAerialPhotos } from "./aerialImages.js";
   import { DRAW_VB, SFMSF_AERIAL_VB, FULL_VB } from "../lib/layerSwitches.js";
   import { tagBuiltBy } from "./builtBy.js";
   import { gantryProgress } from "./gantryProgress.js";
@@ -27,16 +28,22 @@
   let touchDrag = null;
   let edgeTimer;
   let esriTiles = $state(null);
-  let credit = $state(defaultCredit(ui.basemap));
+  // the basemap shown: the dropdown's pick, in every aerial view (each view starts on its own: basemapFor). One at a time, whatever the zoom
+  const basemap = $derived(ui.basemap);
+  let credit = $state(defaultCredit(basemap));
   const basemapShown = $derived(layers.aerial && !layers.sfmsfDrawing);
+  // Esri's credits show only with its basemaps
+  const esriShown = $derived(basemapShown && isEsri(basemap));
 
-  // the basemap coming on again, or another one being picked, may need tiles
+  // the Apple Maps photos, or the Esri tiles (which may need loading when the basemap comes on again or is picked)
   $effect(() => {
-    if (basemapShown) esriTiles?.setBasemap(ui.basemap);
+    if (!esriTiles) return;
+    showAerialPhotos(els.svg, basemap === "apple");
+    if (basemapShown) esriTiles.setBasemap(basemap);
   });
-  // each basemap has its own credit; one that is still being read doesn't replace a later pick's
+  // each Esri basemap has its own credit; one that is still being read doesn't replace a later pick's
   $effect(() => {
-    const basemap = ui.basemap;
+    if (!isEsri(basemap)) return;
     let current = true;
     credit = defaultCredit(basemap);
     esriCredit(basemap).then((text) => {
@@ -246,7 +253,7 @@
   >
     {@html mapSvg}
   </main>
-  {#if basemapShown}
+  {#if esriShown}
     <!-- Esri requires both credits, in view and not covered, wherever its basemaps show; a fixed 12px, not the Text Size -->
     <div
       class="absolute right-0 bottom-0 z-5 max-w-full rounded-tl-md bg-(--panel) px-1.5 py-0.5 text-[12px] text-(--mute)"
