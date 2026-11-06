@@ -1,7 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import mapSvg from "../assets/map.svg?raw";
-  import { startEsriTiles, esriCredit, DEFAULT_CREDIT } from "./esriTiles.js";
+  import { startEsriTiles, esriCredit, defaultCredit } from "./esriTiles.js";
   import { DRAW_VB, SFMSF_AERIAL_VB, FULL_VB } from "../lib/layerSwitches.js";
   import { tagBuiltBy } from "./builtBy.js";
   import { gantryProgress } from "./gantryProgress.js";
@@ -27,12 +27,22 @@
   let touchDrag = null;
   let edgeTimer;
   let esriTiles = $state(null);
-  let credit = $state(DEFAULT_CREDIT);
-  const aerialShown = $derived(layers.aerial && !layers.sfmsfDrawing);
+  let credit = $state(defaultCredit(ui.basemap));
+  const basemapShown = $derived(layers.aerial && !layers.sfmsfDrawing);
 
-  // the aerial coming on again may need tiles
+  // the basemap coming on again, or another one being picked, may need tiles
   $effect(() => {
-    if (aerialShown) esriTiles?.refresh();
+    if (basemapShown) esriTiles?.setBasemap(ui.basemap);
+  });
+  // each basemap has its own credit; one that is still being read doesn't replace a later pick's
+  $effect(() => {
+    const basemap = ui.basemap;
+    let current = true;
+    credit = defaultCredit(basemap);
+    esriCredit(basemap).then((text) => {
+      if (current) credit = text;
+    });
+    return () => (current = false);
   });
 
   function startDrag(clientX, clientY) {
@@ -109,7 +119,6 @@
     svg.append(turn);
     els.turn = turn;
     esriTiles = startEsriTiles(svg, stage);
-    esriCredit().then((text) => (credit = text));
     ui.ready = true;
     svg.style.width = ui.zoom + "%";
     if (layers.progress) progressView();
@@ -237,8 +246,8 @@
   >
     {@html mapSvg}
   </main>
-  {#if aerialShown}
-    <!-- Esri requires both credits, in view and not covered, wherever its imagery shows -->
+  {#if basemapShown}
+    <!-- Esri requires both credits, in view and not covered, wherever its basemaps show -->
     <div
       class="absolute right-0 bottom-0 z-5 max-w-full rounded-tl-md bg-(--panel) px-1.5 py-0.5 text-xs text-(--mute)"
     >

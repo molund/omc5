@@ -4,6 +4,7 @@ import { setView, fillView, progressView, horizontalView, setZoom, centreOn } fr
 import { SPAN_CENTRES } from "../spanCentres.js";
 import {
   defaults,
+  DEFAULT_BASEMAP,
   sfmsfAerialDefaults,
   fullAerialDefaults,
   FULL_VB,
@@ -123,6 +124,8 @@ export function setSwitch(k, on) {
   if (on && VIEWS.includes(k)) {
     ui.view = k;
     ui.span = null;
+    // every view starts on the default basemap: only the SFMSF views have the dropdown to change it back
+    ui.basemap = DEFAULT_BASEMAP;
     // the progress card opens every time Progress is picked, even if it was closed before; no other view opens it
     ui.cardHidden = k !== "progress";
   }
@@ -188,6 +191,16 @@ export function setSwitch(k, on) {
   refresh();
 }
 
+/**
+ * The Basemap switch's dropdown was changed.
+ * @param {string} basemap A BASEMAPS key.
+ * @returns {void}
+ */
+export function setBasemap(basemap) {
+  ui.basemap = basemap;
+  ui.changed = true;
+}
+
 /** The zoom a span link opens at, as the number the zoom readout shows (a multiple of Fit). */
 const SPAN_ZOOM = 20;
 
@@ -249,6 +262,7 @@ function viewSwitches(view) {
  */
 export function reset() {
   Object.assign(layers, viewSwitches(ui.view));
+  ui.basemap = DEFAULT_BASEMAP;
   ui.changed = false;
   refresh();
 }
@@ -256,6 +270,7 @@ export function reset() {
 // Save the panel's settings whenever one changes
 autosave(() => ({
   layers: $state.snapshot(layers),
+  basemap: ui.basemap,
   view: ui.view,
   changed: ui.changed,
   layersOpen: ui.layersOpen,

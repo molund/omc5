@@ -34,7 +34,7 @@ export const LAYERS = [
   [
     "Reference",
     [
-      ["aerial", "Aerial photo", "aerial", true],
+      ["aerial", "Basemap", "aerial", true],
       ["greenbelt", "Greenbelt", "greenbelt", false],
       ["roads", "Roads", "roads", true],
       ["yard", "Construction yard", "yard", false],
@@ -45,6 +45,18 @@ export const LAYERS = [
     ],
   ],
 ];
+/**
+ * The basemaps the Basemap switch's dropdown offers, as [key, label] (see SERVICES in MapView/esriTiles.js).
+ * @type {Array<[string, string]>}
+ */
+export const BASEMAPS = [
+  ["streets", "Streets"],
+  ["navigation", "Navigation"],
+  ["aerial", "Aerial"],
+  ["outdoor", "Outdoor"],
+];
+/** The basemap every view starts with. */
+export const DEFAULT_BASEMAP = "aerial";
 /**
  * The normal view (the on-by-default column above), which Drawing mode returns to when it is switched off.
  * @type {Record<string, boolean>} Every switch's key and whether it is on.
