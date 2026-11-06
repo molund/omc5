@@ -46,17 +46,20 @@ export const LAYERS = [
   ],
 ];
 /**
- * The basemaps the Basemap switch's dropdown offers, as [key, label] (see SERVICES in MapView/esriTiles.js).
+ * The basemaps the Basemap switch's dropdown offers, as [key, label]: the Apple Maps photos (MapView/aerialImages.js)
+ * and Esri's (SERVICES in MapView/esriTiles.js). One shows at a time. The dropdown is only in the SFMSF aerial view;
+ * every other view shows Apple Maps.
  * @type {Array<[string, string]>}
  */
 export const BASEMAPS = [
+  ["apple", "Apple Maps"],
   ["streets", "Streets"],
   ["navigation", "Navigation"],
-  ["aerial", "Aerial"],
+  ["aerial", "Esri aerial"],
   ["outdoor", "Outdoor"],
 ];
-/** The basemap every view starts with. */
-export const DEFAULT_BASEMAP = "aerial";
+/** The basemap every view starts with, and the only one outside the SFMSF aerial view. */
+export const DEFAULT_BASEMAP = "apple";
 /**
  * The normal view (the on-by-default column above), which Drawing mode returns to when it is switched off.
  * @type {Record<string, boolean>} Every switch's key and whether it is on.

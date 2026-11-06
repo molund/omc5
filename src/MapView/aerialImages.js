@@ -1,8 +1,10 @@
-// The close-up aerial photos in map.svg have a data-href and get their href the first time they're shown: past Esri's closest
-// recent imagery (see esriTiles.js), where they take over from it.
+// The Apple Maps basemap: the overview aerial and the close-up photos in map.svg, Apple Maps screenshots. They have a
+// data-href and get their href the first time the basemap is shown, in the order below. Only one basemap shows at a
+// time: these are hidden while an Esri one (esriTiles.js) is picked, whatever the zoom.
 
-/** The photos (file names without .jpg), in the order they are added. */
+/** The photos (file names without .jpg), in the order they are added: the overview first. */
 const DEFERRED = [
+  "aerial-base", // 1.9 MB - the overview
   "aerial-zoom-9", // 68 KB - Fry's Corner
   "aerial-zoom-4", // 168 KB - Serpentine River
   "aerial-zoom-10", // 36 KB - Across from golf course
@@ -19,7 +21,7 @@ const DEFERRED = [
 let loaded = false;
 
 /**
- * Shows or hides the close-up photos, loading them in DEFERRED's order the first time they're shown.
+ * Shows or hides the Apple Maps photos, loading them in DEFERRED's order the first time they're shown.
  * @param {SVGSVGElement} root The map's <svg>.
  * @param {boolean} show Whether they show.
  * @returns {void}
