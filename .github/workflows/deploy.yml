@@ -3,7 +3,8 @@ name: Deploy to GitHub Pages
 # Runs on every push to main. It can also be run by hand (Actions > Deploy to GitHub Pages > Run workflow) or through the API
 # (a repository_dispatch "set-status" event, with any of span, complete and note in client_payload). Those runs update
 # status.yaml: the time is set to now (BC time, UTC−7, nearest quarter hour) and any values given override the file's. The
-# change is committed to main, and the site is rebuilt and deployed.
+# change is committed to main, and the site is rebuilt and deployed. A "desk-pushed" repository_dispatch, sent by desk.yml
+# after it lands the Status Desk's commits on main, only rebuilds and deploys.
 on:
   push:
     branches: [main]
@@ -23,7 +24,7 @@ on:
         required: false
         type: string
   repository_dispatch:
-    types: [set-status, set-span]
+    types: [set-status, set-span, desk-pushed]
 
 permissions:
   contents: read
@@ -43,7 +44,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Update status.yaml
-        if: github.event_name != 'push'
+        if: github.event_name != 'push' && github.event.action != 'desk-pushed'
         env:
           SPAN: ${{ inputs.span || github.event.client_payload.span }}
           COMPLETE: ${{ inputs.complete || github.event.client_payload.complete }}
