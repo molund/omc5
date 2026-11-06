@@ -1127,10 +1127,10 @@
           points="279.08,893.45 301.28,893.45 301.87,1014.30 279.67,1014.30"
         />
         <polygon
-          class="guideway unfinished"
-          fill="#FFFFFF"
-          stroke="#888780"
-          stroke-width="0.825"
+          class="guideway"
+          fill="#888780"
+          stroke="#5F5E5A"
+          stroke-width="1.5"
           points="304.58,893.45 314.23,893.45 314.82,1014.30 305.17,1014.30"
         />
         <polygon
@@ -1568,24 +1568,24 @@
       >
         Pacific Hwy (15)
       </text>
-      <!-- Yard ramp direction arrows (eastbound train direction), same style as the other arrows -->
+      <!-- Span 35 and 39 exit ramp direction arrows (eastbound train direction), placed like the arrows on the span 33, 34 and 35 eastbound girders: 26.6 from the east end of the span, rotated to the span direction; grey while the ramps are unfinished -->
       <text
         class="n guideway"
-        x="-989.93"
-        y="-277.59"
+        x="-942.49"
+        y="-240.96"
         text-anchor="middle"
         style="font-size: 17.6px; fill: #767676"
-        transform="rotate(37.4 -989.93 -284.59)"
+        transform="rotate(35.5 -942.49 -247.96)"
       >
         &#x2192;
       </text>
       <text
         class="n guideway"
-        x="-1350.11"
-        y="-518.68"
+        x="-1328.19"
+        y="-501.41"
         text-anchor="middle"
         style="font-size: 17.6px; fill: #767676"
-        transform="rotate(24.1 -1350.11 -525.68)"
+        transform="rotate(31.3 -1328.19 -508.41)"
       >
         &#x2192;
       </text>
@@ -1856,6 +1856,18 @@
         text-anchor="middle"
         style="font-size: 17.6px; fill: #eeeeee"
         transform="rotate(33.4 -833.20 -191.91)"
+      >
+        &#x2192;
+      </text>
+      <!-- eastbound -->
+      <!-- Span 35 direction arrow (eastbound precast), the same distance from the westbound arrow as at 32, 33 and 34 -->
+      <text
+        class="n guideway"
+        x="-935.27"
+        y="-251.76"
+        text-anchor="middle"
+        style="font-size: 17.6px; fill: #eeeeee"
+        transform="rotate(33.8 -935.27 -258.76)"
       >
         &#x2192;
       </text>
