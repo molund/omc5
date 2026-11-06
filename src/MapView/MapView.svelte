@@ -15,6 +15,7 @@
     setView,
     setZoom,
     fitZoom,
+    holdMap,
     isFit,
     fillView,
     progressView,
@@ -211,18 +212,38 @@
       return true;
     };
     document.addEventListener("prerenderingchange", reframe);
-    // a filled or fitted map stays so when the window or the layer panel changes the stage size
+    // the stage's size and scroll position as they last were, for holdMap: by the time the stage's new size is reported, the
+    // browser has already rescaled the map
+    const seen = {
+      width: stage.clientWidth,
+      height: stage.clientHeight,
+      left: stage.scrollLeft,
+      top: stage.scrollTop,
+    };
+    const scrolled = () => {
+      seen.left = stage.scrollLeft;
+      seen.top = stage.scrollTop;
+    };
+    stage.addEventListener("scroll", scrolled, { passive: true });
+    // a filled or fitted map stays so when the window or the layer panel changes the stage size; any other map stays at its
+    // scale, on the same point
     const resize = new ResizeObserver(() => {
-      if (reframe()) return;
-      if (ui.filled) fillView();
-      else if (isFit()) setZoom(fitZoom());
-      else ui.fit = fitZoom();
+      if (!reframe()) {
+        if (ui.filled) fillView();
+        else if (isFit()) setZoom(fitZoom());
+        else if (seen.width && stage.clientWidth && stage.clientWidth !== seen.width) holdMap(seen);
+        else ui.fit = fitZoom();
+      }
+      seen.width = stage.clientWidth;
+      seen.height = stage.clientHeight;
+      scrolled();
     });
     resize.observe(stage);
     return () => {
       clearTimeout(edgeTimer);
       esriTiles?.stop();
       resize.disconnect();
+      stage.removeEventListener("scroll", scrolled);
       document.removeEventListener("prerenderingchange", reframe);
       stage.removeEventListener("wheel", wheel);
       stage.removeEventListener("gesturestart", gesturestart);
