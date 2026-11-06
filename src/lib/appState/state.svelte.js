@@ -1,5 +1,5 @@
 import { saved } from "./persist.svelte.js";
-import { defaults } from "../layerSwitches.js";
+import { BASEMAPS, DEFAULT_BASEMAP, defaults } from "../layerSwitches.js";
 
 /**
  * Layer switches, keyed as in LAYERS (saved ones only for switches that still exist).
@@ -37,6 +37,7 @@ const view = saved?.view ?? (defaults.progress ? "progress" : defaults.sfmsfDraw
  * The map's and panel's state.
  * @type {{
  *   view: string,
+ *   basemap: string,
  *   span: number|null,
  *   zoom: number,
  *   fit: number,
@@ -50,6 +51,7 @@ const view = saved?.view ?? (defaults.progress ? "progress" : defaults.sfmsfDraw
  *   gantry: GantryProgress|null,
  * }}
  * - view: the view last picked (a View group key).
+ * - basemap: the basemap picked (a BASEMAPS key), shown while the Basemap switch (layers.aerial) is on.
  * - span: the span a ?span=N link opened the map on, until another view is picked.
  * - zoom: a percentage of the stage width; fit: the zoom at which the whole canvas fits the stage.
  * - phone: PHONE, kept up to date by App.svelte; collapsed: whether the panel is hidden (a phone opens on the map, with
@@ -66,6 +68,7 @@ const view = saved?.view ?? (defaults.progress ? "progress" : defaults.sfmsfDraw
  */
 export const ui = $state({
   view,
+  basemap: BASEMAPS.some(([k]) => k === saved?.basemap) ? saved.basemap : DEFAULT_BASEMAP,
   span: null,
   zoom: 187.31,
   fit: 100,

@@ -1,11 +1,12 @@
 <script>
-  import { LAYERS, spanNumbersAvailable } from "./lib/layerSwitches.js";
+  import { BASEMAPS, LAYERS, spanNumbersAvailable } from "./lib/layerSwitches.js";
   import Icon from "./Icon.svelte";
   import { fly, slide } from "svelte/transition";
   import {
     layers,
     ui,
     setSwitch,
+    setBasemap,
     showAll,
     reset,
     setZoom,
@@ -34,7 +35,7 @@
   const opacity = (k) => (disabled(k) ? "0.4" : "");
   // greenbelt and creeks only in drawing mode, roads (with their labels), construction yard and walking paths in the two SFMSF
   // views (drawing mode and SFMSF zoom),
-  // aerial photo everywhere but drawing mode
+  // the basemap everywhere but drawing mode
   function hidden(k) {
     if (k === "greenbelt" || k === "creeks") return !layers.sfmsfDrawing;
     if (k === "roads" || k === "yard" || k === "walk") return !(layers.sfmsfDrawing || layers.sfmsfAerial);
@@ -112,22 +113,37 @@
             {group}
           </div>
           {#each rows as [k, label]}
-            <label
-              class={[
-                "flex items-center gap-2.5 rounded-md px-1 py-1.5",
-                disabled(k) ? "cursor-default" : "cursor-pointer hover:bg-(--bg)",
-              ]}
-              style:opacity={opacity(k)}
-              style:display={hidden(k) ? "none" : ""}
-            >
-              <input
-                class="m-0 h-4.5 w-4.5 accent-(--accent) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent)"
-                type="checkbox"
-                checked={layers[k]}
-                disabled={disabled(k)}
-                onchange={(e) => change(e, k)}
-              />{label}
-            </label>
+            <!-- the basemap switch has a dropdown beside it, for which basemap, that can't be changed while it is off -->
+            <div class="flex items-center gap-2" style:display={hidden(k) ? "none" : ""}>
+              <label
+                class={[
+                  "flex flex-1 items-center gap-2.5 rounded-md px-1 py-1.5",
+                  disabled(k) ? "cursor-default" : "cursor-pointer hover:bg-(--bg)",
+                ]}
+                style:opacity={opacity(k)}
+              >
+                <input
+                  class="m-0 h-4.5 w-4.5 accent-(--accent) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent)"
+                  type="checkbox"
+                  checked={layers[k]}
+                  disabled={disabled(k)}
+                  onchange={(e) => change(e, k)}
+                />{label}
+              </label>
+              {#if k === "aerial"}
+                <select
+                  class="min-w-0 rounded-md border border-(--line) bg-(--panel) px-1 py-0.5 text-base text-(--ink) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent) disabled:cursor-default disabled:opacity-40"
+                  aria-label="Which basemap"
+                  disabled={!layers.aerial}
+                  value={ui.basemap}
+                  onchange={(e) => setBasemap(e.currentTarget.value)}
+                >
+                  {#each BASEMAPS as [key, name]}
+                    <option value={key}>{name}</option>
+                  {/each}
+                </select>
+              {/if}
+            </div>
           {/each}
         {/each}
         <div class="mt-2.5 flex flex-wrap gap-1">

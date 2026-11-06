@@ -2,9 +2,9 @@
 const SAVED = "panel";
 
 /**
- * The panel's settings (the layer switches, the view picked, whether Reset has something to do and whether Layers is
+ * The panel's settings (the layer switches, the basemap and view picked, whether Reset has something to do and whether Layers is
  * folded out) as they were saved, so they survive reloading the page; a new tab starts afresh.
- * @type {{ layers?: Record<string, boolean>, view?: string, changed?: boolean, layersOpen?: boolean, drawingSnap?: Record<string, boolean>|null }|null}
+ * @type {{ layers?: Record<string, boolean>, basemap?: string, view?: string, changed?: boolean, layersOpen?: boolean, drawingSnap?: Record<string, boolean>|null }|null}
  * null when nothing was saved or storage is blocked.
  */
 export const saved = (() => {
