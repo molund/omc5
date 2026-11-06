@@ -214,7 +214,7 @@ export function layerCss(state) {
       const on =
         state[k] &&
         !((k === "greenbelt" || k === "creeks") && !state.sfmsfDrawing) &&
-        !(["roads", "yard", "walk"].includes(k) && !state.sfmsfDrawing && !state.sfmsfAerial) &&
+        !(["roads", "walk"].includes(k) && !state.sfmsfDrawing && !state.sfmsfAerial) &&
         !(k === "aerial" && state.sfmsfDrawing) &&
         !(k === "stationLabels" && (state.sfmsfDrawing || state.sfmsfAerial)) &&
         !(k === "spanNumbers" && !avail);
