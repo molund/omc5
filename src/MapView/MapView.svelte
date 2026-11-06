@@ -26,6 +26,11 @@
   let stage;
   let drag = $state(null);
   let touchDrag = null;
+  // whether the map is still where its view opened it, untouched by a pan or zoom on it (and the zoom the opening framing
+  // set, so the zoom buttons count too): until then, a Progress map is framed again if the stage changes size (see the
+  // ResizeObserver in onMount)
+  let untouched = true,
+    framedZoom = null;
   let edgeTimer;
   let esriTiles = $state(null);
   // the basemap shown: the dropdown's pick, in every aerial view (each view starts on its own: basemapFor). One at a time, whatever the zoom
@@ -128,8 +133,10 @@
     esriTiles = startEsriTiles(svg, stage);
     ui.ready = true;
     svg.style.width = ui.zoom + "%";
-    if (layers.progress) progressView();
-    else if (layers.sfmsfDrawing) {
+    if (layers.progress) {
+      progressView();
+      framedZoom = ui.zoom;
+    } else if (layers.sfmsfDrawing) {
       setView(DRAW_VB);
       fillView();
     } else if (layers.sfmsfAerial) {
@@ -149,6 +156,7 @@
     const wheel = (e) => {
       if (!(e.ctrlKey || e.metaKey)) return;
       e.preventDefault();
+      untouched = false;
       // a mouse wheel notch is much bigger than a touchpad pinch event, so it gets a gentler factor
       const dy = e.deltaY * (e.deltaMode === 1 ? 16 : 1),
         k = e.metaKey && !e.ctrlKey ? 0.002 : 0.01;
@@ -157,6 +165,7 @@
     let gz = 100;
     const gesturestart = (e) => {
       e.preventDefault();
+      untouched = false;
       gz = ui.zoom;
     };
     const gesturechange = (e) => {
@@ -170,6 +179,7 @@
     stage.addEventListener("gesturestart", gesturestart);
     stage.addEventListener("gesturechange", gesturechange);
     const touchstart = (event) => {
+      untouched = false;
       touchDrag = event.touches.length === 1 ? startDrag(event.touches[0].clientX, event.touches[0].clientY) : null;
       if (!touchDrag) settleEdge();
     };
@@ -188,8 +198,21 @@
     stage.addEventListener("touchcancel", touchend);
     document.addEventListener("gesturestart", noPageZoom, { passive: false });
     document.addEventListener("gesturechange", noPageZoom, { passive: false });
+    // Progress opens framed on the gantry's span, worked out from the stage's size at that moment. A page can open at one
+    // size and be shown at another: one Google prerendered from its search results (laid out before it's shown), or a phone
+    // browser whose toolbars settle after the page opens. Until the map is panned or zoomed, Progress is framed again when
+    // the stage changes size, and when a prerendered page is shown.
+    const reframe = () => {
+      if (!untouched || !layers.progress || ui.span || framedZoom === null || Math.abs(ui.zoom - framedZoom) > 0.01)
+        return false;
+      progressView();
+      framedZoom = ui.zoom;
+      return true;
+    };
+    document.addEventListener("prerenderingchange", reframe);
     // a filled or fitted map stays so when the window or the layer panel changes the stage size
     const resize = new ResizeObserver(() => {
+      if (reframe()) return;
       if (ui.filled) fillView();
       else if (isFit()) setZoom(fitZoom());
       else ui.fit = fitZoom();
@@ -199,6 +222,7 @@
       clearTimeout(edgeTimer);
       esriTiles?.stop();
       resize.disconnect();
+      document.removeEventListener("prerenderingchange", reframe);
       stage.removeEventListener("wheel", wheel);
       stage.removeEventListener("gesturestart", gesturestart);
       stage.removeEventListener("gesturechange", gesturechange);
@@ -214,6 +238,7 @@
   // drag to pan
   function pointerdown(e) {
     if (e.pointerType === "touch" || e.button !== 0) return;
+    untouched = false;
     drag = startDrag(e.clientX, e.clientY);
     stage.setPointerCapture(e.pointerId);
   }
