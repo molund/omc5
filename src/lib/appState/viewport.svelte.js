@@ -1,8 +1,9 @@
 import { flushSync } from "svelte";
-import { drawingBounds, turnedXRange } from "./drawingBounds.js";
+import { drawingBounds, turnedXRange, turnedPolygonsLeft } from "./drawingBounds.js";
 import { ui, els } from "./state.svelte.js";
 import {
   HORIZONTAL_MARGIN,
+  HORIZONTAL_WEST_TRIM,
   HORIZONTAL_VIEW_METRES,
   UNITS_PER_METRE,
   FULL_VB,
@@ -179,7 +180,8 @@ export function horizontalView() {
   stage.scrollTop = ((y - vb.y) / vb.height) * box.height - stage.clientHeight / 2;
 }
 /**
- * Fits the canvas to Horizontal: what is drawn with a margin, but no wider than the overview aerial.
+ * Fits the canvas to Horizontal: what is drawn with a margin, but no wider than the overview aerial; on the west, the
+ * guideway's end runs just off it (HORIZONTAL_WEST_TRIM).
  * @returns {void}
  */
 function canvasHorizontal() {
@@ -189,7 +191,10 @@ function canvasHorizontal() {
   const e = drawingBounds(els.svg, els.routeAngle, TURN_X, TURN_Y);
   if (!e) return turnedFullView();
   const m = HORIZONTAL_MARGIN * Math.hypot(e.right.x - e.left.x, e.right.y - e.left.y);
-  let x = e.left.x - m,
+  // the margin is on the east only: the west end of the guideway (not a support or label past it) runs just off the canvas
+  let x =
+      (turnedPolygonsLeft(els.svg, "polygon.guideway", els.routeAngle, TURN_X, TURN_Y) ?? e.left.x) +
+      HORIZONTAL_WEST_TRIM,
     x1 = e.right.x + m;
   // no margin past the ends of the overview aerial, the widest photo
   const photo = els.svg.querySelector("#baseoverview image");
