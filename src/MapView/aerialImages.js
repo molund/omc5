@@ -1,7 +1,7 @@
-// Only aerial-base.jpg (1.9 MB) has an href in map.svg; it loads with the page. The other aerial photos have a data-href and get
-// their href once the page has loaded, in the order below.
+// The close-up aerial photos in map.svg have a data-href and get their href the first time they're shown: past Esri's closest
+// recent imagery (see esriTiles.js), where they take over from it.
 
-/** The photos held back until the page has loaded (file names without .jpg), in the order they are added. */
+/** The photos (file names without .jpg), in the order they are added. */
 const DEFERRED = [
   "aerial-zoom-9", // 68 KB - Fry's Corner
   "aerial-zoom-4", // 168 KB - Serpentine River
@@ -16,17 +16,23 @@ const DEFERRED = [
   "aerial-zoom-2", // 753 KB - Hillcrest 184 St
 ];
 
+let loaded = false;
+
 /**
- * Gives the photos with a data-href their href, in DEFERRED's order, once the page has loaded.
+ * Shows or hides the close-up photos, loading them in DEFERRED's order the first time they're shown.
  * @param {SVGSVGElement} root The map's <svg>.
+ * @param {boolean} show Whether they show.
  * @returns {void}
  */
-export function loadAerialImages(root) {
-  const add = () =>
+export function showAerialPhotos(root, show) {
+  if (show && !loaded) {
+    loaded = true;
     DEFERRED.forEach((name) => {
       const photo = root.querySelector(`image[data-href$="/${name}.jpg"]`);
       photo?.setAttribute("href", photo.dataset.href);
     });
-  if (document.readyState === "complete") add();
-  else addEventListener("load", add, { once: true });
+  }
+  root.querySelectorAll("image[data-href]").forEach((photo) => {
+    photo.style.display = show ? "" : "none";
+  });
 }

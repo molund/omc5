@@ -10,12 +10,12 @@
 import fs from "node:fs";
 import { XMLParser } from "fast-xml-parser";
 import { writeKml } from "./kml.js";
+import { georeference, R } from "../src/lib/georeference.js";
 
 const SVG = "src/assets/map.svg",
   CONTROL = "data/control-points.json",
   STATUS = "status.yaml",
-  OUT = "data/sls-hillcrest-to-bakerview-",
-  R = 6378137; // Web Mercator sphere radius
+  OUT = "data/sls-hillcrest-to-bakerview-";
 
 // 2D affine matrices as [a, b, c, d, e, f] (x' = a x + c y + e, y' = b x + d y + f), as in SVG
 const mul = ([a1, b1, c1, d1, e1, f1], [a2, b2, c2, d2, e2, f2]) => [
@@ -142,41 +142,16 @@ const inside = (ps, [x, y]) =>
 // whether point q of element e is shown, not clipped away
 const shown = (e, q) => e.clips.every((polys) => polys.some((p) => inside(p, q)));
 
-// Canvas to lon/lat. Canvas y points south, so points are taken as complex numbers x - iy.
-function georeference(control) {
-  const z = ([x, y]) => [x, -y],
-    merc = ({ lon, lat }) => [(R * lon * Math.PI) / 180, R * Math.log(Math.tan(Math.PI / 4 + (lat * Math.PI) / 360))];
-  // least squares for w = s z + t (s, t complex) over the pins (exact for two)
-  const pins = control.pins,
-    m = pins.map((p) => [z(p.canvas), merc(p)]),
-    n = m.length,
-    mean = (k, i) => m.reduce((a, p) => a + p[k][i], 0) / n,
-    [zx, zy, wx, wy] = [mean(0, 0), mean(0, 1), mean(1, 0), mean(1, 1)];
-  let re = 0,
-    im = 0,
-    zz = 0;
-  for (const [[x, y], [u, v]] of m) {
-    const [dx, dy, du, dv] = [x - zx, y - zy, u - wx, v - wy];
-    re += du * dx + dv * dy;
-    im += dv * dx - du * dy;
-    zz += dx * dx + dy * dy;
-  }
-  const [sr, si] = [re / zz, im / zz],
-    scaled = ([x, y]) => [sr * x - si * y, si * x + sr * y],
-    [cx, cy] = scaled([zx, zy]),
-    t = [wx - cx, wy - cy];
-  const toMerc = (c) => {
-      const [u, v] = scaled(z(c));
-      return [u + t[0], v + t[1]];
-    },
-    toLonLat = (c) => {
-      const [u, v] = toMerc(c);
-      return [
-        +((u / R) * (180 / Math.PI)).toFixed(7),
-        +((2 * Math.atan(Math.exp(v / R)) - Math.PI / 2) * (180 / Math.PI)).toFixed(7),
-      ];
-    };
-  return toLonLat;
+// Canvas to lon/lat.
+function lonLatFrom(control) {
+  const { toMerc } = georeference(control);
+  return (c) => {
+    const [u, v] = toMerc(c);
+    return [
+      +((u / R) * (180 / Math.PI)).toFixed(7),
+      +((2 * Math.atan(Math.exp(v / R)) - Math.PI / 2) * (180 / Math.PI)).toFixed(7),
+    ];
+  };
 }
 
 function exportGeojson() {
@@ -184,7 +159,7 @@ function exportGeojson() {
   const centre = (e) =>
       e.tag === "text" ? apply(e.ctm, [+e.attrs.x, +e.attrs.y]) : outline(e) && centroid(outline(e)),
     els = elements(fs.readFileSync(SVG, "utf8")).filter((e) => !inGantry(e) && (!centre(e) || shown(e, centre(e)))),
-    toLonLat = georeference(JSON.parse(fs.readFileSync(CONTROL, "utf8")));
+    toLonLat = lonLatFrom(JSON.parse(fs.readFileSync(CONTROL, "utf8")));
   const labels = (cls) =>
     els
       .filter((e) => e.tag === "text" && e.classes.includes(cls))
