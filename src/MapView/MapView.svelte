@@ -3,7 +3,7 @@
   import mapSvg from "../assets/map.svg?raw";
   import { startEsriTiles, esriCredit, defaultCredit, isEsri } from "./esriTiles.js";
   import { showAerialPhotos } from "./aerialImages.js";
-  import { DRAW_VB, SFMSF_AERIAL_VB, FULL_VB, DEFAULT_BASEMAP } from "../lib/layerSwitches.js";
+  import { DRAW_VB, SFMSF_AERIAL_VB, FULL_VB } from "../lib/layerSwitches.js";
   import { tagBuiltBy } from "./builtBy.js";
   import { gantryProgress } from "./gantryProgress.js";
   import { placeGantry } from "../lib/placeGantry.js";
@@ -28,9 +28,8 @@
   let touchDrag = null;
   let edgeTimer;
   let esriTiles = $state(null);
-  // the basemap shown: the dropdown's pick in the SFMSF aerial view, the only one that has it; Apple Maps everywhere else.
-  // One at a time, whatever the zoom
-  const basemap = $derived(layers.sfmsfAerial ? ui.basemap : DEFAULT_BASEMAP);
+  // the basemap shown: the dropdown's pick, in every aerial view (each view starts on Apple). One at a time, whatever the zoom
+  const basemap = $derived(ui.basemap);
   let credit = $state(defaultCredit(basemap));
   const basemapShown = $derived(layers.aerial && !layers.sfmsfDrawing);
   // Esri's credits show only with its basemaps

@@ -124,7 +124,7 @@ export function setSwitch(k, on) {
   if (on && VIEWS.includes(k)) {
     ui.view = k;
     ui.span = null;
-    // every view starts on the default basemap: only the SFMSF views have the dropdown to change it back
+    // every view starts on the default basemap, Apple; each aerial view's dropdown can change it
     ui.basemap = DEFAULT_BASEMAP;
     // the progress card opens every time Progress is picked, even if it was closed before; no other view opens it
     ui.cardHidden = k !== "progress";

@@ -33,19 +33,15 @@
   const ICON_BUTTON = "rounded-lg p-1.5";
   const LINK = "inline-flex items-center gap-1.5 text-inherit [&_svg]:h-[1.2em] [&_svg]:w-[1.2em] [&_svg]:flex-none";
   const opacity = (k) => (disabled(k) ? "0.4" : "");
-  // greenbelt and creeks only in drawing mode, roads (with their labels), construction yard and walking paths in the two SFMSF
-  // views (drawing mode and SFMSF zoom),
-  // the basemap everywhere but drawing mode
+  // greenbelt and creeks only in drawing mode, roads (with their labels) and walking paths in the two SFMSF views (drawing
+  // mode and SFMSF zoom), the basemap everywhere but drawing mode
   function hidden(k) {
     if (k === "greenbelt" || k === "creeks") return !layers.sfmsfDrawing;
-    if (k === "roads" || k === "yard" || k === "walk") return !(layers.sfmsfDrawing || layers.sfmsfAerial);
+    if (k === "roads" || k === "walk") return !(layers.sfmsfDrawing || layers.sfmsfAerial);
     if (k === "aerial") return layers.sfmsfDrawing;
     if (k === "stationLabels") return layers.sfmsfDrawing || layers.sfmsfAerial;
     return false;
   }
-  // the Reference group shows only in the two SFMSF views
-  const sfmsf = $derived(layers.sfmsfDrawing || layers.sfmsfAerial);
-  const groupHidden = (group) => group === "Reference" && !sfmsf;
   function change(e, k) {
     setSwitch(k, e.currentTarget.checked);
     // the mode logic can put the switch straight back (e.g. unticking Full), so match the box to the state
@@ -108,7 +104,7 @@
     >
     {#if ui.layersOpen}
       <div id="layer-list" transition:slide={{ duration: 150 }}>
-        {#each LAYERS.slice(1).filter(([g]) => !groupHidden(g)) as [group, rows]}
+        {#each LAYERS.slice(1) as [group, rows]}
           <div class="group-label">
             {group}
           </div>
