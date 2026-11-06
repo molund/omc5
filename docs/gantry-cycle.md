@@ -41,8 +41,8 @@ least. Post-tensioning and moving the supports have only a start: no end is tagg
 
 - **A cycle is arrival to arrival** (stage 0 to the next stage 0). The time between two "moved to span N" notes is one
   cycle, whatever happened in between.
-- **Working time, not calendar time.** The crews work 24/6. The Sunday shutdown runs from 6 p.m. Saturday to 8 p.m.
-  Sunday (26 hours) and is taken out of any cycle it falls in.
+- **Working time, not calendar time.** The crews work 24/6. The Sunday shutdown runs from 6 p.m. Saturday to 6 p.m.
+  Sunday (24 hours) and is taken out of any cycle it falls in.
 - **No step means "complete".** Hung is the end of stage 1, well before the gantry leaves the span; the hangers coming
   down (stage 4) is the nearest thing to done. The progress card counts the span the gantry is on (stage 0), so the card
   moves at arrival.
