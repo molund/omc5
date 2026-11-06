@@ -147,8 +147,11 @@ const PROGRESS_SHOWS = {
 export const FULL_VB = "-6840.7 -5402.04 12387.4 8699.48";
 /** Drawing mode's canvas: the first-photo frame (the area the greenbelt drawing fills). */
 export const DRAW_VB = "-38.4 -126.95 2188.4 1888.55";
-/** The SFMSF zoom view's canvas, the same frame as drawing mode: the right edge cuts through span A. */
-export const SFMSF_AERIAL_VB = "-38.4 -126.95 2188.4 1888.55";
+/**
+ * The SFMSF zoom view's canvas, drawing mode's frame with the bottom trimmed to end just inside its one photo
+ * (aerial-zoom-1.jpg, which stops at 1759.5), so no strip of background shows: the right edge cuts through span A.
+ */
+export const SFMSF_AERIAL_VB = "-38.4 -126.95 2188.4 1886";
 /** The length of the gantry's trusses, in canvas units. */
 export const GANTRY_LENGTH = 401.56;
 /**
