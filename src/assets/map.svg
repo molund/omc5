@@ -1169,6 +1169,7 @@
         />
         <polygon
           class="p guideway unfinished"
+          data-span="38"
           points="281.98,1238.00 304.18,1238.00 303.23,1358.80 281.03,1358.80"
         />
         <polygon
@@ -1188,6 +1189,7 @@
         />
         <polygon
           class="p guideway unfinished"
+          data-span="39"
           points="281.07,1358.80 303.27,1358.80 303.96,1480.20 281.76,1480.20"
         />
         <polygon
@@ -1199,6 +1201,7 @@
         />
         <polygon
           class="p guideway unfinished"
+          data-span="40"
           points="281.31,1480.20 303.53,1480.20 308.80,1601.80 286.58,1601.80"
         />
         <polygon
@@ -1210,6 +1213,7 @@
         />
         <polygon
           class="p guideway unfinished"
+          data-span="41"
           points="286.57,1601.80 308.79,1601.80 314.10,1724.40 291.88,1724.40"
         />
         <polygon
@@ -1221,6 +1225,7 @@
         />
         <polygon
           class="p guideway unfinished"
+          data-span="42"
           points="291.62,1724.40 313.82,1724.40 315.09,1845.00 292.89,1845.00"
         />
         <polygon
@@ -1819,11 +1824,11 @@
       <text
         class="n guideway arrow-pending"
         data-span="38"
-        x="-1226.78"
-        y="-473.17"
+        x="-1209.05"
+        y="-462.58"
         text-anchor="middle"
         style="font-size: 17.6px; fill: #eeeeee"
-        transform="rotate(-146.5 -1226.78 -479.17)"
+        transform="rotate(-146.5 -1209.05 -469.58)"
       >
         &#x2192;
       </text>
@@ -1831,11 +1836,11 @@
       <text
         class="n guideway arrow-pending"
         data-span="39"
-        x="-1321.6"
-        y="-536.8"
+        x="-1309.40"
+        y="-530.37"
         text-anchor="middle"
         style="font-size: 17.6px; fill: #eeeeee"
-        transform="rotate(-147.5 -1321.6 -543.80)"
+        transform="rotate(-147.5 -1309.40 -537.37)"
       >
         &#x2192;
       </text>
@@ -2033,7 +2038,7 @@
       <!-- eastbound -->
       <!-- Span 45 direction arrows -->
       <text
-        style="font-size: 17.6px; fill: #eeeeee"
+        style="font-size: 17.6px"
         class="n guideway steel-hwy15"
         x="-1896.18"
         y="-903.06"
@@ -2044,7 +2049,7 @@
       </text>
       <!-- westbound -->
       <text
-        style="font-size: 17.6px; fill: #eeeeee"
+        style="font-size: 17.6px"
         class="n guideway steel-hwy15"
         x="-1905.95"
         y="-888.00"
@@ -2056,7 +2061,7 @@
       <!-- eastbound -->
       <!-- Span 46 direction arrows -->
       <text
-        style="font-size: 17.6px; fill: #eeeeee"
+        style="font-size: 17.6px"
         class="n guideway steel-hwy15"
         x="-2010.36"
         y="-977.84"
@@ -2067,7 +2072,7 @@
       </text>
       <!-- westbound -->
       <text
-        style="font-size: 17.6px; fill: #eeeeee"
+        style="font-size: 17.6px"
         class="n guideway steel-hwy15"
         x="-2018.91"
         y="-964.52"
@@ -2078,7 +2083,7 @@
       </text>
       <!-- direction arrows for steel span 47, placed like those on 45 and 46: on each track, 25 canvas units in from its east end, westbound on the north track -->
       <text
-        style="font-size: 17.6px; fill: #eeeeee"
+        style="font-size: 17.6px"
         class="n guideway steel-hwy15"
         x="-2149.31"
         y="-1070.07"
@@ -2088,7 +2093,7 @@
         &#x2192;
       </text>
       <text
-        style="font-size: 17.6px; fill: #eeeeee"
+        style="font-size: 17.6px"
         class="n guideway steel-hwy15"
         x="-2157.27"
         y="-1058.25"
@@ -5116,7 +5121,7 @@
     <!-- Direction arrows of the Clayton Clipper's spans 48-105 (eastbound and westbound for each), above their boxes. Each has
          data-span and the class arrow-pending: gantryProgress.js shows it once the gantry has passed its span, or is on it with
          its segments hung (status.yaml). Arrows are 19.54px, #eeeeee, 30.3 from the span's east end and 5.2 either side of its
-         centre line (span 15's placement); the steel spans 52-54 are on their own tracks. -->
+         centre line (span 15's placement); the steel spans 52-54 have no fill of their own, so they take the span numbers' colour, as the steel arrows on 45-47 do. -->
     <g id="nw-span-arrows">
       <!-- Span 48 eastbound arrow -->
       <text
@@ -5216,72 +5221,72 @@
       </text>
       <!-- Span 52 eastbound arrow -->
       <text
-        class="n guideway arrow-pending"
+        class="n guideway steel-hwy15 arrow-pending"
         data-span="52"
         x="-566.28"
         y="-498.60"
         text-anchor="middle"
-        style="font-size: 19.54px; fill: #eeeeee"
+        style="font-size: 19.54px"
         transform="rotate(33.9 -566.28 -506.37)"
       >
         →
       </text>
       <!-- Span 52 westbound arrow -->
       <text
-        class="n guideway arrow-pending"
+        class="n guideway steel-hwy15 arrow-pending"
         data-span="52"
         x="-557.53"
         y="-511.64"
         text-anchor="middle"
-        style="font-size: 19.54px; fill: #eeeeee"
+        style="font-size: 19.54px"
         transform="rotate(-146.1 -557.53 -519.41)"
       >
         →
       </text>
       <!-- Span 53 eastbound arrow -->
       <text
-        class="n guideway arrow-pending"
+        class="n guideway steel-hwy15 arrow-pending"
         data-span="53"
         x="-702.45"
         y="-590.03"
         text-anchor="middle"
-        style="font-size: 19.54px; fill: #eeeeee"
+        style="font-size: 19.54px"
         transform="rotate(33.9 -702.45 -597.80)"
       >
         →
       </text>
       <!-- Span 53 westbound arrow -->
       <text
-        class="n guideway arrow-pending"
+        class="n guideway steel-hwy15 arrow-pending"
         data-span="53"
         x="-693.68"
         y="-603.05"
         text-anchor="middle"
-        style="font-size: 19.54px; fill: #eeeeee"
+        style="font-size: 19.54px"
         transform="rotate(-146.1 -693.68 -610.82)"
       >
         →
       </text>
       <!-- Span 54 eastbound arrow -->
       <text
-        class="n guideway arrow-pending"
+        class="n guideway steel-hwy15 arrow-pending"
         data-span="54"
         x="-868.96"
         y="-703.16"
         text-anchor="middle"
-        style="font-size: 19.54px; fill: #eeeeee"
+        style="font-size: 19.54px"
         transform="rotate(36.0 -868.96 -710.93)"
       >
         →
       </text>
       <!-- Span 54 westbound arrow -->
       <text
-        class="n guideway arrow-pending"
+        class="n guideway steel-hwy15 arrow-pending"
         data-span="54"
         x="-859.74"
         y="-715.86"
         text-anchor="middle"
-        style="font-size: 19.54px; fill: #eeeeee"
+        style="font-size: 19.54px"
         transform="rotate(-144.0 -859.74 -723.63)"
       >
         →

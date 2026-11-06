@@ -69,10 +69,21 @@ export function gantryProgress(root, complete) {
       }
     });
   }
-  // a gantry span's direction arrows turns on with its box: behind the gantry, or on its span once hung
+  // a span's direction arrows turn on with its box: the gantry is past the span, or on it with its segments hung, and no box of
+  // the span (its pieces carry data-span) is still unfinished. Unfinished spans never show arrows (the two ramp arrows aside).
   root.querySelectorAll(".arrow-pending").forEach((el) => {
     const n = +el.dataset.span;
-    if (complete != null && (n < span || (complete && n === span))) el.classList.remove("arrow-pending");
+    if (
+      complete != null &&
+      (n < span || (complete && n === span)) &&
+      !root.querySelector(`polygon.unfinished[data-span="${n}"]`)
+    )
+      el.classList.remove("arrow-pending");
+  });
+  // arrows on spans the gantry has reached are tagged "reached" too, so progress-chart mode can draw the steel ones light on the
+  // progress colour
+  root.querySelectorAll("text.guideway[data-span]").forEach((el) => {
+    if (+el.dataset.span <= span) el.classList.add("reached");
   });
   pieces.forEach((p) => {
     if (p.n <= span) p.el.classList.add("reached");
