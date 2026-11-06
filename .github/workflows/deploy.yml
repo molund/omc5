@@ -120,7 +120,16 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url || steps.retry-deployment.outputs.page_url }}
     steps:
       - id: deployment
+        continue-on-error: true
+        uses: actions/deploy-pages@v4
+      # Pages can still report a previous deployment as in progress after acknowledging its cancellation.
+      - name: Wait before retrying the deployment
+        if: steps.deployment.outcome == 'failure'
+        run: sleep 60
+      - id: retry-deployment
+        name: Retry the Pages deployment
+        if: steps.deployment.outcome == 'failure'
         uses: actions/deploy-pages@v4
