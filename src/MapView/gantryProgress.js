@@ -69,6 +69,11 @@ export function gantryProgress(root, complete) {
       }
     });
   }
+  // a gantry span's direction arrows turns on with its box: behind the gantry, or on its span once hung
+  root.querySelectorAll(".arrow-pending").forEach((el) => {
+    const n = +el.dataset.span;
+    if (complete != null && (n < span || (complete && n === span))) el.classList.remove("arrow-pending");
+  });
   pieces.forEach((p) => {
     if (p.n <= span) p.el.classList.add("reached");
   });
