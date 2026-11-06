@@ -69,14 +69,15 @@ export function gantryProgress(root, complete) {
       }
     });
   }
-  // a span's direction arrows turn on with its box: the gantry is past the span, or on it with its segments hung, and no box of
-  // the span (its pieces carry data-span) is still unfinished. Unfinished spans never show arrows (the two ramp arrows aside).
+  // a span's direction arrows turn on with its box: the gantry is past the span, or on it with its segments hung, and the
+  // span's gantry box (a polygon with p, unfinished and data-span) is not still drawn unfinished. Its ramps and eastbound
+  // girders stay unfinished for longer and don't hold the arrows back.
   root.querySelectorAll(".arrow-pending").forEach((el) => {
     const n = +el.dataset.span;
     if (
       complete != null &&
       (n < span || (complete && n === span)) &&
-      !root.querySelector(`polygon.unfinished[data-span="${n}"]`)
+      !root.querySelector(`polygon.p.unfinished[data-span="${n}"]`)
     )
       el.classList.remove("arrow-pending");
   });
