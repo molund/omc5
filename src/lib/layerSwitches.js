@@ -52,7 +52,7 @@ export const LAYERS = [
  * @type {Array<[string, string]>}
  */
 export const BASEMAPS = [
-  ["apple", "Apple Maps"],
+  ["apple", "Apple"],
   ["streets", "Streets"],
   ["navigation", "Navigation"],
   ["aerial", "Esri aerial"],
