@@ -33,11 +33,11 @@ Then stage 6: the gantry launches.
 
 ## For the velocity
 
-The Status Desk tags each step it sees in `desk.yaml`, by time stamp: `arrived`, `hanging started`, `hung`,
-`gluing started`, `glued`, `post-tensioning started`, `post-tensioned`, `cables down`, `hangers down`,
-`supports started`, `supports moved`. A tag means the step had happened by that time, so the earliest tag for a span is
-the best time known for it. The desk logs every move of the gantry (`arrived`) and every span marked as hung (`hung`)
-itself, so a missed report doesn't leave a hole. Its velocity is the average of the last two spans' cycles.
+The Status Desk tags each entry in `desk.yaml`, by time stamp, with the one step the gantry had reached by then (`stage:`):
+`arrived at span`, `hanging started`, `hung`, `gluing started`, `glued`, `post-tensioning started`, `cables down`,
+`hangers down`, `supports started`, `supports moved`. A tag means the step had happened by that time, so the earliest tag
+for a span is the best time known for it. Every entry about the gantry has one, and a span marked as hung is at `hung` at
+least. Post-tensioning has only its start: no end is tagged. Its velocity is the average of the last two spans' cycles.
 
 - **A cycle is arrival to arrival** (stage 0 to the next stage 0). The time between two "moved to span N" notes is one
   cycle, whatever happened in between.
