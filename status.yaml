@@ -1,10 +1,10 @@
 # Clayton Clipper status. The site reads it (src/lib/status.js); running the deploy workflow by hand or through the API updates
 # it (see .github/workflows/deploy.yml). Times are BC time (UTC−7), rounded to the nearest quarter hour.
-updated: 2026-11-05T10:00-07:00
+updated: 2026-11-05T17:15-07:00
 # the span the gantry is working on (Clayton Clipper span numbers, 3-104)
 span: 38
 # whether that span is complete (all its segments hung). The map draws it complete; the progress card counts the span either way.
-complete: false
+complete: true
 # every note, newest first. A note is its time stamp (the time of the update that added it) and its title, then its summary,
 # the main text, indented under it. The title is not shown on a status update ("" for none, and the slug comes from the time
 # stamp); a post leads with it. It is also the update's `?post=` slug on
