@@ -1860,6 +1860,18 @@
         &#x2192;
       </text>
       <!-- eastbound -->
+      <!-- Span 35 direction arrow (eastbound precast), the same distance from the westbound arrow as at 32, 33 and 34 -->
+      <text
+        class="n guideway"
+        x="-935.27"
+        y="-251.76"
+        text-anchor="middle"
+        style="font-size: 17.6px; fill: #eeeeee"
+        transform="rotate(33.8 -935.27 -258.76)"
+      >
+        &#x2192;
+      </text>
+      <!-- eastbound -->
       <!-- Arrow placement rule for completed spans: eastbound precast arrow centred between the long edges of its span, 27.4 units from the east end of the span (same spacing as 32, 40, 41, 42), rotated to the span direction (about 34 deg; angle adjusted for slanted spans); westbound gantry arrows on the north side, same distance from the east end -->
       <!-- Span 40 direction arrow (eastbound precast) -->
       <text
