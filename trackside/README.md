@@ -88,7 +88,8 @@ Each update is a note: its time stamp and its title on one line, then indented u
   summary. They get no
   anchor, title or thread of their own.
 
-The comment at the top of `status.yaml` shows the exact format. Photos go in
+Use the current entries in `status.yaml` as a guide for the format (its top comment covers the rules the entries
+don't show). Photos go in
 `public/images/sorry-im-a-shitty-photographer/`.
 
 ## Search and link previews
