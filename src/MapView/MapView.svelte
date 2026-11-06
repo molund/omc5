@@ -45,7 +45,7 @@
   // basemap comes on again or is picked)
   $effect(() => {
     if (!esriTiles) return;
-    showAerialPhotos(els.svg, basemapShown && basemap === "apple");
+    showAerialPhotos(els.svg, basemapShown && basemap === "apple", ui.view === "sfmsfAerial");
     if (basemapShown) esriTiles.setBasemap(basemap);
   });
   // each Esri basemap has its own credit; one that is still being read doesn't replace a later pick's
