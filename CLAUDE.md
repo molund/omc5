@@ -50,7 +50,7 @@ Svelte 5 + Vite site, deployed to GitHub Pages (https://clayton-clipper.olund.ca
     note's address gets `-2`. An earlier note's title stays as it is.
   - When a note has news worth a title of its own, write a short headline of what it says, under 60 characters, in plain words (span numbers, places,
     gantry names), nothing the note doesn't say. Never a bare span number: name the gantry the span belongs to (e.g.
-    "Clayton Clipper completes span 36"), even when the note doesn't, so the title, and the anchor made from it, make
+    "Clayton Clipper moves to span 38"), even when the note doesn't, so the title, and the anchor made from it, make
     sense on their own.
 - `public/images/` — aerial photos.
 - `public/images/sorry-im-a-shitty-photographer/` — update photos (see the `photo:` format in `status.yaml`). Resize every
@@ -84,12 +84,14 @@ Svelte 5 + Vite site, deployed to GitHub Pages (https://clayton-clipper.olund.ca
   steel one connecting two supports, as opposed to the segmental spans the gantry builds from segments. Always call a
   precast concrete or steel one a "girder" and avoid "span" or "beam" for it; use the span's number only to say where it
   goes ("both precast concrete girders for span 34").
-- Complete: a span is marked as complete when all its segments are hung, whether or not its girders are in yet, so
-  "span 34 is complete" can be true while its girders are still missing. The map draws it complete; the progress card
-  counts the span the gantry is on, complete or not.
+- Avoid "complete" for a span. Nothing marks one as finished: after its segments are hung come gluing, post-tensioning
+  and the hangers coming down (the nearest thing to done is all the hangers lowered), and girders can go in later still.
+  Say which step happened instead: "all the segments for span 38 are hung", "span 38 is post-tensioned", "the hangers
+  are down". `status.yaml`'s `hung:` and the map's drawing are only about the segments; the progress card counts the
+  span the gantry is on.
 - Titles: sentence case for everything, posts included ("The curious case of Clayton Clipper span 50").
 - Gantries: the full name first ("Clayton Clipper", "Surrey Sprinter"); "the Clipper", "the Sprinter" or "the gantry" after.
-- Segments: always "segments", never "rocks". When all of a span's segments are hung, the span is "marked as complete".
+- Segments: always "segments", never "rocks".
 - Pillar, support, tulip, hammerhead: use the word as written in the note.
 - Supports by name: "where spans 70 and 71 meet" in the text; "70/71" is fine in titles and short form.
 - Roads: Surrey's style, "176 St", "152 St" (no "th"); "Highway 15 (176 St)" on first mention; "Fraser Highway" in text
