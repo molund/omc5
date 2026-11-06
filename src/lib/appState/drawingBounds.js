@@ -170,3 +170,29 @@ export function turnedXRange(root, el, turn, cx, cy) {
     });
   return { x0: Math.min(...xs), x1: Math.max(...xs) };
 }
+
+/**
+ * The westmost x, after turning, of the corners of the polygons matching a selector that show: their real corners, not
+ * their bounding boxes (a slanted span's box reaches past its end).
+ * @param {SVGSVGElement} root The map's <svg>.
+ * @param {string} selector Which polygons.
+ * @param {number} turn Degrees to turn the canvas by.
+ * @param {number} cx The x of the point to turn about, in canvas units.
+ * @param {number} cy The y of the point to turn about, in canvas units.
+ * @returns {number|null} The x, or null when none show.
+ */
+export function turnedPolygonsLeft(root, selector, turn, cx, cy) {
+  const toRoot = DOMMatrix.fromMatrix(root.getScreenCTM()).inverse(),
+    r = (turn * Math.PI) / 180;
+  let left = null;
+  root.querySelectorAll(selector).forEach((el) => {
+    if (el.tagName !== "polygon" || !shown(el, root)) return;
+    const ctm = DOMMatrix.fromMatrix(el.getScreenCTM());
+    for (const pt of el.points) {
+      const p = new DOMPoint(pt.x, pt.y).matrixTransform(ctm).matrixTransform(toRoot),
+        x = cx + (p.x - cx) * Math.cos(r) - (p.y - cy) * Math.sin(r);
+      if (left === null || x < left) left = x;
+    }
+  });
+  return left;
+}

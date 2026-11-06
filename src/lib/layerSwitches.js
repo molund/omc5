@@ -180,6 +180,11 @@ export const PROGRESS_MIN_LAST_SPAN = 55;
  * its two ends.
  */
 export const HORIZONTAL_MARGIN = 0.05;
+/**
+ * How far into the drawing Horizontal's canvas starts on the west, in canvas units: no margin there, and the westmost span
+ * (the Fleetwood Flyer's, by Bakerview-166 Street Station) runs just off the edge.
+ */
+export const HORIZONTAL_WEST_TRIM = 4;
 /** The drawing's scale: 3 units per metre, shown 1.11 times larger around SFMSF, so a span (about 134 units) is about 40 m. */
 export const UNITS_PER_METRE = 3 * 1.11;
 /** Horizontal starts zoomed to show this many metres before and after the gantry's span, with the span in the middle. */
