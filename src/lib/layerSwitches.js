@@ -48,7 +48,7 @@ export const LAYERS = [
 /**
  * The basemaps the Basemap switch's dropdown offers, as [key, label]: Esri's (SERVICES in MapView/esriTiles.js) and the
  * Apple Maps photos (MapView/aerialImages.js). One shows at a time. Every aerial view has the dropdown, and starts on
- * DEFAULT_BASEMAP.
+ * the basemap basemapFor gives it.
  * @type {Array<[string, string]>}
  */
 export const BASEMAPS = [
@@ -58,8 +58,14 @@ export const BASEMAPS = [
   ["outdoor", "Outdoor"],
   ["apple", "Apple aerial"],
 ];
-/** The basemap every view starts with. */
+/** The basemap a view starts with, unless basemapFor says otherwise. */
 export const DEFAULT_BASEMAP = "aerial";
+/**
+ * The basemap a view starts with: Apple aerial in SFMSF aerial, Esri aerial everywhere else.
+ * @param {string} view A view's key.
+ * @returns {string} A BASEMAPS key.
+ */
+export const basemapFor = (view) => (view === "sfmsfAerial" ? "apple" : DEFAULT_BASEMAP);
 /**
  * The normal view (the on-by-default column above), which Drawing mode returns to when it is switched off.
  * @type {Record<string, boolean>} Every switch's key and whether it is on.
@@ -147,8 +153,11 @@ const PROGRESS_SHOWS = {
 export const FULL_VB = "-6840.7 -5402.04 12387.4 8699.48";
 /** Drawing mode's canvas: the first-photo frame (the area the greenbelt drawing fills). */
 export const DRAW_VB = "-38.4 -126.95 2188.4 1888.55";
-/** The SFMSF zoom view's canvas, the same frame as drawing mode: the right edge cuts through span A. */
-export const SFMSF_AERIAL_VB = "-38.4 -126.95 2188.4 1888.55";
+/**
+ * The SFMSF zoom view's canvas, drawing mode's frame with the bottom trimmed to end just inside its one photo
+ * (aerial-zoom-1.jpg, which stops at 1759.5), so no strip of background shows: the right edge cuts through span A.
+ */
+export const SFMSF_AERIAL_VB = "-38.4 -126.95 2188.4 1886";
 /** The length of the gantry's trusses, in canvas units. */
 export const GANTRY_LENGTH = 401.56;
 /**

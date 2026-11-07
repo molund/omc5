@@ -1,5 +1,5 @@
 import { saved } from "./persist.svelte.js";
-import { BASEMAPS, DEFAULT_BASEMAP, defaults } from "../layerSwitches.js";
+import { BASEMAPS, basemapFor, defaults } from "../layerSwitches.js";
 
 /**
  * Layer switches, keyed as in LAYERS (saved ones only for switches that still exist).
@@ -68,7 +68,7 @@ const view = saved?.view ?? (defaults.progress ? "progress" : defaults.sfmsfDraw
  */
 export const ui = $state({
   view,
-  basemap: BASEMAPS.some(([k]) => k === saved?.basemap) ? saved.basemap : DEFAULT_BASEMAP,
+  basemap: BASEMAPS.some(([k]) => k === saved?.basemap) ? saved.basemap : basemapFor(view),
   span: null,
   zoom: 187.31,
   fit: 100,
