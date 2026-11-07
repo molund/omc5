@@ -51,8 +51,10 @@ pillars and spans from 166 St to 184 St, exported from the drawing as GeoJSON. S
 
 ## Status Desk
 
-Progress updates are written with the Clipper Status Desk, the site's admin app, which lives in its own repo:
-[molund/omc5-admin](https://github.com/molund/omc5-admin). It edits `status.yaml` and keeps its own records in
+Progress updates are posted with the Clipper Status Desk, the site's admin app: an iPhone app Mike uses on walks with
+Piper to post updates from the construction site as they happen. It lives in its own repo,
+[molund/omc5-admin](https://github.com/molund/omc5-admin), and also runs as an artifact in the Claude app, which is only
+used when making changes to the app from the Claude iPhone app. It edits `status.yaml` and keeps its own records in
 `desk.yaml` (the steps of the Clipper's cycle and notes to self), which it turns into the Clipper's velocity. The site
 doesn't read `desk.yaml`.
 
