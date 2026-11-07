@@ -1,6 +1,6 @@
 # Clayton Clipper status. The site reads it (src/lib/status.js); running the deploy workflow by hand or through the API updates
 # it (see .github/workflows/deploy.yml). Times are BC time (UTC−7), rounded to the nearest quarter hour.
-updated: 2026-11-06T17:30-07:00
+updated: 2026-11-06T18:00-07:00
 # the span the gantry is working on (Clayton Clipper span numbers, 3-104)
 span: 38
 # whether all that span's segments are hung. The map draws it hung; the progress card counts the span either way.
@@ -18,6 +18,12 @@ hung: true
 notes:
   - 2026-11-06T08:45-07:00: "Clayton Clipper construction update for Friday, Nov. 6, 2026"
     summary: "Another precast concrete girder was installed at the span 35 eastbound mainline overnight."
+    follow-up:
+      - 2026-11-06T18:00-07:00:
+          summary: "The rain finally stopped, and I got to do the full loop with Piper."
+          photo:
+            file: 2026-11-06-photo.jpg
+            caption: "Only four more spans remain before the Clayton Clipper reaches the section where it will have to crawl across Highway 15."
   - 2026-11-05T10:00-07:00: "Clayton Clipper construction update for Thursday, Nov. 5, 2026"
     summary: "The Clayton Clipper has moved to span 38. It's getting faster: the crews are working 24/6, and the last span took just two days."
   - 2026-11-03T07:15-07:00: "Clayton Clipper construction update for Tuesday, Nov. 3, 2026"
