@@ -271,6 +271,26 @@ export function centreOn(x, y) {
 }
 
 /**
+ * Keeps the map where it is when the stage's width has changed (the layer panel shown or hidden, the window resized): the
+ * zoom is a percentage of the stage's width, so the browser has already rescaled the map, and the scroll position, in pixels,
+ * now points somewhere else. This puts the map back at the scale it had, with the same point in the middle of the stage.
+ * @param {{ width: number, height: number, left: number, top: number }} before The stage's client size and scroll position
+ * before the change.
+ * @returns {void}
+ */
+export function holdMap(before) {
+  const svg = els.svg,
+    vb = svg.viewBox.baseVal,
+    mapWidth = (before.width * ui.zoom) / 100,
+    scale = mapWidth / vb.width,
+    // the margins are still the ones the map had before the change: setZoom sets them again
+    x = vb.x + (before.left + before.width / 2 - (parseFloat(svg.style.marginLeft) || 0)) / scale,
+    y = vb.y + (before.top + before.height / 2 - (parseFloat(svg.style.marginTop) || 0)) / scale;
+  setZoom((100 * mapWidth) / els.stage.clientWidth);
+  centreOn(x, y);
+}
+
+/**
  * Zooms the map, keeping the point (cx, cy) where it is on the screen. Never less than Fit, never more than 16000%.
  * @param {number} p The zoom, a percentage of the stage width.
  * @param {number} [cx] The screen x to zoom about; the middle of the stage by default.
