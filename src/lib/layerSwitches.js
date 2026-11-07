@@ -120,8 +120,7 @@ export const PROGRESS_COLOUR = "#8473a8";
  * Progress-chart mode's own CSS: it hides everything (with visibility, which leaves the masks and clip paths the drawing
  * relies on untouched) and then lets through what its switched-on layers show (see PROGRESS_SHOWS), so the base drawing,
  * which has no switch, stays hidden. The Clayton Clipper's complete spans are in the progress colour up to the gantry's span,
- * their usual colour past it, and its span numbers are white on the progress colour and as in the other views everywhere
- * else.
+ * their usual colour past it. Its span numbers look as they do in the other views.
  */
 const PROGRESS_CSS =
   "#map polygon,#map path,#map line,#map polyline,#map rect,#map circle,#map ellipse,#map text{visibility:hidden !important}" +
@@ -129,9 +128,8 @@ const PROGRESS_CSS =
   "#map polygon.guideway.cc.reached:not(.unfinished){fill:" +
   PROGRESS_COLOUR +
   " !important}" +
-  // white where the number sits on a span in the progress colour; every other number looks as it does in the other views
-  "#map text.ccnumber.cc.on-reached{fill:#ffffff !important}" +
-  // the steel spans' arrows take their span numbers' colour in every view, except light where the span is in the progress colour
+  // the steel spans' arrows keep the drawing's default text colour in every view, except light where the span is in the progress
+  // colour
   "#map text.n.guideway.steel-hwy15.reached{fill:#eeeeee !important}";
 /**
  * What each switch shows in progress-chart mode, as CSS selectors (whether it shows is still up to the layer's own
@@ -241,12 +239,9 @@ export function layerCss(state) {
       else r += "." + cls + "{display:" + (on ? "inline" : "none") + " !important}";
     }),
   );
-  // over the aerial photo (every view but SFMSF drawing), the unfinished spans are 45% opaque, so the finished ones stand out,
-  // and an unfinished span's number is black with a white outline, so it reads on them
-  if (state.aerial && !state.sfmsfDrawing)
-    r +=
-      "#map .guideway.unfinished{opacity:0.45 !important}" +
-      "#map text.ccnumber.on-unfinished{fill:#000000 !important;stroke:#ffffff !important;stroke-width:1.5 !important;stroke-linejoin:round !important;paint-order:stroke !important}";
+  // over the aerial photo (every view but SFMSF drawing), the unfinished spans are 45% opaque, so the finished ones stand out
+  // (the span numbers keep their own white halo, see .ccnumber in map.svg)
+  if (state.aerial && !state.sfmsfDrawing) r += "#map .guideway.unfinished{opacity:0.45 !important}";
   // an arrow on a span that isn't finished yet stays hidden whatever the guideway and arrows switches say (gantryProgress.js
   // takes the class off as the span is finished)
   r += "#map .arrow-pending{display:none !important}";

@@ -89,8 +89,8 @@ export function gantryProgress(root, complete) {
   pieces.forEach((p) => {
     if (p.n <= span) p.el.classList.add("reached");
   });
-  // a span number sitting on a reached, finished piece (the one with its centre nearest the number) is tagged "on-reached", so
-  // progress-chart mode can draw it white on the progress colour
+  // a span number sitting on a reached, finished piece (the one with its centre nearest the number) is tagged "on-reached", for any view that
+  // wants to tell them apart (the numbers themselves keep one look: see .ccnumber in map.svg)
   labels.forEach((t, i) => {
     const { n, q } = anchors[i];
     let under = null,
@@ -105,11 +105,9 @@ export function gantryProgress(root, complete) {
     });
     if (under && under.classList.contains("reached") && !under.classList.contains("unfinished"))
       t.classList.add("on-reached");
-    // an unfinished span's number gets a white outline over the aerial photo (see layerCss), so it is tagged too
+    // an unfinished span's number is tagged too, for any view that wants to tell them apart (the numbers themselves keep one
+    // look: see .ccnumber in map.svg)
     if (under && under.classList.contains("unfinished")) t.classList.add("on-unfinished");
-    // and its colour matches the piece it sits on, now that status.yaml may have finished it: white on a finished span, grey
-    // (#767676) on an unfinished one (the steel spans' numbers, drawn without a colour, keep theirs)
-    if (under && t.style.fill) t.style.fill = under.classList.contains("unfinished") ? "#767676" : "#ffffff";
   });
   return {
     span,
