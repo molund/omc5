@@ -70,7 +70,7 @@ import { anchor } from "./comments.js";
  * @property {boolean} complete Whether that span is complete.
  * @property {string|null} spansPerWeek The Clayton Clipper's velocity, as the Status Desk writes it ("2.83"): how far it got
  *   in the last week, in spans.
- * @property {string|null} spansPerWeekPrevious Its value before it last changed.
+ * @property {string|null} spansPerWeekPrevious Its value at the check-in before, the newest of its earlier values.
  * @property {Note|null} latest The newest status update (not a post).
  * @property {string} note The newest status update's text, or "".
  * @property {Photo|null} photo The newest status update's photo.
@@ -122,15 +122,26 @@ function slugify(s) {
  */
 function parse(src) {
   const out = {},
-    notes = [];
+    notes = [],
+    // the "- time: value" lists under a key above `notes:` (the velocity's earlier values), newest first as written
+    lists = {};
   // "block" after a `block:` line, whose "- …" lines are paragraphs and photos
   let list = null,
     // the photo a `file:` or `caption:` line belongs to
     photo = null,
     // under `follow-up:`, and the follow-up the lines below belong to (the note's own keys are four spaces in)
     inFU = false,
-    fu = null;
+    fu = null,
+    // past the `notes:` line, and the key above it whose list the "- …" lines belong to
+    inNotes = false,
+    key = null;
   src.split("\n").forEach((line) => {
+    // above the notes, "  - time: value" is an item of the key's list, not a note
+    const item = !inNotes && key && line.match(/^ {2}-\s+(\S+):\s*(.*?)\s*$/);
+    if (item) {
+      (lists[key] ??= []).push({ time: item[1], value: unquote(item[2]) });
+      return;
+    }
     // a note: "  - time: text", two spaces in
     const n = line.match(/^ {2}-\s+(\S+):\s+(.*?)\s*$/);
     if (n) {
@@ -234,8 +245,12 @@ function parse(src) {
       }
       return;
     }
-    const m = line.match(/^([A-Za-z_]+):\s*(.*?)\s*$/);
-    if (m) out[m[1]] = unquote(m[2]);
+    const m = line.match(/^([A-Za-z][A-Za-z_-]*):\s*(.*?)\s*$/);
+    if (m) {
+      out[m[1]] = unquote(m[2]);
+      key = m[1];
+      if (m[1] === "notes") inNotes = true;
+    }
   });
   // newest first by time stamp, whatever order the list is in
   // a photo without a file doesn't count
@@ -275,9 +290,13 @@ function parse(src) {
     span: out.span ? +out.span : null,
     // `hung:` in status.yaml (`complete:` before Nov. 6, 2026, still read)
     complete: (out.hung ?? out.complete) === "true",
-    // the velocity the Status Desk writes on every push, and its value before it last changed, as written, or null
-    spansPerWeek: out.spans_per_week ?? null,
-    spansPerWeekPrevious: out.spans_per_week_previous ?? null,
+    // the velocity the Status Desk writes on every push, and its value at the check-in before (the newest of its earlier
+    // values, a list since Nov. 7, 2026), as written, or null (`spans_per_week` and `spans_per_week_previous`, a single
+    // value, earlier that day, still read)
+    spansPerWeek: out["spans-per-week"] ?? out.spans_per_week ?? null,
+    spansPerWeekPrevious:
+      lists["spans-per-week-previous"]?.[0]?.value ??
+      (out["spans-per-week-previous"] || out.spans_per_week_previous || null),
     // the newest status update (not a post), or null
     latest,
     note: latest ? latest.summary : "",
