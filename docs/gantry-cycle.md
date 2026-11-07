@@ -1,7 +1,7 @@
 # The Clayton Clipper's cycle
 
 One cycle is everything the Clayton Clipper does for one span: from arriving at a new position to arriving at the next
-one. It's the unit for the gantry's velocity (days per span). This is Mike's description from watching the gantry,
+one. It's the unit for the gantry's velocity (spans per week). This is Mike's description from watching the gantry,
 refined into stages; the words are his where the writing style in `CLAUDE.md` says to use the word as written.
 
 ## The stages
@@ -46,8 +46,8 @@ least. Post-tensioning and moving the supports have only a start: no end is tagg
 - **Seen Nov. 7, 2026, not yet in the velocity:** the Friday night shift is pretty much nonexistent. There was a little
   activity early Friday evening, the hangers being lowered, which doesn't need a big crew; it may have just been the day
   shift working overtime. The day shift works six days a week and the night shift only five (Sunday to Thursday nights),
-  so the working week is uneven, and a weekly velocity (spans per week) is probably more meaningful than a daily one
-  (days per span).
+  so the working week is uneven, which is why the velocity is given only per week (spans per week), not as days per
+  span.
 - **No step means "complete".** Hung is the end of stage 1, well before the gantry leaves the span; the hangers coming
   down (stage 4) is the nearest thing to done. The progress card counts the span the gantry is on (stage 0), so the card
   moves at arrival.

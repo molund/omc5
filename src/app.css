@@ -39,6 +39,9 @@
   --button-ink: light-dark(#1f2328, #f0f6fc);
   --pager-knob: light-dark(#ffffff, #0d1117);
   --pager-flat-ink: light-dark(#59636e, #9198a1);
+  /* which way the progress card's spans per week went: a muted green and red, to sit with the slate, gold and purple */
+  --up: light-dark(#4f8a6b, #7fbf9a);
+  --down: light-dark(#b0564f, #e0928b);
 }
 :root[data-theme="light"] {
   color-scheme: light;
