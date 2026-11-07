@@ -43,6 +43,11 @@ least. Post-tensioning and moving the supports have only a start: no end is tagg
   cycle, whatever happened in between.
 - **Working time, not calendar time.** The crews work 24/6. The Sunday shutdown runs from 6 p.m. Saturday to 6 p.m.
   Sunday (24 hours) and is taken out of any cycle it falls in.
+- **Seen Nov. 7, 2026, not yet in the velocity:** the Friday night shift is pretty much nonexistent. There was a little
+  activity early Friday evening, the hangers being lowered, which doesn't need a big crew; it may have just been the day
+  shift working overtime. The day shift works six days a week and the night shift only five (Sunday to Thursday nights),
+  so the working week is uneven, and a weekly velocity (spans per week) is probably more meaningful than a daily one
+  (days per span).
 - **No step means "complete".** Hung is the end of stage 1, well before the gantry leaves the span; the hangers coming
   down (stage 4) is the nearest thing to done. The progress card counts the span the gantry is on (stage 0), so the card
   moves at arrival.
