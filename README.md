@@ -49,6 +49,13 @@ Not used by the site itself. `data/` is an open dataset (CC0) of the guideway su
 pillars and spans from 166 St to 184 St, exported from the drawing as GeoJSON. See
 [data/README.md](data/README.md) for the files, how they were made and how to update them.
 
+## Status Desk
+
+Progress updates are written with the Clipper Status Desk, the site's admin app, which lives in its own repo:
+[molund/omc5-admin](https://github.com/molund/omc5-admin). It edits `status.yaml` and keeps its own records in
+`desk.yaml` (the steps of the Clipper's cycle and notes to self), which it turns into the Clipper's velocity. The site
+doesn't read `desk.yaml`.
+
 ## License
 
 The code is under the [MIT License](LICENSE). Two kinds of images in `public/images/` aren't covered by it:
