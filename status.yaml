@@ -21,6 +21,13 @@ spans-per-week: 2.83
 #   No other markdown: anything else shows as typed.
 # Notes to self, and the steps of the gantry's cycle seen at each time stamp, are in desk.yaml, not here.
 notes:
+  - 2026-11-07T14:45-07:00: "Clayton Clipper construction update for Saturday, Nov. 7, 2026"
+    summary: "Made it to span 39!"
+    photo:
+      file: 2026-11-07-photo.jpg
+      caption: "Clayton Clipper launching gantry at span 39/105 on its journey to Bakerview 166 St Station."
+    block:
+      - "That makes three more spans since [@RainCityInfrastructure’s Oct. 31 video](https://youtu.be/NLeJw_DD878?si=fj14i3goJ635GFuZ), shot one week ago."
   - 2026-11-06T08:45-07:00: "Clayton Clipper construction update for Friday, Nov. 6, 2026"
     summary: "Another precast concrete girder was installed at the span 35 eastbound mainline overnight."
     follow-up:
