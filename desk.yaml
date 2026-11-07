@@ -13,6 +13,9 @@
 # copy of spans-per-week; the site's build draws the rest as the progress card's chart
 spans-per-week: 2.83
 spans-per-week-previous:
+  - 2026-11-07T08:15-07:00: 2.83
+    span: 38
+    stage: supports started
   - 2026-11-06T22:00-07:00: 2.81
     span: 38
     stage: hangers down
@@ -37,10 +40,10 @@ spans-per-week-previous:
   - 2026-11-03T20:30-07:00: 2.68
     span: 37
     stage: hung
-  - 2026-11-03T13:30-07:00: 2.59
-    span: 37
-    stage: arrived at span
 entries:
+  - 2026-11-07T14:45-07:00:
+      span: 39
+      stage: arrived at span
   - 2026-11-07T10:45-07:00:
       span: 38
       stage: supports started
