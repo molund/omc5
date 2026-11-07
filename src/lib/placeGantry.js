@@ -13,6 +13,12 @@ const SUPPORTS = {
 };
 
 /**
+ * Spans with two girders. The fourth support can't lie lengthwise on one of these, so on them it is turned across the span,
+ * like the other supports, and centred across the double girder.
+ */
+const DOUBLE_GIRDER = new Set([31, 43, 44, 45, 46, 47, 52, 53, 54]);
+
+/**
  * Anchors the Clayton Clipper gantry to the span it is working on. #clayton-clipper is drawn for span data-drawn-at; this
  * moves each of its data-anchor groups to span data-span (the ccnumber span numbers, 1-105). Spans are found from the
  * drawing:
@@ -25,7 +31,8 @@ const SUPPORTS = {
  * - second: just behind S, its front edge flush with S's back end
  * - rear: fully on S-1, its rear edge a third of its width in from S-1's back end
  * - fourth: on S-1, at the same fraction of the way along it as drawn (the supports keep the across offsets they are drawn
- *   with, and the fourth its along offset too, turned with the span)
+ *   with, and the fourth its along offset too, turned with the span); on a double girder S-1 it is turned across the span and
+ *   centred across the double girder
  * - body: centred on S's midpoint, between its outer edges, and parallel to them
  *
  * @param {SVGSVGElement} root The map's <svg>.
@@ -144,16 +151,39 @@ export function placeGantry(root) {
     const from = centre(key),
       was = spans[D + rule.span],
       now = spans[S + rule.span];
-    let to;
+    let to,
+      turn = angle(now.u) - angle(was.u);
     if (rule.along) {
-      const t = dot(sub(from, was.back), was.u) / dot(sub(was.front, was.back), was.u),
-        across = dot(sub(from, was.c), was.v);
+      const t = dot(sub(from, was.back), was.u) / dot(sub(was.front, was.back), was.u);
+      let across = dot(sub(from, was.c), was.v);
+      if (DOUBLE_GIRDER.has(S + rule.span)) {
+        // across the span, centred on the double girder: midway between the outer edges of its two girders
+        turn += 90;
+        const alongPos = (p) => dot(sub(p, now.back), now.u),
+          lo = Math.min(alongPos(now.back), alongPos(now.front)),
+          hi = Math.max(alongPos(now.back), alongPos(now.front));
+        let edge0 = Infinity,
+          edge1 = -Infinity;
+        root.querySelectorAll("polygon.guideway").forEach((el) => {
+          if (gantry.contains(el)) return;
+          const pts = [...el.points].map((q) => toCanvas(el, q.x, q.y));
+          const c = mul(pts.reduce(add), 1 / pts.length),
+            ca = alongPos(c);
+          if (ca < lo || ca > hi) return;
+          // only girders count: not the gantry boxes (gi, p) or the unfinished ramps and decks
+          if (el.matches(".gi, .p, .unfinished")) return;
+          const v = pts.map((q) => dot(sub(q, now.c), now.v));
+          if (Math.abs(dot(sub(c, now.c), now.v)) > 60) return;
+          edge0 = Math.min(edge0, ...v);
+          edge1 = Math.max(edge1, ...v);
+        });
+        if (edge0 < edge1) across = (edge0 + edge1) / 2;
+      }
       to = add(add(now.back, mul(sub(now.front, now.back), t)), mul(now.v, across));
     } else {
       const off = sub(from, was[rule.end]);
       to = add(now[rule.end], add(mul(now.u, dot(off, was.u)), mul(now.v, dot(off, was.v))));
     }
-    const turn = angle(now.u) - angle(was.u);
     if (rule.edge) {
       // the support is its beam and its walkway (the pads sit on top): the middle of its rear edge (its two corners furthest
       // back) or front edge (furthest forward), carried through the move
