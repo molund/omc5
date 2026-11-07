@@ -58,6 +58,13 @@ used when making changes to the app from the Claude iPhone app. It edits `status
 `desk.yaml` (the steps of the Clipper's cycle and notes to self), which it turns into the Clipper's velocity. The site
 doesn't read `desk.yaml`.
 
+## Velocity calculation
+
+The progress card's velocity (spans per week, with an arrow for which way it last went) is worked out by the Status Desk
+and written into `status.yaml` as `spans_per_week` and `spans_per_week_previous` on every push; the site only shows it.
+How it's calculated, and every assumption it makes, is in
+[VELOCITY.md](https://github.com/molund/omc5-admin/blob/main/src/lib/VELOCITY.md) in the Status Desk's repo.
+
 ## License
 
 The code is under the [MIT License](LICENSE). Two kinds of images in `public/images/` aren't covered by it:
