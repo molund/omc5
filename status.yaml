@@ -17,6 +17,8 @@ spans-per-week: 2.83
 #   date alone ("2026-11-01").
 # - The progress card shows the newest note's summary, or its newest follow-up's, only when that time stamp is `updated`;
 #   otherwise it has no text and a Trackside button. Set `updated` to the newest time stamp.
+# - Summaries, paragraphs and captions can have links, [text](https://…), and bold, **text** or __text__ (src/lib/inline.js).
+#   No other markdown: anything else shows as typed.
 # Notes to self, and the steps of the gantry's cycle seen at each time stamp, are in desk.yaml, not here.
 notes:
   - 2026-11-06T08:45-07:00: "Clayton Clipper construction update for Friday, Nov. 6, 2026"

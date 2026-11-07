@@ -81,6 +81,9 @@ Each update is a note: its time stamp and its title on one line, then indented u
   leads with it.
 - `photo:` — a photo and its caption, shown under the summary.
 - `block:` — more paragraphs and photos, after the summary.
+- Summaries, paragraphs and captions can have links, `[text](https://…)` (or an address on this site, `/about/` or
+  `?post=…`), and bold, `**text**` or `__text__`; `src/lib/inline.js` reads them. No other markdown: anything else shows
+  as typed. Link previews and image descriptions get the plain text, and the comment threads get the links in full.
 - Notes to self aren't here: they're in `desk.yaml`, the Status Desk's file, which the site doesn't read. (The reader
   still skips a `note-to-self:` line, so an old one would never be shown.)
 - `follow-up:` — later, time-stamped additions, shown as a list under the update. Each has its own
