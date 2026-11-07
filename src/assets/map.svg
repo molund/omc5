@@ -7316,10 +7316,8 @@
       transform="matrix(-0.620704 0.920232 -0.920232 -0.620704 2397.600031 1060.140015)"
     />
   </g>
-  <g
-    clip-path="url(#base-photo-frame)"
-    transform="translate(0 1200) scale(1.11) translate(0 -1200)"
-  >
+  <!-- The gantry is not clipped to the aerial photo outline like the rest of the view zoom: it works on spans past the photo's edge -->
+  <g transform="translate(0 1200) scale(1.11) translate(0 -1200)">
     <g transform="translate(2160 1074) rotate(124)">
         <!-- Clipper: no group opacity; every piece is 65% on its own, so each layer blends with everything beneath it down to the solid track -->
         <!-- Gantry pivoted where it crosses the 31/32 support; centreline x = 307.1; shortened 3.5% about its centre y=550 (scale(1 0.965)) -->
