@@ -11,6 +11,7 @@ import { render } from "svelte/server";
 import { format } from "prettier";
 import TracksidePage from "./TracksidePage.svelte";
 import { status, followUpTime } from "../src/lib/status.js";
+import { inline, plainText } from "../src/lib/inline.js";
 import { term, SITE } from "../src/lib/comments.js";
 import { velocityChart, velocityPoints } from "../src/lib/velocityChart.js";
 
@@ -60,7 +61,7 @@ for (const [i, n] of status.history.entries()) {
     <meta charset="utf-8" />
     <meta name="robots" content="noindex" />
     <meta property="og:title" content="${escape(n.title)}" />
-    <meta property="og:description" content="${escape(n.summary)}" />
+    <meta property="og:description" content="${escape(plainText(n.summary))}" />
     <meta property="og:type" content="article" />
     <meta property="og:url" content="${escape(permalink)}" />
     ${image ? `<meta property="og:image" content="${escape(new URL(image.src, SITE).href)}" />` : ""}
@@ -106,12 +107,21 @@ ${urls
 // strict-mode marker,
 // the sha1 of the title it asks for. No date line: the thread's title already has it.
 function threadBody(n) {
-  const parts = [n.summary];
+  // the text's links and bold written out again, each link with its full address (a link on this site is to a page of
+  // Trackside, where it was written), since the thread is on GitHub
+  const md = (text) =>
+    inline(text)
+      .map((p) => {
+        const t = p.href ? `[${p.text}](${new URL(p.href, `${SITE}trackside/`).href})` : p.text;
+        return p.bold ? `**${t}**` : t;
+      })
+      .join("");
+  const parts = [md(n.summary)];
   const photo = (p, parts) => {
-    parts.push(`![${p.caption || "Photo for this update"}](${new URL(p.src, SITE).href})`);
-    if (p.caption) parts.push(`_${p.caption}_`);
+    parts.push(`![${plainText(p.caption) || "Photo for this update"}](${new URL(p.src, SITE).href})`);
+    if (p.caption) parts.push(`_${md(p.caption)}_`);
   };
-  const blocks = (list, parts) => list.forEach((m) => (m.photo ? photo(m.photo, parts) : parts.push(m.text)));
+  const blocks = (list, parts) => list.forEach((m) => (m.photo ? photo(m.photo, parts) : parts.push(md(m.text))));
   if (n.photo) photo(n.photo, parts);
   blocks(n.block, parts);
   if (n.followUps.length) {
@@ -120,7 +130,7 @@ function threadBody(n) {
       [...n.followUps]
         .reverse()
         .map((m) => {
-          const item = [`\`${followUpTime(m.time, n.time)}\` ${m.summary}`.trim()];
+          const item = [`\`${followUpTime(m.time, n.time)}\` ${md(m.summary)}`.trim()];
           if (m.photo) photo(m.photo, item);
           blocks(m.block, item);
           // later paragraphs are indented to stay inside the list item

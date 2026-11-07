@@ -5,6 +5,7 @@
   // this is
   import { onMount } from "svelte";
   import { status, asOf, followUpTime } from "../src/lib/status.js";
+  import { inline, plainText } from "../src/lib/inline.js";
   import { term, fetchCounts, SITE } from "../src/lib/comments.js";
   import Icon from "../src/Icon.svelte";
 
@@ -41,10 +42,11 @@
   // the addresses of a page of updates, and in full, for the Open Graph tags
   const pageUrl = (p) => (p === 1 ? TRACKSIDE : `${TRACKSIDE}page/${p}/`);
   const full = (path) => new URL(path, SITE).href;
-  // update text cut into plain pieces and span numbers ('span 36', 'spans 70 and 71') that link to the map's ?span=N view;
-  // a span already in `seen` (linked earlier in the same update) stays plain
+  // update text cut into pieces: its links and bold (src/lib/inline.js), and outside the links, span numbers ('span 36',
+  // 'spans 70 and 71') that link to the map's ?span=N view; a span already in `seen` (linked earlier in the same update)
+  // stays plain
   const SPANS = /\b[Ss]pans? \d+(?:(?:, and |, | and )\d+)*/g;
-  function parts(text, seen) {
+  function spanParts(text) {
     const out = [];
     let last = 0;
     for (const m of text.matchAll(SPANS)) {
@@ -55,11 +57,18 @@
       last = m.index + m[0].length;
     }
     if (last < text.length) out.push({ text: text.slice(last) });
-    return out.map((p) => {
-      if (!(p.span >= 1 && p.span <= 105) || seen.has(p.span)) return { text: p.text };
-      seen.add(p.span);
-      return p;
-    });
+    return out;
+  }
+  function parts(text, seen) {
+    return inline(text).flatMap((piece) =>
+      piece.href
+        ? [piece]
+        : spanParts(piece.text).map((p) => {
+            if (!(p.span >= 1 && p.span <= 105) || seen.has(p.span)) return { text: p.text, bold: piece.bold };
+            seen.add(p.span);
+            return { ...p, bold: piece.bold };
+          }),
+    );
   }
   // the linked pieces of every text in an update (summaries, paragraphs, photo captions), in the order they show, keyed by
   // the note, follow-up, paragraph or photo
@@ -154,20 +163,23 @@
   <meta property="og:url" content={url} />
   {#if image}
     <meta property="og:image" content={full(image.src)} />
-    {#if image.caption}<meta property="og:image:alt" content={image.caption} />{/if}
+    {#if image.caption}<meta property="og:image:alt" content={plainText(image.caption)} />{/if}
     <meta name="twitter:card" content="summary_large_image" />
   {:else}
     <meta name="twitter:card" content="summary" />
   {/if}
 </svelte:head>
 
-<!-- update text with its span numbers linked to the map, the first time each appears in an update (the giscus threads and
-     the headings stay plain) -->
-{#snippet linked(pieces)}{#each pieces as p}{#if p.span}<a
-        class="text-(--link)"
-        href="{MAP}?span={p.span}"
-        title="Zoom to span {p.span} on the map">{p.text}</a
-      >{:else}{p.text}{/if}{/each}{/snippet}
+<!-- update text with its links and bold, and its span numbers linked to the map, the first time each appears in an update
+     (the giscus threads get no span links, and the headings stay plain) -->
+{#snippet piece(p)}{#if p.href}<a class="text-(--link)" href={p.href}>{p.text}</a>{:else if p.span}<a
+      class="text-(--link)"
+      href="{MAP}?span={p.span}"
+      title="Zoom to span {p.span} on the map">{p.text}</a
+    >{:else}{p.text}{/if}{/snippet}
+{#snippet linked(pieces)}{#each pieces as p}{#if p.bold}<strong>{@render piece(p)}</strong>{:else}{@render piece(
+        p,
+      )}{/if}{/each}{/snippet}
 
 <!-- a photo and its caption, under a note or among its further paragraphs -->
 {#snippet photo(p, plan)}
@@ -176,7 +188,7 @@
       ><img
         class="block h-auto w-full rounded-md"
         src={p.src}
-        alt={p.caption || "Photo for this update"}
+        alt={plainText(p.caption) || "Photo for this update"}
         loading="lazy"
       /></a
     >

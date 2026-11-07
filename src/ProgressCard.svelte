@@ -5,6 +5,7 @@
   import { PROGRESS_COLOUR } from "./lib/layerSwitches.js";
   import { ui } from "./lib/appState/appState.svelte.js";
   import { status, asOf } from "./lib/status.js";
+  import { inline } from "./lib/inline.js";
   import { term, fetchCounts } from "./lib/comments.js";
   import Icon from "./Icon.svelte";
 
@@ -17,6 +18,8 @@
   const word = status.followUps[0] ?? newest;
   const current = !!word && +word.time === +status.updated;
   const note = current ? status.followUps[0]?.summary || status.note : "";
+  // a link in the note: an address on this site that's only `?…` was written for Trackside, so it goes there from the map
+  const noteLink = (href) => (href.startsWith("?") ? `${import.meta.env.BASE_URL}trackside/${href}` : href);
   // the Comments button opens Trackside's first page, scrolled to the newest update (a post can sit above it) with its
   // comments open, and shows its comment and reaction counts once GitHub has sent them
   const TRACKSIDE = `${import.meta.env.BASE_URL}trackside/`;
@@ -188,7 +191,11 @@
       </div>
       {#if tip === "pace"}{@render tipBox("-mt-1")}{/if}{/if}
     {#if when}<div class="mt-2 text-xs text-(--mute)">As of {when}</div>{/if}
-    {#if note}<div class="mt-2 text-sm">{note}</div>{/if}
+    {#if note}<div class="mt-2 text-sm">
+        {#each inline(note) as p}{#if p.href}<a class="text-(--link)" href={noteLink(p.href)}
+              >{#if p.bold}<strong>{p.text}</strong>{:else}{p.text}{/if}</a
+            >{:else if p.bold}<strong>{p.text}</strong>{:else}{p.text}{/if}{/each}
+      </div>{/if}
     {#if newest && !current}
       <a
         class="btn mt-2.5 flex min-h-8 justify-center gap-1.5 border-(--button-line) bg-(--button-bg) px-2.5 text-sm font-semibold text-(--button-ink) hover:bg-(--bg)"
