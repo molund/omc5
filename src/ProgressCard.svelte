@@ -23,6 +23,11 @@
   const COMMENTS = newest ? `${TRACKSIDE}?post=${newest.slug}&comments` : TRACKSIDE;
   let activity = $state(null);
   if (newest && current) fetchCounts().then((c) => (activity = c[term(newest.time)] ?? null));
+  // the velocity the Status Desk writes, how far the gantry got in the last week, with which way it went since its value
+  // before (none when that's missing or the same)
+  const pace = status.spansPerWeek;
+  const before = status.spansPerWeekPrevious;
+  const way = pace && before && +pace !== +before ? (+pace > +before ? "up" : "down") : null;
 
   // what each number counts, shown when it is hovered or clicked with a mouse, tapped (tap again to hide) or pressed with
   // Enter/Space
@@ -126,10 +131,13 @@
       aria-label="Hide the progress card"
       onclick={close}><Icon kind="close" /></button
     >
-    <!-- "36 (+8) / 105": the spans done, the spans ahead built by cranes, and the total (non-breaking spaces, which the flex
-         row keeps) -->
+    <!-- "36 (+8) / 105 spans": the spans done, the spans ahead built by cranes, and the total (non-breaking spaces, which the
+         flex row keeps) -->
     <div class="mt-0.5 mb-2 flex flex-wrap items-baseline text-base text-(--mute)">
-      {@render num("span", span, true)}&nbsp;(+{@render num("ahead", ahead)})&nbsp;/&nbsp;{@render num("total", total)}
+      {@render num("span", span, true)}&nbsp;(+{@render num("ahead", ahead)})&nbsp;/&nbsp;{@render num(
+        "total",
+        total,
+      )}&nbsp;spans
     </div>
     <!-- floats over the progress bar (no top: it sits where it would have started, just under the figure), in the card's
          colours reversed so it stands out from the card in light and dark mode -->
@@ -161,6 +169,14 @@
         {@render num("percent", `${Math.round(percent)}%`, false, true)}
       </div>
     </div>
+    <!-- "▲ 2.83 spans/wk velocity": the arrow green going up, red going down -->
+    {#if pace}<div class="mt-2 text-sm text-(--mute)">
+        {#if way}<span
+            class={way === "up" ? "text-(--up)" : "text-(--down)"}
+            role="img"
+            aria-label="{way} from {before}">{way === "up" ? "▲" : "▼"}</span
+          >&nbsp;{/if}<strong class="font-semibold text-(--ink)">{pace}</strong>&nbsp;spans/wk velocity
+      </div>{/if}
     {#if when}<div class="mt-2 text-xs text-(--mute)">As of {when}</div>{/if}
     {#if note}<div class="mt-2 text-sm">{note}</div>{/if}
     {#if newest && !current}
