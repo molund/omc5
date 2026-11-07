@@ -5,42 +5,16 @@ updated: 2026-11-06T08:45-07:00
 span: 38
 # whether all that span's segments are hung. The map draws it hung; the progress card counts the span either way.
 hung: true
-# every note, newest first. A note is its time stamp (the time of the update that added it) and its title, then its summary,
-# the main text, indented under it. The title is not shown on a status update ("" for none, and the slug comes from the time
-# stamp); a post leads with it. It is also the update's `?post=` slug on
-# Trackside, as a slug (clipper-completes-span-36, "Clayton Clipper" becomes "Clipper", and is dropped from the date titles): to keep the anchor when the title is edited, add `slug: words-here`
-# under the note (the oldest note with a given title keeps the plain words, a later one gets -2). The progress card shows
-# the newest note's summary, or its
-# newest follow-up's if it has any (an empty summary shows none), only when that note's or follow-up's time stamp is
-# `updated`; otherwise the card has no text and a Trackside button in place of Comments (a position-only change to
-# `updated`, span and hung):
-#   - 2026-10-31T14:00-07:00: "Clayton Clipper completes span 36"
-#     summary: "Span 36 is complete."
-# A note can be a post instead of a status update: "post: true" under it. A post leads with its title on Trackside, with
-# just its date under it (its key can be a date alone, "2026-11-01"), and never shows on the progress card.
-#     post: true
-# Notes to self, and the steps of the gantry's cycle seen at each time stamp, are in desk.yaml (the Status Desk's file), not
-# here.
-# a photo, indented under it, with its own caption:
-#     photo:
-#       file: span-36.jpg (in public/images/sorry-im-a-shitty-photographer/)
-#       caption: "What the photo shows"
-# more blocks, paragraphs and photos, indented under it (the card shows only the summary; Trackside shows it all):
-#     block:
-#       - "A second paragraph"
-#       - photo:
-#           file: span-36-close-up.jpg
-#           caption: "What the photo shows"
-# and follow-ups, indented under it, each with its own summary, photo and block like a note (no comments thread or entry of
-# their own; set `updated` to the newest). The card shows only the newest follow-up's summary:
-#     follow-up:
-#       - 2026-10-31T11:45-07:00:
-#           summary: "What changed"
-#           photo:
-#             file: span-36-later.jpg
-#             caption: "What the photo shows"
-#           block:
-#             - "Another paragraph"
+# Notes, newest first: a time stamp and a title, then a summary, and optionally `photo` (file in
+# public/images/sorry-im-a-shitty-photographer/, caption), `block` (more paragraphs and photos) and `follow-up` (later
+# time-stamped entries with their own summary, photo and block, and no title). See the notes below for the shapes.
+# - The title leads a post and is the update's `?post=` slug on Trackside ("Clayton Clipper" becomes "Clipper"; a later
+#   note with the same title gets -2). To keep the anchor when a title is edited, add `slug: words-here` under the note.
+# - `post: true` makes a note a post instead of a status update: it never shows on the progress card, and its key can be a
+#   date alone ("2026-11-01").
+# - The progress card shows the newest note's summary, or its newest follow-up's, only when that time stamp is `updated`;
+#   otherwise it has no text and a Trackside button. Set `updated` to the newest time stamp.
+# Notes to self, and the steps of the gantry's cycle seen at each time stamp, are in desk.yaml, not here.
 notes:
   - 2026-11-06T08:45-07:00: "Clayton Clipper construction update for Friday, Nov. 6, 2026"
     summary: "Another precast concrete girder was installed at the span 35 eastbound mainline overnight."
