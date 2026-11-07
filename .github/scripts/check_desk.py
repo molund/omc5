@@ -2,7 +2,7 @@
 
 The branch must be main plus one or more commits, none of them a merge, each of which only changes status.yaml or
 desk.yaml, or adds or replaces photos in public/images/sorry-im-a-shitty-photographer/. Every photo it touches must be a
-JPEG at most 800 pixels wide, with no metadata (no EXIF, XMP or comment segments), under 1 MB. Run from the repo root
+JPEG at most 1024 pixels wide, with no metadata (no EXIF, XMP or comment segments), under 1 MB. Run from the repo root
 with origin/main fetched. Writes count=<number of commits> to $GITHUB_OUTPUT (0 when the branch is already main) and
 exits 1 on the first problem.
 """
@@ -15,7 +15,7 @@ import sys
 BASE = "origin/main"
 FILES = ("status.yaml", "desk.yaml")
 PHOTO = re.compile(r"^public/images/sorry-im-a-shitty-photographer/[a-z0-9][a-z0-9._-]*\.jpg$")
-MAX_WIDTH = 800
+MAX_WIDTH = 1024
 MAX_BYTES = 1_000_000
 
 
