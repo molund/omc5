@@ -1,5 +1,5 @@
-# The Status Desk's own records (molund/omc5-admin). The site doesn't read this file. Entries are keyed by
-# BC time stamps, like status.yaml's notes, newest first. An entry can have:
+# The Status Desk's own records (molund/omc5-admin). The site reads only the velocity below, at build time, for the
+# progress card's chart. Entries are keyed by BC time stamps, like status.yaml's notes, newest first. An entry can have:
 #   span: the Clayton Clipper span it's about
 #   stage: the step of the gantry's cycle it had reached by then (see docs/gantry-cycle.md), one of:
 #     arrived at span, hanging started, hung, gluing started, glued,
@@ -7,6 +7,39 @@
 #   note-to-self: a memo, one line
 # Every entry about the gantry has a stage, and one that marks its span hung is at "hung" or later. A time stamp can match a
 # note or follow-up in status.yaml, or stand alone (a step seen with no post about it).
+# the Clayton Clipper's velocity, written by the Status Desk on every push: spans per week, from how far the gantry got in
+# the week up to the latest step reported (the weekly shutdown allowed for), with its values at the earlier steps of the
+# past 96 hours (-previous), newest first, with the span and stage of the step each was timed by. status.yaml has a
+# copy of spans-per-week; the site's build draws the rest as the progress card's chart
+spans-per-week: 2.83
+spans-per-week-previous:
+  - 2026-11-06T22:00-07:00: 2.81
+    span: 38
+    stage: hangers down
+  - 2026-11-06T17:30-07:00: 2.77
+    span: 38
+    stage: cables down
+  - 2026-11-06T08:00-07:00: 2.78
+    span: 38
+    stage: post-tensioning started
+  - 2026-11-05T21:30-07:00: 2.61
+    span: 38
+    stage: gluing started
+  - 2026-11-05T17:15-07:00: 2.61
+    span: 38
+    stage: hung
+  - 2026-11-05T10:00-07:00: 2.77
+    span: 38
+    stage: arrived at span
+  - 2026-11-04T12:30-07:00: 2.77
+    span: 37
+    stage: post-tensioning started
+  - 2026-11-03T20:30-07:00: 2.68
+    span: 37
+    stage: hung
+  - 2026-11-03T13:30-07:00: 2.59
+    span: 37
+    stage: arrived at span
 entries:
   - 2026-11-07T10:45-07:00:
       span: 38

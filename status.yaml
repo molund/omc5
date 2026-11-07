@@ -5,39 +5,9 @@ updated: 2026-11-07T10:45-07:00
 span: 38
 # whether all that span's segments are hung. The map draws it hung; the progress card counts the span either way.
 hung: true
-# the Clayton Clipper's velocity, written by the Status Desk on every push from desk.yaml: spans per week, from how far
-# the gantry got in the week up to the latest step reported (the weekly shutdown allowed for), with its values at the
-# earlier steps on the current span and the one before it (-previous), newest first, with the span and stage of the
-# step each was timed by
+# the Clayton Clipper's velocity in spans per week, a copy of desk.yaml's (where its earlier values are), written by the
+# Status Desk on every push
 spans-per-week: 2.83
-spans-per-week-previous:
-  - 2026-11-06T22:00-07:00: 2.81
-    span: 38
-    stage: hangers down
-  - 2026-11-06T17:30-07:00: 2.77
-    span: 38
-    stage: cables down
-  - 2026-11-06T08:00-07:00: 2.78
-    span: 38
-    stage: post-tensioning started
-  - 2026-11-05T21:30-07:00: 2.61
-    span: 38
-    stage: gluing started
-  - 2026-11-05T17:15-07:00: 2.61
-    span: 38
-    stage: hung
-  - 2026-11-05T10:00-07:00: 2.77
-    span: 38
-    stage: arrived at span
-  - 2026-11-04T12:30-07:00: 2.77
-    span: 37
-    stage: post-tensioning started
-  - 2026-11-03T20:30-07:00: 2.68
-    span: 37
-    stage: hung
-  - 2026-11-03T13:30-07:00: 2.59
-    span: 37
-    stage: arrived at span
 # Notes, newest first: a time stamp and a title, then a summary, and optionally `photo` (file in
 # public/images/sorry-im-a-shitty-photographer/, caption), `block` (more paragraphs and photos) and `follow-up` (later
 # time-stamped entries with their own summary, photo and block, and no title). See the notes below for the shapes.

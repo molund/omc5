@@ -23,11 +23,12 @@
   const COMMENTS = newest ? `${TRACKSIDE}?post=${newest.slug}&comments` : TRACKSIDE;
   let activity = $state(null);
   if (newest && current) fetchCounts().then((c) => (activity = c[term(newest.time)] ?? null));
-  // the velocity the Status Desk writes, how far the gantry got in the last week, with which way it went since its value
-  // before (none when that's missing or the same)
+  // the velocity the Status Desk writes, how far the gantry got in the last week, and its chart, drawn when the site is
+  // built (trackside/prerender.js); a new address for each update, so a browser doesn't show an old one, and none shown
+  // when there isn't one (too few values yet, or `npm run dev`, which doesn't draw it)
   const pace = status.spansPerWeek;
-  const before = status.spansPerWeekPrevious;
-  const way = pace && before && +pace !== +before ? (+pace > +before ? "up" : "down") : null;
+  const CHART = `${import.meta.env.BASE_URL}velocity.svg?v=${+status.updated}`;
+  let chart = $state(true);
 
   // what each number counts, shown when it is hovered or clicked with a mouse, tapped (tap again to hide) or pressed with
   // Enter/Space
@@ -172,14 +173,17 @@
         {@render num("percent", `${Math.round(percent)}%`, false, true)}
       </div>
     </div>
-    <!-- "▲ 2.83 spans/wk velocity": the arrow green going up, red going down, and none when it's the same as before; the
+    <!-- "〰 2.83 spans/wk velocity": the chart green going up, red going down, grey flat (src/lib/velocityChart.js); the
          figure has its tip, like the ones above -->
-    {#if pace}<div class="mt-1 flex flex-wrap items-baseline text-sm text-(--mute)">
-        {#if way}<span
-            class={way === "up" ? "text-(--up)" : "text-(--down)"}
-            role="img"
-            aria-label="{way} from {before}">{way === "up" ? "▲" : "▼"}</span
-          >&nbsp;{/if}{@render num("pace", pace)}&nbsp;spans/wk velocity
+    {#if pace}<div class="mt-1 flex flex-wrap items-center text-sm text-(--mute)">
+        {#if chart}<img
+            class="mr-1.5 h-4 w-12"
+            src={CHART}
+            alt="Velocity trend"
+            width="48"
+            height="16"
+            onerror={() => (chart = false)}
+          />{/if}{@render num("pace", pace)}&nbsp;spans/wk velocity
       </div>
       {#if tip === "pace"}{@render tipBox("-mt-1")}{/if}{/if}
     {#if when}<div class="mt-2 text-xs text-(--mute)">As of {when}</div>{/if}
