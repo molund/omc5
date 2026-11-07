@@ -1,6 +1,7 @@
 // The Apple Maps basemap: the overview aerial and the close-up photos in map.svg, Apple Maps screenshots. They have a
-// data-href and get their href the first time the basemap is shown, in the order below. Only one basemap shows at a
-// time: these are hidden while an Esri one (esriTiles.js) is picked, whatever the zoom.
+// data-href and get their href the first time the basemap is shown, in the order below; SFMSF aerial only needs the photo
+// that covers its canvas, so the others wait until another view shows the basemap. Only one basemap shows at a time:
+// these are hidden while an Esri one (esriTiles.js) is picked, whatever the zoom.
 
 /** The photos (file names without .jpg), in the order they are added: the overview first. */
 const DEFERRED = [
@@ -18,22 +19,22 @@ const DEFERRED = [
   "aerial-zoom-2", // 753 KB - Hillcrest 184 St
 ];
 
-let loaded = false;
+/** The one photo SFMSF aerial needs: it covers that view's canvas. */
+const SFMSF_PHOTO = "aerial-zoom-1";
 
 /**
- * Shows or hides the Apple Maps photos, loading them in DEFERRED's order the first time they're shown.
+ * Shows or hides the Apple Maps photos, loading the ones not yet loaded in DEFERRED's order.
  * @param {SVGSVGElement} root The map's <svg>.
  * @param {boolean} show Whether they show.
+ * @param {boolean} sfmsfOnly Whether only SFMSF aerial's photo is needed so far.
  * @returns {void}
  */
-export function showAerialPhotos(root, show) {
-  if (show && !loaded) {
-    loaded = true;
-    DEFERRED.forEach((name) => {
+export function showAerialPhotos(root, show, sfmsfOnly) {
+  if (show)
+    (sfmsfOnly ? [SFMSF_PHOTO] : DEFERRED).forEach((name) => {
       const photo = root.querySelector(`image[data-href$="/${name}.jpg"]`);
-      photo?.setAttribute("href", photo.dataset.href);
+      if (photo && !photo.hasAttribute("href")) photo.setAttribute("href", photo.dataset.href);
     });
-  }
   // hidden, not taken out of the layout: the views are framed to the overview photo's outline (viewport.svelte.js), which
   // can't be measured with display: none
   root.querySelectorAll("image[data-href]").forEach((photo) => {

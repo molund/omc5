@@ -34,7 +34,7 @@
     framedZoom = null;
   let edgeTimer;
   let esriTiles = $state(null);
-  // the basemap shown: the dropdown's pick, in every aerial view (each view starts on Esri aerial). One at a time, whatever the zoom
+  // the basemap shown: the dropdown's pick, in every aerial view (each view starts on its own: basemapFor). One at a time, whatever the zoom
   const basemap = $derived(ui.basemap);
   let credit = $state(defaultCredit(basemap));
   const basemapShown = $derived(layers.aerial && !layers.sfmsfDrawing);
@@ -45,7 +45,7 @@
   // basemap comes on again or is picked)
   $effect(() => {
     if (!esriTiles) return;
-    showAerialPhotos(els.svg, basemapShown && basemap === "apple");
+    showAerialPhotos(els.svg, basemapShown && basemap === "apple", ui.view === "sfmsfAerial");
     if (basemapShown) esriTiles.setBasemap(basemap);
   });
   // each Esri basemap has its own credit; one that is still being read doesn't replace a later pick's
