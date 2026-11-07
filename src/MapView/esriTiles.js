@@ -1,7 +1,9 @@
 // The Esri basemaps: Esri tiles (World Imagery for Esri aerial, Static Basemap Tiles for the rest) drawn as <image>s
 // inside the map's <svg>, so they zoom, pan and turn with the drawing. Each tile is billed (2 million a month are
-// free), so only tiles in view are asked for, once the map has settled, and each only once per page load. Esri's terms
-// don't allow keeping tiles, so they always load from Esri.
+// free), so only tiles in view are asked for, once the map has settled, and each only once per page load, along with a
+// few coarse backdrop tiles (see BACKDROP) that show until the sharp ones arrive. Tiles that can't be seen are hidden, not
+// removed, so the map doesn't slow down as tiles build up and coming back to them is not billed again. Esri's terms don't
+// allow keeping tiles, so they always load from Esri.
 import control from "../../data/control-points.json";
 import { georeference, R } from "../lib/georeference.js";
 import { DEFAULT_BASEMAP } from "../lib/layerSwitches.js";
@@ -20,6 +22,10 @@ const WORLD = Math.PI * R;
 const SETTLE = 150;
 /** The most device pixels per CSS pixel worth paying tiles for. */
 const MAX_PIXEL_RATIO = 2;
+/** How many levels coarser than the current one the backdrop is: one of its tiles covers 8 × 8 of the current level's. */
+const BACKDROP = 3;
+/** How often tiles are hidden and shown again while the map moves, in milliseconds. */
+const CULL_EVERY = 100;
 const SVG_NS = "http://www.w3.org/2000/svg";
 
 /**
@@ -106,8 +112,11 @@ export function startEsriTiles(svg, stage) {
     base = svg.querySelector("#baseoverview"),
     layer = document.createElementNS(SVG_NS, "g"),
     levels = new Map(),
-    asked = new Set();
+    asked = new Set(),
+    // each tile's four corners, in the layer's coordinates
+    corners = new Map();
   let timer,
+    cullTimer,
     basemap = DEFAULT_BASEMAP;
   layer.id = "esri-tiles";
   base.append(layer);
@@ -141,40 +150,59 @@ export function startEsriTiles(svg, stage) {
     image.setAttribute("width", service.pixels + 0.5);
     image.setAttribute("height", service.pixels + 0.5);
     image.setAttribute("preserveAspectRatio", "none");
+    image.setAttribute("decoding", "async");
     image.setAttribute("transform", `matrix(${ax - e} ${ay - f} ${cx - e} ${cy - f} ${e} ${f})`);
     image.setAttribute("href", `${service.url}${service.tiles}/${level}/${y}/${x}?token=${KEY}`);
+    corners.set(
+      image,
+      [
+        [west, north],
+        [west + size, north],
+        [west + size, north - size],
+        [west, north - size],
+      ].map(fromMerc),
+    );
     levelGroup(level).append(image);
   };
 
-  const update = () => {
-    // nothing to pay for while the basemaps are off, or the Apple Maps one is shown
-    if (getComputedStyle(base).display === "none" || !isEsri(basemap)) return;
-    const ctm = DOMMatrix.fromMatrix(layer.getScreenCTM()),
-      toCanvas = ctm.inverse(),
-      s = stage.getBoundingClientRect(),
+  // the part of the screen the map shows, and how the layer maps to it; null when there's nothing to draw or pay for: the
+  // basemaps are off, or the Apple Maps one is shown
+  const view = () => {
+    if (getComputedStyle(base).display === "none" || !isEsri(basemap)) return null;
+    const s = stage.getBoundingClientRect(),
       box = svg.getBoundingClientRect(),
       left = Math.max(s.left, box.left),
       right = Math.min(s.right, box.right),
       top = Math.max(s.top, box.top),
       bottom = Math.min(s.bottom, box.bottom);
-    if (left >= right || top >= bottom) return;
+    if (left >= right || top >= bottom) return null;
+    return { ctm: DOMMatrix.fromMatrix(layer.getScreenCTM()), left, right, top, bottom };
+  };
 
-    // the level whose pixels best match the screen's
+  // the level whose pixels best match the screen's
+  const levelFor = (ctm) => {
     const service = SERVICES[basemap],
       [ox, oy] = fromMerc([0, 0]),
       [ux, uy] = fromMerc([1, 0]),
       canvasPerMetre = Math.hypot(ux - ox, uy - oy),
-      levelFor = (pixelsPerCanvas) =>
-        Math.round(Math.log2((2 * WORLD * canvasPerMetre * pixelsPerCanvas) / service.pixels)),
       cssPerCanvas = Math.hypot(ctm.a, ctm.b),
-      level = Math.max(
-        MIN_LEVEL,
-        Math.min(service.maxLevel, levelFor(cssPerCanvas * Math.min(devicePixelRatio || 1, MAX_PIXEL_RATIO))),
-      );
+      pixelsPerCanvas = cssPerCanvas * Math.min(devicePixelRatio || 1, MAX_PIXEL_RATIO);
+    return Math.max(
+      MIN_LEVEL,
+      Math.min(
+        service.maxLevel,
+        Math.round(Math.log2((2 * WORLD * canvasPerMetre * pixelsPerCanvas) / service.pixels)),
+      ),
+    );
+  };
 
-    const size = (2 * WORLD) / 2 ** level,
+  // asks for a level's tiles in view, and `margin` tiles past it on every side
+  const ask = ({ ctm, left, right, top, bottom }, level, margin) => {
+    const service = SERVICES[basemap],
+      toCanvas = ctm.inverse(),
+      size = (2 * WORLD) / 2 ** level,
       screen = ([x, y]) => new DOMPoint(x, y).matrixTransform(ctm),
-      corners = [
+      viewCorners = [
         [left, top],
         [right, top],
         [right, bottom],
@@ -183,12 +211,12 @@ export function startEsriTiles(svg, stage) {
         const p = new DOMPoint(x, y).matrixTransform(toCanvas);
         return toMerc([p.x, p.y]);
       }),
-      us = corners.map((c) => c[0]),
-      vs = corners.map((c) => c[1]),
-      x0 = Math.floor((Math.min(...us) + WORLD) / size),
-      x1 = Math.floor((Math.max(...us) + WORLD) / size),
-      y0 = Math.floor((WORLD - Math.max(...vs)) / size),
-      y1 = Math.floor((WORLD - Math.min(...vs)) / size);
+      us = viewCorners.map((c) => c[0]),
+      vs = viewCorners.map((c) => c[1]),
+      x0 = Math.floor((Math.min(...us) + WORLD) / size) - margin,
+      x1 = Math.floor((Math.max(...us) + WORLD) / size) + margin,
+      y0 = Math.floor((WORLD - Math.max(...vs)) / size) - margin,
+      y1 = Math.floor((WORLD - Math.min(...vs)) / size) + margin;
     for (let y = y0; y <= y1; y++)
       for (let x = x0; x <= x1; x++) {
         const id = `${basemap}/${level}/${y}/${x}`;
@@ -201,17 +229,68 @@ export function startEsriTiles(svg, stage) {
           [x, y + 1],
         ].map(([tx, ty]) => screen(fromMerc([-WORLD + tx * size, WORLD - ty * size])));
         const px = points.map((p) => p.x),
-          py = points.map((p) => p.y);
-        if (Math.max(...px) < left || Math.min(...px) > right || Math.max(...py) < top || Math.min(...py) > bottom)
+          py = points.map((p) => p.y),
+          pad = margin * Math.hypot(points[1].x - points[0].x, points[1].y - points[0].y);
+        if (
+          Math.max(...px) < left - pad ||
+          Math.min(...px) > right + pad ||
+          Math.max(...py) < top - pad ||
+          Math.min(...py) > bottom + pad
+        )
           continue;
         asked.add(id);
         addTile(level, x, y, size, service);
       }
   };
 
+  // hides what can't be seen: levels finer than the current one, and tiles more than a screen out of view. Coarser levels
+  // stay, as what shows until the current level's tiles arrive. No tile is asked for here, so this costs nothing to run while
+  // the map moves.
+  const cull = () => {
+    const shown = view(),
+      own = levels.get(basemap)?.levels;
+    if (!shown || !own) return;
+    const { ctm, left, right, top, bottom } = shown,
+      level = levelFor(ctm),
+      padX = right - left,
+      padY = bottom - top;
+    own.forEach((group, l) => {
+      group.style.display = l > level ? "none" : "";
+      if (l > level) return;
+      for (const image of group.children) {
+        const points = corners.get(image).map(([x, y]) => new DOMPoint(x, y).matrixTransform(ctm)),
+          px = points.map((p) => p.x),
+          py = points.map((p) => p.y),
+          far =
+            Math.max(...px) < left - padX ||
+            Math.min(...px) > right + padX ||
+            Math.max(...py) < top - padY ||
+            Math.min(...py) > bottom + padY,
+          display = far ? "none" : "";
+        if (image.style.display !== display) image.style.display = display;
+      }
+    });
+  };
+
+  const update = () => {
+    const shown = view();
+    if (!shown) return;
+    const level = levelFor(shown.ctm),
+      backdrop = Math.max(MIN_LEVEL, level - BACKDROP);
+    // the backdrop first, so it arrives first; with a tile to spare on every side, it also covers about a screen around the view
+    if (backdrop < level) ask(shown, backdrop, 1);
+    ask(shown, level, 0);
+    cull();
+  };
+
   const refresh = () => {
     clearTimeout(timer);
     timer = setTimeout(update, SETTLE);
+    // tiles seen before come back while the map moves, without waiting for it to settle
+    cullTimer ??= setTimeout(() => {
+      cullTimer = null;
+      cull();
+    }, CULL_EVERY);
   };
   stage.addEventListener("scroll", refresh, { passive: true });
   const resize = new ResizeObserver(refresh);
@@ -230,6 +309,7 @@ export function startEsriTiles(svg, stage) {
     },
     stop() {
       clearTimeout(timer);
+      clearTimeout(cullTimer);
       stage.removeEventListener("scroll", refresh);
       resize.disconnect();
       changes.disconnect();
