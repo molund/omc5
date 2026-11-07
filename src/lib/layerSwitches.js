@@ -130,7 +130,9 @@ const PROGRESS_CSS =
   PROGRESS_COLOUR +
   " !important}" +
   // white where the number sits on a span in the progress colour; every other number looks as it does in the other views
-  "#map text.ccnumber.cc.on-reached{fill:#ffffff !important}";
+  "#map text.ccnumber.cc.on-reached{fill:#ffffff !important}" +
+  // the steel spans' arrows take their span numbers' colour in every view, except light where the span is in the progress colour
+  "#map text.n.guideway.steel-hwy15.reached{fill:#eeeeee !important}";
 /**
  * What each switch shows in progress-chart mode, as CSS selectors (whether it shows is still up to the layer's own
  * display rule).
@@ -245,6 +247,9 @@ export function layerCss(state) {
     r +=
       "#map .guideway.unfinished{opacity:0.45 !important}" +
       "#map text.ccnumber.on-unfinished{fill:#000000 !important;stroke:#ffffff !important;stroke-width:1.5 !important;stroke-linejoin:round !important;paint-order:stroke !important}";
+  // an arrow on a span that isn't finished yet stays hidden whatever the guideway and arrows switches say (gantryProgress.js
+  // takes the class off as the span is finished)
+  r += "#map .arrow-pending{display:none !important}";
   r += ".gantry{display:" + (state.gantry ? "inline" : "none") + " !important}";
   if (state.progress) {
     r += PROGRESS_CSS;
