@@ -11,6 +11,7 @@ entries:
   - 2026-11-07T08:15-07:00:
       span: 38
       stage: supports started
+      note-to-self: "The sideways support is behind the front support. The gantry hasn’t backed up to pick up the front support yet."
   - 2026-11-06T22:00-07:00:
       span: 38
       stage: hangers down
