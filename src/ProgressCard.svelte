@@ -34,7 +34,8 @@
   // Enter/Space
   const TIPS = $derived({
     span: "<strong>The span the Clayton Clipper is currently working on.</strong> Its colour changes on the map once all the segments are hung.",
-    ahead: "<strong>Built ahead by mobile cranes.</strong> Counted when the gantry passes.",
+    ahead:
+      "<strong>Built ahead by mobile cranes.</strong> Parallel guideways count as one position. Single guideways do not count.",
     total: "<strong>Route total.</strong> Parallel guideways count as one position.",
     percent: ui.gantry
       ? `<strong>${ui.gantry.span} \u00f7 ${ui.gantry.total}.</strong> Excludes the ${ui.gantry.ahead} built ahead.`
