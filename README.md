@@ -60,13 +60,7 @@ reads only that velocity from `desk.yaml`, when it's built, for the progress car
 
 ## Velocity calculation
 
-The progress card's velocity (spans per week) is worked out by the Status Desk and written on every push into
-`desk.yaml` as `spans-per-week`, with its values at the check-ins of the past 96 hours in the `spans-per-week-previous`
-list, newest first, each with the span and stage it was timed by; `status.yaml` has a copy of `spans-per-week`, the
-figure the card shows. When the site is built, `trackside/prerender.js` draws that list and the figure now as
-`velocity.svg` (`src/lib/velocityChart.js`), a tiny chart beside the figure: no labels, its y axis zoomed to the values,
-green when the latest is above the earliest, red below.
-How it's calculated, and every assumption it makes, is in
+How the Clayton Clipper's velocity (spans per week) is calculated, and every assumption it makes, is in
 [VELOCITY.md](https://github.com/molund/omc5-admin/blob/main/src/lib/VELOCITY.md) in the Status Desk's repo.
 
 ## License
