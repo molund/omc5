@@ -4,7 +4,7 @@
 #   stage: the step of the gantry's cycle it had reached by then (see docs/gantry-cycle.md), one of:
 #     arrived at span, hanging started, hung, gluing started, glued,
 #     post-tensioning started, cables down, hangers down, supports started
-#   note-to-self: a memo, one line
+#   note: a memo, one line
 # Every entry about the gantry has a stage, and one that marks its span hung is at "hung" or later. A time stamp can match a
 # note or follow-up in status.yaml, or stand alone (a step seen with no post about it).
 # the Clayton Clipper's velocity, written by the Status Desk on every push: spans per week, from how far the gantry got in
@@ -47,11 +47,11 @@ entries:
   - 2026-11-07T10:45-07:00:
       span: 38
       stage: supports started
-      note-to-self: "They are hooking up the front lifting jacks to the forward support. It hasn’t moved yet."
+      note: "They are hooking up the front lifting jacks to the forward support. It hasn’t moved yet."
   - 2026-11-07T08:15-07:00:
       span: 38
       stage: supports started
-      note-to-self: "The sideways support is behind the front support. The gantry hasn’t backed up to pick up the front support yet."
+      note: "The sideways support is behind the front support. The gantry hasn’t backed up to pick up the front support yet."
   - 2026-11-06T22:00-07:00:
       span: 38
       stage: hangers down
@@ -61,11 +61,11 @@ entries:
   - 2026-11-06T08:00-07:00:
       span: 38
       stage: post-tensioning started
-      note-to-self: "The eastbound main line at span 35 was installed last night"
+      note: "The eastbound main line at span 35 was installed last night"
   - 2026-11-05T21:30-07:00:
       span: 38
       stage: gluing started
-      note-to-self: "6/12 segments glued"
+      note: "6/12 segments glued"
   - 2026-11-05T17:15-07:00:
       span: 38
       stage: hung
@@ -75,7 +75,7 @@ entries:
   - 2026-11-04T12:30-07:00:
       span: 37
       stage: post-tensioning started
-      note-to-self: "Fully glued. Hangers and cables are still up. Post tensioning in progress."
+      note: "Fully glued. Hangers and cables are still up. Post tensioning in progress."
   - 2026-11-03T20:30-07:00:
       span: 37
       stage: hung
