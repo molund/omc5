@@ -71,11 +71,8 @@ How it's calculated, and every assumption it makes, is in
 
 ## License
 
-The code is under the [MIT License](LICENSE). Two kinds of images in `public/images/` aren't covered by it:
-
-- the aerial images (`aerial-base.jpg` and `aerial-zoom-*.jpg`), Apple Maps screenshots that belong to Apple and its
-  imagery providers
-- the Clayton Clipper logo (`logo.png`), which belongs to the Surrey Langley SkyTrain project
+The code is under the [MIT License](LICENSE). The aerial images in `public/images/` (`aerial-base.jpg` and
+`aerial-zoom-*.jpg`) aren't covered by it: they're Apple Maps screenshots that belong to Apple and its imagery providers.
 
 The Esri basemaps (Esri World Imagery and Esri's road maps), offered in the SFMSF aerial view, load from Esri as the map
 is viewed and are credited on the map; they aren't in this repository.
