@@ -49,19 +49,19 @@ Not used by the site itself. `data/` is an open dataset (CC0) of the guideway su
 pillars and spans from 166 St to 184 St, exported from the drawing as GeoJSON. See
 [data/README.md](data/README.md) for the files, how they were made and how to update them.
 
-## Status Desk
+## Leash Log
 
-Progress updates are posted with the Clipper Status Desk, the site's admin app: an iPhone app Mike uses on walks with
+Progress updates are posted with the Clipper Leash Log, the site's admin app: an iPhone app Mike uses on walks with
 Piper to post updates from the construction site as they happen. It lives in its own repo,
 [molund/omc5-admin](https://github.com/molund/omc5-admin), and also runs as an artifact in the Claude app, which is only
 used when making changes to the app from the Claude iPhone app. It edits `status.yaml` and keeps its own records in
-`desk.yaml` (the steps of the Clipper's cycle and notes to self), which it turns into the Clipper's velocity. The site
-reads only that velocity from `desk.yaml`, when it's built, for the progress card's chart.
+`gantry-cycles.yaml` (the steps of the Clipper's cycle and notes to self), which it turns into the Clipper's velocity. The site
+reads only that velocity from `gantry-cycles.yaml`, when it's built, for the progress card's chart.
 
 ## Velocity calculation
 
 How the Clayton Clipper's velocity (spans per week) is calculated, and every assumption it makes, is in
-[VELOCITY.md](https://github.com/molund/omc5-admin/blob/main/src/lib/VELOCITY.md) in the Status Desk's repo.
+[VELOCITY.md](https://github.com/molund/omc5-admin/blob/main/src/lib/VELOCITY.md) in the Leash Log's repo.
 
 ## License
 

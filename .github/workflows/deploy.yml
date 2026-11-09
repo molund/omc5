@@ -4,7 +4,7 @@ name: Deploy to GitHub Pages
 # the API (a repository_dispatch "set-status" event, with any of span, hung and note in client_payload; complete, hung's
 # old name, still works). Those runs update status.yaml: the time is set to now (BC time, UTC−7, nearest quarter hour)
 # and any values given override the file's. The change is committed to main, and the site is rebuilt and deployed. A
-# "desk-pushed" repository_dispatch, sent by desk.yml after it lands the Status Desk's commits on main, only rebuilds
+# "desk-pushed" repository_dispatch, sent by desk.yml after it lands the Leash Log's commits on main, only rebuilds
 # and deploys.
 on:
   push:
