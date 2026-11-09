@@ -1,7 +1,7 @@
-name: Land Status Desk changes
+name: Land Leash Log changes
 
-# The Status Desk (molund/omc5-admin) pushes its changes to the desk branch, with Mike's fine-grained token (Contents:
-# read and write on this repo only): one commit per change, by "Mike Olund (Status Desk)", on top of main. This checks
+# The Leash Log (molund/omc5-admin) pushes its changes to the desk branch, with Mike's fine-grained token (Contents:
+# read and write on this repo only): one commit per change, by "Mike Olund (Leash Log)", on top of main. This checks
 # that the commits only change status.yaml and desk.yaml and add photos (.github/scripts/check_desk.py), formats and
 # builds the site, then moves main up to the branch (a fast-forward, so the commits land as they are). A push made with
 # the built-in token doesn't start other workflows, so it then starts the deploy with a "desk-pushed"

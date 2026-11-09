@@ -33,7 +33,7 @@ Then stage 6: the gantry launches.
 
 ## For the velocity
 
-The Status Desk tags each entry in `desk.yaml`, by time stamp, with the one step the gantry had reached by then (`stage:`):
+The Leash Log tags each entry in `desk.yaml`, by time stamp, with the one step the gantry had reached by then (`stage:`):
 `arrived at span`, `hanging started`, `hung`, `gluing started`, `glued`, `post-tensioning started`, `cables down`,
 `hangers down`, `supports started`. A tag means the step had happened by that time, so the earliest tag
 for a span is the best time known for it. Every entry about the gantry has one, and a span marked as hung is at `hung` at

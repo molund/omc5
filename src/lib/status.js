@@ -68,7 +68,7 @@ import { anchor } from "./comments.js";
  * @property {Date|null} updated When status.yaml was last updated.
  * @property {number|null} span The span the Clayton Clipper's gantry is on.
  * @property {boolean} complete Whether that span is complete.
- * @property {string|null} spansPerWeek The Clayton Clipper's velocity, as the Status Desk writes it ("2.83"): how far it got
+ * @property {string|null} spansPerWeek The Clayton Clipper's velocity, as the Leash Log writes it ("2.83"): how far it got
  *   in the last week, in spans.
  * @property {Note|null} latest The newest status update (not a post).
  * @property {string} note The newest status update's text, or "".
@@ -290,7 +290,7 @@ function parse(src) {
     span: out.span ? +out.span : null,
     // `hung:` in status.yaml (`complete:` before Nov. 6, 2026, still read)
     complete: (out.hung ?? out.complete) === "true",
-    // the velocity the Status Desk writes on every push (a copy of desk.yaml's, whose earlier values the chart is drawn
+    // the velocity the Leash Log writes on every push (a copy of desk.yaml's, whose earlier values the chart is drawn
     // from), as written, or null (`spans_per_week`, on Nov. 7, 2026, still read)
     spansPerWeek: out["spans-per-week"] ?? out.spans_per_week ?? null,
     // the newest status update (not a post), or null

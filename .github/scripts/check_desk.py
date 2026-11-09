@@ -1,4 +1,4 @@
-"""Check the Status Desk's commits on the desk branch before they land on main (see .github/workflows/desk.yml).
+"""Check the Leash Log's commits on the desk branch before they land on main (see .github/workflows/desk.yml).
 
 The branch must be main plus one or more commits, none of them a merge, each of which only changes status.yaml or
 desk.yaml, or adds or replaces photos in public/images/sorry-im-a-shitty-photographer/. Every photo it touches must be a

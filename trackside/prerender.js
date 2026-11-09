@@ -163,7 +163,7 @@ writeFileSync(
 );
 console.log(`prerendered Trackside: ${pages} page(s), ${status.history.length} updates`);
 
-// dist/velocity.svg, the progress card's velocity chart, from the velocity the Status Desk keeps in desk.yaml (the only part
+// dist/velocity.svg, the progress card's velocity chart, from the velocity the Leash Log keeps in desk.yaml (the only part
 // of desk.yaml the site reads); with too little to draw, there's no file, and the card shows no chart
 const chart = velocityChart(velocityPoints(readFileSync("desk.yaml", "utf8")));
 if (chart) writeFileSync("dist/velocity.svg", chart);

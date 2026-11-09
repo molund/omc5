@@ -26,7 +26,7 @@
   const COMMENTS = newest ? `${TRACKSIDE}?post=${newest.slug}&comments` : TRACKSIDE;
   let activity = $state(null);
   if (newest && current) fetchCounts().then((c) => (activity = c[term(newest.time)] ?? null));
-  // the velocity the Status Desk writes, how far the gantry got in the last week, and its chart, drawn when the site is
+  // the velocity the Leash Log writes, how far the gantry got in the last week, and its chart, drawn when the site is
   // built (trackside/prerender.js); a new address for each update, so a browser doesn't show an old one, and none shown
   // when there isn't one (too few values yet, or `npm run dev`, which doesn't draw it)
   const pace = status.spansPerWeek;

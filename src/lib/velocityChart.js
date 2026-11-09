@@ -1,5 +1,5 @@
 // The progress card's velocity chart, drawn when the site is built (trackside/prerender.js writes it as dist/velocity.svg):
-// a tiny line, like a stock's in Apple's Stocks app, of the spans per week the Status Desk keeps in desk.yaml, from its
+// a tiny line, like a stock's in Apple's Stocks app, of the spans per week the Leash Log keeps in desk.yaml, from its
 // earlier values to the figure now. The desk's card preview draws the same (chartFor in its src/lib/card.js); keep the two
 // alike. Plain JS, no Svelte, so the build can run it.
 

@@ -6,7 +6,7 @@ span: 39
 # whether all that span's segments are hung. The map draws it hung; the progress card counts the span either way.
 hung: false
 # the Clayton Clipper's velocity in spans per week, a copy of desk.yaml's (where its earlier values are), written by the
-# Status Desk on every push
+# Leash Log on every push
 spans-per-week: 2.83
 # Notes, newest first: a time stamp and a title, then a summary, and optionally `photo` (file in
 # public/images/sorry-im-a-shitty-photographer/, caption), `block` (more paragraphs and photos) and `follow-up` (later
