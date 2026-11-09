@@ -101,6 +101,9 @@ notes:
     follow-up:
       - 2026-10-31T11:45-07:00:
           summary: "Six segments have been hung. There is a long line of semi trucks carrying the rest of the segments."
+  - 2026-10-31: "I’m not the only crazy person"
+    summary: "Check out the latest [drone footage](https://youtu.be/NLeJw_DD878?si=5NC294sdGHnHd7wX) by @RainCityInfrastructure on YouTube."
+    post: true
   - 2026-10-30T12:45-07:00: "Clayton Clipper construction update for Friday, Oct. 30, 2026"
     summary: "The Clayton Clipper has started moving its supports, getting ready to move from span 35 to span 36."
     follow-up:
