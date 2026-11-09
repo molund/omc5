@@ -42,6 +42,9 @@ entries:
       span: 39
       stage: hanging started
       note: "6/12 spans hung"
+  - 2026-11-07T18:00-07:00:
+      span: 39
+      stage: arrived at span
   - 2026-11-07T14:45-07:00:
       span: 39
       stage: arrived at span
@@ -56,9 +59,15 @@ entries:
   - 2026-11-06T22:00-07:00:
       span: 38
       stage: hangers down
+  - 2026-11-06T18:00-07:00:
+      span: 38
+      stage: cables down
   - 2026-11-06T17:30-07:00:
       span: 38
       stage: cables down
+  - 2026-11-06T08:45-07:00:
+      span: 38
+      stage: post-tensioning started
   - 2026-11-06T08:00-07:00:
       span: 38
       stage: post-tensioning started
@@ -86,12 +95,24 @@ entries:
   - 2026-11-03T07:15-07:00:
       span: 36
       stage: supports started
+  - 2026-11-02T20:30-07:00:
+      span: 36
+      stage: cables down
   - 2026-11-02T17:45-07:00:
       span: 36
       stage: cables down
   - 2026-11-02T09:15-07:00:
       span: 36
       stage: post-tensioning started
+  - 2026-10-31T16:15-07:00:
+      span: 36
+      stage: hung
+  - 2026-10-31T15:45-07:00:
+      span: 36
+      stage: hung
+  - 2026-10-31T15:15-07:00:
+      span: 36
+      stage: hung
   - 2026-10-31T14:00-07:00:
       span: 36
       stage: hung
