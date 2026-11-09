@@ -84,7 +84,7 @@ Each update is a note: its time stamp and its title on one line, then indented u
 - Summaries, paragraphs and captions can have links, `[text](https://…)` (or an address on this site, `/about/` or
   `?post=…`), and bold, `**text**` or `__text__`; `src/lib/inline.js` reads them. No other markdown: anything else shows
   as typed. Link previews and image descriptions get the plain text, and the comment threads get the links in full.
-- Notes to self aren't here: they're in `desk.yaml`, the Leash Log's file, which the site doesn't read. (The reader
+- Notes to self aren't here: they're in `gantry-cycles.yaml`, the Leash Log's file, which the site doesn't read. (The reader
   still skips a `note-to-self:` line, so an old one would never be shown.)
 - `follow-up:` — later, time-stamped additions, shown as a list under the update. Each has its own
   `summary:`, `photo:` and `block:`, like the update. The card shows only the newest follow-up's

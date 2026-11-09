@@ -11,7 +11,7 @@
 //     photo:
 //       file: span-36.jpg
 //       caption: "Its own caption, separate from the note"
-// a note to self is in desk.yaml now, not here; this reader skips a `note-to-self:` line all the same, so one is never shown
+// a note to self is in gantry-cycles.yaml now, not here; this reader skips a `note-to-self:` line all the same, so one is never shown
 // optionally more blocks, paragraphs and photos, indented under it (shown after the summary and its photo on the Trackside page
 // and in its thread; the card shows only the summary):
 //     block:
@@ -123,7 +123,7 @@ function parse(src) {
   const out = {},
     notes = [],
     // the "- time: value" lists under a key above `notes:`, kept apart so they aren't taken for notes (the velocity's
-    // earlier values were one on Nov. 7, 2026; they're in desk.yaml now)
+    // earlier values were one on Nov. 7, 2026; they're in gantry-cycles.yaml now)
     lists = {};
   // "block" after a `block:` line, whose "- …" lines are paragraphs and photos
   let list = null,
@@ -290,7 +290,7 @@ function parse(src) {
     span: out.span ? +out.span : null,
     // `hung:` in status.yaml (`complete:` before Nov. 6, 2026, still read)
     complete: (out.hung ?? out.complete) === "true",
-    // the velocity the Leash Log writes on every push (a copy of desk.yaml's, whose earlier values the chart is drawn
+    // the velocity the Leash Log writes on every push (a copy of gantry-cycles.yaml's, whose earlier values the chart is drawn
     // from), as written, or null (`spans_per_week`, on Nov. 7, 2026, still read)
     spansPerWeek: out["spans-per-week"] ?? out.spans_per_week ?? null,
     // the newest status update (not a post), or null

@@ -4,7 +4,7 @@
 //   dist/trackside/page/2/index.html …   the older ones, 10 a page
 // dist/sitemap.xml, every page for search engines, and dist-ssr/threads.json, each update's comment thread title and
 // body, for .github/scripts/sync_discussions.py, so status.yaml is read in one place (lib/status.js). And
-// dist/velocity.svg, the progress card's velocity chart, from desk.yaml (lib/velocityChart.js).
+// dist/velocity.svg, the progress card's velocity chart, from gantry-cycles.yaml (lib/velocityChart.js).
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { render } from "svelte/server";
@@ -163,8 +163,8 @@ writeFileSync(
 );
 console.log(`prerendered Trackside: ${pages} page(s), ${status.history.length} updates`);
 
-// dist/velocity.svg, the progress card's velocity chart, from the velocity the Leash Log keeps in desk.yaml (the only part
-// of desk.yaml the site reads); with too little to draw, there's no file, and the card shows no chart
-const chart = velocityChart(velocityPoints(readFileSync("desk.yaml", "utf8")));
+// dist/velocity.svg, the progress card's velocity chart, from the velocity the Leash Log keeps in gantry-cycles.yaml (the only part
+// of gantry-cycles.yaml the site reads); with too little to draw, there's no file, and the card shows no chart
+const chart = velocityChart(velocityPoints(readFileSync("gantry-cycles.yaml", "utf8")));
 if (chart) writeFileSync("dist/velocity.svg", chart);
-console.log(chart ? "drew the velocity chart" : "no velocity chart: too few values in desk.yaml");
+console.log(chart ? "drew the velocity chart" : "no velocity chart: too few values in gantry-cycles.yaml");

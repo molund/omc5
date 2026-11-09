@@ -55,8 +55,8 @@ Progress updates are posted with the Clipper Leash Log, the site's admin app: an
 Piper to post updates from the construction site as they happen. It lives in its own repo,
 [molund/omc5-admin](https://github.com/molund/omc5-admin), and also runs as an artifact in the Claude app, which is only
 used when making changes to the app from the Claude iPhone app. It edits `status.yaml` and keeps its own records in
-`desk.yaml` (the steps of the Clipper's cycle and notes to self), which it turns into the Clipper's velocity. The site
-reads only that velocity from `desk.yaml`, when it's built, for the progress card's chart.
+`gantry-cycles.yaml` (the steps of the Clipper's cycle and notes to self), which it turns into the Clipper's velocity. The site
+reads only that velocity from `gantry-cycles.yaml`, when it's built, for the progress card's chart.
 
 ## Velocity calculation
 

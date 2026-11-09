@@ -1,5 +1,5 @@
 // The progress card's velocity chart, drawn when the site is built (trackside/prerender.js writes it as dist/velocity.svg):
-// a tiny line, like a stock's in Apple's Stocks app, of the spans per week the Leash Log keeps in desk.yaml, from its
+// a tiny line, like a stock's in Apple's Stocks app, of the spans per week the Leash Log keeps in gantry-cycles.yaml, from its
 // earlier values to the figure now. The desk's card preview draws the same (chartFor in its src/lib/card.js); keep the two
 // alike. Plain JS, no Svelte, so the build can run it.
 
@@ -8,9 +8,9 @@
 const COLOURS = { up: ["#4f8a6b", "#7fbf9a"], down: ["#b0564f", "#e0928b"], flat: ["#5b6670", "#a3adb5"] };
 
 /**
- * The chart's points from desk.yaml, oldest first: its `spans-per-week-previous` list (newest first in the file, each
- * "- time: value"), then `spans-per-week` at its newest entry's time stamp. None when desk.yaml has no velocity.
- * @param {string} text desk.yaml
+ * The chart's points from gantry-cycles.yaml, oldest first: its `spans-per-week-previous` list (newest first in the file, each
+ * "- time: value"), then `spans-per-week` at its newest entry's time stamp. None when gantry-cycles.yaml has no velocity.
+ * @param {string} text gantry-cycles.yaml
  * @returns {{ time: Date, value: number }[]}
  */
 export function velocityPoints(text) {

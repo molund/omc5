@@ -5,7 +5,7 @@ updated: 2026-11-07T18:00-07:00
 span: 39
 # whether all that span's segments are hung. The map draws it hung; the progress card counts the span either way.
 hung: false
-# the Clayton Clipper's velocity in spans per week, a copy of desk.yaml's (where its earlier values are), written by the
+# the Clayton Clipper's velocity in spans per week, a copy of gantry-cycles.yaml's (where its earlier values are), written by the
 # Leash Log on every push
 spans-per-week: 2.83
 # Notes, newest first: a time stamp and a title, then a summary, and optionally `photo` (file in
@@ -19,7 +19,7 @@ spans-per-week: 2.83
 #   otherwise it has no text and a Trackside button. Set `updated` to the newest time stamp.
 # - Summaries, paragraphs and captions can have links, [text](https://…), and bold, **text** or __text__ (src/lib/inline.js).
 #   No other markdown: anything else shows as typed.
-# Notes to self, and the steps of the gantry's cycle seen at each time stamp, are in desk.yaml, not here.
+# Notes to self, and the steps of the gantry's cycle seen at each time stamp, are in gantry-cycles.yaml, not here.
 notes:
   - 2026-11-07T14:45-07:00: "Clayton Clipper construction update for Saturday, Nov. 7, 2026"
     summary: "Made it to span 39!"
