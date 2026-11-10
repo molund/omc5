@@ -21,12 +21,15 @@ spans-per-week: 2.88
 #   No other markdown: anything else shows as typed.
 # Notes to self, and the steps of the gantry's cycle seen at each time stamp, are in gantry-cycles.yaml, not here.
 notes:
-  - 2026-11-09: "Gantry animation is live"
+  - 2026-11-09: "Clayton Clipper SkyTrain gantry animation"
+    slug: gantry-animation-is-live
     summary: "The feature nobody asked for is finally here!"
     post: true
     photo:
       file: 2026-11-09-gantry-animation-is-live-2.jpg
-      caption: "Click the “animate” link to watch the Clayton Clipper go all the way to Rona."
+      caption: "Click the “animate” link on the “Layers” area of the side panel to watch the Clayton Clipper go all the way to Rona."
+    block:
+      - "I still haven't actually seen the Clayton Clipper crawl over the Highway 15 girders yet, so for now that part of the SVG animation is just doing the same thing it does everywhere else."
   - 2026-11-07T14:45-07:00: "Clayton Clipper construction update for Saturday, Nov. 7, 2026"
     summary: "Made it to span 39!"
     photo:
