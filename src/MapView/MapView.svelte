@@ -44,8 +44,16 @@
 
   /** While the gantry animates, how much of the stage's width or height the whole gantry fills. */
   const GANTRY_FILL = 0.7;
-  /** How close to the stage's edge, as a share of its size, the gantry can come before the map scrolls to follow it. */
-  const FOLLOW_MARGIN = 0.05;
+  /**
+   * How far the gantry's middle can drift from the stage's middle before the map starts to follow it: a central zone, as a
+   * share of the stage's width and height (0.3: the middle 30%).
+   */
+  const FOLLOW_ZONE = 0.3;
+  /**
+   * How quickly the map catches up, in milliseconds: each frame it scrolls part of the way back, so it covers about two
+   * thirds of the gap in this time and eases out as it closes. Bigger is gentler.
+   */
+  const FOLLOW_TIME = 700;
 
   /**
    * Zooms so the whole gantry (its trusses and all four supports) fills GANTRY_FILL of the stage, and centres it.
@@ -76,35 +84,37 @@
   }
 
   /**
-   * Keeps the gantry on screen while it animates: every frame, if any part of it has come within FOLLOW_MARGIN of the
-   * stage's edge (or gone past it), the map scrolls smoothly to put it back in the middle. It stops when the animation
-   * does. Zooming and panning by hand still work; the map only follows when the gantry would go off screen.
+   * Keeps the gantry in view while it animates, like a camera following it: every frame, if its middle has drifted out of
+   * the central FOLLOW_ZONE of the stage, the map scrolls part of the way back towards it (the part depends on the time
+   * since the last frame, so it is as smooth at any frame rate). Far off, it catches up quickly; close in, it eases to a
+   * stop. It stops when the animation does. Zooming and panning by hand still work: the map then follows from there.
    * @returns {void}
    */
   function followGantry() {
-    let scrollingUntil = 0;
+    let last = 0,
+      // the scroll position kept as a fraction: browsers round scrollLeft and scrollTop to whole pixels, which would lose
+      // the small steps of a slow follow
+      x = stage.scrollLeft,
+      y = stage.scrollTop;
+    // how far past the zone's edge `off` is, keeping its sign (0 inside the zone)
+    const beyond = (off, half) => Math.sign(off) * Math.max(0, Math.abs(off) - half);
     const look = (now) => {
       if (!ui.gantryPlaying) return;
-      const gantry = els.svg?.querySelector("#clayton-clipper"),
-        box = gantry?.getBoundingClientRect(),
-        frame = stage.getBoundingClientRect(),
-        mx = frame.width * FOLLOW_MARGIN,
-        my = frame.height * FOLLOW_MARGIN;
-      // one smooth scroll at a time: the next look waits for it to finish
-      if (
-        box?.width &&
-        now > scrollingUntil &&
-        (box.left < frame.left + mx ||
-          box.right > frame.right - mx ||
-          box.top < frame.top + my ||
-          box.bottom > frame.bottom - my)
-      ) {
-        stage.scrollBy({
-          left: box.left + box.width / 2 - (frame.left + frame.width / 2),
-          top: box.top + box.height / 2 - (frame.top + frame.height / 2),
-          behavior: "smooth",
-        });
-        scrollingUntil = now + 800;
+      const step = last ? Math.min(100, now - last) : 16;
+      last = now;
+      // panned or zoomed by hand since the last frame: follow from where the map is now
+      if (Math.abs(stage.scrollLeft - x) > 1 || Math.abs(stage.scrollTop - y) > 1) {
+        x = stage.scrollLeft;
+        y = stage.scrollTop;
+      }
+      const box = els.svg?.querySelector("#clayton-clipper")?.getBoundingClientRect(),
+        frame = stage.getBoundingClientRect();
+      if (box?.width) {
+        const part = 1 - Math.exp(-step / FOLLOW_TIME);
+        x += part * beyond(box.left + box.width / 2 - (frame.left + frame.width / 2), (frame.width * FOLLOW_ZONE) / 2);
+        y += part * beyond(box.top + box.height / 2 - (frame.top + frame.height / 2), (frame.height * FOLLOW_ZONE) / 2);
+        stage.scrollLeft = x;
+        stage.scrollTop = y;
       }
       requestAnimationFrame(look);
     };
