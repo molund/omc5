@@ -191,6 +191,20 @@
     showAerialPhotos(els.svg, basemapShown && basemap === "apple", ui.view === "sfmsfAerial");
     if (basemapShown) esriTiles.setBasemap(basemap);
   });
+  // Vertical turns the span numbers 90 degrees clockwise, each about its own point, on top of the turn map.svg gives it
+  // (the drawing's own turn is kept in data-turn, and put back in every other view)
+  $effect(() => {
+    const vertical = layers.vertical;
+    if (!ui.ready) return;
+    els.svg.querySelectorAll("text.ccnumber").forEach((t) => {
+      t.dataset.turn ??= t.getAttribute("transform") ?? "";
+      const turn = vertical
+        ? `${t.dataset.turn} rotate(90 ${t.getAttribute("x")} ${t.getAttribute("y")})`.trim()
+        : t.dataset.turn;
+      if (turn) t.setAttribute("transform", turn);
+      else t.removeAttribute("transform");
+    });
+  });
   // each Esri basemap has its own credit; one that is still being read doesn't replace a later pick's
   $effect(() => {
     if (!isEsri(basemap)) return;
@@ -288,12 +302,13 @@
       setView(SFMSF_AERIAL_VB);
       fillView();
     } else if (layers.horizontal) horizontalView();
+    else if (layers.vertical) horizontalView(true);
     // the views a reload can come back to (the page itself opens on Progress)
     else if (ui.view === "fullAerial") {
       setView(FULL_VB);
       fillView();
     }
-    // a view or span named in the address (?view=aerial, ?view=horizontal, ?view=omc, ?view=omc-drawing, ?span=36) wins over
+    // a view or span named in the address (?view=aerial, ?view=horizontal, ?view=vertical, ?view=omc, ?view=omc-drawing, ?span=36) wins over
     // the opening view
     applyAddress();
 
@@ -421,8 +436,8 @@
 </script>
 
 <div class="relative min-h-0 min-w-0">
-  <!-- where the map zooms itself on a pinch (Safari), the browser mustn't zoom the page with it; Horizontal: the white
-       canvas backing would show past the turned photo, so it goes -->
+  <!-- where the map zooms itself on a pinch (Safari), the browser mustn't zoom the page with it; Horizontal and Vertical:
+       the white canvas backing would show past the turned photo, so it goes -->
   <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
   <main
     class={[
@@ -432,7 +447,7 @@
       "[&_#canvas-backing]:fill-black",
       drag ? "cursor-grabbing" : "cursor-grab",
       !safariPinch && "touch-pinch-zoom",
-      layers.horizontal && "[&_#canvas-backing]:hidden",
+      (layers.horizontal || layers.vertical) && "[&_#canvas-backing]:hidden",
     ]}
     bind:this={stage}
     onpointerdown={pointerdown}

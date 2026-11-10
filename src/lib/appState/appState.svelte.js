@@ -54,6 +54,7 @@ const drawingSwitches = () => ({
   progress: false,
   sfmsfAerial: false,
   horizontal: false,
+  vertical: false,
   sfmsfDrawing: true,
 });
 /**
@@ -110,7 +111,7 @@ function applyFullAerial() {
 }
 
 /** The keys of the View group: radio-style switches, one on at a time. */
-const VIEWS = ["progress", "sfmsfAerial", "fullAerial", "horizontal", "sfmsfDrawing"];
+const VIEWS = ["progress", "sfmsfAerial", "fullAerial", "horizontal", "vertical", "sfmsfDrawing"];
 
 /**
  * A layer checkbox was ticked or unticked. Picking a view sets up that view's switches, canvas and card.
@@ -129,19 +130,22 @@ export function setSwitch(k, on) {
     // the progress card opens every time Progress is picked, even if it was closed before; no other view opens it
     ui.cardHidden = k !== "progress";
   }
-  // picking any other view leaves Horizontal (Full image does so through fullAerialDefaults)
-  if (on && (k === "sfmsfDrawing" || k === "progress" || k === "sfmsfAerial")) layers.horizontal = false;
+  // picking any other view leaves Horizontal and Vertical (Full image does so through fullAerialDefaults)
+  if (on && (k === "sfmsfDrawing" || k === "progress" || k === "sfmsfAerial")) {
+    layers.horizontal = false;
+    layers.vertical = false;
+  }
   if (k === "fullAerial") {
     applyFullAerial();
-  } else if (k === "horizontal" && on) {
+  } else if ((k === "horizontal" || k === "vertical") && on) {
     if (layers.sfmsfDrawing) exitDrawing();
     if (layers.sfmsfAerial) exitSfmsfAerial();
     drawingSnap = null;
     Object.assign(layers, fullAerialDefaults, {
-      horizontal: true,
+      [k]: true,
       progress: false,
     });
-    horizontalView();
+    horizontalView(k === "vertical");
   } else if (k === "sfmsfDrawing") {
     if (on && layers.sfmsfAerial) {
       // from SFMSF aerial only the aerial photo gives way to the greenbelt; every other switch stays as it is
@@ -234,7 +238,8 @@ export function showAll() {
       k !== "progress" &&
       k !== "sfmsfDrawing" &&
       k !== "sfmsfAerial" &&
-      k !== "horizontal"
+      k !== "horizontal" &&
+      k !== "vertical"
     )
       layers[k] = true;
   });
@@ -251,7 +256,7 @@ export function showAll() {
 function viewSwitches(view) {
   if (view === "progress") return defaults;
   if (view === "fullAerial") return fullAerialDefaults;
-  if (view === "horizontal") return { ...fullAerialDefaults, horizontal: true, progress: false };
+  if (view === "horizontal" || view === "vertical") return { ...fullAerialDefaults, [view]: true, progress: false };
   if (view === "sfmsfDrawing") return drawingSwitches();
   return { ...sfmsfAerialDefaults, ...sfmsfAerialReference() }; // SFMSF aerial
 }
