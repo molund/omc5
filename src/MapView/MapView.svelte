@@ -3,7 +3,7 @@
   import mapSvg from "../assets/map.svg?raw";
   import { startEsriTiles, esriCredit, defaultCredit, isEsri } from "./esriTiles.js";
   import { showAerialPhotos } from "./aerialImages.js";
-  import { DRAW_VB, SFMSF_AERIAL_VB, FULL_VB } from "../lib/layerSwitches.js";
+  import { DRAW_VB, SFMSF_AERIAL_VB, FULL_VB, GANTRY_LENGTH } from "../lib/layerSwitches.js";
   import { tagBuiltBy } from "./builtBy.js";
   import { gantryProgress } from "./gantryProgress.js";
   import { placeGantry } from "../lib/placeGantry.js";
@@ -42,6 +42,8 @@
 
   /** While the gantry animates, how much of the stage's width or height the whole gantry fills. */
   const GANTRY_FILL = 0.7;
+  /** The space kept around the gantry on every side when it is framed, as a share of its length (GANTRY_LENGTH). */
+  const GANTRY_PAD = 0.08;
   /**
    * How far the gantry's middle can drift from the stage's middle before the map starts to follow it: a central zone, as a
    * share of the stage's width and height (0.3: the middle 30%).
@@ -57,9 +59,9 @@
   const ZOOM_TIME = 1200;
 
   /**
-   * Zooms smoothly so the whole gantry (its trusses and all four supports) fills GANTRY_FILL of the stage, and centres
-   * it, over ZOOM_TIME. Each frame zooms about the gantry's middle, so it stays put while the map grows around it, and
-   * scrolls it the matching part of the way to the stage's middle. The zoom grows by the same ratio each step (it is
+   * Zooms smoothly so the whole gantry (its trusses and all four supports), with GANTRY_PAD of its length added on every
+   * side, fills GANTRY_FILL of the stage, and centres it, over ZOOM_TIME. Each frame zooms about the gantry's middle, so
+   * it stays put while the map grows around it, and scrolls it the matching part of the way to the stage's middle. The zoom grows by the same ratio each step (it is
    * eased between the two zooms' logarithms), so it looks steady rather than speeding up as it gets closer.
    * @returns {Promise<void>} Done when the zoom is.
    */
@@ -67,9 +69,18 @@
     const gantry = els.svg?.querySelector("#clayton-clipper"),
       box = gantry?.getBoundingClientRect();
     if (!box?.width) return Promise.resolve();
+    // the padding on each side, on the screen: GANTRY_PAD of the gantry's length in canvas units, times the screen pixels
+    // to a canvas unit now
+    const m = els.svg.getScreenCTM(),
+      pad = GANTRY_PAD * GANTRY_LENGTH * Math.hypot(m.a, m.b);
     const frame = stage.getBoundingClientRect(),
       from = ui.zoom,
-      to = from * Math.min((frame.width * GANTRY_FILL) / box.width, (frame.height * GANTRY_FILL) / box.height),
+      to =
+        from *
+        Math.min(
+          (frame.width * GANTRY_FILL) / (box.width + 2 * pad),
+          (frame.height * GANTRY_FILL) / (box.height + 2 * pad),
+        ),
       // where the gantry's middle starts, from the stage's middle
       start = offCentre(gantry);
     // ease in and out, gently: a sine curve, whose fastest moment (the middle) is only about 1.6 times its average speed
