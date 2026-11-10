@@ -13,6 +13,7 @@
     fitZoom,
     isFit,
     centreView,
+    animateGantry,
   } from "./lib/appState/appState.svelte.js";
 
   // each press of zoom in or out changes the zoom by this factor, about the middle of the stage; Fit's zoom depends on the
@@ -135,13 +136,7 @@
                   class="border-0 bg-transparent p-0 text-xs text-(--link) underline disabled:cursor-default disabled:text-(--mute) disabled:no-underline"
                   disabled={ui.gantryPlaying}
                   onclick={() => {
-                    if (!layers.gantry) setSwitch("gantry", true);
-                    setSwitch("arrows", false);
-                    setSwitch("spanNumbers", false);
-                    setSwitch("guideway", true);
-                    setSwitch("unfinished", false);
-                    setSwitch("supports", true);
-                    ui.gantryPlaying = true;
+                    animateGantry();
                     if (ui.phone) ui.collapsed = true;
                   }}>{ui.gantryPlaying ? "animating…" : "animate"}</button
                 >
