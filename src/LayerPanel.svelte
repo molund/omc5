@@ -128,12 +128,13 @@
               </label>
               {#if k === "gantry"}
                 <!-- a small link that plays the gantry's moves span by span to the last span (MapView does the moving):
-                     only while the gantry is on (turning it off stops and resets the moves); on a phone it closes the
-                     menu so the map shows -->
+                     it ticks the Gantry box first if it's off (turning it off again stops and resets the moves), and on a
+                     phone closes the menu so the map shows -->
                 <button
                   class="border-0 bg-transparent p-0 text-xs text-(--link) underline disabled:cursor-default disabled:text-(--mute) disabled:no-underline"
-                  disabled={ui.gantryPlaying || !layers.gantry}
+                  disabled={ui.gantryPlaying}
                   onclick={() => {
+                    if (!layers.gantry) setSwitch("gantry", true);
                     ui.gantryPlaying = true;
                     if (ui.phone) ui.collapsed = true;
                   }}>{ui.gantryPlaying ? "animating…" : "animate"}</button
