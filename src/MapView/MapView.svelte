@@ -2,6 +2,7 @@
   import { onMount, untrack } from "svelte";
   import mapSvg from "../assets/map.svg?raw";
   import { startEsriTiles, esriCredit, defaultCredit, isEsri } from "./esriTiles.js";
+  import { evenSupportBorders } from "./supportBorders.js";
   import { showAerialPhotos } from "./aerialImages.js";
   import { DRAW_VB, SFMSF_AERIAL_VB, FULL_VB, GANTRY_LENGTH } from "../lib/layerSwitches.js";
   import { tagBuiltBy } from "./builtBy.js";
@@ -189,6 +190,7 @@
     framedZoom = null;
   let edgeTimer;
   let esriTiles = $state(null);
+  let supportBorders = null;
   // the basemap shown: the dropdown's pick, in every aerial view (each view starts on its own: basemapFor). One at a time, whatever the zoom
   const basemap = $derived(ui.basemap);
   let credit = $state(defaultCredit(basemap));
@@ -302,6 +304,8 @@
     svg.append(turn);
     els.turn = turn;
     esriTiles = startEsriTiles(svg, stage);
+    // the gantry's support beams get borders of even width (see supportBorders.js)
+    supportBorders = evenSupportBorders(svg, stage);
     ui.ready = true;
     svg.style.width = ui.zoom + "%";
     if (layers.progress) {
@@ -412,6 +416,7 @@
     return () => {
       clearTimeout(edgeTimer);
       esriTiles?.stop();
+      supportBorders?.stop();
       resize.disconnect();
       stage.removeEventListener("scroll", scrolled);
       document.removeEventListener("prerenderingchange", reframe);
