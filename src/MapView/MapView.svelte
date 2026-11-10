@@ -3,7 +3,7 @@
   import mapSvg from "../assets/map.svg?raw";
   import { startEsriTiles, esriCredit, defaultCredit, isEsri } from "./esriTiles.js";
   import { showAerialPhotos } from "./aerialImages.js";
-  import { DRAW_VB, SFMSF_AERIAL_VB, FULL_VB } from "../lib/layerSwitches.js";
+  import { DRAW_VB, SFMSF_AERIAL_VB, FULL_VB, GANTRY_LENGTH } from "../lib/layerSwitches.js";
   import { tagBuiltBy } from "./builtBy.js";
   import { gantryProgress } from "./gantryProgress.js";
   import { placeGantry } from "../lib/placeGantry.js";
@@ -30,8 +30,129 @@
   // the layer panel's "animate" link: the gantry moves on span by span to the last span, then the link comes back. Only
   // ui.gantryPlaying is watched; the moves themselves are untracked, so nothing they read starts them again.
   $effect(() => {
-    if (ui.gantryPlaying) untrack(() => playToEnd(els.svg).finally(() => (ui.gantryPlaying = false)));
+    if (!ui.gantryPlaying) return;
+    untrack(() => {
+      // the next frame, once the Gantry layer the link may have just turned on is showing (a hidden gantry has no size)
+      requestAnimationFrame(() => {
+        frameGantry().then(followGantry);
+      });
+      playToEnd(els.svg).finally(() => (ui.gantryPlaying = false));
+    });
   });
+
+  /** While the gantry animates, how much of the stage's width or height the whole gantry fills. */
+  const GANTRY_FILL = 0.7;
+  /** The space kept around the gantry on every side when it is framed, as a share of its length (GANTRY_LENGTH). */
+  const GANTRY_PAD = 0.08;
+  /**
+   * How far the gantry's middle can drift from the stage's middle before the map starts to follow it: a central zone, as a
+   * share of the stage's width and height (0.3: the middle 30%).
+   */
+  const FOLLOW_ZONE = 0.3;
+  /**
+   * How quickly the map catches up, in milliseconds: each frame it scrolls part of the way back, so it covers about two
+   * thirds of the gap in this time and eases out as it closes. Bigger is gentler.
+   */
+  const FOLLOW_TIME = 700;
+
+  /** How long the zoom onto the gantry takes when an animation starts, in milliseconds. */
+  const ZOOM_TIME = 1200;
+
+  /**
+   * Zooms smoothly so the whole gantry (its trusses and all four supports), with GANTRY_PAD of its length added on every
+   * side, fills GANTRY_FILL of the stage, and centres it, over ZOOM_TIME. Each frame zooms about the gantry's middle, so
+   * it stays put while the map grows around it, and scrolls it the matching part of the way to the stage's middle. The zoom grows by the same ratio each step (it is
+   * eased between the two zooms' logarithms), so it looks steady rather than speeding up as it gets closer.
+   * @returns {Promise<void>} Done when the zoom is.
+   */
+  function frameGantry() {
+    const gantry = els.svg?.querySelector("#clayton-clipper"),
+      box = gantry?.getBoundingClientRect();
+    if (!box?.width) return Promise.resolve();
+    // the padding on each side, on the screen: GANTRY_PAD of the gantry's length in canvas units, times the screen pixels
+    // to a canvas unit now
+    const m = els.svg.getScreenCTM(),
+      pad = GANTRY_PAD * GANTRY_LENGTH * Math.hypot(m.a, m.b);
+    const frame = stage.getBoundingClientRect(),
+      from = ui.zoom,
+      to =
+        from *
+        Math.min(
+          (frame.width * GANTRY_FILL) / (box.width + 2 * pad),
+          (frame.height * GANTRY_FILL) / (box.height + 2 * pad),
+        ),
+      // where the gantry's middle starts, from the stage's middle
+      start = offCentre(gantry);
+    // ease in and out, gently: a sine curve, whose fastest moment (the middle) is only about 1.6 times its average speed
+    const ease = (t) => (1 - Math.cos(Math.PI * t)) / 2;
+    return new Promise((done) => {
+      let t0 = null;
+      const step = (now) => {
+        t0 ??= now;
+        const t = Math.min(1, (now - t0) / ZOOM_TIME),
+          e = ease(t);
+        // zoom about the gantry's middle, where it is on the screen now
+        const b = gantry.getBoundingClientRect();
+        setZoom(from * (to / from) ** e, b.left + b.width / 2, b.top + b.height / 2);
+        // then scroll so it is (1 − e) of its starting distance from the stage's middle
+        const now_ = offCentre(gantry);
+        stage.scrollLeft += now_.x - start.x * (1 - e);
+        stage.scrollTop += now_.y - start.y * (1 - e);
+        if (t < 1 && ui.gantryPlaying) requestAnimationFrame(step);
+        else done();
+      };
+      requestAnimationFrame(step);
+    });
+  }
+
+  /**
+   * How far an element's middle is from the stage's middle, on the screen.
+   * @param {Element} el
+   * @returns {{ x: number, y: number }}
+   */
+  function offCentre(el) {
+    const b = el.getBoundingClientRect(),
+      f = stage.getBoundingClientRect();
+    return { x: b.left + b.width / 2 - (f.left + f.width / 2), y: b.top + b.height / 2 - (f.top + f.height / 2) };
+  }
+
+  /**
+   * Keeps the gantry in view while it animates, like a camera following it: every frame, if its middle has drifted out of
+   * the central FOLLOW_ZONE of the stage, the map scrolls part of the way back towards it (the part depends on the time
+   * since the last frame, so it is as smooth at any frame rate). Far off, it catches up quickly; close in, it eases to a
+   * stop. It stops when the animation does. Zooming and panning by hand still work: the map then follows from there.
+   * @returns {void}
+   */
+  function followGantry() {
+    let last = 0,
+      // the scroll position kept as a fraction: browsers round scrollLeft and scrollTop to whole pixels, which would lose
+      // the small steps of a slow follow
+      x = stage.scrollLeft,
+      y = stage.scrollTop;
+    // how far past the zone's edge `off` is, keeping its sign (0 inside the zone)
+    const beyond = (off, half) => Math.sign(off) * Math.max(0, Math.abs(off) - half);
+    const look = (now) => {
+      if (!ui.gantryPlaying) return;
+      const step = last ? Math.min(100, now - last) : 16;
+      last = now;
+      // panned or zoomed by hand since the last frame: follow from where the map is now
+      if (Math.abs(stage.scrollLeft - x) > 1 || Math.abs(stage.scrollTop - y) > 1) {
+        x = stage.scrollLeft;
+        y = stage.scrollTop;
+      }
+      const box = els.svg?.querySelector("#clayton-clipper")?.getBoundingClientRect(),
+        frame = stage.getBoundingClientRect();
+      if (box?.width) {
+        const part = 1 - Math.exp(-step / FOLLOW_TIME);
+        x += part * beyond(box.left + box.width / 2 - (frame.left + frame.width / 2), (frame.width * FOLLOW_ZONE) / 2);
+        y += part * beyond(box.top + box.height / 2 - (frame.top + frame.height / 2), (frame.height * FOLLOW_ZONE) / 2);
+        stage.scrollLeft = x;
+        stage.scrollTop = y;
+      }
+      requestAnimationFrame(look);
+    };
+    requestAnimationFrame(look);
+  }
   // picking another view preset stops the gantry's moves and puts the drawing back as status.yaml has it (the moves give
   // up, and the "animate" link comes back when playToEnd ends)
   let viewWas = ui.view;
