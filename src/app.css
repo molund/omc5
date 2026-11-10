@@ -3,6 +3,7 @@
 @import "tailwindcss" source(none);
 @source "../about/index.html";
 @source "../play/index.html";
+@source "../404.html";
 @source "../trackside/*.svelte";
 @source "./*.svelte";
 @source "./MapView/*.svelte";
