@@ -12,11 +12,13 @@ the real text, and then Svelte takes over in the browser for the comments and co
 ## Pages
 
 - `/trackside/` — the newest 10 updates, then `/trackside/page/2/`, `/trackside/page/3/` and so on.
-  Every update is on one of these pages; there are no individual content pages.
-- `/trackside/<slug>/` — a permanent permalink for an update. Its generated page redirects to the page
-  where the update currently appears, with its comments open. That destination can change as new updates
-  are added, but the permalink stays the same. Its Open Graph title and description use the update's title and
-  summary; when the update has a photo, the first one is used as the preview image.
+  Every update is on one of these pages.
+- `/trackside/<slug>/` — an update's own page, at a permanent address: just that update, with its comments. It's
+  listed in `sitemap.xml` for search engines. The only link to it is the Copy permalink icon by each update's heading, a
+  real link for search engines and anyone without JavaScript; a plain click copies the address instead (a cmd-, ctrl-,
+  shift- or middle-click opens it). It links only to `/trackside/`, never to the page of updates the update is on. Its title,
+  description and Open Graph tags use the update's title (or date) and summary; when the update has a photo, the first
+  one is the preview image.
 - An update is addressed by its slug: `/trackside/?post=clipper-completes-span-36` scrolls to it (the page's script
   calls `scrollIntoView()`, there are no hash anchors), and its date heading does the same. Add `&comments` to open
   its comments too. The old `#slug` links still work.
@@ -52,8 +54,8 @@ Shared with the map, in `src/`:
 1. `vite build` — the normal build of the map and of `index.html` here.
 2. `vite build --ssr trackside/prerender.js` — builds the prerender step itself, so it can import
    the Svelte page and `status.yaml` the way the site does.
-3. `node dist-ssr/prerender.js` — renders `TracksidePage.svelte` for every list page, using the built
-   `dist/trackside/index.html` as the template. It writes:
+3. `node dist-ssr/prerender.js` — renders `TracksidePage.svelte` for every list page and every update's own page,
+   using the built `dist/trackside/index.html` as the template. It writes:
    - `dist/trackside/…/index.html` — the pages
    - `dist/sitemap.xml` — every page on the site, with when it last changed
    - `dist-ssr/threads.json` — each update's thread title and text, for the comment threads
@@ -99,7 +101,8 @@ don't show). Photos go in
 
 Each page of updates gets its own `<title>`, description, canonical link, and Open Graph and Twitter tags.
 
-- The pages use a fixed description and the newest photo; an update gets no preview of its own.
+- The pages of updates use a fixed description and the newest photo; an update's own page uses its title, summary and
+  photo.
 - `sitemap.xml` is for search engines: submit https://clayton-clipper.olund.ca/sitemap.xml once
   in Google Search Console, and Google rereads it from then on.
 - On the pages, the date links carry an `aria-label` with the date and the title, for screen
