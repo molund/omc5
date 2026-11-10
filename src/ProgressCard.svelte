@@ -3,7 +3,7 @@
   import { fade } from "svelte/transition";
   import { cubicIn } from "svelte/easing";
   import { PROGRESS_COLOUR } from "./lib/layerSwitches.js";
-  import { ui } from "./lib/appState/appState.svelte.js";
+  import { ui, stopAnimation } from "./lib/appState/appState.svelte.js";
   import { status, asOf } from "./lib/status.js";
   import { inline } from "./lib/inline.js";
   import { term, fetchCounts, SITE } from "./lib/comments.js";
@@ -122,6 +122,16 @@
   >
 {/snippet}
 
+<!-- while the gantry animates, in every view, a Stop button left of the top-right corner's button; the progress card, drawn
+     after it, opens over it. It ends the animation (the layer panel's "animate" link starts it again) -->
+{#if ui.gantry && ui.gantryPlaying}
+  <button
+    class="absolute top-3 right-13 z-5 p-1.5 shadow-float"
+    title="Stop the animation"
+    aria-label="Stop the animation"
+    onclick={stopAnimation}><Icon kind="stop" /></button
+  >
+{/if}
 {#if ui.gantry && ui.cardHidden && ui.gantryPlaying && ui.view !== "progress"}
   <a
     class="absolute top-3 right-3 z-5 block rounded-md border border-(--line) bg-(--panel) p-1.5 leading-none text-(--ink) shadow-float [touch-action:manipulation] hover:border-(--accent) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent)"

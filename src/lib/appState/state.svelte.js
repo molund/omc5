@@ -68,6 +68,8 @@ const view = saved?.view ?? (defaults.progress ? "progress" : defaults.sfmsfDraw
  * - gantry: the Clayton Clipper's span number out of the total, and the spans ahead of it.
  * - gantryPlaying: set by animateGantry() (the layer panel's "animate" link, or ?animate=true in the address): MapView
  *   then plays the gantry's moves span by span to the last span, and clears it when they're done.
+ * - gantryStops: counts the times the Stop button has stopped an animation (stopAnimation()), so the address can drop
+ *   ?animate=true.
  */
 export const ui = $state({
   view,
@@ -84,6 +86,7 @@ export const ui = $state({
   ready: false,
   gantry: null,
   gantryPlaying: false,
+  gantryStops: 0,
 });
 
 /**

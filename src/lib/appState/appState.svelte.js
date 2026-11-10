@@ -222,6 +222,17 @@ export function animateGantry() {
   ui.gantryPlaying = true;
 }
 
+/**
+ * Stops the gantry animation (the Stop button): MapView stops the moves and puts the drawing back, as turning the gantry
+ * off does, and ?animate=true leaves the address. The layer panel's "animate" link starts it again.
+ * @returns {void}
+ */
+export function stopAnimation() {
+  if (!ui.gantryPlaying) return;
+  ui.gantryPlaying = false;
+  ui.gantryStops++;
+}
+
 /** The zoom a span link opens at, as the number the zoom readout shows (a multiple of Fit). */
 const SPAN_ZOOM = 20;
 
