@@ -16,6 +16,7 @@
     setView,
     setZoom,
     fitZoom,
+    centreOn,
     holdMap,
     isFit,
     fillView,
@@ -30,8 +31,85 @@
   // the layer panel's "animate" link: the gantry moves on span by span to the last span, then the link comes back. Only
   // ui.gantryPlaying is watched; the moves themselves are untracked, so nothing they read starts them again.
   $effect(() => {
-    if (ui.gantryPlaying) untrack(() => playToEnd(els.svg).finally(() => (ui.gantryPlaying = false)));
+    if (!ui.gantryPlaying) return;
+    untrack(() => {
+      // the next frame, once the Gantry layer the link may have just turned on is showing (a hidden gantry has no size)
+      requestAnimationFrame(() => {
+        frameGantry();
+        followGantry();
+      });
+      playToEnd(els.svg).finally(() => (ui.gantryPlaying = false));
+    });
   });
+
+  /** While the gantry animates, how much of the stage's width or height the whole gantry fills. */
+  const GANTRY_FILL = 0.7;
+  /** How close to the stage's edge, as a share of its size, the gantry can come before the map scrolls to follow it. */
+  const FOLLOW_MARGIN = 0.05;
+
+  /**
+   * Zooms so the whole gantry (its trusses and all four supports) fills GANTRY_FILL of the stage, and centres it.
+   * @returns {void}
+   */
+  function frameGantry() {
+    const gantry = els.svg?.querySelector("#clayton-clipper"),
+      box = gantry?.getBoundingClientRect();
+    if (!box?.width) return;
+    const frame = stage.getBoundingClientRect(),
+      grow = Math.min((frame.width * GANTRY_FILL) / box.width, (frame.height * GANTRY_FILL) / box.height);
+    setZoom(ui.zoom * grow, box.left + box.width / 2, box.top + box.height / 2);
+    const middle = middleOnCanvas(gantry);
+    centreOn(middle.x, middle.y);
+  }
+
+  /**
+   * The middle of an element's box on the screen, as a point on the canvas (viewBox units), for centreOn().
+   * @param {Element} el
+   * @returns {DOMPoint}
+   */
+  function middleOnCanvas(el) {
+    const b = el.getBoundingClientRect(),
+      m = els.svg.getScreenCTM();
+    return new DOMPoint(b.left + b.width / 2, b.top + b.height / 2).matrixTransform(
+      new DOMMatrix([m.a, m.b, m.c, m.d, m.e, m.f]).inverse(),
+    );
+  }
+
+  /**
+   * Keeps the gantry on screen while it animates: every frame, if any part of it has come within FOLLOW_MARGIN of the
+   * stage's edge (or gone past it), the map scrolls smoothly to put it back in the middle. It stops when the animation
+   * does. Zooming and panning by hand still work; the map only follows when the gantry would go off screen.
+   * @returns {void}
+   */
+  function followGantry() {
+    let scrollingUntil = 0;
+    const look = (now) => {
+      if (!ui.gantryPlaying) return;
+      const gantry = els.svg?.querySelector("#clayton-clipper"),
+        box = gantry?.getBoundingClientRect(),
+        frame = stage.getBoundingClientRect(),
+        mx = frame.width * FOLLOW_MARGIN,
+        my = frame.height * FOLLOW_MARGIN;
+      // one smooth scroll at a time: the next look waits for it to finish
+      if (
+        box?.width &&
+        now > scrollingUntil &&
+        (box.left < frame.left + mx ||
+          box.right > frame.right - mx ||
+          box.top < frame.top + my ||
+          box.bottom > frame.bottom - my)
+      ) {
+        stage.scrollBy({
+          left: box.left + box.width / 2 - (frame.left + frame.width / 2),
+          top: box.top + box.height / 2 - (frame.top + frame.height / 2),
+          behavior: "smooth",
+        });
+        scrollingUntil = now + 800;
+      }
+      requestAnimationFrame(look);
+    };
+    requestAnimationFrame(look);
+  }
   // picking another view preset stops the gantry's moves and puts the drawing back as status.yaml has it (the moves give
   // up, and the "animate" link comes back when playToEnd ends)
   let viewWas = ui.view;
