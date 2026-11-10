@@ -16,7 +16,6 @@
     setView,
     setZoom,
     fitZoom,
-    centreOn,
     holdMap,
     isFit,
     fillView,
@@ -35,8 +34,7 @@
     untrack(() => {
       // the next frame, once the Gantry layer the link may have just turned on is showing (a hidden gantry has no size)
       requestAnimationFrame(() => {
-        frameGantry();
-        followGantry();
+        frameGantry().then(followGantry);
       });
       playToEnd(els.svg).finally(() => (ui.gantryPlaying = false));
     });
@@ -55,32 +53,56 @@
    */
   const FOLLOW_TIME = 700;
 
+  /** How long the zoom onto the gantry takes when an animation starts, in milliseconds. */
+  const ZOOM_TIME = 1200;
+
   /**
-   * Zooms so the whole gantry (its trusses and all four supports) fills GANTRY_FILL of the stage, and centres it.
-   * @returns {void}
+   * Zooms smoothly so the whole gantry (its trusses and all four supports) fills GANTRY_FILL of the stage, and centres
+   * it, over ZOOM_TIME. Each frame zooms about the gantry's middle, so it stays put while the map grows around it, and
+   * scrolls it the matching part of the way to the stage's middle. The zoom grows by the same ratio each step (it is
+   * eased between the two zooms' logarithms), so it looks steady rather than speeding up as it gets closer.
+   * @returns {Promise<void>} Done when the zoom is.
    */
   function frameGantry() {
     const gantry = els.svg?.querySelector("#clayton-clipper"),
       box = gantry?.getBoundingClientRect();
-    if (!box?.width) return;
+    if (!box?.width) return Promise.resolve();
     const frame = stage.getBoundingClientRect(),
-      grow = Math.min((frame.width * GANTRY_FILL) / box.width, (frame.height * GANTRY_FILL) / box.height);
-    setZoom(ui.zoom * grow, box.left + box.width / 2, box.top + box.height / 2);
-    const middle = middleOnCanvas(gantry);
-    centreOn(middle.x, middle.y);
+      from = ui.zoom,
+      to = from * Math.min((frame.width * GANTRY_FILL) / box.width, (frame.height * GANTRY_FILL) / box.height),
+      // where the gantry's middle starts, from the stage's middle
+      start = offCentre(gantry);
+    // ease in and out, gently: a sine curve, whose fastest moment (the middle) is only about 1.6 times its average speed
+    const ease = (t) => (1 - Math.cos(Math.PI * t)) / 2;
+    return new Promise((done) => {
+      let t0 = null;
+      const step = (now) => {
+        t0 ??= now;
+        const t = Math.min(1, (now - t0) / ZOOM_TIME),
+          e = ease(t);
+        // zoom about the gantry's middle, where it is on the screen now
+        const b = gantry.getBoundingClientRect();
+        setZoom(from * (to / from) ** e, b.left + b.width / 2, b.top + b.height / 2);
+        // then scroll so it is (1 − e) of its starting distance from the stage's middle
+        const now_ = offCentre(gantry);
+        stage.scrollLeft += now_.x - start.x * (1 - e);
+        stage.scrollTop += now_.y - start.y * (1 - e);
+        if (t < 1 && ui.gantryPlaying) requestAnimationFrame(step);
+        else done();
+      };
+      requestAnimationFrame(step);
+    });
   }
 
   /**
-   * The middle of an element's box on the screen, as a point on the canvas (viewBox units), for centreOn().
+   * How far an element's middle is from the stage's middle, on the screen.
    * @param {Element} el
-   * @returns {DOMPoint}
+   * @returns {{ x: number, y: number }}
    */
-  function middleOnCanvas(el) {
+  function offCentre(el) {
     const b = el.getBoundingClientRect(),
-      m = els.svg.getScreenCTM();
-    return new DOMPoint(b.left + b.width / 2, b.top + b.height / 2).matrixTransform(
-      new DOMMatrix([m.a, m.b, m.c, m.d, m.e, m.f]).inverse(),
-    );
+      f = stage.getBoundingClientRect();
+    return { x: b.left + b.width / 2 - (f.left + f.width / 2), y: b.top + b.height / 2 - (f.top + f.height / 2) };
   }
 
   /**
