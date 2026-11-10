@@ -202,8 +202,9 @@ export function gantryMoves(root, D, S) {
       const t = dot(sub(from, was.back), was.u) / dot(sub(was.front, was.back), was.u);
       let across = dot(sub(from, was.c), was.v);
       if (DOUBLE_GIRDER.has(S + rule.span)) {
-        // across the span, centred on the double girder: midway between the outer edges of its two girders
-        turn += 90;
+        // across the span, centred on the double girder: midway between the outer edges of its two girders. A quarter
+        // turn anticlockwise (−90, not +90: the other way round faces it backwards)
+        turn -= 90;
         const alongPos = (p) => dot(sub(p, now.back), now.u),
           lo = Math.min(alongPos(now.back), alongPos(now.front)),
           hi = Math.max(alongPos(now.back), alongPos(now.front));

@@ -429,8 +429,8 @@ export async function playGantry(svg) {
   // double girder span (DOUBLE_GIRDER). gantryMoves() turns it from how it lies now and adds the double girder's quarter
   // turn on top, so when it is already turned across now (span S − 1 is a double girder) that quarter turn is taken
   // back out once: fourthFinal is its true angle there, and fourthLengthwise the angle it would have lying lengthwise.
-  const acrossNow = DOUBLE_GIRDER.has(S - 1) ? 90 : 0,
-    acrossNext = DOUBLE_GIRDER.has(S) ? 90 : 0,
+  const acrossNow = DOUBLE_GIRDER.has(S - 1) ? -90 : 0,
+    acrossNext = DOUBLE_GIRDER.has(S) ? -90 : 0,
     fourthFinal = fourthAngle + N.fourth.turn - acrossNow,
     fourthLengthwise = fourthFinal - acrossNext;
 
