@@ -2,6 +2,7 @@
 // Open Graph tags in the HTML, for search engines and link previews:
 //   dist/trackside/index.html            the newest 10 updates
 //   dist/trackside/page/2/index.html …   the older ones, 10 a page
+//   dist/trackside/<slug>/index.html     each update on its own page (in the sitemap, not linked from the site)
 // dist/sitemap.xml, every page for search engines, and dist-ssr/threads.json, each update's comment thread title and
 // body, for .github/scripts/sync_discussions.py, so status.yaml is read in one place (lib/status.js). And
 // dist/velocity.svg, the progress card's velocity chart, from gantry-cycles.yaml (lib/velocityChart.js).
@@ -42,44 +43,12 @@ for (let p = 1; p <= pages; p++)
   await write(p === 1 ? "dist/trackside" : `dist/trackside/page/${p}`, {
     page: p,
   });
-for (const [i, n] of status.history.entries()) {
-  const page = Math.floor(i / PAGE_SIZE) + 1,
-    target = `/trackside/${page === 1 ? "" : `page/${page}/`}?post=${n.slug}&comments`,
-    permalink = `${SITE}trackside/${n.slug}/`,
-    image = n.photo || n.block.find((m) => m.photo)?.photo;
-  const escape = (value) =>
-    String(value).replace(
-      /[&<>"']/g,
-      (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c],
-    );
-  mkdirSync(`dist/trackside/${n.slug}`, { recursive: true });
-  writeFileSync(
-    `dist/trackside/${n.slug}/index.html`,
-    `<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="robots" content="noindex" />
-    <meta property="og:title" content="${escape(n.title)}" />
-    <meta property="og:description" content="${escape(plainText(n.summary))}" />
-    <meta property="og:type" content="article" />
-    <meta property="og:url" content="${escape(permalink)}" />
-    ${image ? `<meta property="og:image" content="${escape(new URL(image.src, SITE).href)}" />` : ""}
-    <title>Trackside permalink · Clayton Clipper Tracker</title>
-    <meta http-equiv="refresh" content="0;url=${target}" />
-    <script>location.replace(${JSON.stringify(target)});</script>
-  </head>
-  <body>
-    <noscript><a href="${target}">Open this update and its comments on Trackside.</a></noscript>
-  </body>
-</html>
-`,
-  );
-}
+// each update's own page, /trackside/<slug>/: just that update, with its own title, description and photo
+for (const n of status.history) await write(`dist/trackside/${n.slug}`, { slug: n.slug });
 
 // dist/sitemap.xml, for search engines (submitted in Google Search Console, since a project site can't have a robots.txt):
-// the map, the pages of updates and the About page, each with when it last changed (a page of updates, at its newest update
-// or follow-up; the map, at status.yaml's `updated`)
+// the map, the pages of updates, each update's own page and the About page, each with when it last changed (a page of
+// updates, at its newest update or follow-up; the map, at status.yaml's `updated`)
 const changed = (n) => n.followUps[0]?.time ?? n.time;
 const newest = (list) => new Date(Math.max(...list.map(changed)));
 const urls = [
@@ -88,6 +57,8 @@ const urls = [
     i === 0 ? `${SITE}trackside/` : `${SITE}trackside/page/${i + 1}/`,
     newest(status.history.slice(i * PAGE_SIZE, (i + 1) * PAGE_SIZE)),
   ]),
+  // each update's own page, at its newest follow-up or its own time
+  ...status.history.map((n) => [`${SITE}trackside/${n.slug}/`, changed(n)]),
   // the About page, which has no date of its own
   [`${SITE}about/`, null],
 ];

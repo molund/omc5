@@ -94,16 +94,30 @@
   const PAGE_SIZE = 10;
   const pages = Math.max(1, Math.ceil(status.history.length / PAGE_SIZE));
   const page = $derived(Math.min(Math.max(1, view.page || 1), pages));
-  const shown = $derived(status.history.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE));
+  // an update's own page, /trackside/<slug>/ ({ slug } as the view): just that update, listed in the sitemap but not linked
+  // from the site, and linking only to the first page of Trackside
+  const single = $derived(view.slug ? status.history.find((n) => n.slug === view.slug) : null);
+  const shown = $derived(single ? [single] : status.history.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE));
 
-  // what search engines and link previews show: the page's title, a fixed description, and the newest photo
+  // what search engines and link previews show: on a page of updates, the page's title, a fixed description, and the
+  // newest photo; on an update's own page, its title (or date), its summary, and its own photo
+  const singleTitle = $derived(single && (single.title || heading(single.time)));
   const title = $derived(
-    page > 1 ? `Trackside, page ${page} · Clayton Clipper Tracker` : "Trackside · Clayton Clipper Tracker",
+    single
+      ? `${singleTitle} · Clayton Clipper Tracker`
+      : page > 1
+        ? `Trackside, page ${page} · Clayton Clipper Tracker`
+        : "Trackside · Clayton Clipper Tracker",
   );
-  const description =
-    "Updates and photos from along the Surrey Langley SkyTrain guideway, following the Clayton Clipper gantry span by span.";
-  const image = status.history.find((n) => n.photo)?.photo;
-  const url = $derived(full(pageUrl(page)));
+  const description = $derived(
+    single
+      ? plainText(single.summary)
+      : "Updates and photos from along the Surrey Langley SkyTrain guideway, following the Clayton Clipper gantry span by span.",
+  );
+  const image = $derived(
+    single ? single.photo || single.block.find((m) => m.photo)?.photo : status.history.find((n) => n.photo)?.photo,
+  );
+  const url = $derived(full(single ? `${TRACKSIDE}${single.slug}/` : pageUrl(page)));
 
   // the slug of the update whose comments are open (one at a time, so the page stays light); a string, since $state would
   // wrap an update object in a proxy that never equals the original. ?post=<slug>&comments (the progress card's Comments
@@ -111,7 +125,11 @@
   let open = $state(null);
   let copied = $state(false);
   let copyTimer;
-  async function copyPermalink(n) {
+  // the permalink icon is a real link to the update's own page, for search engines and for anyone without JavaScript;
+  // a plain click copies the address instead, and a cmd-, ctrl-, shift- or middle-click still opens it
+  async function copyPermalink(e, n) {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+    e.preventDefault();
     try {
       await navigator.clipboard.writeText(full(`${TRACKSIDE}${n.slug}/`));
       copied = true;
@@ -157,8 +175,8 @@
   <meta name="description" content={description} />
   <link rel="canonical" href={url} />
   <meta property="og:site_name" content="Clayton Clipper Tracker" />
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="Trackside" />
+  <meta property="og:type" content={single ? "article" : "website"} />
+  <meta property="og:title" content={single ? singleTitle : "Trackside"} />
   <meta property="og:description" content={description} />
   <meta property="og:url" content={url} />
   {#if image}
@@ -229,12 +247,12 @@
           onclick={(e) => jumpTo(e, n.slug)}
           aria-label={n.title && !n.post ? `${heading(n.time)}: ${n.title}` : undefined}>{label(n)}</a
         >
-        <button
-          class="shrink-0 border-0 bg-transparent p-1 text-(--mute) hover:text-(--accent)"
-          type="button"
+        <a
+          class="shrink-0 p-1 text-(--mute) hover:text-(--accent)"
+          href="{TRACKSIDE}{n.slug}/"
           title="Copy permalink"
           aria-label="Copy permalink"
-          onclick={() => copyPermalink(n)}><Icon kind="link" /></button
+          onclick={(e) => copyPermalink(e, n)}><Icon kind="link" /></a
         >
       </h2>
       <!-- a post leads with its title, with just its date under it -->
@@ -305,7 +323,12 @@
        bold text, a button you can't press flat and faded, in GitHub's own colours, light and dark. On a phone: the
        buttons share the full width with a gap and are tall enough to tap, with no track behind them (a button you can't
        press keeps the track colour). -->
-  {#if pages > 1}
+  {#if single}
+    <!-- an update's own page links to the first page of Trackside, not to the page of updates it is on -->
+    <nav class="mx-auto mt-6 flex w-fit rounded-md bg-(--button-bg) phone:w-auto phone:bg-transparent">
+      <a class="pager-link" href={TRACKSIDE}>See all updates</a>
+    </nav>
+  {:else if pages > 1}
     <nav
       class="mx-auto mt-6 flex w-fit rounded-md bg-(--button-bg) phone:w-auto phone:gap-2 phone:bg-transparent"
       aria-label="Pages of updates"
