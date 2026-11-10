@@ -44,6 +44,9 @@ spans-per-week-previous:
     span: 38
     stage: hung
 entries:
+  - 2026-11-09T20:45-07:00:
+      span: 39
+      stage: post-tensioning started
   - 2026-11-09T13:15-07:00:
       span: 39
       stage: post-tensioning started
