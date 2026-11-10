@@ -613,3 +613,53 @@ export function stopGantry(svg) {
   placeGantry(svg);
   before = null;
 }
+
+/** The supports, as the Supports switch shows and hides them. */
+const SUPPORTS = 'rect.g, circle[fill="#D7D7D7"]';
+/** What counts as a span when the supports are moved below them. */
+const SPANS = "polygon.guideway";
+
+/**
+ * Where lowerSupports() took each support from, [element, parent, next sibling], in the drawing's order; empty when the
+ * supports are where map.svg has them.
+ * @type {Array<[Element, Node, Node|null]>}
+ */
+let lowered = [];
+
+/**
+ * Moves the supports below the spans, for while the gantry animates. Each support (or the group it is in, up to the
+ * group that also holds spans) goes just before the first spans that came ahead of it in the same group, without going
+ * past an aerial photo, so it stays above the photos and the roads. The geometry doesn't change: only the order the
+ * pieces are drawn in. raiseSupports() puts them back.
+ * @param {SVGSVGElement} svg The map's <svg>.
+ * @returns {void}
+ */
+export function lowerSupports(svg) {
+  if (lowered.length) return;
+  const units = new Set();
+  svg.querySelectorAll(SUPPORTS).forEach((el) => {
+    let unit = el;
+    while (unit.parentNode !== svg && !unit.parentNode.querySelector(SPANS)) unit = unit.parentNode;
+    if (unit.parentNode !== svg) units.add(unit);
+  });
+  for (const unit of units) {
+    let below = null;
+    for (let s = unit.previousElementSibling; s; s = s.previousElementSibling) {
+      if (s.matches("image") || s.querySelector("image")) break;
+      if (s.matches(SPANS) || s.querySelector(SPANS)) below = s;
+    }
+    if (!below) continue;
+    lowered.push([unit, unit.parentNode, unit.nextSibling]);
+    below.before(unit);
+  }
+}
+
+/**
+ * Puts the supports back where map.svg has them, above the spans (the last one moved goes back first, so every next
+ * sibling is already in its place).
+ * @returns {void}
+ */
+export function raiseSupports() {
+  for (const [el, parent, next] of lowered.reverse()) parent.insertBefore(el, next);
+  lowered = [];
+}
