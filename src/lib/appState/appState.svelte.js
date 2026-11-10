@@ -205,6 +205,23 @@ export function setBasemap(basemap) {
   ui.changed = true;
 }
 
+/**
+ * Starts the gantry animation (MapView plays it while ui.gantryPlaying is set): the Gantry box is ticked if it's off, the
+ * finished spans and supports are shown, and the unfinished spans, span numbers and arrows hidden. Used by the layer
+ * panel's "animate" link and by ?animate=true in the address.
+ * @returns {void}
+ */
+export function animateGantry() {
+  if (ui.gantryPlaying) return;
+  if (!layers.gantry) setSwitch("gantry", true);
+  setSwitch("arrows", false);
+  setSwitch("spanNumbers", false);
+  setSwitch("guideway", true);
+  setSwitch("unfinished", false);
+  setSwitch("supports", true);
+  ui.gantryPlaying = true;
+}
+
 /** The zoom a span link opens at, as the number the zoom readout shows (a multiple of Fit). */
 const SPAN_ZOOM = 20;
 
