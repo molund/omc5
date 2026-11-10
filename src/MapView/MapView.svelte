@@ -29,18 +29,30 @@
   let drag = $state(null);
   // the layer panel's "animate" link: the gantry moves on span by span to the last span (span 48 in the two SFMSF views),
   // then the link comes back. Only ui.gantryPlaying is watched; the moves themselves are untracked, so nothing they read
-  // starts them again.
+  // starts them again. `running` is whether a run is still under way, so the Stop button (which clears ui.gantryPlaying)
+  // can be told from a run that has reached its last span; `runs` keeps a stopped run's end from clearing a newer one.
+  let running = false,
+    runs = 0;
   $effect(() => {
     if (!ui.gantryPlaying) return;
     untrack(() => {
+      const run = ++runs;
+      running = true;
       // the next frame, once the Gantry layer the link may have just turned on is showing (a hidden gantry has no size)
       requestAnimationFrame(() => {
         frameGantry().then(followGantry);
       });
-      playToEnd(els.svg, layers.sfmsfDrawing || layers.sfmsfAerial ? 48 : undefined).finally(
-        () => (ui.gantryPlaying = false),
-      );
+      playToEnd(els.svg, layers.sfmsfDrawing || layers.sfmsfAerial ? 48 : undefined).finally(() => {
+        if (run !== runs) return;
+        running = false;
+        ui.gantryPlaying = false;
+      });
     });
+  });
+  // the Stop button clears ui.gantryPlaying while a run is under way: that stops the moves and puts the drawing back, as
+  // turning the gantry off does
+  $effect(() => {
+    if (!ui.gantryPlaying && running) untrack(() => stopGantry(els.svg));
   });
 
   // while the gantry animates, the supports are drawn below the spans; they go back above them when it stops

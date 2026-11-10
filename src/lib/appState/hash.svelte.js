@@ -26,11 +26,13 @@ let keepOthers = true;
 const placeKey = () => `${ui.view}|${ui.span}`;
 /**
  * Whether the address says ?animate=true: from when an animation starts (the "animate" link, or the address itself)
- * until another view or span is picked or the gantry is turned off (either stops it). A run that finishes leaves it on.
+ * until another view or span is picked, the gantry is turned off or the Stop button pressed (each stops it). A run that
+ * finishes leaves it on.
  */
 let animateInAddress = false,
   wasPlaying = false,
-  lastPlace = null;
+  lastPlace = null,
+  stopsWere = 0;
 
 /**
  * Switches to the view or span the address the page was opened with names, then, with ?animate=true (on its own, for
@@ -63,12 +65,15 @@ $effect.root(() => {
   $effect(() => {
     if (!ui.ready || typeof location === "undefined") return;
     const place = placeKey(),
-      playing = ui.gantryPlaying;
+      playing = ui.gantryPlaying,
+      stopsNow = ui.gantryStops;
     if (openedOn !== null && place !== openedOn) keepOthers = false;
-    // ?animate=true goes on when an animation starts, and off when another view or span is picked or the gantry turned
-    // off (a run stopped that way is still finishing, so `playing` can't be used for that)
+    // ?animate=true goes on when an animation starts, and off when another view or span is picked, the gantry turned
+    // off or the Stop button pressed (a run stopped that way is still finishing, so `playing` can't be used for that)
     if (playing && !wasPlaying) animateInAddress = true;
-    if ((lastPlace !== null && place !== lastPlace) || !layers.gantry) animateInAddress = false;
+    if ((lastPlace !== null && place !== lastPlace) || !layers.gantry || stopsNow !== stopsWere)
+      animateInAddress = false;
+    stopsWere = stopsNow;
     wasPlaying = playing;
     lastPlace = place;
     // always in this order: the view (or span), then ?animate, then any others the opening address had
