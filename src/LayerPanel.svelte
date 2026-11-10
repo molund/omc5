@@ -1,6 +1,7 @@
 <script>
   import { BASEMAPS, LAYERS, spanNumbersAvailable } from "./lib/layerSwitches.js";
   import Icon from "./Icon.svelte";
+  import { status } from "./lib/status.js";
   import { fly, slide } from "svelte/transition";
   import {
     layers,
@@ -127,7 +128,8 @@
                   onchange={(e) => change(e, k)}
                 />{label}
               </label>
-              {#if k === "gantry"}
+              <!-- no "animate" link once status.yaml has the gantry on the last span, 105: there's nowhere left to move it -->
+              {#if k === "gantry" && !(status.span >= 105)}
                 <!-- a small link that plays the gantry's moves span by span to the last span (MapView does the moving):
                      it ticks the Gantry box first if it's off (turning it off again stops and resets the moves), shows
                      the finished spans and supports and hides the unfinished spans, span numbers and arrows, and on a

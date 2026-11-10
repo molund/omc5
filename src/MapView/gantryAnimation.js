@@ -570,7 +570,7 @@ export async function playGantry(svg) {
  * @param {number} [last] The span to stop on.
  * @returns {Promise<void>}
  */
-export async function playToEnd(svg, last = 105) {
+export async function playToEnd(svg, last = 106) {
   const gantry = svg.querySelector("#clayton-clipper");
   if (!gantry) return;
   // the drawing as it is before the first move, for stopGantry() to put back: the span the gantry is on, and the classes
