@@ -7,7 +7,7 @@
   import { tagBuiltBy } from "./builtBy.js";
   import { gantryProgress } from "./gantryProgress.js";
   import { placeGantry } from "../lib/placeGantry.js";
-  import { playToEnd, stopGantry } from "./gantryAnimation.js";
+  import { playToEnd, stopGantry, lowerSupports, raiseSupports } from "./gantryAnimation.js";
   import { status } from "../lib/status.js";
   import {
     layers,
@@ -41,6 +41,13 @@
         () => (ui.gantryPlaying = false),
       );
     });
+  });
+
+  // while the gantry animates, the supports are drawn below the spans; they go back above them when it stops
+  $effect(() => {
+    if (!ui.ready) return;
+    if (ui.gantryPlaying) lowerSupports(els.svg);
+    else raiseSupports();
   });
 
   /** While the gantry animates, how much of the stage's width or height the whole gantry fills. */
