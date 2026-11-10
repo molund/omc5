@@ -1,5 +1,5 @@
 <script>
-  import { onMount } from "svelte";
+  import { onMount, untrack } from "svelte";
   import mapSvg from "../assets/map.svg?raw";
   import { startEsriTiles, esriCredit, defaultCredit, isEsri } from "./esriTiles.js";
   import { showAerialPhotos } from "./aerialImages.js";
@@ -7,6 +7,7 @@
   import { tagBuiltBy } from "./builtBy.js";
   import { gantryProgress } from "./gantryProgress.js";
   import { placeGantry } from "../lib/placeGantry.js";
+  import { playToEnd, stopGantry } from "./gantryAnimation.js";
   import { status } from "../lib/status.js";
   import {
     layers,
@@ -26,6 +27,20 @@
 
   let stage;
   let drag = $state(null);
+  // the layer panel's "animate" link: the gantry moves on span by span to the last span, then the link comes back. Only
+  // ui.gantryPlaying is watched; the moves themselves are untracked, so nothing they read starts them again.
+  $effect(() => {
+    if (ui.gantryPlaying) untrack(() => playToEnd(els.svg).finally(() => (ui.gantryPlaying = false)));
+  });
+  // picking another view preset stops the gantry's moves and puts the drawing back as status.yaml has it (the moves give
+  // up, and the "animate" link comes back when playToEnd ends)
+  let viewWas = ui.view;
+  $effect(() => {
+    const view = ui.view;
+    if (view === viewWas) return;
+    viewWas = view;
+    untrack(() => stopGantry(els.svg));
+  });
   let touchDrag = null;
   // whether the map is still where its view opened it, untouched by a pan or zoom on it (and the zoom the opening framing
   // set, so the zoom buttons count too): until then, a Progress map is framed again if the stage changes size (see the

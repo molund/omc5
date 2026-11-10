@@ -16,7 +16,7 @@ const SUPPORTS = {
  * Spans with two girders. The fourth support can't lie lengthwise on one of these, so on them it is turned across the span,
  * like the other supports, and centred across the double girder.
  */
-const DOUBLE_GIRDER = new Set([31, 43, 44, 45, 46, 47, 52, 53, 54]);
+export const DOUBLE_GIRDER = new Set([31, 43, 44, 45, 46, 47, 52, 53, 54]);
 
 /**
  * Anchors the Clayton Clipper gantry to the span it is working on. #clayton-clipper is drawn for span data-drawn-at; this
@@ -50,9 +50,54 @@ export function placeGantry(root) {
     if (g.dataset.drawnTransform == null) g.dataset.drawnTransform = g.getAttribute("transform") || "";
     else g.setAttribute("transform", g.dataset.drawnTransform);
   });
+  const found = gantryMoves(root, D, S);
+  if (!found) return;
+  const { moves, spans } = found;
+  const toRoot = ctm(root).inverse();
 
-  // getScreenCTM gives an SVGMatrix in some browsers, which DOMMatrix maths won't take
-  const ctm = (el) => DOMMatrix.fromMatrix(el.getScreenCTM());
+  groups.forEach((g) => {
+    const m = moves[g.dataset.anchor];
+    if (!m) return;
+    const T = new DOMMatrix().translate(m.to.x, m.to.y).rotate(m.turn).translate(-m.from.x, -m.from.y);
+    // the same move in the group's own (narrowed, rotated) frame
+    const P = toRoot.multiply(ctm(gantry)),
+      M = P.inverse().multiply(T).multiply(P);
+    g.setAttribute(
+      "transform",
+      `matrix(${[M.a, M.b, M.c, M.d, M.e, M.f].map((x) => +x.toFixed(6)).join(" ")}) ${g.dataset.drawnTransform}`.trim(),
+    );
+  });
+  // the middle of the span the gantry is on, in canvas units, for views that centre on it
+  return spans[S].c;
+}
+
+/**
+ * getScreenCTM as a 2D DOMMatrix, from its six numbers: it gives an SVGMatrix in some browsers, which DOMMatrix maths won't
+ * take, and with some views' CSS on the page DOMMatrix.fromMatrix() makes one Chrome treats as 3D, which a 2D matrix then
+ * can't be multiplied with
+ */
+const ctm = (el) => {
+  const m = el.getScreenCTM();
+  return new DOMMatrix([m.a, m.b, m.c, m.d, m.e, m.f]);
+};
+
+/**
+ * Works out, without moving anything, where each part of the gantry goes to move it from span D to span S: the rules
+ * above, measured from where the gantry is now (so it must be sitting on span D). placeGantry() uses it to move the
+ * drawing from span data-drawn-at to data-span; the gantry animations use it to find where the supports go on the next
+ * span.
+ * @param {SVGSVGElement} root The map's <svg>.
+ * @param {number} D The span the gantry is on now.
+ * @param {number} S The span to move it to.
+ * @returns {{ moves: Record<string, { from: { x: number, y: number }, to: { x: number, y: number }, turn: number }>,
+ *   spans: Record<number, { c: { x: number, y: number }, u: { x: number, y: number }, v: { x: number, y: number } }> }|null}
+ * Each anchor's move in canvas units (its middle from `from` to `to`, turned by `turn` degrees), and spans S-1, S, D-1
+ * and D: each one's middle `c`, its forward direction `u` and its across direction `v`. Null when the drawing has no
+ * gantry or no joints for one of those spans.
+ */
+export function gantryMoves(root, D, S) {
+  const gantry = root.querySelector("#clayton-clipper");
+  if (!gantry) return null;
   const toRoot = ctm(root).inverse();
   const toCanvas = (el, x, y) => new DOMPoint(x, y).matrixTransform(ctm(el)).matrixTransform(toRoot);
   const add = (a, b) => ({ x: a.x + b.x, y: a.y + b.y }),
@@ -132,7 +177,7 @@ export function placeGantry(root) {
   const spans = Object.fromEntries(needed.map((n) => [n, span(n)]));
   if (needed.some((n) => !spans[n])) {
     console.warn(`gantry: span ${S} or a span next to it has no joints; left where it is drawn`);
-    return;
+    return null;
   }
   const angle = (u) => (Math.atan2(u.y, u.x) * 180) / Math.PI;
 
@@ -230,19 +275,5 @@ export function placeGantry(root) {
     moves.body = { from, to: now.c, turn: angle(now.u) - angle(dir) };
   }
   gantry.style.display = display;
-
-  groups.forEach((g) => {
-    const m = moves[g.dataset.anchor];
-    if (!m) return;
-    const T = new DOMMatrix().translate(m.to.x, m.to.y).rotate(m.turn).translate(-m.from.x, -m.from.y);
-    // the same move in the group's own (narrowed, rotated) frame
-    const P = toRoot.multiply(ctm(gantry)),
-      M = P.inverse().multiply(T).multiply(P);
-    g.setAttribute(
-      "transform",
-      `matrix(${[M.a, M.b, M.c, M.d, M.e, M.f].map((x) => +x.toFixed(6)).join(" ")}) ${g.dataset.drawnTransform}`.trim(),
-    );
-  });
-  // the middle of the span the gantry is on, in canvas units, for views that centre on it
-  return spans[S].c;
+  return { moves, spans };
 }

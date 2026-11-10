@@ -219,14 +219,15 @@
 <!-- laid out like a README on GitHub: a heading per update, the note, its photo, its follow-ups as a list with code-style
      times, then its comments -->
 <main class="page-column">
-  <!-- a slim bar: the Clayton Clipper logo (back to the top of Trackside) and the page's name on the left, a button back to
-       the map on the right. It stays at the top of the screen while the updates scroll under it, clear of the iPhone's
-       notch; its own top padding takes the place of the page's space above it, so it sits where it did before scrolling -->
+  <!-- a slim bar: the Clayton Clipper logo (to the map) and the page's name (to the top of Trackside) on the left, a button
+       back to the map on the right. It stays at the top of the screen while the updates scroll under it, clear of the
+       iPhone's notch; its own top padding takes the place of the page's space above it, so it sits where it did before
+       scrolling -->
   <header class="page-header">
-    <a class="block leading-[0]" href={TRACKSIDE}
+    <a class="block leading-[0]" href={MAP}
       ><img class="h-10 w-auto logo" src="{MAP}images/logo.png" alt="Clayton Clipper" width="625" height="351" /></a
     >
-    <h1 class="page-header-title">Trackside</h1>
+    <h1 class="page-header-title"><a class="text-inherit no-underline" href={TRACKSIDE}>Trackside</a></h1>
     <nav class="page-header-nav">
       <a class="btn btn-grey" href={MAP}>← Map</a>
     </nav>

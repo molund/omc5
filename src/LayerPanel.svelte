@@ -126,6 +126,19 @@
                   onchange={(e) => change(e, k)}
                 />{label}
               </label>
+              {#if k === "gantry"}
+                <!-- a small link that plays the gantry's moves span by span to the last span (MapView does the moving):
+                     it turns the gantry on first, and on a phone closes the menu so the map shows -->
+                <button
+                  class="border-0 bg-transparent p-0 text-xs text-(--link) underline disabled:cursor-default disabled:text-(--mute) disabled:no-underline"
+                  disabled={ui.gantryPlaying}
+                  onclick={() => {
+                    if (!layers.gantry) setSwitch("gantry", true);
+                    ui.gantryPlaying = true;
+                    if (ui.phone) ui.collapsed = true;
+                  }}>{ui.gantryPlaying ? "animating…" : "animate"}</button
+                >
+              {/if}
               {#if k === "aerial"}
                 <select
                   class="min-w-0 rounded-md border border-(--line) bg-(--panel) px-1 py-0.5 text-base text-(--ink) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent) disabled:cursor-default disabled:opacity-40"
