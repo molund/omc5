@@ -27,8 +27,9 @@
 
   let stage;
   let drag = $state(null);
-  // the layer panel's "animate" link: the gantry moves on span by span to the last span, then the link comes back. Only
-  // ui.gantryPlaying is watched; the moves themselves are untracked, so nothing they read starts them again.
+  // the layer panel's "animate" link: the gantry moves on span by span to the last span (span 48 in the two SFMSF views),
+  // then the link comes back. Only ui.gantryPlaying is watched; the moves themselves are untracked, so nothing they read
+  // starts them again.
   $effect(() => {
     if (!ui.gantryPlaying) return;
     untrack(() => {
@@ -36,7 +37,9 @@
       requestAnimationFrame(() => {
         frameGantry().then(followGantry);
       });
-      playToEnd(els.svg).finally(() => (ui.gantryPlaying = false));
+      playToEnd(els.svg, layers.sfmsfDrawing || layers.sfmsfAerial ? 48 : undefined).finally(
+        () => (ui.gantryPlaying = false),
+      );
     });
   });
 
