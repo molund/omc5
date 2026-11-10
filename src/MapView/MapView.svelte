@@ -41,6 +41,10 @@
     viewWas = view;
     untrack(() => stopGantry(els.svg));
   });
+  // turning the gantry off does the same
+  $effect(() => {
+    if (!layers.gantry) untrack(() => stopGantry(els.svg));
+  });
   let touchDrag = null;
   // whether the map is still where its view opened it, untouched by a pan or zoom on it (and the zoom the opening framing
   // set, so the zoom buttons count too): until then, a Progress map is framed again if the stage changes size (see the
