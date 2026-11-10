@@ -14,7 +14,8 @@ export const LAYERS = [
     [
       ["progress", "Progress", "progress", false],
       ["fullAerial", "Full aerial", "fullAerial", false],
-      ["horizontal", "Horizontal aerial", "horizontal", false],
+      ["horizontal", "Horizontal", "horizontal", false],
+      ["vertical", "Vertical", "vertical", false],
       ["sfmsfAerial", "SFMSF aerial", "sfmsfAerial", true],
       ["sfmsfDrawing", "SFMSF drawing", "sfmsfDrawing", false],
     ],
@@ -77,7 +78,7 @@ LAYERS.forEach((g) =>
   }),
 );
 /**
- * "Full" is the earlier default: the whole canvas with roads off (Horizontal starts with these too).
+ * "Full" is the earlier default: the whole canvas with roads off (Horizontal and Vertical start with these too).
  * @type {Record<string, boolean>}
  */
 export const fullAerialDefaults = Object.assign({}, sfmsfAerialDefaults, {
@@ -227,7 +228,14 @@ export function layerCss(state) {
         !(k === "aerial" && state.sfmsfDrawing) &&
         !(k === "stationLabels" && (state.sfmsfDrawing || state.sfmsfAerial)) &&
         !(k === "spanNumbers" && !avail);
-      if (k === "progress" || k === "sfmsfDrawing" || k === "sfmsfAerial" || k === "fullAerial" || k === "horizontal")
+      if (
+        k === "progress" ||
+        k === "sfmsfDrawing" ||
+        k === "sfmsfAerial" ||
+        k === "fullAerial" ||
+        k === "horizontal" ||
+        k === "vertical"
+      )
         return;
       // roads: Fraser Highway and Highway 15, with their labels (every piece is tagged "roads")
       if (k === "roads") r += ".roads{display:" + (on ? "inline" : "none") + " !important}";

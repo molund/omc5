@@ -8,6 +8,7 @@ import { ui, setSwitch, showSpan } from "./appState.svelte.js";
 const VIEW_PARAMS = {
   fullAerial: "aerial",
   horizontal: "horizontal",
+  vertical: "vertical",
   sfmsfAerial: "omc",
   sfmsfDrawing: "omc-drawing",
 };

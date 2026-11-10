@@ -161,35 +161,41 @@ function canvasProgress() {
 /**
  * Shows the Horizontal view: the drawing turned so both ends of the Clayton Clipper route are level. Its canvas is what is
  * drawn with a margin on every side of HORIZONTAL_MARGIN times the distance between its two ends; it starts zoomed to
- * HORIZONTAL_VIEW_METRES before and after the gantry's span, with the span in the middle.
+ * HORIZONTAL_VIEW_METRES before and after the gantry's span, with the span in the middle. Vertical is the same view turned
+ * a further 90 degrees counter-clockwise, east at the top, with those metres running down the stage.
+ * @param {boolean} [vertical=false] Whether to show Vertical.
  * @returns {void}
  */
-export function horizontalView() {
-  canvasHorizontal();
+export function horizontalView(vertical = false) {
+  canvasHorizontal(vertical);
   const c = els.gantrySpanCentre;
   if (!c) return;
-  const vb = els.svg.viewBox.baseVal;
-  setZoom(Math.max((100 * vb.width) / (2 * HORIZONTAL_VIEW_METRES * UNITS_PER_METRE), fillZoom()));
+  const vb = els.svg.viewBox.baseVal,
+    stage = els.stage,
+    // the zoom is a share of the stage's width, so Vertical's metres down the stage are scaled by its height
+    across = vertical ? (stage.clientWidth / stage.clientHeight) * UNITS_PER_METRE : UNITS_PER_METRE;
+  setZoom(Math.max((100 * vb.width) / (2 * HORIZONTAL_VIEW_METRES * across), fillZoom()));
   // the span's middle, turned with the drawing, then onto the middle of the stage
-  const r = (els.routeAngle * Math.PI) / 180,
+  const r = ((els.routeAngle - (vertical ? 90 : 0)) * Math.PI) / 180,
     x = TURN_X + (c.x - TURN_X) * Math.cos(r) - (c.y - TURN_Y) * Math.sin(r),
     y = TURN_Y + (c.x - TURN_X) * Math.sin(r) + (c.y - TURN_Y) * Math.cos(r);
-  const stage = els.stage,
-    box = els.svg.getBoundingClientRect();
+  const box = els.svg.getBoundingClientRect();
   stage.scrollLeft = ((x - vb.x) / vb.width) * box.width - stage.clientWidth / 2;
   stage.scrollTop = ((y - vb.y) / vb.height) * box.height - stage.clientHeight / 2;
 }
 /**
  * Fits the canvas to Horizontal: what is drawn with a margin, but no wider than the overview aerial; on the west, the
- * guideway's end runs just off it (HORIZONTAL_WEST_TRIM).
+ * guideway's end runs just off it (HORIZONTAL_WEST_TRIM). Vertical gets the same canvas turned 90 degrees
+ * counter-clockwise.
+ * @param {boolean} [vertical=false] Whether to fit Vertical.
  * @returns {void}
  */
-function canvasHorizontal() {
+function canvasHorizontal(vertical = false) {
   // the layer rules for the new switches have to be on the page before measuring what shows
   flushSync();
   els.turn.removeAttribute("transform");
   const e = drawingBounds(els.svg, els.routeAngle, TURN_X, TURN_Y);
-  if (!e) return turnedFullView();
+  if (!e) return turnedFullView(vertical);
   const m = HORIZONTAL_MARGIN * Math.hypot(e.right.x - e.left.x, e.right.y - e.left.y);
   // the margin is on the east only: the west end of the guideway (not a support or label past it) runs just off the canvas
   let x =
@@ -204,14 +210,30 @@ function canvasHorizontal() {
     x1 = Math.min(x1, p.x1);
   }
   const y = e.top.y - m;
-  setView(`${x} ${y} ${x1 - x} ${e.bottom.y + m - y}`, els.routeAngle);
+  setTurnedView(x, y, x1 - x, e.bottom.y + m - y, vertical);
+}
+/**
+ * Shows a canvas area measured in Horizontal's turn, and fits it: for Vertical, the area and the drawing both turn a further
+ * 90 degrees counter-clockwise about the turning point, so a point (x, y) goes to (TURN_X + y - TURN_Y, TURN_Y - x + TURN_X).
+ * @param {number} x The area's left, turned level.
+ * @param {number} y Its top.
+ * @param {number} w Its width.
+ * @param {number} h Its height.
+ * @param {boolean} vertical Whether to show it as Vertical.
+ * @returns {void}
+ */
+function setTurnedView(x, y, w, h, vertical) {
+  if (vertical) setView(`${TURN_X + y - TURN_Y} ${TURN_Y + TURN_X - x - w} ${h} ${w}`, els.routeAngle - 90);
+  else setView(`${x} ${y} ${w} ${h}`, els.routeAngle);
   setZoom(fitZoom());
 }
 /**
- * Shows the whole canvas, turned level, all of it in view (when there is nothing drawn to measure).
+ * Shows the whole canvas, turned level (and for Vertical, a further 90 degrees counter-clockwise), all of it in view (when
+ * there is nothing drawn to measure).
+ * @param {boolean} [vertical=false] Whether to show it as Vertical.
  * @returns {void}
  */
-function turnedFullView() {
+function turnedFullView(vertical = false) {
   const r = (els.routeAngle * Math.PI) / 180,
     c = Math.cos(r),
     s = Math.sin(r);
@@ -225,8 +247,7 @@ function turnedFullView() {
     ys = pts.map((p) => p[1]),
     x = Math.min(...xs),
     y = Math.min(...ys);
-  setView(`${x} ${y} ${Math.max(...xs) - x} ${Math.max(...ys) - y}`, els.routeAngle);
-  setZoom(fitZoom());
+  setTurnedView(x, y, Math.max(...xs) - x, Math.max(...ys) - y, vertical);
 }
 
 /**
