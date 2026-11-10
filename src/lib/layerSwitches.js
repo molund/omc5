@@ -148,7 +148,8 @@ const PROGRESS_SHOWS = {
   spanNumbers: [".ccnumber"],
   arrows: ["text.n.guideway"],
   stationLabels: [".stationlabel"],
-  gantry: [".gantry"],
+  // the gantry, and the hangers the animation draws on a span as it fills in (gantryAnimation.js)
+  gantry: [".gantry", ".clipper-hangers"],
 };
 /** The whole canvas, as an SVG viewBox string. */
 export const FULL_VB = "-6840.7 -5402.04 12387.4 8699.48";
