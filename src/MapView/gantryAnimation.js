@@ -11,10 +11,12 @@ import { gantryProgress } from "./gantryProgress.js";
 const SMOOTH = { easing: "ease-in-out", fill: "forwards" };
 
 /**
- * How fast the whole animation plays: every move's duration and every pause is divided by it, so 1.5 is 50% faster than
- * the times written in the steps, and 1 plays them as written.
+ * How fast the whole animation plays: every move's duration and every pause is divided by it, so 2 is twice as fast as
+ * the times written in the steps, and 1 plays them as written. After the "animate" link, the moves play at SPEEDS in
+ * turn, and every move after the last of them at that last speed (playToEnd sets it).
  */
-const SPEED = 1.5;
+const SPEEDS = [2, 3, 4];
+let SPEED = SPEEDS[0];
 
 /**
  * The matrix that turns `el`'s own coordinates into `frame`'s coordinates (both measured through the screen).
@@ -578,8 +580,10 @@ export async function playToEnd(svg, last = 105) {
     classes: [...svg.querySelectorAll(PROGRESS_MARKED)].map((el) => [el, el.getAttribute("class")]),
   };
   const at = stops;
+  let moved = 0;
+  SPEED = SPEEDS[0];
   try {
-    while (+gantry.dataset.span < last && (await playGantry(svg)));
+    while (+gantry.dataset.span < last && (await playGantry(svg))) SPEED = SPEEDS[Math.min(++moved, SPEEDS.length - 1)];
   } catch (error) {
     // a stop makes the move under way give up (see pause() and stopGantry()); anything else is a real error
     if (at === stops) throw error;
