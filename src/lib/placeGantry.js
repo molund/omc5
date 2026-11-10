@@ -22,7 +22,9 @@ export const DOUBLE_GIRDER = new Set([31, 43, 44, 45, 46, 47, 52, 53, 54]);
  * Anchors the Clayton Clipper gantry to the span it is working on. #clayton-clipper is drawn for span data-drawn-at; this
  * moves each of its data-anchor groups to span data-span (the ccnumber span numbers, 1-105). Spans are found from the
  * drawing:
- * - the joint between spans n and n+1 is the bent cap (rect.g) nearest the midpoint of their two labels
+ * - the joint between spans n and n+1 is the bent cap (rect.g) nearest the midpoint of their two labels; the last span
+ *   (105) has no label after it, so its far end is the cap nearest half a span past its label (stepping on from the label
+ *   before), if there is one that close
  * - span n runs from joint n-1/n to joint n/n+1, centred on its gantry box (a gi or p polygon) where it has one, so the
  *   gantry stays on its own track; crane spans with no gantry box use the midpoint between their joints
  *
@@ -51,7 +53,10 @@ export function placeGantry(root) {
     else g.setAttribute("transform", g.dataset.drawnTransform);
   });
   const found = gantryMoves(root, D, S);
-  if (!found) return;
+  if (!found) {
+    console.warn(`gantry: span ${S} or a span next to it has no joints; left where it is drawn`);
+    return;
+  }
   const { moves, spans } = found;
   const toRoot = ctm(root).inverse();
 
@@ -132,7 +137,15 @@ export function gantryMoves(root, D, S) {
     });
     return [best, d];
   };
-  const joint = (n) => (labels[n] && labels[n + 1] ? nearest(caps, mid(labels[n], labels[n + 1]))[0] : null);
+  const joint = (n) => {
+    if (labels[n] && labels[n + 1]) return nearest(caps, mid(labels[n], labels[n + 1]))[0];
+    // the end of the line: no label after span n, so half a span on from its label, the way the label before it points;
+    // the nearest cap counts only if it is within a quarter span of that, so there is no joint past the last cap
+    if (!labels[n] || !labels[n - 1]) return null;
+    const on = sub(labels[n], labels[n - 1]),
+      [cap, d] = nearest(caps, add(labels[n], mul(on, 0.5)));
+    return d < Math.hypot(on.x, on.y) / 4 ? cap : null;
+  };
   const boxes = [...root.querySelectorAll("polygon.gi, polygon.p")]
     .filter((el) => !gantry.contains(el))
     .map((el) => {
@@ -175,10 +188,7 @@ export function gantryMoves(root, D, S) {
   };
   const needed = [S - 1, S, D - 1, D];
   const spans = Object.fromEntries(needed.map((n) => [n, span(n)]));
-  if (needed.some((n) => !spans[n])) {
-    console.warn(`gantry: span ${S} or a span next to it has no joints; left where it is drawn`);
-    return null;
-  }
+  if (needed.some((n) => !spans[n])) return null;
   const angle = (u) => (Math.atan2(u.y, u.x) * 180) / Math.PI;
 
   // the gantry's own styles hide it, and a hidden element has no box to measure
