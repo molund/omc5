@@ -20,6 +20,11 @@ const MIN_LEVEL = 10;
 const WORLD = Math.PI * R;
 /** How long the map has to sit still before tiles are asked for, in milliseconds. */
 const SETTLE = 150;
+/**
+ * The longest tiles wait for the map to sit still, in milliseconds: a map that keeps moving (the gantry animation zooms
+ * and follows the gantry every frame) still gets them this often.
+ */
+const MAX_WAIT = 500;
 /** The most device pixels per CSS pixel worth paying tiles for. */
 const MAX_PIXEL_RATIO = 2;
 /** How many levels coarser than the current one the backdrop is: one of its tiles covers 8 × 8 of the current level's. */
@@ -283,9 +288,16 @@ export function startEsriTiles(svg, stage) {
     cull();
   };
 
+  // when the first move since the last update was: each move restarts the SETTLE wait, but never past MAX_WAIT from it
+  let waitingSince = null;
   const refresh = () => {
     clearTimeout(timer);
-    timer = setTimeout(update, SETTLE);
+    waitingSince ??= performance.now();
+    const wait = Math.max(0, Math.min(SETTLE, waitingSince + MAX_WAIT - performance.now()));
+    timer = setTimeout(() => {
+      waitingSince = null;
+      update();
+    }, wait);
     // tiles seen before come back while the map moves, without waiting for it to settle
     cullTimer ??= setTimeout(() => {
       cullTimer = null;
