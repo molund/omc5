@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Langley Surrey SkyTrain Launching gantry movement animation</title>
+    <meta
+      name="description"
+      content="This animation shows how the Clayton Clipper, one of the four launching gantries building the Surrey Langley SkyTrain's guideway in Surrey, BC, moves itself forward one span at a time."
+    />
+    <!-- only a redirect to the map, so search engines are told not to index it (and it has no canonical link, which
+         would say the opposite). Link previews on Facebook, X and the like don't follow this: they read the Open Graph
+         tags below, so the page can still be shared. It's also left out of sitemap.xml. -->
+    <meta name="robots" content="noindex" />
+    <link rel="icon" href="/favicon.ico?v=2" sizes="any" />
+    <!-- what link previews show; the image is a still of the animation (public/og-gantry-animation.jpg, 1200×630) -->
+    <meta property="og:site_name" content="Clayton Clipper Tracker" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Langley Surrey SkyTrain Launching gantry movement animation" />
+    <meta
+      property="og:description"
+      content="This animation shows how the Clayton Clipper, one of the four launching gantries building the Surrey Langley SkyTrain's guideway in Surrey, BC, moves itself forward one span at a time."
+    />
+    <meta property="og:url" content="https://clayton-clipper.olund.ca/play/" />
+    <meta property="og:image" content="https://clayton-clipper.olund.ca/og-gantry-animation.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="The Clayton Clipper launching gantry part way through a move along the Surrey Langley SkyTrain guideway, on an aerial photo"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <!-- the launcher for the gantry animation, linked from the blog and nowhere on the site: it opens the map in the view
+         that suits the screen, with ?animate=true, so the animation starts by itself. Taller than wide (a phone): the
+         Vertical view; wider than tall (a computer): the Horizontal view. location.replace keeps this page out of the
+         back button's history. -->
+    <script>
+      location.replace(innerHeight > innerWidth ? "/?view=vertical&animate=true" : "/?view=horizontal&animate=true");
+    </script>
+    <script type="module" src="/play/main.js"></script>
+  </head>
+  <body>
+    <!-- for anyone without JavaScript: laid out like the About page -->
+    <main class="page-column [&_p]:mt-3.5 [&_p_a]:text-(--link)">
+      <header class="page-header">
+        <a class="block leading-[0] logo" href="/"
+          ><img class="h-10 w-auto logo" src="/images/logo.png" alt="Clayton Clipper" width="625" height="351"
+        /></a>
+        <h1 class="page-header-title">Animation</h1>
+      </header>
+
+      <h2 class="mt-7 mb-2 text-xl leading-tight font-bold">
+        Langley Surrey SkyTrain Launching gantry movement animation
+      </h2>
+      <p>
+        This animation shows how the Clayton Clipper, one of the four launching gantries building the Surrey Langley
+        SkyTrain's guideway in Surrey, BC, moves itself forward one span at a time. It plays on the Clayton Clipper
+        Tracker map, over an aerial photo of the route, from the span the gantry is on today to Bakerview-166 Street
+        Station.
+      </p>
+      <p>It's a simplified picture of the Clipper's cycle, drawn from watching it at work, not an engineering model.</p>
+      <noscript>
+        <p>
+          Watch it on a phone in the <a href="/?view=vertical&amp;animate=true">vertical view</a>, or on a computer in
+          the <a href="/?view=horizontal&amp;animate=true">horizontal view</a>.
+        </p>
+      </noscript>
+    </main>
+  </body>
+</html>

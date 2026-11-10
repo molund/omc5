@@ -2,6 +2,7 @@
    data), so a stray word in them can't turn into a utility */
 @import "tailwindcss" source(none);
 @source "../about/index.html";
+@source "../play/index.html";
 @source "../trackside/*.svelte";
 @source "./*.svelte";
 @source "./MapView/*.svelte";

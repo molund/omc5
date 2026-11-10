@@ -21,14 +21,18 @@ spans-per-week: 2.88
 #   No other markdown: anything else shows as typed.
 # Notes to self, and the steps of the gantry's cycle seen at each time stamp, are in gantry-cycles.yaml, not here.
 notes:
-  - 2026-11-09: "Clayton Clipper SkyTrain gantry animation"
+  - 2026-11-09: "Surrey Langley SkyTrain launching gantry animation"
     slug: gantry-animation-is-live
-    summary: "The feature nobody asked for is finally here!"
+    summary: "The feature nobody asked for is finally here: the Clayton Clipper launching gantry moving along the Surrey Langley SkyTrain guideway, span by span."
     post: true
     photo:
-      file: 2026-11-09-gantry-animation-is-live-2.jpg
-      caption: "Click the “animate” link on the “Layers” area of the side panel to watch the Clayton Clipper go all the way to Rona."
+      file: 2026-11-09-gantry-animation.jpg
+      caption: "The Clayton Clipper launching gantry part way through a move in the animation, with one of its supports turning under the trolley."
     block:
+      - "▶️ [Watch the Clayton Clipper move, span by span, all the way to Rona](/play/) 🏗️"
+      - "⏱️ From span 39 it's 66 moves to span 105 at Bakerview-166 Street Station: about 19 minutes of gantry movement, and under 17 seconds a span once it gets up to speed."
+      - "Each move shows the cycle the crews repeat for every span: the trolley crane carries the supports forward one by one, then the trusses launch ahead onto the next span."
+      - "You can click the “animate” link on the “Layers” area of the side panel to activate the animation whenever you are really bored."
       - "I still haven't actually seen the Clayton Clipper crawl over the Highway 15 girders yet, so for now that part of the SVG animation is just doing the same thing it does everywhere else."
   - 2026-11-07T14:45-07:00: "Clayton Clipper construction update for Saturday, Nov. 7, 2026"
     summary: "Made it to span 39!"

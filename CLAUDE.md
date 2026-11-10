@@ -37,6 +37,9 @@ Svelte 5 + Vite site, deployed to GitHub Pages (https://clayton-clipper.olund.ca
 - `src/lib/layerSwitches.js` — layer definitions; `LayerPanel.svelte` the switches.
 - `src/app.css` — Tailwind, the colour variables and the base styles; see Styling below.
 - `trackside/` — Trackside (`/trackside/`), the updates page; read `trackside/README.md` before changing it.
+- `play/` — `/play/`, the gantry animation launcher for the blog: it sends phones to `/?view=vertical&animate=true` and
+  computers to `/?view=horizontal&animate=true`. Not in the sitemap (it only redirects), and nothing on the site links
+  to it.
 - `docs/gantry-cycle.md` — the Clayton Clipper's cycle, stage by stage: the input for its velocity (spans per week).
 - `gantry-cycles.yaml` — the Leash Log's own records (molund/omc5-admin): notes to self, and the steps of the cycle seen at each
   time stamp, which the desk turns into the velocity. The site doesn't read it. Keep a note's or follow-up's time stamp in
