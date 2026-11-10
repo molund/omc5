@@ -49,6 +49,7 @@ const view = saved?.view ?? (defaults.progress ? "progress" : defaults.sfmsfDraw
  *   filled: boolean,
  *   ready: boolean,
  *   gantry: GantryProgress|null,
+ *   gantryPlaying: boolean,
  * }}
  * - view: the view last picked (a View group key).
  * - basemap: the basemap picked (a BASEMAPS key), shown while the Basemap switch (layers.aerial) is on.
@@ -65,6 +66,8 @@ const view = saved?.view ?? (defaults.progress ? "progress" : defaults.sfmsfDraw
  * - filled: whether the map is at a view's opening fill (see fillView).
  * - ready: turns on the layer rules once map.svg is tagged.
  * - gantry: the Clayton Clipper's span number out of the total, and the spans ahead of it.
+ * - gantryPlaying: set by the layer panel's "animate" link: MapView then plays the gantry's moves span by span to the
+ *   last span, and clears it when they're done.
  */
 export const ui = $state({
   view,
@@ -80,6 +83,7 @@ export const ui = $state({
   filled: false,
   ready: false,
   gantry: null,
+  gantryPlaying: false,
 });
 
 /**
