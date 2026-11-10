@@ -48,7 +48,8 @@ for (const n of status.history) await write(`dist/trackside/${n.slug}`, { slug: 
 
 // dist/sitemap.xml, for search engines (submitted in Google Search Console, since a project site can't have a robots.txt):
 // the map, the pages of updates, each update's own page and the About page, each with when it last changed (a page of
-// updates, at its newest update or follow-up; the map, at status.yaml's `updated`)
+// updates, at its newest update or follow-up; the map, at status.yaml's `updated`). Not the animation launcher, /play/:
+// it only redirects to the map.
 const changed = (n) => n.followUps[0]?.time ?? n.time;
 const newest = (list) => new Date(Math.max(...list.map(changed)));
 const urls = [
