@@ -6,7 +6,7 @@
   import { ui } from "./lib/appState/appState.svelte.js";
   import { status, asOf } from "./lib/status.js";
   import { inline } from "./lib/inline.js";
-  import { term, fetchCounts } from "./lib/comments.js";
+  import { term, fetchCounts, SITE } from "./lib/comments.js";
   import Icon from "./Icon.svelte";
 
   // "today" or "yesterday" on the card (Trackside keeps full dates)
@@ -65,6 +65,24 @@
   }
   let card = $state(),
     showButton = $state();
+  // while the gantry animates in any view but Progress, the info button gives way to a Permalink to /play/, the
+  // animation's launcher: a real link (a cmd-, ctrl-, shift- or middle-click opens it), and a plain click copies its
+  // address, as on Trackside. It goes back to the info button when the animation stops.
+  const PLAY = `${import.meta.env.BASE_URL}play/`;
+  let copied = $state(false);
+  let copyTimer;
+  async function copyPermalink(e) {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+    e.preventDefault();
+    try {
+      await navigator.clipboard.writeText(new URL("play/", SITE).href);
+      copied = true;
+      clearTimeout(copyTimer);
+      copyTimer = setTimeout(() => (copied = false), 1800);
+    } catch (error) {
+      console.error("Could not copy permalink", error);
+    }
+  }
   function close() {
     tip = null;
     ui.cardHidden = true;
@@ -104,7 +122,15 @@
   >
 {/snippet}
 
-{#if ui.gantry && ui.cardHidden}
+{#if ui.gantry && ui.cardHidden && ui.gantryPlaying && ui.view !== "progress"}
+  <a
+    class="absolute top-3 right-3 z-5 block rounded-md border border-(--line) bg-(--panel) p-1.5 leading-none text-(--ink) shadow-float [touch-action:manipulation] hover:border-(--accent) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent)"
+    href={PLAY}
+    title="Copy permalink"
+    aria-label="Copy permalink"
+    onclick={copyPermalink}><Icon kind="link" /></a
+  >
+{:else if ui.gantry && ui.cardHidden}
   <button
     bind:this={showButton}
     in:fade={{ delay: 350, duration: 100 }}
@@ -213,3 +239,10 @@
     {/if}
   </div>
 {/if}
+{#if copied}<div
+    class="fixed inset-x-0 bottom-5 z-20 mx-auto w-fit rounded-md bg-(--ink) px-3 py-2 text-sm text-(--panel) shadow-card"
+    role="status"
+    aria-live="polite"
+  >
+    Permalink copied
+  </div>{/if}
