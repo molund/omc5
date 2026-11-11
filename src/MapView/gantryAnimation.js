@@ -415,8 +415,6 @@ export async function playGantry(svg) {
   const FOURTH_TURNS_AT = 70 / 151;
   // PICKUP: a nudge, in truss units along y, to where the front tip stops when the trusses go back for the front support
   const PICKUP = -8;
-  // THIRD_RIDES: how much of the front support's trip, at the end, the third support rides along for (0 to 1)
-  const THIRD_RIDES = 25 / 121;
 
   // 1. the trolley slides from where it is to stop over the middle of the fourth support; there, the hangers the fill
   // put on the finished span come down
@@ -491,8 +489,15 @@ export async function playGantry(svg) {
     frontTrip = [(-qb + root) / (2 * qa), (-qb - root) / (2 * qa)].reduce((a, b) =>
       Math.abs(b - plain) < Math.abs(a - plain) ? b : a,
     ),
-    ride = frontTrip * THIRD_RIDES,
-    alone = frontTrip - ride;
+    // the third support rides along for the end of the trip: from when the rear tips reach it, their middle over its
+    // middle (the rear tip is the blue tip furthest back, measured in the truss frame; the trusses are `back` along by
+    // now, and the third support hasn't moved), kept within the trip
+    rearTipAt = [...gantry.querySelectorAll(".clipper-tip")]
+      .map((t) => centreIn(t, truss))
+      .reduce((a, b) => (ahead * b.y < ahead * a.y ? b : a)),
+    reached = (thirdAt.y - rearTipAt.y - back) / frontTrip,
+    alone = frontTrip * Math.min(1, Math.max(0, reached)),
+    ride = frontTrip - alone;
 
   // 7. the trusses carry the front support forward, the first part of its trip, and the trolley stays still over the
   // second support (moved back inside the trusses as they go forward, as in step 6)
