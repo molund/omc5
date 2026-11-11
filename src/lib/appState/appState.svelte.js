@@ -122,6 +122,14 @@ const VIEWS = ["progress", "sfmsfAerial", "fullAerial", "horizontal", "vertical"
 export function setSwitch(k, on) {
   layers[k] = on;
   ui.changed = !VIEWS.includes(k);
+  // turning the gantry off puts back the switches the animation changed, as they were before it started
+  if (k === "gantry" && !on && beforeAnimation) {
+    Object.assign(layers, beforeAnimation.switches);
+    ui.changed = beforeAnimation.changed || beforeAnimation.gantry;
+    beforeAnimation = null;
+  }
+  // a view sets its own switches, so there is nothing to put back after it
+  if (on && VIEWS.includes(k)) beforeAnimation = null;
   if (on && VIEWS.includes(k)) {
     ui.view = k;
     ui.span = null;
@@ -205,6 +213,18 @@ export function setBasemap(basemap) {
   ui.changed = true;
 }
 
+/** The switches animateGantry() sets, besides the gantry itself. */
+const ANIMATION_SWITCHES = ["arrows", "spanNumbers", "guideway", "unfinished", "supports"];
+
+/**
+ * The switches as they were before the first animation since the view was picked (ANIMATION_SWITCHES, the gantry and
+ * whether anything had been changed), for turning the gantry off to put back; null when there's nothing to put back.
+ * Stop leaves it, so a later animation doesn't save the animation's own switches; picking a view, Reset and Show all
+ * clear it.
+ * @type {{ switches: Record<string, boolean>, gantry: boolean, changed: boolean }|null}
+ */
+let beforeAnimation = null;
+
 /**
  * Starts the gantry animation (MapView plays it while ui.gantryPlaying is set): the Gantry box is ticked if it's off, the
  * finished spans and supports are shown, and the unfinished spans, span numbers and arrows hidden. Used by the layer
@@ -213,6 +233,11 @@ export function setBasemap(basemap) {
  */
 export function animateGantry() {
   if (ui.gantryPlaying) return;
+  beforeAnimation ??= {
+    switches: Object.fromEntries(ANIMATION_SWITCHES.map((k) => [k, layers[k]])),
+    gantry: layers.gantry,
+    changed: ui.changed,
+  };
   if (!layers.gantry) setSwitch("gantry", true);
   setSwitch("arrows", false);
   setSwitch("spanNumbers", false);
@@ -276,6 +301,7 @@ export function showSpan(n) {
  * @returns {void}
  */
 export function showAll() {
+  beforeAnimation = null;
   Object.keys(layers).forEach((k) => {
     if (
       k !== "greenbelt" &&
@@ -312,6 +338,7 @@ function viewSwitches(view) {
  * @returns {void}
  */
 export function reset() {
+  beforeAnimation = null;
   Object.assign(layers, viewSwitches(ui.view));
   ui.basemap = basemapFor(ui.view);
   ui.changed = false;
