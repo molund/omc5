@@ -3,7 +3,7 @@
   import { fade } from "svelte/transition";
   import { cubicIn } from "svelte/easing";
   import { PROGRESS_COLOUR } from "./lib/layerSwitches.js";
-  import { ui, stopAnimation } from "./lib/appState/appState.svelte.js";
+  import { ui, stopAnimation, pauseAnimation, resumeAnimation } from "./lib/appState/appState.svelte.js";
   import { status, asOf } from "./lib/status.js";
   import { inline } from "./lib/inline.js";
   import { term, fetchCounts, SITE } from "./lib/comments.js";
@@ -122,9 +122,25 @@
   >
 {/snippet}
 
-<!-- while the gantry animates, in every view, a Stop button left of the top-right corner's button; the progress card, drawn
-     after it, opens over it. It ends the animation (the layer panel's "animate" link starts it again) -->
+<!-- while the gantry animates, in every view, a Pause and a Stop button left of the top-right corner's button; the progress
+     card, drawn after them, opens over them. Pause holds the gantry where it is and turns into Play, which plays it on from
+     there; Stop ends the animation (the layer panel's "animate" link starts it again) -->
 {#if ui.gantry && ui.gantryPlaying}
+  {#if ui.gantryPaused}
+    <button
+      class="absolute top-3 right-23 z-5 p-1.5 shadow-float"
+      title="Play the animation"
+      aria-label="Play the animation"
+      onclick={resumeAnimation}><Icon kind="play" /></button
+    >
+  {:else}
+    <button
+      class="absolute top-3 right-23 z-5 p-1.5 shadow-float"
+      title="Pause the animation"
+      aria-label="Pause the animation"
+      onclick={pauseAnimation}><Icon kind="pause" /></button
+    >
+  {/if}
   <button
     class="absolute top-3 right-13 z-5 p-1.5 shadow-float"
     title="Stop the animation"

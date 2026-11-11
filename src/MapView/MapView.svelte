@@ -8,7 +8,7 @@
   import { tagBuiltBy } from "./builtBy.js";
   import { gantryProgress } from "./gantryProgress.js";
   import { placeGantry } from "../lib/placeGantry.js";
-  import { playToEnd, stopGantry, lowerSupports, raiseSupports } from "./gantryAnimation.js";
+  import { playToEnd, stopGantry, holdGantry, resumeGantry, lowerSupports, raiseSupports } from "./gantryAnimation.js";
   import { status } from "../lib/status.js";
   import {
     layers,
@@ -47,6 +47,7 @@
         if (run !== runs) return;
         running = false;
         ui.gantryPlaying = false;
+        ui.gantryPaused = false;
       });
     });
   });
@@ -54,6 +55,11 @@
   // turning the gantry off does
   $effect(() => {
     if (!ui.gantryPlaying && running) untrack(() => stopGantry(els.svg));
+  });
+  // the Pause button holds the moves where they are, and Play plays them on from there
+  $effect(() => {
+    if (ui.gantryPaused) untrack(() => holdGantry(els.svg));
+    else resumeGantry();
   });
 
   // while the gantry animates, the supports are drawn below the spans; they go back above them when it stops
@@ -149,12 +155,14 @@
   /**
    * Keeps the gantry's centre point (gantryCentre) in the middle of the stage while it animates: every frame, the map
    * scrolls by however far the point has moved. It stops when the animation does. Zooming by hand still works (the point
-   * stays in the middle); panning by hand is undone on the next frame.
+   * stays in the middle); panning by hand is undone on the next frame, except while the animation is paused.
    * @returns {void}
    */
   function followGantry() {
     const look = () => {
       if (!ui.gantryPlaying) return;
+      // while it's paused, the map is left where it is, so it can be panned around
+      if (ui.gantryPaused) return requestAnimationFrame(look);
       // measured from where the map actually is: browsers round the scroll position to whole pixels, so keeping a
       // fractional one and adding each frame's offset to it counts every rounding twice, and the map flicks back and
       // forth a pixel every few frames. From the real scroll position, the map only moves once the point is half a pixel
