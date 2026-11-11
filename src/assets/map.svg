@@ -6176,7 +6176,7 @@
   <g transform="translate(0 1200) scale(1.11) translate(0 -1200)">
     <g transform="translate(2160 1074) rotate(124)">
         <!-- Clipper: no group opacity; every piece is 65% on its own, so each layer blends with everything beneath it down to the solid track -->
-        <!-- Gantry pivoted where it crosses the 31/32 support; centreline x = 307.1; shortened 3.5% about its centre y=550 (scale(1 0.965)) -->
+        <!-- Gantry pivoted where it crosses the 31/32 support; centreline x = 307.1; shortened 8.3% about its centre y=550 (scale(1 0.91675)); the trolley only 3.5% (scale(1 0.965)) -->
         <g
           transform="translate(278.16 0) scale(0.55 1) translate(-278.16 0)"
         >
@@ -6393,7 +6393,7 @@
                   width="3.33"
                   height="158.7"
                   fill="#174B83"
-                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
+                  transform="translate(6.6 0) translate(0 550) scale(1 0.91675) translate(0 -550)"
                 />
                 <rect
                   opacity="0.65"
@@ -6403,7 +6403,7 @@
                   width="3.33"
                   height="158.7"
                   fill="#174B83"
-                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
+                  transform="translate(6.6 0) translate(0 550) scale(1 0.91675) translate(0 -550)"
                 />
                 <!-- Inner side walkways (blue), same length, centring and thickness (3.33) as the outer ones, on the inside face of each truss -->
                 <rect
@@ -6414,7 +6414,7 @@
                   width="3.33"
                   height="158.7"
                   fill="#174B83"
-                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
+                  transform="translate(6.6 0) translate(0 550) scale(1 0.91675) translate(0 -550)"
                 />
                 <rect
                   opacity="0.65"
@@ -6424,11 +6424,11 @@
                   width="3.33"
                   height="158.7"
                   fill="#174B83"
-                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
+                  transform="translate(6.6 0) translate(0 550) scale(1 0.91675) translate(0 -550)"
                 />
                 <g
                   class="clipper-truss"
-                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
+                  transform="translate(6.6 0) translate(0 550) scale(1 0.91675) translate(0 -550)"
                 >
                   <clipPath id="truss-clip-273">
                     <rect x="273.5" y="371.5" width="10" height="357" />
@@ -6460,7 +6460,7 @@
                 <!-- truss lattice: three chords + diamond diagonals, yellow, 100% opacity, no fill -->
                 <g
                   class="clipper-truss"
-                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
+                  transform="translate(6.6 0) translate(0 550) scale(1 0.91675) translate(0 -550)"
                 >
                   <clipPath id="truss-clip-317">
                     <rect x="317.5" y="371.5" width="10" height="357" />
@@ -6496,7 +6496,7 @@
                   width="44"
                   height="2.5"
                   fill="#F2A51F"
-                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
+                  transform="translate(6.6 0) translate(0 550) scale(1 0.91675) translate(0 -550)"
                 />
                 <rect
                   x="278.5"
@@ -6504,7 +6504,7 @@
                   width="44"
                   height="2.5"
                   fill="#F2A51F"
-                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
+                  transform="translate(6.6 0) translate(0 550) scale(1 0.91675) translate(0 -550)"
                 />
                 <!-- Clipper blue truss tips (end legs; solid #4D76A3 to match the pads and decks as rendered): inner half of each truss (5 wide), 11.2 long, recessed 8.6 from each truss end (trimmed by a third from the outer end); y = truss start + 8.6 and truss end - 19.8 -->
                 <rect
@@ -6514,7 +6514,7 @@
                   width="5"
                   height="11.2"
                   fill="#4D76A3"
-                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
+                  transform="translate(6.6 0) translate(0 550) scale(1 0.91675) translate(0 -550)"
                 />
                 <rect
                   class="clipper-tip"
@@ -6523,7 +6523,7 @@
                   width="5"
                   height="11.2"
                   fill="#4D76A3"
-                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
+                  transform="translate(6.6 0) translate(0 550) scale(1 0.91675) translate(0 -550)"
                 />
                 <rect
                   class="clipper-tip"
@@ -6532,7 +6532,7 @@
                   width="5"
                   height="11.2"
                   fill="#4D76A3"
-                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
+                  transform="translate(6.6 0) translate(0 550) scale(1 0.91675) translate(0 -550)"
                 />
                 <rect
                   class="clipper-tip"
@@ -6541,7 +6541,7 @@
                   width="5"
                   height="11.2"
                   fill="#4D76A3"
-                  transform="translate(6.6 0) translate(0 550) scale(1 0.965) translate(0 -550)"
+                  transform="translate(6.6 0) translate(0 550) scale(1 0.91675) translate(0 -550)"
                 />
               </g>
             </g>
