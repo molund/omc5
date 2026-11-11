@@ -28,13 +28,20 @@ async function write(dir, view) {
     .replace("</head>", `${head}\n  </head>`)
     .replace('<div id="app"></div>', `<div id="app" data-view='${JSON.stringify(view)}'>${body}</div>`);
   mkdirSync(dir, { recursive: true });
+  const formatted = await format(html, {
+    parser: "html",
+    htmlWhitespaceSensitivity: "strict",
+    printWidth: 120,
+  });
+  // Prettier still lays out the inside of an <svg> on lines of its own, even in strict mode, and Svelte then finds
+  // spaces where it expects the icon's first shape and redraws the page (hydration_mismatch); spaces between an svg's
+  // tags don't change how it draws, so they come out again
   writeFileSync(
     `${dir}/index.html`,
-    await format(html, {
-      parser: "html",
-      htmlWhitespaceSensitivity: "strict",
-      printWidth: 120,
-    }),
+    formatted.replace(
+      /(<svg\b[^>]*>)([\s\S]*?)(<\/svg)/g,
+      (_, open, inner, close) => open + inner.replace(/>\s+</g, "><").trim() + close,
+    ),
   );
 }
 
