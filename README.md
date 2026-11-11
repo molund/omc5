@@ -61,7 +61,7 @@ reads only that velocity from `gantry-cycles.yaml`, when it's built, for the pro
 ## Velocity calculation
 
 How the Clayton Clipper's velocity (spans per week) is calculated, and every assumption it makes, is in
-[VELOCITY.md](https://github.com/molund/omc5-admin/blob/main/src/lib/VELOCITY.md) in the Leash Log's repo.
+[velocity-calculation.md](https://github.com/molund/omc5-admin/blob/main/docs/velocity-calculation.md) in the Leash Log's repo.
 
 ## License
 
