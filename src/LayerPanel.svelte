@@ -15,6 +15,7 @@
     isFit,
     centreView,
     animateGantry,
+    stopAnimation,
   } from "./lib/appState/appState.svelte.js";
 
   // each press of zoom in or out changes the zoom by this factor, about the middle of the stage; Fit's zoom depends on the
@@ -133,14 +134,15 @@
                 <!-- a small link that plays the gantry's moves span by span to the last span (MapView does the moving):
                      it ticks the Gantry box first if it's off (turning it off again stops and resets the moves), shows
                      the finished spans and supports and hides the unfinished spans, span numbers and arrows, and on a
-                     phone closes the menu so the map shows -->
+                     phone closes the menu so the map shows. While the moves play it reads "stop" and stops them, as the
+                     progress card's Stop button does -->
                 <button
-                  class="border-0 bg-transparent p-0 text-xs text-(--link) underline disabled:cursor-default disabled:text-(--mute) disabled:no-underline"
-                  disabled={ui.gantryPlaying}
+                  class="border-0 bg-transparent p-0 text-xs text-(--link) underline"
                   onclick={() => {
+                    if (ui.gantryPlaying) return stopAnimation();
                     animateGantry();
                     if (ui.phone) ui.collapsed = true;
-                  }}>{ui.gantryPlaying ? "animating…" : "animate"}</button
+                  }}>{ui.gantryPlaying ? "stop" : "animate"}</button
                 >
               {/if}
               {#if k === "aerial"}
