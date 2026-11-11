@@ -95,12 +95,87 @@ const UNSEEN = 2;
  */
 let stops = 0;
 
+/**
+ * Whether the Pause button has the gantry held (holdGantry() to resumeGantry()), and since when (performance.now()).
+ * @type {number|null}
+ */
+let heldAt = null;
+/** How long the gantry has been held in all, in milliseconds, so clock() can leave it out. */
+let heldFor = 0;
+/** The moves holdGantry() paused, for resumeGantry() to play on. @type {Set<Animation>} */
+const heldMoves = new Set();
+
+/** The animation's own time, in milliseconds: performance.now() with the time the gantry has been held left out. */
+const clock = () => performance.now() - heldFor - (heldAt == null ? 0 : performance.now() - heldAt);
+
+/**
+ * The waits under way (pause()): how long each has left, when it last started counting (performance.now()), its
+ * timer, and what to do when it is up. holdGantry() stops their timers and resumeGantry() starts them again with what
+ * they had left.
+ * @type {Set<{ left: number, from: number, timer: number, up: () => void }>}
+ */
+const waits = new Set();
+
+/** Starts a wait's timer for what it has left. */
+function count(w) {
+  w.from = performance.now();
+  w.timer = setTimeout(w.up, w.left);
+}
+
 /** Waits `ms` milliseconds; fails instead if the gantry is stopped meanwhile, so the move it is part of goes no further. */
 const pause = (ms) =>
   new Promise((done, fail) => {
-    const at = stops;
-    setTimeout(() => (at === stops ? done() : fail(new Error("gantry stopped"))), ms / SPEED);
+    const at = stops,
+      w = { left: ms / SPEED, from: 0, timer: 0, up: () => {} };
+    w.up = () => {
+      clearTimeout(w.timer);
+      waits.delete(w);
+      if (at === stops) done();
+      else fail(new Error("gantry stopped"));
+    };
+    waits.add(w);
+    if (heldAt == null) count(w);
   });
+
+/**
+ * Holds the gantry where it is (the Pause button): every move on the map pauses, the waits between them stop counting,
+ * and the fills stop filling (they go by clock()). Until resumeGantry(), any move that starts is paused on its first
+ * frame, so a step that was just finishing doesn't carry on into the next.
+ * @param {SVGSVGElement} svg The map's <svg>.
+ * @returns {void}
+ */
+export function holdGantry(svg) {
+  if (heldAt != null || !svg) return;
+  heldAt = performance.now();
+  for (const w of waits) {
+    clearTimeout(w.timer);
+    w.left = Math.max(0, w.left - (heldAt - w.from));
+  }
+  const at = heldAt;
+  const hold = () => {
+    if (heldAt !== at) return;
+    for (const a of svg.getAnimations({ subtree: true }))
+      if (a.playState === "running") {
+        a.pause();
+        heldMoves.add(a);
+      }
+    requestAnimationFrame(hold);
+  };
+  hold();
+}
+
+/**
+ * Plays the gantry on from where holdGantry() held it (the Play button).
+ * @returns {void}
+ */
+export function resumeGantry() {
+  if (heldAt == null) return;
+  heldFor += performance.now() - heldAt;
+  heldAt = null;
+  heldMoves.forEach((a) => a.playState === "paused" && a.play());
+  heldMoves.clear();
+  waits.forEach(count);
+}
 
 /**
  * A whole gantry move, from the span the gantry is on to the next one: the trolley carries the supports forward one by
@@ -674,6 +749,9 @@ export function stopGantry(svg) {
   const gantry = svg?.querySelector("#clayton-clipper");
   if (!gantry) return;
   stops++;
+  // a held gantry lets go first, and the waits give up straight away rather than waiting out what they had left
+  resumeGantry();
+  waits.forEach((w) => w.up());
   fills.forEach((end) => end());
   clearHangers();
   gantry.getAnimations({ subtree: true }).forEach((a) => a.cancel());
@@ -941,15 +1019,16 @@ function fillIn(svg, el, was) {
     west: endAt(to),
     length: to - from,
     start() {
-      const t0 = performance.now(),
+      // timed by clock(), so a held gantry's fill waits where it is
+      const t0 = clock(),
         fillTime = FILL_TIME / SPEED;
       let shown = 0;
       el.after(group);
       hangers.add(group);
-      const step = (now) => {
+      const step = () => {
         // the steps filled so far: one more every fillTime / steps, the last one when fillTime is up; each step
         // that has just filled gets its hanger
-        const k = Math.min(steps, Math.floor(((now - t0) / fillTime) * steps)),
+        const k = Math.min(steps, Math.floor(((clock() - t0) / fillTime) * steps)),
           was = shown;
         while (shown < k) hang(shown++);
         if (k === steps) return end();

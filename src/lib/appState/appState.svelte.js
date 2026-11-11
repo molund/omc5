@@ -230,7 +230,25 @@ export function animateGantry() {
 export function stopAnimation() {
   if (!ui.gantryPlaying) return;
   ui.gantryPlaying = false;
+  ui.gantryPaused = false;
   ui.gantryStops++;
+}
+
+/**
+ * Holds the gantry animation where it is (the Pause button), without putting the drawing back: MapView pauses the moves,
+ * and Play (resumeAnimation()) plays them on from there.
+ * @returns {void}
+ */
+export function pauseAnimation() {
+  if (ui.gantryPlaying) ui.gantryPaused = true;
+}
+
+/**
+ * Plays a paused gantry animation on from where it was held (the Play button).
+ * @returns {void}
+ */
+export function resumeAnimation() {
+  ui.gantryPaused = false;
 }
 
 /** The zoom a span link opens at, as the number the zoom readout shows (a multiple of Fit). */

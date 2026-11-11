@@ -1,6 +1,6 @@
 <script>
   // panel: a window with a sidebar (show or hide the layer panel); menu: three lines (open the menu on a phone); close: a
-  // cross (close it, or the progress card); info: an information icon (bring the progress card back); comment: a speech bubble (comment on the newest update); chevron: a "›" (fold the layer switches out or away); minus, plus: a − or + (zoom out or in); fit: four corner brackets (zoom to fit); centre: a crosshair (center without zooming); stop: a filled square (stop the gantry animation); github: the GitHub mark (link to the repo)
+  // cross (close it, or the progress card); info: an information icon (bring the progress card back); comment: a speech bubble (comment on the newest update); chevron: a "›" (fold the layer switches out or away); minus, plus: a − or + (zoom out or in); fit: four corner brackets (zoom to fit); centre: a crosshair (center without zooming); stop: a filled square (stop the gantry animation); pause, play: two bars or a triangle (pause the gantry animation or play it on); github: the GitHub mark (link to the repo)
   let { kind = "panel" } = $props();
 </script>
 
@@ -34,6 +34,17 @@
   {:else if kind === "stop"}
     <!-- a stop icon: a filled square -->
     <rect x="4.5" y="4.5" width="9" height="9" rx="1" fill="currentColor" stroke="none" />
+  {:else if kind === "pause"}
+    <!-- a pause icon: two filled bars, the same height as the stop icon's square -->
+    <rect x="4.5" y="4.5" width="3" height="9" rx="0.75" fill="currentColor" stroke="none" />
+    <rect x="10.5" y="4.5" width="3" height="9" rx="0.75" fill="currentColor" stroke="none" />
+  {:else if kind === "play"}
+    <!-- a play icon: a filled triangle pointing right, with its middle a little right of centre so it looks centred -->
+    <path
+      d="M6 4.25v9.5a.5.5 0 0 0 .77.42l7.1-4.75a.5.5 0 0 0 0-.84l-7.1-4.75A.5.5 0 0 0 6 4.25z"
+      fill="currentColor"
+      stroke="none"
+    />
   {:else if kind === "info"}
     <!-- an information icon: an "i" in a circle -->
     <circle cx="9" cy="9" r="7.25" />
