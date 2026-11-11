@@ -11,8 +11,11 @@
 # the week up to the latest step reported (the weekly shutdown allowed for), with its values at the earlier steps of the
 # past 96 hours (-previous), newest first, with the span and stage of the step each was timed by. status.yaml has a
 # copy of spans-per-week; the site's build draws the rest as the progress card's chart
-spans-per-week: 2.81
+spans-per-week: 2.79
 spans-per-week-previous:
+  - 2026-11-10T21:00-07:00: 2.81
+    span: 40
+    stage: arrived at span
   - 2026-11-10T12:00-07:00: 2.88
     span: 39
     stage: supports started
@@ -31,13 +34,10 @@ spans-per-week-previous:
   - 2026-11-07T14:45-07:00: 2.83
     span: 39
     stage: arrived at span
-  - 2026-11-07T08:15-07:00: 2.83
-    span: 38
-    stage: supports started
-  - 2026-11-06T22:00-07:00: 2.81
-    span: 38
-    stage: hangers down
 entries:
+  - 2026-11-11T08:45-07:00:
+      span: 40
+      stage: hung
   - 2026-11-10T21:00-07:00:
       span: 40
       stage: arrived at span
