@@ -72,11 +72,10 @@
     else resumeGantry();
   });
 
-  // while the gantry animates, the supports are drawn below the spans; they go back above them when it stops
+  // once the gantry animates, the supports are drawn below the spans, and they stay there when it stops (picking another
+  // view or turning the gantry off puts them back above)
   $effect(() => {
-    if (!ui.ready) return;
-    if (ui.gantryPlaying) lowerSupports(els.svg);
-    else raiseSupports();
+    if (ui.ready && ui.gantryPlaying) lowerSupports(els.svg);
   });
 
   /** While the gantry animates, how much of the stage's width or height the whole gantry fills. */
@@ -188,17 +187,24 @@
     requestAnimationFrame(look);
   }
   // picking another view preset stops the gantry's moves and puts the drawing back as status.yaml has it (the moves give
-  // up, and the "animate" link comes back when playToEnd ends)
+  // up, and the "animate" link comes back when playToEnd ends), with the supports above the spans again
   let viewWas = ui.view;
   $effect(() => {
     const view = ui.view;
     if (view === viewWas) return;
     viewWas = view;
-    untrack(() => stopGantry(els.svg));
+    untrack(() => {
+      stopGantry(els.svg);
+      raiseSupports();
+    });
   });
-  // turning the gantry off does the same
+  // turning the gantry off does the same, supports included
   $effect(() => {
-    if (!layers.gantry) untrack(() => stopGantry(els.svg));
+    if (!layers.gantry)
+      untrack(() => {
+        stopGantry(els.svg);
+        raiseSupports();
+      });
   });
   let touchDrag = null;
   // whether the map is still where its view opened it, untouched by a pan or zoom on it (and the zoom the opening framing
