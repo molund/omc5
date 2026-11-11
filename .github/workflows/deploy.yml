@@ -44,6 +44,13 @@ jobs:
       discussions: write
     steps:
       - uses: actions/checkout@v4
+      # a mistake in the irregular shutdowns listed in gantry-cycles.yaml fails the run, so nothing is built or deployed, and GitHub
+      # emails the failure. The check is the Leash Log's own (molund/omc5-admin's scripts/check-shutdowns.mjs, plain Node), so
+      # there's one set of rules; warnings fail too
+      - name: Check the irregular shutdowns
+        run: |
+          git clone --depth 1 https://github.com/molund/omc5-admin "$RUNNER_TEMP/omc5-admin"
+          node "$RUNNER_TEMP/omc5-admin/scripts/check-shutdowns.mjs" gantry-cycles.yaml
       - name: Update status.yaml
         if: github.event_name != 'push' && github.event.action != 'desk-pushed'
         env:

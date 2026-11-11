@@ -7,6 +7,29 @@
 #   note: a memo, one line
 # Every entry about the gantry has a stage, and one that marks its span hung is at "hung" or later. A time stamp can match a
 # note or follow-up in status.yaml, or stand alone (a step seen with no post about it).
+# irregular-shutdowns: stretches with no gantry work that the weekly shutdown doesn't cover, added by hand. Each one has:
+#   label: what to call it
+#   type: holiday (excused: it extends the week by its hours, up to 24 each), or mechanical, or waiting (on work ahead):
+#     those two count against the pace. Any other type does too, and has no icon
+#   start: a BC time stamp, like the entries below
+#   end: a BC time stamp, or hours: how long it lasted (14, 5.5): either one, whichever saves the arithmetic
+#   with neither, it's still going: add one when work starts again
+# Write the real stretch: if the crews worked into it, shorten it. A step reported during a shutdown is counted at its start.
+# A holiday is excused for 24 hours at most. Christmas and Boxing Day are two holidays: list them as two entries, one for
+# each day, not one of 48 hours.
+# Examples (take out the "# "):
+#   - label: Remembrance Day
+#     type: holiday
+#     start: 2026-11-11T06:00-07:00
+#     hours: 14
+#   - label: Hydraulic pump failure
+#     type: mechanical
+#     start: 2026-11-14T10:15-07:00
+#     end: 2026-11-14T15:15-07:00
+#   - label: Waiting for the caps at span 31
+#     type: waiting
+#     start: 2026-09-14T07:00-07:00
+irregular-shutdowns:
 # the Clayton Clipper's velocity, written by the Leash Log on every push: spans per week, from how far the gantry got in
 # the week up to the latest step reported (the weekly shutdown allowed for), with its values at the earlier steps of the
 # past 96 hours (-previous), newest first, with the span and stage of the step each was timed by. status.yaml has a
