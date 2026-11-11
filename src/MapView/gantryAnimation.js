@@ -38,6 +38,21 @@ function screen(el) {
 }
 
 /**
+ * Half the length of `el`'s long side, in `frame`'s coordinates (both measured through the screen).
+ * @param {SVGGraphicsElement} el
+ * @param {SVGGraphicsElement} frame
+ * @returns {number}
+ */
+function halfLength(el, frame) {
+  const b = el.getBBox(),
+    m = between(el, frame),
+    o = new DOMPoint(b.x, b.y).matrixTransform(m),
+    w = new DOMPoint(b.x + b.width, b.y).matrixTransform(m),
+    h = new DOMPoint(b.x, b.y + b.height).matrixTransform(m);
+  return Math.max(Math.hypot(w.x - o.x, w.y - o.y), Math.hypot(h.x - o.x, h.y - o.y)) / 2;
+}
+
+/**
  * The middle of `el`'s box, in `frame`'s coordinates.
  * @param {SVGGraphicsElement} el
  * @param {SVGGraphicsElement} frame
@@ -65,6 +80,14 @@ function reachIn(el, frame) {
   ].map(([x, y]) => new DOMPoint(x, y).matrixTransform(m).y);
   return { lo: Math.min(...ys), hi: Math.max(...ys) };
 }
+
+/**
+ * How far, in pixels on the screen, a step has to move something to be played: a step whose move would be shorter is
+ * skipped, with its pause (on straight track the swings in steps 9 and 10, the turn in step 17 and the slide in step 20
+ * come out at next to nothing, and would only hold the animation still). The drawing still ends up right: step 22 snaps
+ * every piece to where placeGantry() puts it on the next span.
+ */
+const UNSEEN = 2;
 
 /**
  * Counts the stops: stopGantry() adds one. A move notes it as it starts waiting, and gives up if it has changed by the
@@ -97,6 +120,9 @@ export async function playGantry(svg) {
   if (!gantry || !trolley || !beam || !frontBeam || !secondBeam || !thirdBeam) return false;
   // a moment for the page to settle and the gantry layer to show: a hidden element has no size to measure
   await pause(1000);
+  // whether a move of `d` on the map would be too short to see (UNSEEN), measured as the map is shown on the screen now
+  const shown = screen(svg),
+    unseen = (d) => d * Math.hypot(shown.a, shown.b) < UNSEEN;
 
   // 0. the span the gantry is on is drawn complete (all its segments hung) before the gantry moves: as MapView draws it
   // when status.yaml says `hung: true`, but only in the drawing (status.yaml isn't touched). Each piece that turns
@@ -415,14 +441,28 @@ export async function playGantry(svg) {
       deg({ x: frontTo.x - pivot.x, y: frontTo.y - pivot.y }) -
         deg({ x: frontStart.x + frontSlid.x - pivot.x, y: frontStart.y + frontSlid.y - pivot.y }),
     );
-  await Promise.all([trusses.swing(pivot, turn, 3000), front.swing(pivot, turn, 3000)]);
-  await pause(500);
+  // How far the swing carries the front end: the arc the front support's middle follows. On straight track `turn` is next
+  // to nothing, and steps 9 and 10 skip the swing (UNSEEN).
+  const swingArc = (Math.hypot(frontTo.x - pivot.x, frontTo.y - pivot.y) * Math.abs(turn) * Math.PI) / 180,
+    swings = !unseen(swingArc);
+  if (swings) {
+    await Promise.all([trusses.swing(pivot, turn, 3000), front.swing(pivot, turn, 3000)]);
+    await pause(500);
+  }
 
   // 10. the trusses swing back the same way to where they were, leaving the front support on its place; at the same time
   // it turns about its own middle to the angle it has there (its whole turn on the move is N.front.turn, and the swing
   // has done `turn` of it)
-  await Promise.all([trusses.swing(pivot, -turn, 3000), front.swing(frontTo, N.front.turn - turn, 3000)]);
-  await pause(500);
+  // The front support's own turn is played if the ends of its beam would move far enough to see, even without the swing.
+  const frontEnds = (halfLength(frontBeam, svg) * Math.abs(N.front.turn - turn) * Math.PI) / 180,
+    tenMoves = [
+      ...(swings ? [trusses.swing(pivot, -turn, 3000)] : []),
+      ...(unseen(frontEnds) ? [] : [front.swing(frontTo, N.front.turn - turn, 3000)]),
+    ];
+  if (tenMoves.length) {
+    await Promise.all(tenMoves);
+    await pause(500);
+  }
 
   // 11. the trusses slide back until their middle is halfway between the fourth support and the second support. The
   // third and front supports stay where they are, and the trolley stays still over the second support, as in step 6.
@@ -512,9 +552,20 @@ export async function playGantry(svg) {
     toLine = { x: beforeSwing.x - lineAt.x, y: beforeSwing.y - lineAt.y },
     alongLine = toLine.x * lineDir.x + toLine.y * lineDir.y,
     across = { x: toLine.x - alongLine * lineDir.x, y: toLine.y - alongLine * lineDir.y };
-  // the shift is started first, so the swing turns about the fourth support as the shifted trusses see it
-  await Promise.all([trusses.by(0, 2500, across), trusses.swing(fourthMid, lineUp, 2500)]);
-  await pause(500);
+  // how far the move takes the trusses: the shift, plus the arc their end furthest from the pivot follows in the swing.
+  // On straight track both are next to nothing, and the step is skipped (UNSEEN).
+  const reach = Math.max(
+      ...[...gantry.querySelectorAll(".clipper-tip")].map((t) => {
+        const c = centreIn(t, svg);
+        return Math.hypot(c.x - fourthMid.x, c.y - fourthMid.y);
+      }),
+    ),
+    moves17 = Math.hypot(across.x, across.y) + (reach * Math.abs(lineUp) * Math.PI) / 180;
+  if (!unseen(moves17)) {
+    // the shift is started first, so the swing turns about the fourth support as the shifted trusses see it
+    await Promise.all([trusses.by(0, 2500, across), trusses.swing(fourthMid, lineUp, 2500)]);
+    await pause(500);
+  }
 
   // 18. the trusses slide forward until their rear ends (where the yellow truss lines stop at the back) are over the
   // middle of the second support, and the trolley stays still over the fourth support. Measured in the truss frame,
@@ -558,8 +609,11 @@ export async function playGantry(svg) {
   const middleNow = trussesMiddle(),
     slide20 = { x: N.body.to.x - middleNow.x, y: N.body.to.y - middleNow.y },
     forward20 = (slide20.x * unitNow.x + slide20.y * unitNow.y) / (unitNow.x * unitNow.x + unitNow.y * unitNow.y);
-  await Promise.all([trusses.by(0, 3000, slide20), moveTrolley(trolleyY - forward20, 3000)]);
-  await pause(500);
+  // step 19 usually leaves the trusses all but there, and then the slide is skipped (UNSEEN)
+  if (!unseen(Math.hypot(slide20.x, slide20.y))) {
+    await Promise.all([trusses.by(0, 3000, slide20), moveTrolley(trolleyY - forward20, 3000)]);
+    await pause(500);
+  }
 
   // 21. the trolley drives back to where it started on the trusses. Its offset is measured inside the trusses from where
   // it is drawn, so its starting place there is an offset of 0, wherever the trusses have gone.
@@ -680,8 +734,8 @@ export function raiseSupports() {
   lowered = [];
 }
 
-/** How long a span takes to fill in when it turns finished, in milliseconds (real time, whatever the SPEED). */
-const FILL_TIME = 3000;
+/** How long a span takes to fill in when it turns finished, in milliseconds as written (divided by SPEED like every move). */
+const FILL_TIME = 6000;
 /**
  * How many equal steps a piece fills in by (and so how many hangers it gets): FILL_STEPS for a piece as long as span
  * BASELINE_SPAN's, more or fewer in proportion to its length, to the nearest whole step (at least one). See fillSteps.
@@ -887,14 +941,15 @@ function fillIn(svg, el, was) {
     west: endAt(to),
     length: to - from,
     start() {
-      const t0 = performance.now();
+      const t0 = performance.now(),
+        fillTime = FILL_TIME / SPEED;
       let shown = 0;
       el.after(group);
       hangers.add(group);
       const step = (now) => {
-        // the steps filled so far: one more every FILL_TIME / steps, the last one when FILL_TIME is up; each step
+        // the steps filled so far: one more every fillTime / steps, the last one when fillTime is up; each step
         // that has just filled gets its hanger
-        const k = Math.min(steps, Math.floor(((now - t0) / FILL_TIME) * steps)),
+        const k = Math.min(steps, Math.floor(((now - t0) / fillTime) * steps)),
           was = shown;
         while (shown < k) hang(shown++);
         if (k === steps) return end();
@@ -936,7 +991,7 @@ async function followFill(trolley, pieces) {
     }).finished;
   await go(0, east, FILL_TROLLEY_TIME / SPEED, "ease-in-out");
   pieces.forEach((p) => p.start());
-  // the fill's own time, not divided by SPEED, and at a steady pace like the fill's equal steps
-  await go(east, west, FILL_TIME, "linear");
+  // the fill's time, divided by SPEED like the fill itself, and at a steady pace like the fill's equal steps
+  await go(east, west, FILL_TIME / SPEED, "linear");
   await go(west, 0, FILL_TROLLEY_TIME / SPEED, "ease-in-out");
 }
