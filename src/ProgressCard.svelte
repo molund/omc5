@@ -43,7 +43,7 @@
     percent: ui.gantry
       ? `<strong>${ui.gantry.span} \u00f7 ${ui.gantry.total}.</strong> Excludes the ${ui.gantry.ahead} built ahead.`
       : "",
-    pace: "<strong>Approximate.</strong> Based on 2-3 site visits per day during the 168 hours preceding the last check-in. Significant figures are for entertainment purposes only.",
+    pace: "<strong>Approximate.</strong> Based on 2-3 site visits per day during the 168 hours preceding the last check-in. A statutory holiday extends the week by the hours without gantry work, up to 24. Significant figures are for entertainment purposes only.",
   });
   let tip = $state(null);
   const toggle = (k) => (tip = tip === k ? null : k);
