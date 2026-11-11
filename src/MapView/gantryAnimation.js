@@ -19,6 +19,12 @@ const SPEEDS = [2, 3, 4];
 let SPEED = SPEEDS[0];
 
 /**
+ * Whether the map zooms onto the gantry when the animation starts and keeps it centred while it plays (MapView does
+ * both). false leaves the map where it is, for watching one part of a move up close.
+ */
+export const FOLLOW_GANTRY = true;
+
+/**
  * The matrix that turns `el`'s own coordinates into `frame`'s coordinates (both measured through the screen).
  * @param {SVGGraphicsElement} el
  * @param {SVGGraphicsElement} frame

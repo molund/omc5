@@ -8,7 +8,15 @@
   import { tagBuiltBy } from "./builtBy.js";
   import { gantryProgress } from "./gantryProgress.js";
   import { placeGantry } from "../lib/placeGantry.js";
-  import { playToEnd, stopGantry, holdGantry, resumeGantry, lowerSupports, raiseSupports } from "./gantryAnimation.js";
+  import {
+    playToEnd,
+    stopGantry,
+    holdGantry,
+    resumeGantry,
+    lowerSupports,
+    raiseSupports,
+    FOLLOW_GANTRY,
+  } from "./gantryAnimation.js";
   import { status } from "../lib/status.js";
   import {
     layers,
@@ -39,10 +47,12 @@
     untrack(() => {
       const run = ++runs;
       running = true;
-      // the next frame, once the Gantry layer the link may have just turned on is showing (a hidden gantry has no size)
-      requestAnimationFrame(() => {
-        frameGantry().then(followGantry);
-      });
+      // the next frame, once the Gantry layer the link may have just turned on is showing (a hidden gantry has no size);
+      // not at all with FOLLOW_GANTRY off
+      if (FOLLOW_GANTRY)
+        requestAnimationFrame(() => {
+          frameGantry().then(followGantry);
+        });
       playToEnd(els.svg, layers.sfmsfDrawing || layers.sfmsfAerial ? 48 : undefined).finally(() => {
         if (run !== runs) return;
         running = false;
