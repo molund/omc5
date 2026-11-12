@@ -49,6 +49,9 @@ calculated-chart-data:
   - 2026-11-07T14:45-07:00: 2.83
   - 2026-11-07T08:15-07:00: 2.81
 entries:
+  - 2026-11-11T21:15-07:00:
+      span: 40
+      stage: hung
   - 2026-11-11T08:45-07:00:
       span: 40
       stage: hung
