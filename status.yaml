@@ -7,7 +7,7 @@ span: 40
 hung: true
 # the Clayton Clipper's velocity in spans per week, a copy of gantry-cycles.yaml's (where its earlier values are), written by the
 # Leash Log on every push
-spans-per-week: 2.79
+spans-per-week: 2.82
 # Notes, newest first: a time stamp and a title, then a summary, and optionally `photo` (file in
 # public/images/sorry-im-a-shitty-photographer/, caption), `block` (more paragraphs and photos) and `follow-up` (later
 # time-stamped entries with their own summary, photo and block, and no title). See the notes below for the shapes.
@@ -26,6 +26,22 @@ notes:
     block:
       - "All is quiet on the job site this morning, with no visible construction activity underway at the time of the visit. With today being Remembrance Day, the crews are likely taking the day off in observance of the holiday. I'll check in later to see whether any night shift activity is underway or if the entire site remains shut down for the full 24 hours."
       - "Future velocity calculations will account for statutory holidays by extending the 168-hour observation window by the hours without gantry work, up to 24, ensuring that scheduled holidays do not unfairly penalize crew velocity."
+  - 2026-11-11: "Surrey Langley Skytrain gantries Nov 11, 2026"
+    summary: "The Surrey Langley SkyTrain line was quiet today as crews took the day off to observe Remembrance Day, but I still made it out on my bike for some photos and a quick look at progress along the route."
+    post: true
+    photo:
+      file: 2026-11-11-surrey-langley-skytrain-gantries-nov-11.jpg
+      caption: "The Langley Launcher in the Willowbrook Mall parking lot"
+    block:
+      - photo:
+          file: 2026-11-11-surrey-langley-skytrain-gantries-nov-11-2.jpg
+          caption: "The Clayton Clipper at span 40, just before Hwy 15"
+      - photo:
+          file: 2026-11-11-surrey-langley-skytrain-gantries-nov-11-3.jpg
+          caption: "The Fleetwood Flyer, finished its route and awaiting disassembly at 152 St"
+      - photo:
+          file: 2026-11-11-surrey-langley-skytrain-gantries-nov-11-4.jpg
+          caption: "The Surrey Sprinter at 140 St"
   - 2026-11-09: "Surrey Langley SkyTrain launching gantry animation"
     slug: gantry-animation-is-live
     summary: "The feature nobody asked for is finally here: the Clayton Clipper launching gantry moving along the Surrey Langley SkyTrain guideway, span by span."
