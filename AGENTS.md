@@ -63,9 +63,24 @@ Svelte 5 + Vite site, deployed to GitHub Pages (https://clayton-clipper.olund.ca
 
 ## Styling
 
-- Everything is styled with Tailwind v4 classes in the markup (`.svelte` files and `about/index.html`); no component
-  `<style>` blocks. `src/app.css` is the only stylesheet: Tailwind (with preflight), the colour variables, `@theme` and the
-  base rules.
+- Tailwind v4, through `@tailwindcss/vite`. `src/app.css` is the global stylesheet: Tailwind (with preflight), the colour
+  variables, `@theme` and the base rules.
+- Existing markup is styled with Tailwind classes; new work follows the rules below. Don't rewrite existing components
+  to match: apply them only to new components and to the elements a change actually touches (boy scout rule).
+- Inline classes are for layout only: at most 4 Tailwind utilities on an element, and only positioning and layout
+  (`flex`, `grid`, `items-center`, `gap-2`, `mt-4`, `w-full`, `hidden`, `phone:hidden`). No colours, type, padding,
+  borders, backgrounds, shadows or hover/focus states inline.
+- Everything visual goes in the component's own `<style>` block under a semantic class name (`.card-header`,
+  `.btn-primary`, `.span-count`), written with `@apply` (or plain CSS where `@apply` doesn't fit). Keep one class per
+  role, and a short comment above it when the purpose isn't obvious.
+- Every `<style>` block that uses `@apply` starts with `@reference` to `app.css` (relative to the component:
+  `"./app.css"` in `src/`, `"../app.css"` in `src/MapView/`, `"../src/app.css"` in `trackside/`), so it sees our
+  `@theme`, the `phone:` variant and the colour variables. Never `@import` there: that would copy Tailwind into the
+  component.
+- The size, colour and `phone:` rules below apply inside `<style>` too (`@apply text-sm p-4 bg-(--panel) phone:hidden`):
+  no px or rem values, no hex colours.
+- A look used by more than one component still belongs in `@layer components` in `app.css` (see below); use those
+  before writing a new class.
 - Sizes are Tailwind's standard ones (`text-sm`, `p-4`, `rounded-md`), all in rem, so they follow the iPhone's Text Size
   setting (the `html` rule in `src/app.css` hands 1rem to the iPhone's body text size). Use the named font sizes and radii,
   and the spacing numbers (`mt-3.5` is 14px at 16px to the rem). Don't write px or rem values (`mt-[14px]`).
@@ -80,7 +95,8 @@ Svelte 5 + Vite site, deployed to GitHub Pages (https://clayton-clipper.olund.ca
 - `phone:` is the phone layout (up to 760px wide, the same width as `PHONE` in `src/lib/appState/appState.svelte.js`).
 - The map drawing's own styles (`map.svg`) and the layer rules built in `src/lib/layerSwitches.js` stay plain CSS: the
   drawing is injected as raw markup and can't take classes.
-- After a styling change, `npm run build` must pass, and `prettier --write` the changed files.
+- After a styling change, `npm run build` must pass with no `Cannot apply unknown utility class` errors, and
+  `prettier --write` the changed files.
 
 ## Writing style (status updates and posts)
 
