@@ -154,12 +154,12 @@ body::before {
     content: "";
     position: absolute;
     inset-inline: 0.1875rem;
-    bottom: 0.1875rem;
-    height: 0.125rem;
-    background: radial-gradient(circle, black 0.0625rem, transparent 0.0625rem) left / 0.25rem 0.125rem;
+    bottom: 0.15625rem;
+    height: 0.1875rem;
+    /* the halo is a white ring in the gradient itself: Safari on the iPhone drops drop-shadow filters this small */
+    background: radial-gradient(circle, black 0.0625rem, white 0.0625rem, white 0.09375rem, transparent 0.09375rem)
+      left / 0.25rem 0.1875rem;
     background-repeat: round no-repeat;
-    filter: drop-shadow(0.015625rem 0 0 white) drop-shadow(-0.015625rem 0 0 white) drop-shadow(0 0.015625rem 0 white)
-      drop-shadow(0 -0.015625rem 0 white);
   }
   /* small spaced-out capitals in grey: the page and card titles; the size is set where it's used */
   .eyebrow {
