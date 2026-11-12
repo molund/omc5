@@ -9,7 +9,9 @@ const SAVED = "panel";
  */
 export const saved = (() => {
   try {
-    return JSON.parse(sessionStorage.getItem(SAVED));
+    const panel = JSON.parse(sessionStorage.getItem(SAVED));
+    // a tab left open on the old Full aerial view starts afresh: that view is gone
+    return panel?.view === "fullAerial" ? null : panel;
   } catch {
     return null;
   }

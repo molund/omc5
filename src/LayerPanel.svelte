@@ -23,9 +23,10 @@
   const ZOOM_STEP = 1.5;
   const avail = $derived(spanNumbersAvailable(layers));
 
-  // the span number switch needs Clayton Clipper spans on screen, and the direction arrows the finished spans they sit on, so
-  // they fade and can't be changed without them
-  const disabled = (k) => (k === "spanNumbers" && !avail) || (k === "arrows" && !layers.guideway);
+  // the span number switch needs Clayton Clipper spans on screen, and the direction arrows and Progress purple the finished
+  // spans they sit on, so they fade and can't be changed without them
+  const disabled = (k) =>
+    (k === "spanNumbers" && !avail) || ((k === "arrows" || k === "purpleSpans") && !layers.guideway);
   // the buttons in the button groups: the views, the gantry's Off / style row, and Show all and Reset; and what a button
   // that can't be pressed looks like (zoom out can't go past Fit, Center has nothing to move at Fit, and Reset has nothing
   // to do until a layer is changed)
@@ -43,6 +44,8 @@
     if (k === "roads" || k === "walk") return !(layers.sfmsfDrawing || layers.sfmsfAerial);
     if (k === "aerial") return layers.sfmsfDrawing;
     if (k === "stationLabels") return layers.sfmsfDrawing || layers.sfmsfAerial;
+    // the Clipper's spans in purple: not in the two SFMSF views, which are about the facility
+    if (k === "purpleSpans") return layers.sfmsfDrawing || layers.sfmsfAerial;
     return false;
   }
   function change(e, k) {
@@ -113,7 +116,11 @@
           </div>
           {#each rows as [k, label]}
             <!-- the basemap switch has a dropdown beside it, for which basemap, that can't be changed while it is off -->
-            <div class="flex items-center gap-2" style:display={hidden(k) ? "none" : ""}>
+            <!-- Progress purple is a child of Finished spans: indented under it -->
+            <div
+              class={["flex items-center gap-2", k === "purpleSpans" && "ml-6"]}
+              style:display={hidden(k) ? "none" : ""}
+            >
               <label
                 class={[
                   "flex flex-1 items-center gap-2.5 rounded-md px-1 py-1.5",

@@ -1,5 +1,5 @@
 // Where each Clayton Clipper span's number sits, as [x, y] in the map's own canvas units: the middle of the span, which the
-// ?span=N address centres the Full aerial view on. Measured once from the span numbers in map.svg (their anchor points,
+// ?span=N address centres the map on. Measured once from the span numbers in map.svg (their anchor points,
 // through every transform they sit under), not worked out when the page opens. If a span is ever moved in the drawing, measure
 // it again.
 export const SPAN_CENTRES = {

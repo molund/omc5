@@ -13,7 +13,6 @@ export const LAYERS = [
     "View",
     [
       ["progress", "Progress", "progress", false],
-      ["fullAerial", "Full aerial", "fullAerial", false],
       ["horizontal", "Horizontal", "horizontal", false],
       ["vertical", "Vertical", "vertical", false],
       ["sfmsfAerial", "SFMSF aerial", "sfmsfAerial", true],
@@ -25,6 +24,7 @@ export const LAYERS = [
     [
       ["gantry", "Gantry", "gantry", false],
       ["guideway", "Finished spans", "guideway", true],
+      ["purpleSpans", "Progress purple", "purple", false],
       ["unfinished", "Unfinished spans", "unfinished", true],
       ["supports", "Supports", "supports", true],
       ["spanNumbers", "Span numbers", "ccnumber", true],
@@ -78,13 +78,13 @@ LAYERS.forEach((g) =>
   }),
 );
 /**
- * "Full" is the earlier default: the whole canvas with roads off (Horizontal and Vertical start with these too).
+ * The whole canvas with roads off, which Horizontal and Vertical start with, and which the other views go back to (the old
+ * Full aerial view, which Progress with Progress purple off has taken the place of).
  * @type {Record<string, boolean>}
  */
 export const fullAerialDefaults = Object.assign({}, sfmsfAerialDefaults, {
   sfmsfAerial: false,
   roads: false,
-  fullAerial: true,
 });
 /**
  * Switches that progress-chart mode starts with, which match what it shows: the Clayton Clipper's spans (finished and
@@ -93,6 +93,7 @@ export const fullAerialDefaults = Object.assign({}, sfmsfAerialDefaults, {
  * @type {Record<string, boolean>}
  */
 export const PROGRESS_DEFAULTS = {
+  purpleSpans: true,
   guideway: true,
   unfinished: true,
   supports: true,
@@ -111,7 +112,6 @@ export const PROGRESS_DEFAULTS = {
  */
 export const defaults = Object.assign({}, fullAerialDefaults, PROGRESS_DEFAULTS, {
   progress: true,
-  fullAerial: false,
 });
 /**
  * The colour of the Clayton Clipper's complete spans in progress-chart mode.
@@ -120,12 +120,16 @@ export const PROGRESS_COLOUR = "#8473a8";
 /**
  * Progress-chart mode's own CSS: it hides everything (with visibility, which leaves the masks and clip paths the drawing
  * relies on untouched) and then lets through what its switched-on layers show (see PROGRESS_SHOWS), so the base drawing,
- * which has no switch, stays hidden. The Clayton Clipper's complete spans are in the progress colour up to the gantry's span,
- * their usual colour past it. Its span numbers look as they do in the other views.
+ * which has no switch, stays hidden. Its span numbers look as they do in the other views.
  */
 const PROGRESS_CSS =
   "#map polygon,#map path,#map line,#map polyline,#map rect,#map circle,#map ellipse,#map text{visibility:hidden !important}" +
-  "#map #aerial-backing,#map mask *,#map clipPath *,#map defs *{visibility:visible !important}" +
+  "#map #aerial-backing,#map mask *,#map clipPath *,#map defs *{visibility:visible !important}";
+/**
+ * The Progress purple switch's CSS, in any view: the Clayton Clipper's complete spans are in the progress colour up to the
+ * gantry's span, their usual colour past it.
+ */
+const PURPLE_CSS =
   "#map polygon.guideway.cc.reached:not(.unfinished){fill:" +
   PROGRESS_COLOUR +
   " !important}" +
@@ -194,17 +198,6 @@ export const UNITS_PER_METRE = 3 * 1.11;
 export const HORIZONTAL_VIEW_METRES = 350;
 
 /**
- * CSS for the Full image view, which draws the old railway line about 50% heavier: the line itself, and its cross ties
- * (dash) thicker on the same spacing. The original line is inside the 1.11x zoomed frame; its two extensions are in canvas
- * units, 1.11 times larger.
- */
-export const FULL_AERIAL_CSS =
-  "#nwsr-railway{stroke-width:3 !important}" +
-  "#nwsr-railway-ties{stroke-dasharray:3 13 !important}" +
-  "#railway-extension path:first-of-type,#railway-extension-north path:first-of-type{stroke-width:3.33 !important}" +
-  "#railway-extension path:last-of-type,#railway-extension-north path:last-of-type{stroke-dasharray:3.33 14.43 !important}";
-
-/**
  * Whether the span numbers can show: they need Clayton Clipper spans on screen, so Progress, or at least one type of span
  * on.
  * @param {Record<string, boolean>} state The switches' state.
@@ -231,9 +224,9 @@ export function layerCss(state) {
         !(k === "spanNumbers" && !avail);
       if (
         k === "progress" ||
+        k === "purpleSpans" ||
         k === "sfmsfDrawing" ||
         k === "sfmsfAerial" ||
-        k === "fullAerial" ||
         k === "horizontal" ||
         k === "vertical"
       )
@@ -258,6 +251,8 @@ export function layerCss(state) {
   // takes the class off as the span is finished)
   r += "#map .arrow-pending{display:none !important}";
   r += ".gantry{display:" + (state.gantry ? "inline" : "none") + " !important}";
+  // the Clayton Clipper's spans in the progress colour: not in the two SFMSF views, which are about the facility
+  if (state.purpleSpans && !state.sfmsfDrawing && !state.sfmsfAerial) r += PURPLE_CSS;
   if (state.progress) {
     r += PROGRESS_CSS;
     const shows = Object.keys(PROGRESS_SHOWS)

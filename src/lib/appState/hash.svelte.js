@@ -7,7 +7,6 @@ import { ui, layers, setSwitch, showSpan, animateGantry } from "./appState.svelt
  * @type {Record<string, string>} The view's key and its ?view= value.
  */
 const VIEW_PARAMS = {
-  fullAerial: "aerial",
   horizontal: "horizontal",
   vertical: "vertical",
   sfmsfAerial: "omc",
@@ -48,6 +47,12 @@ export function applyAddress() {
     if (ui.span !== span) showSpan(span);
   } else {
     const name = params.get("view") ?? old;
+    // the old Full aerial address: Progress, with the gantry on as in Progress, but without Progress purple
+    if (name === "aerial") {
+      if (ui.view !== "progress") setSwitch("progress", true);
+      layers.purpleSpans = false;
+      ui.changed = true;
+    }
     const v = Object.keys(VIEW_PARAMS).find((k) => VIEW_PARAMS[k] === name) ?? (name ? null : "progress");
     if (v && ui.view !== v) setSwitch(v, true);
   }

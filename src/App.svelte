@@ -2,12 +2,12 @@
   import LayerPanel from "./LayerPanel.svelte";
   import Icon from "./Icon.svelte";
   import MapView from "./MapView/MapView.svelte";
-  import { layerCss, FULL_AERIAL_CSS } from "./lib/layerSwitches.js";
+  import { layerCss } from "./lib/layerSwitches.js";
   import { fade } from "svelte/transition";
   import { layers, ui, PHONE } from "./lib/appState/appState.svelte.js";
 
   // the layer rules wait until MapView has tagged the drawing, which needs it laid out as map.svg draws it on its own
-  const css = $derived(ui.ready ? layerCss(layers) + (ui.view === "fullAerial" ? FULL_AERIAL_CSS : "") : "");
+  const css = $derived(ui.ready ? layerCss(layers) : "");
   // turning a tablet or resizing the window across the phone width: the panel opens beside the map, or the menu closes
   $effect(() => {
     const changed = (e) => {
