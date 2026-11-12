@@ -111,7 +111,7 @@
     class={[
       "relative cursor-help rounded-sm border-0 px-0.75 py-0.5 after:absolute after:-inset-x-1.75 after:inset-y-0 after:content-['']",
       bar
-        ? "map-number tip-dots min-h-6 text-sm font-bold text-black"
+        ? "map-number tip-dots min-h-6 text-[length:calc(var(--text-sm)*1.12)] leading-5 font-bold text-black"
         : "min-h-9 font-semibold text-(--ink) underline decoration-(--mute) decoration-dotted underline-offset-4",
       !bar && (big ? "text-3xl" : "[font-size:inherit]"),
       bar ? "bg-transparent hover:bg-transparent" : tip === k ? "bg-(--bg)" : "bg-transparent hover:bg-(--bg)",
@@ -121,7 +121,12 @@
     onclick={(e) => (e.pointerType === "mouse" ? (tip = k) : toggle(k))}
     onpointerenter={(e) => e.pointerType === "mouse" && (tip = k)}
     onpointerleave={(e) => e.pointerType === "mouse" && tip === k && (tip = null)}
-    onblur={() => tip === k && (tip = null)}>{value}</button
+    onblur={() => tip === k && (tip = null)}
+    ><!-- on the bar, the type is 12% bigger than text-sm in text-sm's line height, so the button (and its dots) keep their
+         place; a bigger font sinks in a line box of the same height by half its extra ascent less descent, about 0.35 of
+         the extra size, so the figure is lifted by that: its bottom stays where it was and it grows at the top --><span
+      class={bar && "relative bottom-[calc(var(--text-sm)*0.12*0.35)]"}>{value}</span
+    ></button
   >
 {/snippet}
 
