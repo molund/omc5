@@ -27,6 +27,8 @@ notes:
     photo:
       file: 2026-11-12-photo.jpg
       caption: "Screenshot from the Waze app, Nov. 12, 2026 showing “SkyTrain Dave Bennett Extension”"
+    block:
+      - "It came up on my navigation system, as I was driving by. And I was like WTF?"
   - 2026-11-11T08:45-07:00: "Clayton Clipper construction update for Wednesday, Nov. 11, 2026"
     summary: "The night shift finished hanging span 40 last night."
     block:
