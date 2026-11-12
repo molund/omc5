@@ -302,6 +302,8 @@
     els.stage = stage;
     els.svg = svg;
     tagBuiltBy(svg);
+    // the span numbers and the direction arrows are marks on the drawing, not text to read
+    svg.querySelectorAll("text.ccnumber, text.n.guideway").forEach((t) => t.setAttribute("aria-hidden", "true"));
     // the gantry's span and whether it is complete come from status.yaml
     const gantry = svg.querySelector("#clayton-clipper");
     if (gantry && status.span) gantry.dataset.span = status.span;
