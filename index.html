@@ -43,21 +43,29 @@
       }
     </script>
     <link rel="icon" href="/favicon.ico?v=2" sizes="any" />
-    <!-- with JavaScript on, hide the text for search engines straight away, so it doesn't flash before the map loads -->
+    <!-- with JavaScript on, the text for search engines stays in the page but is hidden from view (not display:none, which
+         search engines can discount), so the map doesn't have to share the screen with it -->
     <script>
       document.documentElement.classList.add("js");
     </script>
     <style>
-      .js #app > main {
-        display: none;
+      .js #app > section {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
       }
     </style>
   </head>
   <body>
-    <!-- for search engines and readers without JavaScript; src/main.js replaces it with the map -->
+    <!-- for search engines and readers without JavaScript; with JavaScript it stays in the page, hidden, beside the map. The page's
+         one h1; the status sentence is written when the site is built (trackside/prerender.js) -->
     <div id="app">
-      <main>
-        <h1>Clayton Clipper Tracker</h1>
+      <section>
+        <h1>Clayton Clipper Tracker: Surrey Langley SkyTrain guideway construction progress</h1>
+        <p><!--status-summary--></p>
         <p>
           A map of the Surrey Langley SkyTrain guideway in Surrey, BC, following the Clayton Clipper gantry span by span
           as it builds the elevated guideway along Fraser Highway, alongside the spans lifted in by mobile cranes. It's
@@ -67,7 +75,7 @@
           <a href="/trackside/">Trackside</a> has every update, newest first, with photos and comments. The map itself
           needs JavaScript.
         </p>
-      </main>
+      </section>
     </div>
     <script type="module" src="/src/main.js"></script>
   </body>

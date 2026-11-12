@@ -15,7 +15,7 @@ import { status, followUpTime } from "../src/lib/status.js";
 import { inline, plainText } from "../src/lib/inline.js";
 import { term, SITE } from "../src/lib/comments.js";
 import { velocityChart, velocityPoints } from "../src/lib/velocityChart.js";
-import { statusData, datasetJsonLd } from "../src/lib/statusData.js";
+import { statusData, datasetJsonLd, summarySentence } from "../src/lib/statusData.js";
 
 const PAGE_SIZE = 10;
 
@@ -155,11 +155,17 @@ console.log(chart ? "drew the velocity chart" : "no velocity chart: too few valu
 const data = statusData(status, points);
 writeFileSync("dist/status.json", JSON.stringify(data, null, 2) + "\n");
 const MARKER = "<!--dataset-jsonld-->";
+const SUMMARY = "<!--status-summary-->";
 const mapPage = readFileSync("dist/index.html", "utf8");
-if (!mapPage.includes(MARKER)) throw new Error(`index.html has no ${MARKER} for the Dataset to go in`);
+for (const marker of [MARKER, SUMMARY])
+  if (!mapPage.includes(marker)) throw new Error(`index.html has no ${marker} for the status data to go in`);
 const jsonLd = JSON.stringify(datasetJsonLd(data), null, 2).replaceAll("<", "\\u003c");
+// the sentence is plain text of our own making, but is escaped all the same
+const sentence = summarySentence(data).replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[c]);
 writeFileSync(
   "dist/index.html",
-  mapPage.replace(MARKER, `<script type="application/ld+json">\n${jsonLd}\n    </script>`),
+  mapPage
+    .replace(MARKER, () => `<script type="application/ld+json">\n${jsonLd}\n    </script>`)
+    .replace(SUMMARY, () => sentence),
 );
-console.log("wrote status.json and the Dataset JSON-LD");
+console.log("wrote status.json, the Dataset JSON-LD and the status sentence");
