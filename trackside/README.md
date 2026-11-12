@@ -45,7 +45,8 @@ Shared with the map, in `src/`:
   and `SITE`, the site's address.
 - `src/app.css` — colours, base styles and Tailwind. Trackside is styled with Tailwind classes in
   `TracksidePage.svelte`; sizes are Tailwind's standard ones, in rem, so they follow the iPhone's Text
-  Size setting.
+  Size setting. New and changed elements follow the styling rules in `AGENTS.md` (layout classes
+  inline, the rest in the component's `<style>` block).
 
 ## How it's built
 
