@@ -121,3 +121,21 @@ export function datasetJsonLd(data) {
     ],
   };
 }
+
+const MONTHS = ["Jan.", "Feb.", "Mar.", "Apr.", "May", "June", "July", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."];
+/**
+ * One plain sentence of the status for the page's hidden text (and so for search engines): "As of 8:45 a.m. on Nov. 11, 2026
+ * (BC time), the Clayton Clipper is on span 40 of 105, 38% of the route, at about 2.82 spans a week." It matches what the
+ * progress card shows. Empty when there's no span yet.
+ * @param {object} data From statusData.
+ * @returns {string}
+ */
+export function summarySentence(data) {
+  if (data.span.shownOnCard == null) return "";
+  const m = data.updated?.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+  const when = m
+    ? `As of ${+m[4] % 12 || 12}:${m[5]} ${+m[4] < 12 ? "a.m." : "p.m."} on ${MONTHS[+m[2] - 1]} ${+m[3]}, ${m[1]} (BC time), the`
+    : "The";
+  const pace = data.velocity ? `, at about ${data.velocity.spansPerWeek} spans a week` : "";
+  return `${when} Clayton Clipper is on span ${data.span.shownOnCard} of ${data.span.total}, ${Math.round(data.span.percentOfRoute)}% of the route${pace}.`;
+}

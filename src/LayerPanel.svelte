@@ -65,8 +65,9 @@
     class="min-h-0 flex-1 overflow-y-auto px-4 pt-4 pb-6 phone:pt-[calc(env(safe-area-inset-top,0px)_+_var(--spacing)*4)] phone:pb-[calc(env(safe-area-inset-bottom,0px)_+_var(--spacing)*6)]"
   >
     <div class="mb-2 flex items-center justify-between gap-2">
-      <!-- the title: the Clayton Clipper logo with "Map" beside it, small and spaced out, as on the progress card and Trackside -->
-      <h1 class="eyebrow flex items-center gap-2.5 text-xs">
+      <!-- the title: the Clayton Clipper logo with "Map" beside it, small and spaced out, as on the progress card and Trackside; not a
+           heading, since the page's one h1 is the hidden text in index.html -->
+      <p class="eyebrow flex items-center gap-2.5 text-xs">
         <img
           class="h-9 w-auto logo"
           src="{import.meta.env.BASE_URL}images/logo.png"
@@ -74,7 +75,7 @@
           width="625"
           height="351"
         /><span>Map</span>
-      </h1>
+      </p>
       <button
         title={ui.phone ? "Close the menu" : "Hide the layer panel"}
         aria-label={ui.phone ? "Close the menu" : "Hide the layer panel"}
