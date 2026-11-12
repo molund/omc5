@@ -2,8 +2,8 @@
   import { tick } from "svelte";
   import { fade } from "svelte/transition";
   import { cubicIn } from "svelte/easing";
-  import { PROGRESS_COLOUR } from "./lib/layerSwitches.js";
-  import { ui, stopAnimation, pauseAnimation, resumeAnimation } from "./lib/appState/appState.svelte.js";
+  import { PROGRESS_COLOUR, CONCRETE_COLOUR } from "./lib/layerSwitches.js";
+  import { ui, layers, stopAnimation, pauseAnimation, resumeAnimation } from "./lib/appState/appState.svelte.js";
   import { status, asOf } from "./lib/status.js";
   import { inline } from "./lib/inline.js";
   import { cardSpan } from "./lib/placeGantry.js";
@@ -222,7 +222,11 @@
         aria-valuemax={total}
         aria-valuenow={span}
       >
-        <div class="h-full rounded-md" style:width="{percent}%" style:background={PROGRESS_COLOUR}></div>
+        <div
+          class="h-full rounded-md"
+          style:width="{percent}%"
+          style:background={!layers.purpleSpans && layers.guideway ? CONCRETE_COLOUR : PROGRESS_COLOUR}
+        ></div>
       </div>
       <div
         class="absolute inset-y-0 left-0 flex min-w-12 max-w-full items-center justify-center"

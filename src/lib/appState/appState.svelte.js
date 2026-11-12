@@ -19,16 +19,6 @@ export * from "./state.svelte.js";
 export * from "./viewport.svelte.js";
 
 /**
- * Keeps "Full" ticked exactly while every switch matches the old default view.
- * @returns {void}
- */
-function refresh() {
-  layers.fullAerial = Object.keys(fullAerialDefaults).every(
-    (k) => k === "fullAerial" || layers[k] === fullAerialDefaults[k],
-  );
-}
-
-/**
  * What Drawing mode (SFMSF drawing) puts back when it is switched off: it shrinks the canvas to the first-photo frame and
  * fills the stage with it, switches the aerial photo off and puts the SFMSF labels and every other layer on. When the page
  * opens in Drawing mode, switching it off goes to the Full view (the normal view with SFMSF zoom ended, as when Drawing mode
@@ -51,6 +41,7 @@ let drawingSnap = saved ? (saved.drawingSnap ?? null) : startSnap();
 const drawingSwitches = () => ({
   ...Object.fromEntries(Object.keys(layers).map((k) => [k, true])),
   aerial: false,
+  purpleSpans: false,
   progress: false,
   sfmsfAerial: false,
   horizontal: false,
@@ -99,19 +90,8 @@ function exitSfmsfAerial() {
   setView(FULL_VB);
   layers.roads = false;
 }
-/**
- * Shows Full image: the whole canvas, filling the stage, with the Full image switches.
- * @returns {void}
- */
-function applyFullAerial() {
-  drawingSnap = null;
-  setView(FULL_VB);
-  fillView();
-  Object.assign(layers, fullAerialDefaults);
-}
-
 /** The keys of the View group: radio-style switches, one on at a time. */
-const VIEWS = ["progress", "sfmsfAerial", "fullAerial", "horizontal", "vertical", "sfmsfDrawing"];
+const VIEWS = ["progress", "sfmsfAerial", "horizontal", "vertical", "sfmsfDrawing"];
 
 /**
  * A layer checkbox was ticked or unticked. Picking a view sets up that view's switches, canvas and card.
@@ -138,14 +118,12 @@ export function setSwitch(k, on) {
     // the progress card opens every time Progress is picked, even if it was closed before; no other view opens it
     ui.cardHidden = k !== "progress";
   }
-  // picking any other view leaves Horizontal and Vertical (Full image does so through fullAerialDefaults)
+  // picking any other view leaves Horizontal and Vertical
   if (on && (k === "sfmsfDrawing" || k === "progress" || k === "sfmsfAerial")) {
     layers.horizontal = false;
     layers.vertical = false;
   }
-  if (k === "fullAerial") {
-    applyFullAerial();
-  } else if ((k === "horizontal" || k === "vertical") && on) {
+  if ((k === "horizontal" || k === "vertical") && on) {
     if (layers.sfmsfDrawing) exitDrawing();
     if (layers.sfmsfAerial) exitSfmsfAerial();
     drawingSnap = null;
@@ -200,7 +178,6 @@ export function setSwitch(k, on) {
       layers.roads = false;
     }
   }
-  refresh();
 }
 
 /**
@@ -280,17 +257,18 @@ export function resumeAnimation() {
 const SPAN_ZOOM = 20;
 
 /**
- * Opens a span link (?span=N): the Full aerial view with the gantry on, zoomed to SPAN_ZOOM times Fit and centred on the span.
+ * Opens a span link (?span=N): Progress with the gantry on and the card closed, zoomed to SPAN_ZOOM times Fit and centred on the
+ * span.
  * @param {number} n The span number, 1 to 105.
  * @returns {void}
  */
 export function showSpan(n) {
   const c = SPAN_CENTRES[n];
   if (!c) return;
-  setSwitch("fullAerial", true);
+  setSwitch("progress", true);
   layers.gantry = true;
   ui.changed = true;
-  refresh();
+  ui.cardHidden = true;
   setZoom(ui.fit * SPAN_ZOOM);
   centreOn(c[0], c[1]);
   ui.span = n;
@@ -317,7 +295,6 @@ export function showAll() {
   });
   layers.greenbelt = false;
   ui.changed = true;
-  refresh();
 }
 
 /**
@@ -327,7 +304,6 @@ export function showAll() {
  */
 function viewSwitches(view) {
   if (view === "progress") return defaults;
-  if (view === "fullAerial") return fullAerialDefaults;
   if (view === "horizontal" || view === "vertical") return { ...fullAerialDefaults, [view]: true, progress: false };
   if (view === "sfmsfDrawing") return drawingSwitches();
   return { ...sfmsfAerialDefaults, ...sfmsfAerialReference() }; // SFMSF aerial
@@ -342,7 +318,6 @@ export function reset() {
   Object.assign(layers, viewSwitches(ui.view));
   ui.basemap = basemapFor(ui.view);
   ui.changed = false;
-  refresh();
 }
 
 // Save the panel's settings whenever one changes

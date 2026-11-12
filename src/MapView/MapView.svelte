@@ -4,7 +4,7 @@
   import { startEsriTiles, esriCredit, defaultCredit, isEsri } from "./esriTiles.js";
   import { evenSupportBorders } from "./supportBorders.js";
   import { showAerialPhotos } from "./aerialImages.js";
-  import { DRAW_VB, SFMSF_AERIAL_VB, FULL_VB, GANTRY_LENGTH } from "../lib/layerSwitches.js";
+  import { DRAW_VB, SFMSF_AERIAL_VB, GANTRY_LENGTH } from "../lib/layerSwitches.js";
   import { tagBuiltBy } from "./builtBy.js";
   import { gantryProgress } from "./gantryProgress.js";
   import { placeGantry } from "../lib/placeGantry.js";
@@ -343,12 +343,7 @@
       fillView();
     } else if (layers.horizontal) horizontalView();
     else if (layers.vertical) horizontalView(true);
-    // the views a reload can come back to (the page itself opens on Progress)
-    else if (ui.view === "fullAerial") {
-      setView(FULL_VB);
-      fillView();
-    }
-    // a view or span named in the address (?view=aerial, ?view=horizontal, ?view=vertical, ?view=omc, ?view=omc-drawing, ?span=36) wins over
+    // a view or span named in the address (?view=aerial (Progress without Progress purple), ?view=horizontal, ?view=vertical, ?view=omc, ?view=omc-drawing, ?span=36) wins over
     // the opening view
     applyAddress();
 
