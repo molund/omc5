@@ -139,6 +139,28 @@ body::before {
   .page-header {
     @apply sticky top-0 z-5 mt-[calc(var(--spacing)*-4_-_env(safe-area-inset-top,0px))] mb-1 flex flex-wrap items-center gap-x-2.5 gap-y-2 border-b border-(--line) bg-(--bg) pt-[calc(var(--spacing)*6.5_+_env(safe-area-inset-top,0px))] pb-2;
   }
+  /* the look of the map's span numbers (.ccnumber in map.svg), for text that sits on a colour: their condensed bold type, with a
+     white halo round it; the colour and size are set where it's used */
+  .map-number {
+    font-family: "DejaVu Sans Condensed", "DejaVu Sans", sans-serif;
+    font-stretch: condensed;
+    -webkit-text-stroke: 0.12em white;
+    paint-order: stroke fill;
+    stroke-linejoin: round;
+  }
+  /* the dotted underline that hints at a tip, for .map-number text: drawn as a line of its own so the dots can have the same white
+     halo as the text (a text underline can't); the button must be positioned */
+  .tip-dots::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0.1875rem;
+    bottom: 0.1875rem;
+    height: 0.125rem;
+    background: radial-gradient(circle, black 0.0625rem, transparent 0.0625rem) left / 0.25rem 0.125rem;
+    background-repeat: round no-repeat;
+    filter: drop-shadow(0.015625rem 0 0 white) drop-shadow(-0.015625rem 0 0 white) drop-shadow(0 0.015625rem 0 white)
+      drop-shadow(0 -0.015625rem 0 white);
+  }
   /* small spaced-out capitals in grey: the page and card titles; the size is set where it's used */
   .eyebrow {
     @apply m-0 font-bold tracking-[0.3em] text-(--mute) uppercase;
