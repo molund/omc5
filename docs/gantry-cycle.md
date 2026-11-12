@@ -2,7 +2,7 @@
 
 One cycle is everything the Clayton Clipper does for one span: from arriving at a new position to arriving at the next
 one. It's the unit for the gantry's velocity (spans per week). This is Mike's description from watching the gantry,
-refined into stages; the words are his where the writing style in `CLAUDE.md` says to use the word as written.
+refined into stages; the words are his where the writing style in `AGENTS.md` says to use the word as written.
 
 ## The stages
 
