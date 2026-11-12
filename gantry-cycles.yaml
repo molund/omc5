@@ -33,6 +33,7 @@ irregular-shutdowns:
   - label: Remembrance Day
     type: holiday
     start: 2026-11-11T06:00-07:00
+    hours: 24
 # the Clayton Clipper's velocity, written by the Leash Log on every push: spans per week, from how far the gantry got in
 # the week up to the latest step reported (the weekly shutdown allowed for). calculated-chart-data is the figure at each
 # step of the past 96 hours, newest first, the first being spans-per-week itself; the site's build draws it as the progress
