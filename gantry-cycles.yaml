@@ -34,32 +34,20 @@ irregular-shutdowns:
     type: holiday
     start: 2026-11-11T06:00-07:00
 # the Clayton Clipper's velocity, written by the Leash Log on every push: spans per week, from how far the gantry got in
-# the week up to the latest step reported (the weekly shutdown allowed for), with its values at the earlier steps of the
-# past 96 hours (-previous), newest first, with the span and stage of the step each was timed by. status.yaml has a
-# copy of spans-per-week; the site's build draws the rest as the progress card's chart
-spans-per-week: 2.79
-spans-per-week-previous:
+# the week up to the latest step reported (the weekly shutdown allowed for). calculated-chart-data is the figure at each
+# step of the past 96 hours, newest first, the first being spans-per-week itself; the site's build draws it as the progress
+# card's chart. status.yaml has a copy of spans-per-week
+spans-per-week: 2.82
+calculated-chart-data:
+  - 2026-11-11T06:00-07:00: 2.82
   - 2026-11-10T21:00-07:00: 2.81
-    span: 40
-    stage: arrived at span
   - 2026-11-10T12:00-07:00: 2.88
-    span: 39
-    stage: supports started
   - 2026-11-10T09:00-07:00: 2.93
-    span: 39
-    stage: hangers down
-  - 2026-11-09T13:15-07:00: 2.88
-    span: 39
-    stage: post-tensioning started
+  - 2026-11-09T13:15-07:00: 2.86
   - 2026-11-09T08:30-07:00: 2.71
-    span: 39
-    stage: gluing started
   - 2026-11-08T22:00-07:00: 2.77
-    span: 39
-    stage: hanging started
   - 2026-11-07T14:45-07:00: 2.83
-    span: 39
-    stage: arrived at span
+  - 2026-11-07T08:15-07:00: 2.81
 entries:
   - 2026-11-11T08:45-07:00:
       span: 40
