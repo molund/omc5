@@ -101,5 +101,6 @@ Svelte 5 + Vite site, deployed to GitHub Pages (https://clayton-clipper.olund.ca
 - Supports by name: "where spans 70 and 71 meet" in the text; "70/71" is fine in titles and short form.
 - Roads: Surrey's style, "176 St", "152 St" (no "th"); "Highway 15 (176 St)" on first mention; "Fraser Highway" in text
   (the map labels stay "Fraser Hwy (1A)").
+- SkyTrain: always "SkyTrain", never "Skytrain".
 - Stations: the official names ("Green Timbers Station", "Hillcrest-184 Street Station").
 - Times: "a.m." and "p.m.", BC time; posts show the date only.
