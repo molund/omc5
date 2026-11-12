@@ -35,6 +35,8 @@ Svelte 5 + Vite site, deployed to GitHub Pages (https://clayton-clipper.olund.ca
   els), `viewport.svelte.js` (zoom and the canvas views), the layer switch logic (`appState.svelte.js` itself),
   `hash.svelte.js` (address bookmarks), `persist.svelte.js` (saved panel settings) and `drawingBounds.js`.
 - `src/lib/layerSwitches.js` — layer definitions; `LayerPanel.svelte` the switches.
+- `src/lib/statusData.js` — the current span and velocity as data (CC0): `trackside/prerender.js` writes `status.json` and the schema.org
+  Dataset in the map page's head from it when the site is built. `public/llms.txt` points AI tools at them.
 - `src/app.css` — Tailwind, the colour variables and the base styles; see Styling below.
 - `trackside/` — Trackside (`/trackside/`), the updates page; read `trackside/README.md` before changing it.
 - `play/` — `/play/`, the gantry animation launcher for the blog: it sends phones to `/?view=vertical&animate=true` and

@@ -15,6 +15,7 @@ import { status, followUpTime } from "../src/lib/status.js";
 import { inline, plainText } from "../src/lib/inline.js";
 import { term, SITE } from "../src/lib/comments.js";
 import { velocityChart, velocityPoints } from "../src/lib/velocityChart.js";
+import { statusData, datasetJsonLd } from "../src/lib/statusData.js";
 
 const PAGE_SIZE = 10;
 
@@ -144,6 +145,21 @@ console.log(`prerendered Trackside: ${pages} page(s), ${status.history.length} u
 
 // dist/velocity.svg, the progress card's velocity chart, from the velocity the Leash Log keeps in gantry-cycles.yaml (the only part
 // of gantry-cycles.yaml the site reads); with too little to draw, there's no file, and the card shows no chart
-const chart = velocityChart(velocityPoints(readFileSync("gantry-cycles.yaml", "utf8")));
+const points = velocityPoints(readFileSync("gantry-cycles.yaml", "utf8"));
+const chart = velocityChart(points);
 if (chart) writeFileSync("dist/velocity.svg", chart);
 console.log(chart ? "drew the velocity chart" : "no velocity chart: too few values in gantry-cycles.yaml");
+
+// dist/status.json, the current span and velocity as data, and the schema.org Dataset that describes it, put into the map page's
+// <head> where index.html has the marker (lib/statusData.js). "<" is escaped so nothing in the data can end the script early.
+const data = statusData(status, points);
+writeFileSync("dist/status.json", JSON.stringify(data, null, 2) + "\n");
+const MARKER = "<!--dataset-jsonld-->";
+const mapPage = readFileSync("dist/index.html", "utf8");
+if (!mapPage.includes(MARKER)) throw new Error(`index.html has no ${MARKER} for the Dataset to go in`);
+const jsonLd = JSON.stringify(datasetJsonLd(data), null, 2).replaceAll("<", "\\u003c");
+writeFileSync(
+  "dist/index.html",
+  mapPage.replace(MARKER, `<script type="application/ld+json">\n${jsonLd}\n    </script>`),
+);
+console.log("wrote status.json and the Dataset JSON-LD");

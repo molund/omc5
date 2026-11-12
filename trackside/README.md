@@ -30,12 +30,12 @@ text, `updated` is later than every note, and the card shows no text and a Track
 
 ## Files
 
-| File                   | What it does                                                                             |
-| ---------------------- | ---------------------------------------------------------------------------------------- |
-| `index.html`           | The HTML shell. Vite builds `/trackside/` from it, so where it sits sets the address.    |
-| `main.js`              | The browser entry. Takes over the built page, or draws it from scratch in `npm run dev`. |
-| `TracksidePage.svelte` | The page itself: the list pages, the head tags, the pager and the comments.              |
-| `prerender.js`         | The build step: writes every page, the sitemap and the comment-thread text.              |
+| File                   | What it does                                                                               |
+| ---------------------- | ------------------------------------------------------------------------------------------ |
+| `index.html`           | The HTML shell. Vite builds `/trackside/` from it, so where it sits sets the address.      |
+| `main.js`              | The browser entry. Takes over the built page, or draws it from scratch in `npm run dev`.   |
+| `TracksidePage.svelte` | The page itself: the list pages, the head tags, the pager and the comments.                |
+| `prerender.js`         | The build step: writes every page, the sitemap, the comment-thread text and `status.json`. |
 
 Shared with the map, in `src/`:
 
