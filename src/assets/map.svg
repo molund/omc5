@@ -137,7 +137,7 @@
     .guideway.unfinished {
       display: inline;
     }
-    /* Direction arrows of the gantry's spans 38-42 (westbound) and 48-105 (both ways), hidden until gantryProgress.js (from status.yaml's span and hung) removes the class */
+    /* Direction arrows of the gantry's spans 38-42 (westbound) and 48-105 (both ways, but for the steel spans 52-54), hidden until gantryProgress.js (from status.yaml's span and hung) removes the class */
     .guideway.arrow-pending {
       display: none;
     }
@@ -3975,9 +3975,9 @@
       points="-678.47,-588.11 -542.29,-496.71 -548.26,-487.83 -684.44,-579.23"
     />
     <!-- Direction arrows of the Clayton Clipper's spans 48-105 (eastbound and westbound for each), above their boxes. Each has
-         data-span and the class arrow-pending: gantryProgress.js shows it once the gantry has passed its span, or is on it with
+         data-span and, but for the steel spans 52-54, the class arrow-pending: gantryProgress.js shows it once the gantry has passed its span, or is on it with
          its segments hung (status.yaml). Arrows are 19.54px, #eeeeee, 30.3 from the span's east end and 5.2 either side of its
-         centre line (span 15's placement); the steel spans 52-54 have no fill of their own, so they take the span numbers' colour, as the steel arrows on 45-47 do. -->
+         centre line (span 15's placement); the steel spans 52-54 are girders already in place, so their arrows always show, and they have no fill of their own, so they take the span numbers' colour, as the steel arrows on 45-47 do. -->
     <g id="nw-span-arrows">
       <!-- Span 48 eastbound arrow -->
       <text
@@ -4077,7 +4077,7 @@
       </text>
       <!-- Span 52 eastbound arrow -->
       <text
-        class="n guideway steel-hwy15 arrow-pending"
+        class="n guideway steel-hwy15"
         data-span="52"
         x="-566.28"
         y="-498.60"
@@ -4089,7 +4089,7 @@
       </text>
       <!-- Span 52 westbound arrow -->
       <text
-        class="n guideway steel-hwy15 arrow-pending"
+        class="n guideway steel-hwy15"
         data-span="52"
         x="-557.53"
         y="-511.64"
@@ -4101,7 +4101,7 @@
       </text>
       <!-- Span 53 eastbound arrow -->
       <text
-        class="n guideway steel-hwy15 arrow-pending"
+        class="n guideway steel-hwy15"
         data-span="53"
         x="-702.45"
         y="-590.03"
@@ -4113,7 +4113,7 @@
       </text>
       <!-- Span 53 westbound arrow -->
       <text
-        class="n guideway steel-hwy15 arrow-pending"
+        class="n guideway steel-hwy15"
         data-span="53"
         x="-693.68"
         y="-603.05"
@@ -4125,7 +4125,7 @@
       </text>
       <!-- Span 54 eastbound arrow -->
       <text
-        class="n guideway steel-hwy15 arrow-pending"
+        class="n guideway steel-hwy15"
         data-span="54"
         x="-868.96"
         y="-703.16"
@@ -4137,7 +4137,7 @@
       </text>
       <!-- Span 54 westbound arrow -->
       <text
-        class="n guideway steel-hwy15 arrow-pending"
+        class="n guideway steel-hwy15"
         data-span="54"
         x="-859.74"
         y="-715.86"
