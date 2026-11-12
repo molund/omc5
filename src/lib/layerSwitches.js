@@ -118,6 +118,11 @@ export const defaults = Object.assign({}, fullAerialDefaults, PROGRESS_DEFAULTS,
  */
 export const PROGRESS_COLOUR = "#8473a8";
 /**
+ * The colour of a finished concrete span as the drawing has it (.gi in map.svg), which the progress card's bar takes while
+ * Progress purple is off and Finished spans is on (with them hidden, there's no span colour to match).
+ */
+export const CONCRETE_COLOUR = "#888780";
+/**
  * Progress-chart mode's own CSS: it hides everything (with visibility, which leaves the masks and clip paths the drawing
  * relies on untouched) and then lets through what its switched-on layers show (see PROGRESS_SHOWS), so the base drawing,
  * which has no switch, stays hidden. Its span numbers look as they do in the other views.
