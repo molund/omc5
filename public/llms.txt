@@ -1,0 +1,24 @@
+# Clayton Clipper Tracker
+
+> A map and updates page following the Clayton Clipper gantry, span by span, along the Surrey Langley SkyTrain guideway in Surrey, BC (Hillcrest to Bakerview). A hobby project by Mike, not affiliated with TransLink.
+
+The current span and the gantry's velocity are published as data, rebuilt whenever the status changes. The data below is dedicated to the public domain (CC0 1.0): https://creativecommons.org/publicdomain/zero/1.0/
+
+## Data
+
+- [Status (JSON)](https://clayton-clipper.olund.ca/status.json): the span the gantry is on, whether its segments are hung, the share of the route, and the velocity in spans per week with its last few days of values. Each field is defined in the file. The velocity is an estimate.
+- [Guideway spans (GeoJSON)](https://clayton-clipper.olund.ca/data/sls-hillcrest-to-bakerview-spans.geojson)
+- [Guideway supports (GeoJSON)](https://clayton-clipper.olund.ca/data/sls-hillcrest-to-bakerview-supports.geojson)
+- [Guideway pillars (GeoJSON)](https://clayton-clipper.olund.ca/data/sls-hillcrest-to-bakerview-pillars.geojson)
+- [About the map data](https://clayton-clipper.olund.ca/data/README.md): how the files were made and how to update them
+
+## Pages
+
+- [Map](https://clayton-clipper.olund.ca/): the guideway on an aerial photo, with the Clayton Clipper's progress
+- [Trackside](https://clayton-clipper.olund.ca/trackside/): the construction updates, newest first, with photos
+- [About](https://clayton-clipper.olund.ca/about/)
+
+## Notes
+
+- Span numbers run along the route. The gantry's span number goes up when it arrives at a span; on a double girder span only the arrival is logged, so the progress card shows one less (`shownOnCard` in status.json).
+- How the velocity is worked out: https://github.com/molund/omc5-admin/blob/main/docs/velocity-calculation.md
