@@ -21,6 +21,12 @@ spans-per-week: 2.80
 #   No other markdown: anything else shows as typed.
 # Notes to self, and the steps of the gantry's cycle seen at each time stamp, are in gantry-cycles.yaml, not here.
 notes:
+  - 2026-11-12: "Dave Bennett Extension?"
+    summary: "Did anybody else notice that Waze completely mixed up 1970s British Columbia premiers?"
+    post: true
+    photo:
+      file: 2026-11-12-photo.jpg
+      caption: "Screenshot from the Waze app, Nov. 12, 2026 showing “SkyTrain Dave Bennett Extension”"
   - 2026-11-11T08:45-07:00: "Clayton Clipper construction update for Wednesday, Nov. 11, 2026"
     summary: "The night shift finished hanging span 40 last night."
     block:
