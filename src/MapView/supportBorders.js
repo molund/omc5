@@ -1,4 +1,4 @@
-// The gantry's yellow support beams (#clipper-support-1 to -4) are drawn inside the gantry's squashed frame (the
+// The gantry's yellow support beams (#gantry-support-*) are drawn inside the gantry's squashed frame (the
 // scale(0.55 1) in map.svg), so their brown border was squashed with them: full width on the sides that run across
 // the gantry, 55% on the sides that run along it. Turning a beam (the gantry animation does) turned its thin and thick
 // sides with it, and when the animation's cycle snapped back (placeGantry puts each beam's own drawing in each place),
@@ -8,7 +8,7 @@
 // changes.
 
 /** The gantry's support beams. */
-const BEAMS = 'rect[id^="clipper-support-"]';
+const BEAMS = 'rect[id^="gantry-support-"]';
 
 /**
  * The largest stretch of a matrix's turn-and-scale part: how many screen pixels one unit becomes in its least squashed

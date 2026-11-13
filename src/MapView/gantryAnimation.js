@@ -194,10 +194,10 @@ export function resumeGantry() {
 export async function playGantry(svg) {
   const gantry = svg.querySelector("#clayton-clipper"),
     trolley = svg.querySelector("#clipper-trolley"),
-    beam = svg.querySelector("#clipper-support-1"),
-    frontBeam = svg.querySelector("#clipper-support-4-short"),
-    secondBeam = svg.querySelector("#clipper-support-3"),
-    thirdBeam = svg.querySelector("#clipper-support-2");
+    beam = svg.querySelector("#gantry-support-c"),
+    frontBeam = svg.querySelector("#gantry-support-front"),
+    secondBeam = svg.querySelector("#gantry-support-a"),
+    thirdBeam = svg.querySelector("#gantry-support-b");
   if (!gantry || !trolley || !beam || !frontBeam || !secondBeam || !thirdBeam) return false;
   // a moment for the page to settle and the gantry layer to show: a hidden element has no size to measure
   await pause(1000);
@@ -244,8 +244,8 @@ export async function playGantry(svg) {
     return a.finished;
   }
 
-  // THE FOURTH SUPPORT is four groups (beam, walkway and two pads) side by side in #clayton-clipper, all marked
-  // data-anchor="fourth"; they get the same moves so they stay together.
+  // THE FOURTH SUPPORT is four groups (beam, walkway and two wheel assemblies) side by side in #clayton-clipper, all
+  // marked data-anchor="fourth"; they get the same moves so they stay together.
   // Its groups live in #clayton-clipper's frame, which is squashed to 55% across (the scale(0.55 1) above it): a turn in
   // that frame would stretch the beam as it turned. So it is moved and turned in the map's own frame (the <svg>, the same
   // scale both ways), and the move is carried into #clayton-clipper's frame by `toMap` and back out by `fromMap`.
