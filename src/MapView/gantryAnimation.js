@@ -418,7 +418,7 @@ export async function playGantry(svg) {
 
   // TUNING: these only set where along the way things happen; every final position comes from the next span.
   // FOURTH_TURNS_AT: how much of the fourth support's trip it makes before it turns (0 to 1)
-  const FOURTH_TURNS_AT = 70 / 151;
+  const FOURTH_TURNS_AT = 0.5;
   // PICKUP: a nudge, in truss units along y, to where the front tip stops when the trusses go back for the front support
   const PICKUP = -8;
 
@@ -521,7 +521,8 @@ export async function playGantry(svg) {
 
   // 9. the trusses stay on the second support and their front end swings, carrying the front support, until the front
   // support is on its place on the next span: the turn from where it is now to N.front.to, seen from the pivot. The
-  // trolley, parked over the pivot, turns where it is.
+  // trolley, parked over the pivot, turns where it is. The third support, riding on the rear lifting jacks since step 8,
+  // swings with the trusses as a counterweight for the front support.
   const frontSlid = along(front.at),
     turn = small(
       deg({ x: frontTo.x - pivot.x, y: frontTo.y - pivot.y }) -
@@ -532,17 +533,21 @@ export async function playGantry(svg) {
   const swingArc = (Math.hypot(frontTo.x - pivot.x, frontTo.y - pivot.y) * Math.abs(turn) * Math.PI) / 180,
     swings = !unseen(swingArc);
   if (swings) {
-    await Promise.all([trusses.swing(pivot, turn, 3000), front.swing(pivot, turn, 3000)]);
+    await Promise.all([
+      trusses.swing(pivot, turn, 3000),
+      front.swing(pivot, turn, 3000),
+      third.swing(pivot, turn, 3000),
+    ]);
     await pause(500);
   }
 
   // 10. the trusses swing back the same way to where they were, leaving the front support on its place; at the same time
   // it turns about its own middle to the angle it has there (its whole turn on the move is N.front.turn, and the swing
-  // has done `turn` of it)
+  // has done `turn` of it). The third support swings back with the trusses, ending where step 8 left it.
   // The front support's own turn is played if the ends of its beam would move far enough to see, even without the swing.
   const frontEnds = (halfLength(frontBeam, svg) * Math.abs(N.front.turn - turn) * Math.PI) / 180,
     tenMoves = [
-      ...(swings ? [trusses.swing(pivot, -turn, 3000)] : []),
+      ...(swings ? [trusses.swing(pivot, -turn, 3000), third.swing(pivot, -turn, 3000)] : []),
       ...(unseen(frontEnds) ? [] : [front.swing(frontTo, N.front.turn - turn, 3000)]),
     ];
   if (tenMoves.length) {
