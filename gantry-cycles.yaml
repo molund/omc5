@@ -38,8 +38,9 @@ irregular-shutdowns:
 # the week up to the latest step reported (the weekly shutdown allowed for). calculated-chart-data is the figure at each
 # step of the past 96 hours, newest first, the first being spans-per-week itself; the site's build draws it as the progress
 # card's chart. status.yaml has a copy of spans-per-week
-spans-per-week: 2.80
+spans-per-week: 2.84
 calculated-chart-data:
+  - 2026-11-12T19:30-07:00: 2.84
   - 2026-11-12T10:15-07:00: 2.80
   - 2026-11-11T06:00-07:00: 2.81
   - 2026-11-10T21:00-07:00: 2.81
@@ -49,6 +50,10 @@ calculated-chart-data:
   - 2026-11-09T08:30-07:00: 2.71
   - 2026-11-08T22:00-07:00: 2.77
 entries:
+  - 2026-11-12T19:30-07:00:
+      span: 40
+      stage: glued
+      note: "All the blocks are in place but there’s still plastic on the ground"
   - 2026-11-12T10:15-07:00:
       span: 40
       stage: gluing started
