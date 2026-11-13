@@ -969,18 +969,18 @@
         />
         <!-- Span 35 off-ramp, second span, including the part that merges into the 36 eastbound track (a guess until it is built) -->
         <polygon
-          class="guideway unfinished ramp-current"
-          fill="#FFFFFF"
-          stroke="#888780"
-          stroke-width="0.825"
+          class="guideway ramp-current"
+          fill="#888780"
+          stroke="#5F5E5A"
+          stroke-width="1.5"
           points="315.23,1014.30 314.82,1014.30 315.53,1075.43 317.28,1075.53 328.03,893.53 318.39,893.37 314.74,955.09"
         />
         <!-- Alternate: the span 35 off-ramp forks from the eastbound track at the 36/37 hammer, aimed at a point past the cap's far edge by the cap's width (35.09) and cut off at the cap's far edge, so the tip is blunt; two girders, span 35 and span 36, meeting on the centre of the 35/36 bent, moved south-west so they sit clear of the eastbound girders there (a slight bend where they meet). Span 35 here; span 36 is one wide deck with the eastbound track (see eastbound span 36) -->
         <polygon
-          class="guideway unfinished ramp-alt"
-          fill="#FFFFFF"
-          stroke="#888780"
-          stroke-width="0.825"
+          class="guideway ramp-alt"
+          fill="#888780"
+          stroke="#5F5E5A"
+          stroke-width="1.5"
           points="318.39,893.37 328.03,893.53 324.88,1014.30 315.23,1014.30"
         />
         <!-- The span 35 off-ramp ends on the centre of the 36 eastbound track at mid-span 36, like the span 39 on-ramp in span 38 --><!-- Span 39: yard on-ramp joining eastbound (mirror of the span 35 off-ramp) -->
@@ -1596,7 +1596,7 @@
         x="-942.49"
         y="-240.96"
         text-anchor="middle"
-        style="font-size: 17.6px; fill: #767676"
+        style="font-size: 17.6px; fill: #eeeeee"
         transform="rotate(35.5 -942.49 -247.96)"
       >
         &#x2192;
