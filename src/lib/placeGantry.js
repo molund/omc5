@@ -248,10 +248,10 @@ export function gantryMoves(root, D, S) {
       to = add(now[rule.end], add(mul(now.u, dot(off, was.u)), mul(now.v, dot(off, was.v))));
     }
     if (rule.edge) {
-      // the support is its beam and its walkway (the pads sit on top): the middle of its rear edge (its two corners furthest
-      // back) or front edge (furthest forward), carried through the move
+      // the support is its beam and its walkway (the wheel assemblies sit on top): the middle of its rear edge (its two
+      // corners furthest back) or front edge (furthest forward), carried through the move
       const corners = [
-        ...gantry.querySelectorAll(`:scope > [data-anchor="${a}"] > :not(.clipper-support-pad)`),
+        ...gantry.querySelectorAll(`:scope > [data-anchor="${a}"] > :not(.gantry-support-wheels)`),
       ].flatMap((el) => {
         const b = el.getBBox();
         return [

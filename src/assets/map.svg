@@ -130,7 +130,7 @@
     /* Guideway (spans, beams, ramps, direction arrows; not bents/hammers/tulips): change display:none to display:inline to show it */
     .guideway {
       display: inline;
-    } /* Gantry body (trusses, cross beams, walkways, tips, trolley; not the supports, their walkways or pads): change display:none to display:inline to show it */
+    } /* Gantry body (trusses, cross beams, walkways, tips, trolley; not the supports, their walkways or wheels): change display:none to display:inline to show it */
     .gantry-body {
       display: inline;
     } /* Unfinished spans (pale westbound boxes, eastbound precast and exit ramps): change display:inline to display:none to hide them */
@@ -6192,7 +6192,7 @@
             <g data-anchor="fourth" transform="matrix(0.999713 0.013177 -0.043561 0.999713 38.95772 355.921894)">
               <rect
                 opacity="1"
-                id="clipper-support-1"
+                id="gantry-support-c"
                 x="329.73"
                 y="677.255"
                 width="10.91"
@@ -6206,7 +6206,7 @@
             <g data-anchor="rear" transform="matrix(0.999713 0.013177 -0.043561 0.999713 56.969543 496.079776)">
               <rect
                 opacity="1"
-                id="clipper-support-2"
+                id="gantry-support-b"
                 x="262.1"
                 y="481.0"
                 width="90"
@@ -6220,7 +6220,7 @@
             <g data-anchor="second" transform="matrix(0.999993 0.002016 -0.006666 0.999993 40.98533 742.588772)">
               <rect
                 opacity="1"
-                id="clipper-support-3"
+                id="gantry-support-a"
                 x="260.0"
                 y="347.0"
                 width="90"
@@ -6233,7 +6233,7 @@
             <g data-anchor="front" transform="matrix(0.999993 0.002016 -0.006666 0.999993 34.835558 584.371764)">
               <rect
                 opacity="1"
-                id="clipper-support-4-short"
+                id="gantry-support-front"
                 x="282.895"
                 y="613"
                 width="63"
@@ -6247,7 +6247,7 @@
             <g data-anchor="fourth" transform="matrix(0.999713 0.013177 -0.043561 0.999713 38.95772 355.921894)">
               <rect
                 opacity="0.65"
-                class="clipper-support-walkway"
+                class="gantry-support-walkway"
                 x="323.67"
                 y="677.255"
                 width="6.06"
@@ -6259,7 +6259,7 @@
             <g data-anchor="rear" transform="matrix(0.999713 0.013177 -0.043561 0.999713 56.969543 496.079776)">
               <rect
                 opacity="0.65"
-                class="clipper-support-walkway"
+                class="gantry-support-walkway"
                 x="262.1"
                 y="477.67"
                 width="90"
@@ -6271,7 +6271,7 @@
             <g data-anchor="second" transform="matrix(0.999993 0.002016 -0.006666 0.999993 40.98533 742.588772)">
               <rect
                 opacity="0.65"
-                class="clipper-support-walkway"
+                class="gantry-support-walkway"
                 x="260.0"
                 y="343.67"
                 width="90"
@@ -6282,7 +6282,7 @@
             <g data-anchor="front" transform="matrix(0.999993 0.002016 -0.006666 0.999993 34.835558 584.371764)">
               <rect
                 opacity="0.65"
-                class="clipper-support-walkway"
+                class="gantry-support-walkway"
                 x="282.895"
                 y="619"
                 width="63"
@@ -6290,10 +6290,10 @@
                 fill="#174B83"
               />
             </g>
-            <!-- Support pads: solid blue, above their beams and walkways but below the trusses; move with their support. -->
+            <!-- Support wheel assemblies: solid blue, above their beams and walkways but below the trusses; move with their support. -->
             <g data-anchor="fourth" transform="matrix(0.999713 0.013177 -0.043561 0.999713 38.95772 355.921894)">
               <rect
-                class="clipper-support-pad"
+                class="gantry-support-wheels"
                 x="327.50"
                 y="688.371"
                 width="15.35"
@@ -6304,7 +6304,7 @@
             </g>
             <g data-anchor="fourth" transform="matrix(0.999713 0.013177 -0.043561 0.999713 38.95772 355.921894)">
               <rect
-                class="clipper-support-pad"
+                class="gantry-support-wheels"
                 x="327.50"
                 y="712.529"
                 width="15.35"
@@ -6315,7 +6315,7 @@
             </g>
             <g data-anchor="rear" transform="matrix(0.999713 0.013177 -0.043561 0.999713 56.969543 496.079776)">
               <rect
-                class="clipper-support-pad"
+                class="gantry-support-wheels"
                 x="282.368"
                 y="479.779"
                 width="5.628"
@@ -6326,7 +6326,7 @@
             </g>
             <g data-anchor="rear" transform="matrix(0.999713 0.013177 -0.043561 0.999713 56.969543 496.079776)">
               <rect
-                class="clipper-support-pad"
+                class="gantry-support-wheels"
                 x="326.204"
                 y="479.779"
                 width="5.628"
@@ -6337,7 +6337,7 @@
             </g>
             <g data-anchor="second" transform="matrix(0.999993 0.002016 -0.006666 0.999993 40.98533 742.588772)">
               <rect
-                class="clipper-support-pad"
+                class="gantry-support-wheels"
                 x="280.251"
                 y="345.779"
                 width="5.628"
@@ -6347,7 +6347,7 @@
             </g>
             <g data-anchor="second" transform="matrix(0.999993 0.002016 -0.006666 0.999993 40.98533 742.588772)">
               <rect
-                class="clipper-support-pad"
+                class="gantry-support-wheels"
                 x="324.121"
                 y="345.779"
                 width="5.628"
@@ -6357,7 +6357,7 @@
             </g>
             <g data-anchor="front" transform="matrix(0.999993 0.002016 -0.006666 0.999993 34.835558 584.371764)">
               <rect
-                class="clipper-support-pad"
+                class="gantry-support-wheels"
                 x="289.581"
                 y="611.779"
                 width="5.628"
@@ -6367,7 +6367,7 @@
             </g>
             <g data-anchor="front" transform="matrix(0.999993 0.002016 -0.006666 0.999993 34.835558 584.371764)">
               <rect
-                class="clipper-support-pad"
+                class="gantry-support-wheels"
                 x="333.451"
                 y="611.779"
                 width="5.628"
@@ -6506,7 +6506,7 @@
                   fill="#F2A51F"
                   transform="translate(6.6 0) translate(0 550) scale(1 0.91675) translate(0 -550)"
                 />
-                <!-- Clipper blue truss tips (end legs; solid #4D76A3 to match the pads and decks as rendered): inner half of each truss (5 wide), 11.2 long, recessed 8.6 from each truss end (trimmed by a third from the outer end); y = truss start + 8.6 and truss end - 19.8 -->
+                <!-- Clipper blue truss tips (end legs; solid #4D76A3 to match the wheel assemblies and decks as rendered): inner half of each truss (5 wide), 11.2 long, recessed 8.6 from each truss end (trimmed by a third from the outer end); y = truss start + 8.6 and truss end - 19.8 -->
                 <rect
                   class="clipper-tip"
                   x="278.5"
