@@ -40,6 +40,7 @@ irregular-shutdowns:
 # card's chart. status.yaml has a copy of spans-per-week
 spans-per-week: 2.84
 calculated-chart-data:
+  - 2026-11-12T20:45-07:00: 2.84
   - 2026-11-12T19:30-07:00: 2.84
   - 2026-11-12T10:15-07:00: 2.80
   - 2026-11-11T06:00-07:00: 2.81
@@ -50,6 +51,9 @@ calculated-chart-data:
   - 2026-11-09T08:30-07:00: 2.71
   - 2026-11-08T22:00-07:00: 2.77
 entries:
+  - 2026-11-12T20:45-07:00:
+      span: 40
+      stage: post-tensioning started
   - 2026-11-12T19:30-07:00:
       span: 40
       stage: glued
