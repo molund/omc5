@@ -41,8 +41,8 @@ least. Post-tensioning and moving the supports have only a start: no end is tagg
 
 - **A cycle is arrival to arrival** (stage 0 to the next stage 0). The time between two "moved to span N" notes is one
   cycle, whatever happened in between.
-- **Working time, not calendar time.** The crews work 24/6. The Sunday shutdown runs from 6 p.m. Saturday to 6 p.m.
-  Sunday (24 hours) and is taken out of any cycle it falls in.
+- **Working time, not calendar time.** The crews work 24/6. The Sunday shutdown runs from 3 p.m. Saturday, when the day shift
+  ends, to 8 p.m. Sunday (29 hours) and is taken out of any cycle it falls in.
 - **Seen Nov. 7, 2026, not yet in the velocity:** the Friday night shift is pretty much nonexistent. There was a little
   activity early Friday evening, the hangers being lowered, which doesn't need a big crew; it may have just been the day
   shift working overtime. The day shift works six days a week and the night shift only five (Sunday to Thursday nights),
