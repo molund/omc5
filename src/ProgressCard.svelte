@@ -3,7 +3,14 @@
   import { fade } from "svelte/transition";
   import { cubicIn } from "svelte/easing";
   import { PROGRESS_COLOUR, CONCRETE_COLOUR } from "./lib/layerSwitches.js";
-  import { ui, layers, stopAnimation, pauseAnimation, resumeAnimation } from "./lib/appState/appState.svelte.js";
+  import {
+    ui,
+    layers,
+    animateGantry,
+    stopAnimation,
+    pauseAnimation,
+    resumeAnimation,
+  } from "./lib/appState/appState.svelte.js";
   import { status, asOf } from "./lib/status.js";
   import { inline } from "./lib/inline.js";
   import { cardSpan } from "./lib/placeGantry.js";
@@ -132,7 +139,7 @@
 
 <!-- while the gantry animates, in every view, a Pause and a Stop button left of the top-right corner's button; the progress
      card, drawn after them, opens over them. Pause holds the gantry where it is and turns into Play, which plays it on from
-     there; Stop ends the animation (the layer panel's "animate" link starts it again) -->
+     there; Stop ends the animation (the Play pill starts it again) -->
 {#if ui.gantry && ui.gantryPlaying}
   {#if ui.gantryPaused}
     <button
@@ -154,6 +161,22 @@
     title="Stop the animation"
     aria-label="Stop the animation"
     onclick={stopAnimation}><Icon kind="stop" /></button
+  >
+{/if}
+<!-- while the gantry doesn't animate, a Play pill where the Pause and Stop buttons go (as wide as the two together), left of
+     the info button, or left of the progress card when that is open; none once status.yaml has the gantry on the last
+     span, 105: there's nowhere left to move it. It ticks the Gantry box first if it's off and, on a phone, closes the menu
+     so the map shows. While the animation plays, the Stop button stops it and the layer switches stay as the animation
+     set them -->
+{#if ui.gantry && !ui.gantryPlaying && !(status.span >= 105)}
+  <button
+    class={["play-pill absolute top-3 z-5", ui.cardHidden ? "right-13" : "right-65"]}
+    title="Play the animation"
+    aria-label="Play the animation"
+    onclick={() => {
+      animateGantry();
+      if (ui.phone) ui.collapsed = true;
+    }}><Icon kind="play" /><span>Play</span></button
   >
 {/if}
 {#if ui.gantry && ui.cardHidden && ui.gantryPlaying && ui.view !== "progress"}
@@ -285,3 +308,35 @@
   >
     Permalink copied
   </div>{/if}
+
+<style>
+  @reference "./app.css";
+
+  /* the idle Play pill: as wide as the Pause and Stop buttons are together (2 + 0.5 + 2 rem), with an accent border so it
+     reads as the thing to press, and a ring that pulses three times when the map loads */
+  .play-pill {
+    @apply flex w-18 items-center justify-center gap-1.5 border-(--accent) px-0 font-medium shadow-float;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .play-pill::after {
+      content: "";
+      position: absolute;
+      inset: calc(var(--spacing) * -1);
+      border: calc(var(--spacing) * 0.5) solid var(--accent);
+      border-radius: var(--radius-lg);
+      opacity: 0;
+      pointer-events: none;
+      animation: play-pulse 2.4s ease-out 3;
+    }
+  }
+  @keyframes play-pulse {
+    0% {
+      opacity: 0.55;
+      transform: scale(0.96);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1.12);
+    }
+  }
+</style>

@@ -1,7 +1,6 @@
 <script>
   import { BASEMAPS, LAYERS, spanNumbersAvailable } from "./lib/layerSwitches.js";
   import Icon from "./Icon.svelte";
-  import { status } from "./lib/status.js";
   import { fly, slide } from "svelte/transition";
   import {
     layers,
@@ -14,8 +13,6 @@
     fitZoom,
     isFit,
     centreView,
-    animateGantry,
-    stopAnimation,
   } from "./lib/appState/appState.svelte.js";
 
   // each press of zoom in or out changes the zoom by this factor, about the middle of the stage; Fit's zoom depends on the
@@ -137,22 +134,6 @@
                   onchange={(e) => change(e, k)}
                 />{label}
               </label>
-              <!-- no "animate" link once status.yaml has the gantry on the last span, 105: there's nowhere left to move it -->
-              {#if k === "gantry" && !(status.span >= 105)}
-                <!-- a small link that plays the gantry's moves span by span to the last span (MapView does the moving):
-                     it ticks the Gantry box first if it's off (turning it off again stops and resets the moves), shows
-                     the finished spans and supports and hides the unfinished spans, span numbers and arrows, and on a
-                     phone closes the menu so the map shows. While the moves play it reads "stop" and stops them, as the
-                     progress card's Stop button does -->
-                <button
-                  class="border-0 bg-transparent p-0 text-xs text-(--link) underline"
-                  onclick={() => {
-                    if (ui.gantryPlaying) return stopAnimation();
-                    animateGantry();
-                    if (ui.phone) ui.collapsed = true;
-                  }}>{ui.gantryPlaying ? "stop" : "animate"}</button
-                >
-              {/if}
               {#if k === "aerial"}
                 <select
                   class="min-w-0 rounded-md border border-(--line) bg-(--panel) px-1 py-0.5 text-base text-(--ink) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent) disabled:cursor-default disabled:opacity-40"

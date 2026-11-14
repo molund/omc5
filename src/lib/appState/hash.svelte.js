@@ -24,7 +24,7 @@ let openedOn = null;
 let keepOthers = true;
 const placeKey = () => `${ui.view}|${ui.span}`;
 /**
- * Whether the address says ?animate=true: from when an animation starts (the "animate" link, or the address itself)
+ * Whether the address says ?animate=true: from when an animation starts (the Play pill, or the address itself)
  * until another view or span is picked, the gantry is turned off or the Stop button pressed (each stops it). A run that
  * finishes leaves it on.
  */

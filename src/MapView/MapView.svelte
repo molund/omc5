@@ -36,8 +36,8 @@
 
   let stage;
   let drag = $state(null);
-  // the layer panel's "animate" link: the gantry moves on span by span to the last span (span 48 in the two SFMSF views),
-  // then the link comes back. Only ui.gantryPlaying is watched; the moves themselves are untracked, so nothing they read
+  // the Play pill: the gantry moves on span by span to the last span (span 48 in the two SFMSF views),
+  // then the pill comes back. Only ui.gantryPlaying is watched; the moves themselves are untracked, so nothing they read
   // starts them again. `running` is whether a run is still under way, so the Stop button (which clears ui.gantryPlaying)
   // can be told from a run that has reached its last span; `runs` keeps a stopped run's end from clearing a newer one.
   let running = false,
@@ -243,7 +243,7 @@
     requestAnimationFrame(look);
   }
   // picking another view preset stops the gantry's moves and puts the drawing back as status.yaml has it (the moves give
-  // up, and the "animate" link comes back when playToEnd ends), with the supports above the spans again
+  // up, and the Play pill comes back when playToEnd ends), with the supports above the spans again
   let viewWas = ui.view;
   $effect(() => {
     const view = ui.view;

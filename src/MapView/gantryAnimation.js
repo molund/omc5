@@ -1,4 +1,4 @@
-// Clayton Clipper gantry animations, played by the layer panel's "animate" link (through ui.gantryPlaying and MapView).
+// Clayton Clipper gantry animations, played by the Play pill (through ui.gantryPlaying and MapView).
 //
 // Every move uses the Web Animations API: el.animate(keyframes, options) slides an element from the first keyframe to the
 // last, and returns an Animation whose `finished` promise lets the next step wait its turn (`await`). `fill: "forwards"`
@@ -12,7 +12,7 @@ const SMOOTH = { easing: "ease-in-out", fill: "forwards" };
 
 /**
  * How fast the whole animation plays: every move's duration and every pause is divided by it, so 2 is twice as fast as
- * the times written in the steps, and 1 plays them as written. After the "animate" link, the moves play at SPEEDS in
+ * the times written in the steps, and 1 plays them as written. After the Play pill, the moves play at SPEEDS in
  * turn, and every move after the last of them at that last speed (playToEnd sets it).
  */
 const SPEEDS = [1, 2, 3, 4, 5];
@@ -830,7 +830,7 @@ export async function playToEnd(svg, last = 106) {
 /** What gantryProgress() marks as the gantry moves on: the guideway pieces, their arrows and the span numbers. */
 const PROGRESS_MARKED = "polygon.guideway, .arrow-pending, text.guideway, text.ccnumber";
 
-/** The drawing before the "animate" link's first move, saved by playToEnd(); null when nothing has moved. */
+/** The drawing before the Play pill's first move, saved by playToEnd(); null when nothing has moved. */
 let before = null;
 
 /**
