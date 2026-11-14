@@ -1155,11 +1155,12 @@ function fillIn(svg, el, was) {
 }
 
 /**
- * How long the trolley takes to get to the start of a fill, across to its second half, back afterwards, and then on to
- * the fourth support (step 1), in milliseconds as written (divided by SPEED like every move): half its usual 3000, so
- * it hurries.
+ * How long the trolley takes to get to the start of a fill, across to its second half, and then on to the fourth
+ * support (step 1), in milliseconds as written (divided by SPEED like every move): half its usual 3000, so it hurries.
  */
 const FILL_TROLLEY_TIME = 1500;
+/** How long the trolley takes to get back to its start position after the fill, from the middle: a quick snap back. */
+const FILL_RETURN_TIME = 600;
 
 /**
  * The trolley's part in a fill: it hurries along the trusses to the east end of the span (where the fill starts),
@@ -1192,5 +1193,5 @@ async function followFill(trolley, pieces) {
   await go(middle, west, FILL_TROLLEY_TIME / SPEED, "ease-in-out");
   pieces.forEach((p) => p.start(2));
   await go(west, middle, FILL_TIME / 2 / SPEED, "linear");
-  await go(middle, 0, FILL_TROLLEY_TIME / SPEED, "ease-in-out");
+  await go(middle, 0, FILL_RETURN_TIME / SPEED, "ease-in-out");
 }
