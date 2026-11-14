@@ -67,7 +67,7 @@ const view = saved?.view ?? (defaults.progress ? "progress" : defaults.sfmsfDraw
  * - filled: whether the map is at a view's opening fill (see fillView).
  * - ready: turns on the layer rules once map.svg is tagged.
  * - gantry: the Clayton Clipper's span number out of the total, and the spans ahead of it.
- * - gantryPlaying: set by animateGantry() (the layer panel's "animate" link, or ?animate=true in the address): MapView
+ * - gantryPlaying: set by animateGantry() (the Play pill, or ?animate=true in the address): MapView
  *   then plays the gantry's moves span by span to the last span, and clears it when they're done.
  * - gantryPaused: whether the Pause button has the animation held where it is (pauseAnimation()); Play
  *   (resumeAnimation()) plays it on from there. Cleared whenever the animation ends or is stopped.

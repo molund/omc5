@@ -204,8 +204,8 @@ let beforeAnimation = null;
 
 /**
  * Starts the gantry animation (MapView plays it while ui.gantryPlaying is set): the Gantry box is ticked if it's off, the
- * finished spans and supports are shown, and the unfinished spans, span numbers and arrows hidden. Used by the layer
- * panel's "animate" link and by ?animate=true in the address.
+ * finished spans and supports are shown, and the unfinished spans, span numbers and arrows hidden. Used by the Play pill
+ * and by ?animate=true in the address.
  * @returns {void}
  */
 export function animateGantry() {
@@ -226,7 +226,7 @@ export function animateGantry() {
 
 /**
  * Stops the gantry animation (the Stop button): MapView stops the moves and puts the drawing back, as turning the gantry
- * off does, and ?animate=true leaves the address. The layer panel's "animate" link starts it again.
+ * off does, and ?animate=true leaves the address. The Play pill starts it again.
  * @returns {void}
  */
 export function stopAnimation() {
