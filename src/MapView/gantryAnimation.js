@@ -426,11 +426,11 @@ export async function playGantry(svg) {
   // PICKUP: a nudge, in truss units along y, to where the front tip stops when the trusses go back for the front support
   const PICKUP = -8;
 
-  // 1. the trolley slides from where it is to stop over the middle of the fourth support; there, the hangers the fill
-  // put on the finished span come down
-  await moveTrolley(beamAt.y - trolleyAt.y, 3000);
+  // 1. the trolley slides from where it is (back at its start, after the fill) to stop over the middle of the fourth
+  // support, hurrying like it did to and from the fill (FILL_TROLLEY_TIME); there, the hangers the fill put on the
+  // finished span come down
+  await moveTrolley(beamAt.y - trolleyAt.y, FILL_TROLLEY_TIME);
   clearHangers();
-  await pause(500);
 
   // THE FOURTH SUPPORT'S TRIP (steps 2 and 3): from where it starts (`middle`) towards the second support's place on the
   // next span (N.second.to), as far as the point where it turns
@@ -1155,10 +1155,12 @@ function fillIn(svg, el, was) {
 }
 
 /**
- * How long the trolley takes to get to the start of a fill and back afterwards, in milliseconds as written (divided by
- * SPEED like every move): half its usual 3000, so it hurries there and back.
+ * How long the trolley takes to get to the start of a fill, across to its second half, and then on to the fourth
+ * support (step 1), in milliseconds as written (divided by SPEED like every move): half its usual 3000, so it hurries.
  */
 const FILL_TROLLEY_TIME = 1500;
+/** How long the trolley takes to get back to its start position after the fill, from the middle: a quick snap back. */
+const FILL_RETURN_TIME = 600;
 
 /**
  * The trolley's part in a fill: it hurries along the trusses to the east end of the span (where the fill starts),
@@ -1191,5 +1193,5 @@ async function followFill(trolley, pieces) {
   await go(middle, west, FILL_TROLLEY_TIME / SPEED, "ease-in-out");
   pieces.forEach((p) => p.start(2));
   await go(west, middle, FILL_TIME / 2 / SPEED, "linear");
-  await go(middle, 0, FILL_TROLLEY_TIME / SPEED, "ease-in-out");
+  await go(middle, 0, FILL_RETURN_TIME / SPEED, "ease-in-out");
 }
