@@ -94,9 +94,6 @@ entries:
   - 2026-11-10T09:00-07:00:
       span: 39
       stage: hangers down
-  - 2026-11-09T20:45-07:00:
-      span: 39
-      stage: post-tensioning started
   - 2026-11-09T13:15-07:00:
       span: 39
       stage: post-tensioning started
