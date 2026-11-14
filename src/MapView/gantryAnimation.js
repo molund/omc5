@@ -4,7 +4,7 @@
 // last, and returns an Animation whose `finished` promise lets the next step wait its turn (`await`). `fill: "forwards"`
 // keeps each piece where its last move left it.
 
-import { gantryMoves, placeGantry, DOUBLE_GIRDER } from "../lib/placeGantry.js";
+import { gantryMoves, placeGantry, stackSupports, DOUBLE_GIRDER } from "../lib/placeGantry.js";
 import { gantryProgress } from "./gantryProgress.js";
 
 /** Smooth starts and stops, and stay put at the end. */
@@ -438,6 +438,9 @@ export async function playGantry(svg) {
   // 2. the trolley and the fourth support move forward together: the first part of its trip. On a double girder span
   // (DOUBLE_GIRDER, from placeGantry) the fourth support is drawn turned across the span, so when it is picked up there
   // it first turns a quarter turn clockwise (a positive turn on the map, where y points down).
+  // (A support that lies lengthwise is drawn above those across the trusses, so it doesn't blend with them as it is
+  // carried over them: stackSupports. The fourth support is lifted first, to turn lengthwise.)
+  stackSupports(svg, ["fourth"]);
   if (DOUBLE_GIRDER.has(S - 1)) {
     await moveFourth({ ...fourth, turn: fourth.turn + 90 }, 2000);
     await pause(500);
@@ -457,6 +460,8 @@ export async function playGantry(svg) {
     { ...fourth, turn: fourth.turn + nearest(secondAngle + N.second.turn - (fourthAngle + fourth.turn), -90) },
     2000,
   );
+  // it lies across the trusses now, so it goes back under the supports that are lengthwise
+  stackSupports(svg);
 
   // 4. the trolley backs up with the fourth support and sets it down on the rear support's place on the next span
   // (N.rear.to), where it stays for the rest of the move. It turns to the angle the rear support has there (the third
@@ -491,6 +496,7 @@ export async function playGantry(svg) {
   // 6. the trolley lifts the second support and backs up with it a little
   const backUp = -ahead * BACK_UP,
     backStep = along(backUp);
+  stackSupports(svg, ["second"]);
   await Promise.all([moveTrolley(trolleyY + backUp, 1500), second.by(backUp, 1500)]);
   aMid = { x: aMid.x + backStep.x, y: aMid.y + backStep.y };
   await pause(500);
@@ -515,6 +521,7 @@ export async function playGantry(svg) {
   // (N.second.turn), from its angle now (where it started plus the turn in step 7); of the ways round, the one nearest a
   // quarter turn back, as in step 3
   await second.swing(aMid, nearest(N.second.turn - secondSideways, -90), 2000);
+  stackSupports(svg);
   await pause(500);
 
   // 10. the rest of its trip, with the small move sideways that only the support makes, and the trolley lowers it on the
@@ -642,6 +649,7 @@ export async function playGantry(svg) {
   // round, the one nearest a quarter turn. swing() turns in the map's frame, so it keeps its shape.
   const slidThird = along(third.at),
     thirdTurn = nearest(fourthLengthwise - thirdAngle, 90);
+  stackSupports(svg, ["rear"]);
   await third.swing({ x: thirdStart.x + slidThird.x, y: thirdStart.y + slidThird.y }, thirdTurn, 2000);
   await pause(500);
 
@@ -661,6 +669,7 @@ export async function playGantry(svg) {
   // (anticlockwise) when either way would do
   if (acrossNext) {
     await third.swing(N.fourth.to, nearest(fourthFinal - (thirdAngle + thirdTurn), -90), 2000);
+    stackSupports(svg);
     await pause(500);
   }
 
