@@ -44,7 +44,7 @@
     if (k === "roads" || k === "walk") return !(layers.sfmsfDrawing || layers.sfmsfAerial);
     if (k === "aerial") return layers.sfmsfDrawing;
     if (k === "stationLabels") return layers.sfmsfDrawing || layers.sfmsfAerial;
-    // the Clipper's spans in purple: not in the two SFMSF views, which are about the facility
+    // the Clayton Clipper's spans in purple: not in the two SFMSF views, which are about the facility
     if (k === "purpleSpans") return layers.sfmsfDrawing || layers.sfmsfAerial;
     return false;
   }
