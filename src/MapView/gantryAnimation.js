@@ -15,7 +15,7 @@ const SMOOTH = { easing: "ease-in-out", fill: "forwards" };
  * the times written in the steps, and 1 plays them as written. After the "animate" link, the moves play at SPEEDS in
  * turn, and every move after the last of them at that last speed (playToEnd sets it).
  */
-const SPEEDS = [2, 3, 4];
+const SPEEDS = [1, 2, 3, 4, 5];
 let SPEED = SPEEDS[0];
 
 /**
@@ -89,9 +89,9 @@ function reachIn(el, frame) {
 
 /**
  * How far, in pixels on the screen, a step has to move something to be played: a step whose move would be shorter is
- * skipped, with its pause (on straight track the swings in steps 9 and 10, the turn in step 17 and the slide in step 20
- * come out at next to nothing, and would only hold the animation still). The drawing still ends up right: step 22 snaps
- * every piece to where placeGantry() puts it on the next span.
+ * skipped, with its pause (on straight track the swings in steps 15 and 16, the turn in step 23 and the slides in steps
+ * 24 and 26 come out at next to nothing, and would only hold the animation still). The drawing still ends up right: step
+ * 28 snaps every piece to where placeGantry() puts it on the next span.
  */
 const UNSEEN = 2;
 
@@ -390,10 +390,11 @@ export async function playGantry(svg) {
   const one = along(1),
     alongOf = (v) => (v.x * one.x + v.y * one.y) / (one.x * one.x + one.y * one.y);
 
-  // where things are at the start, on the map: the second support (the pivot of step 9), the front and third supports'
-  // middles, and the angles of the supports' long sides
-  const pivot = centreIn(secondBeam, svg),
-    secondStart = pivot,
+  // where things are at the start, on the map: the second support, the front and third supports' middles, and the angles
+  // of the supports' long sides. The pivot of the trusses' swing (step 15) is the second support's middle once step 10 has
+  // put it on its place on the next span.
+  const secondStart = centreIn(secondBeam, svg),
+    pivot = N.second.to,
     frontStart = centreIn(frontBeam, svg),
     thirdStart = centreIn(thirdBeam, svg),
     fourthAngle = lengthwise(beam),
@@ -428,13 +429,10 @@ export async function playGantry(svg) {
   clearHangers();
   await pause(500);
 
-  // THE FOURTH SUPPORT'S TRIP: from where it starts (`middle`) to the second support's place on the next span
-  // (N.second.to), split into the part along the trusses, which the trolley carrying it follows, and a small move
-  // sideways that only the support makes
+  // THE FOURTH SUPPORT'S TRIP (steps 2 and 3): from where it starts (`middle`) towards the second support's place on the
+  // next span (N.second.to), as far as the point where it turns
   const fourthGap = { x: N.second.to.x - middle.x, y: N.second.to.y - middle.y },
-    fourthTrip = alongOf(fourthGap),
-    fourthStraight = along(fourthTrip),
-    fourthSide = { x: fourthGap.x - fourthStraight.x, y: fourthGap.y - fourthStraight.y };
+    fourthTrip = alongOf(fourthGap);
 
   // 2. the trolley and the fourth support move forward together: the first part of its trip. On a double girder span
   // (DOUBLE_GIRDER, from placeGantry) the fourth support is drawn turned across the span, so when it is picked up there
@@ -459,29 +457,89 @@ export async function playGantry(svg) {
     2000,
   );
 
-  // 4. the rest of its trip, with the move sideways: the fourth support ends on the second support's place
-  const leg2 = fourthTrip - leg1;
-  step = along(leg2);
+  // 4. the trolley backs up with the fourth support and sets it down on the rear support's place on the next span
+  // (N.rear.to), where it stays for the rest of the move. It turns to the angle the rear support has there (the third
+  // support's angle now plus its turn on the move, N.rear.turn) as it goes: step 3 left it a little short of that on a
+  // curve. The trolley follows its trip along the trusses.
+  const rearGap = { x: N.rear.to.x - middle.x, y: N.rear.to.y - middle.y };
   await Promise.all([
-    moveTrolley(trolleyY + leg2, 2500),
-    moveFourth({ ...fourth, x: fourth.x + step.x + fourthSide.x, y: fourth.y + step.y + fourthSide.y }, 2500),
+    moveTrolley(trolleyY + alongOf({ x: rearGap.x - fourth.x, y: rearGap.y - fourth.y }), 3000),
+    moveFourth(
+      {
+        x: rearGap.x,
+        y: rearGap.y,
+        turn: fourth.turn + nearest(thirdAngle + N.rear.turn - (fourthAngle + fourth.turn), 0),
+      },
+      3000,
+    ),
   ]);
   await pause(500);
 
-  // 5. the trolley slides back to stop over the middle of the second support (the trusses haven't moved yet, so this is
+  // 5. the trolley slides to stop over the middle of the second support (the trusses haven't moved yet, so this is
   // measured the same way as step 1)
   await moveTrolley(secondAt.y - trolleyAt.y, 3000);
   await pause(500);
 
-  // 6. The trusses slide back so they can pick up the front supprt: until the front tip is over the middle of the front
+  // THE SECOND SUPPORT'S TRIP (steps 6 to 10): the trolley does with it what step 2 to 4 first had it do with the fourth:
+  // it lifts it, backs up a little, turns it lengthwise, and carries it to the second support's place on the next span
+  // (N.second.to), turning it to the angle it has there half way. aMid is where its middle is as it goes, on the map.
+  // BACK_UP: how far, in truss units, it backs up before it turns
+  const BACK_UP = 20;
+  let aMid = { x: secondStart.x, y: secondStart.y };
+
+  // 6. the trolley lifts the second support and backs up with it a little
+  const backUp = -ahead * BACK_UP,
+    backStep = along(backUp);
+  await Promise.all([moveTrolley(trolleyY + backUp, 1500), second.by(backUp, 1500)]);
+  aMid = { x: aMid.x + backStep.x, y: aMid.y + backStep.y };
+  await pause(500);
+
+  // 7. the second support turns about its own middle to lie lengthwise, the way the fourth support lies when it is carried
+  // (a quarter turn across from the way it lies on a double girder span); of the ways round, the one nearest a quarter turn
+  const carryAngle = fourthAngle + (DOUBLE_GIRDER.has(S - 1) ? 90 : 0),
+    secondSideways = nearest(carryAngle - secondAngle, 90);
+  await second.swing(aMid, secondSideways, 2000);
+  await pause(500);
+
+  // 8. the trolley carries it forward, the first part of its trip: the same share of it as step 2 (FOURTH_TURNS_AT)
+  const secondGap = { x: N.second.to.x - aMid.x, y: N.second.to.y - aMid.y },
+    secondTrip = alongOf(secondGap),
+    secondLeg1 = secondTrip * FOURTH_TURNS_AT;
+  step = along(secondLeg1);
+  await Promise.all([moveTrolley(trolleyY + secondLeg1, 2500), second.by(secondLeg1, 2500)]);
+  aMid = { x: aMid.x + step.x, y: aMid.y + step.y };
+  await pause(500);
+
+  // 9. the second support turns to the angle it has on the next span: its angle now plus its turn on the move
+  // (N.second.turn), from its angle now (where it started plus the turn in step 7); of the ways round, the one nearest a
+  // quarter turn back, as in step 3
+  await second.swing(aMid, nearest(N.second.turn - secondSideways, -90), 2000);
+  await pause(500);
+
+  // 10. the rest of its trip, with the small move sideways that only the support makes, and the trolley lowers it on the
+  // second support's place on the next span
+  const secondLeg2 = secondTrip - secondLeg1,
+    secondSide = { x: secondGap.x - along(secondTrip).x, y: secondGap.y - along(secondTrip).y };
+  await Promise.all([moveTrolley(trolleyY + secondLeg2, 2500), second.by(secondLeg2, 2500, secondSide)]);
+  await pause(500);
+
+  // 11. the trolley slides on its own to stop over the middle of the fourth support, where it stays through steps 12 to 16
+  // (it leaves the second support, which is still the pivot of the swing in step 15). Its place on the trusses is where the
+  // fourth support started plus how far it has gone along them (its moves are kept as x, y on the map, alongOf), less the
+  // trusses' slide so far, and the trolley's own drawn position, as in step 18 (the trusses haven't moved yet).
+  const fourthAlong = alongOf(fourth);
+  await moveTrolley(beamAt.y + fourthAlong - trolleyAt.y - trusses.at, 3000);
+  await pause(500);
+
+  // 12. The trusses slide back so they can pick up the front supprt: until the front tip is over the middle of the front
   // support (nudged by PICKUP). The trolley rides on the trusses, so it is moved forward the same distance at the same
-  // time, with the same timing and easing: the two moves cancel out at every moment, and it stays still over the second
+  // time, with the same timing and easing: the two moves cancel out at every moment, and it stays still over the fourth
   // support.
   const back = frontAt.y - tipAt.y + PICKUP;
   await Promise.all([trusses.by(back, 3000), moveTrolley(trolleyY - back, 3000)]);
   await pause(500);
 
-  // THE FRONT SUPPORT'S TRIP along the trusses: after the swing in step 9 it has to be on its place on the next span
+  // THE FRONT SUPPORT'S TRIP along the trusses: after the swing in step 15 it has to be on its place on the next span
   // (N.front.to). The swing turns it about the pivot without changing its distance from it, so first it slides to the
   // point on its slide line that is as far from the pivot as N.front.to is: |w + s × one|² = R², a quadratic in s, with
   // w from the pivot to where it starts. Of its two answers, the one nearest a plain slide to N.front.to.
@@ -505,12 +563,12 @@ export async function playGantry(svg) {
     alone = frontTrip * Math.min(1, Math.max(0, reached)),
     ride = frontTrip - alone;
 
-  // 7. the trusses carry the front support forward, the first part of its trip, and the trolley stays still over the
-  // second support (moved back inside the trusses as they go forward, as in step 6)
+  // 13. the trusses carry the front support forward, the first part of its trip, and the trolley stays still over the
+  // fourth support (moved back inside the trusses as they go forward, as in step 12)
   await Promise.all([trusses.by(alone, 2500), front.by(alone, 2500), moveTrolley(trolleyY - alone, 2500)]);
   await pause(500);
 
-  // 8. the rest of its trip, with the third support riding along too, and the trolley still stays still
+  // 14. the rest of its trip, with the third support riding along too, and the trolley still stays still
   await Promise.all([
     trusses.by(ride, 1500),
     front.by(ride, 1500),
@@ -519,9 +577,9 @@ export async function playGantry(svg) {
   ]);
   await pause(500);
 
-  // 9. the trusses stay on the second support and their front end swings, carrying the front support, until the front
+  // 15. the trusses stay on the second support and their front end swings, carrying the front support, until the front
   // support is on its place on the next span: the turn from where it is now to N.front.to, seen from the pivot. The
-  // trolley, parked over the pivot, turns where it is. The third support, riding on the rear lifting jacks since step 8,
+  // trolley, parked over the fourth support, rides round with the trusses. The third support, riding on the rear lifting jacks since step 14,
   // swings with the trusses as a counterweight for the front support.
   const frontSlid = along(front.at),
     turn = small(
@@ -529,7 +587,7 @@ export async function playGantry(svg) {
         deg({ x: frontStart.x + frontSlid.x - pivot.x, y: frontStart.y + frontSlid.y - pivot.y }),
     );
   // How far the swing carries the front end: the arc the front support's middle follows. On straight track `turn` is next
-  // to nothing, and steps 9 and 10 skip the swing (UNSEEN).
+  // to nothing, and steps 15 and 16 skip the swing (UNSEEN).
   const swingArc = (Math.hypot(frontTo.x - pivot.x, frontTo.y - pivot.y) * Math.abs(turn) * Math.PI) / 180,
     swings = !unseen(swingArc);
   if (swings) {
@@ -541,9 +599,9 @@ export async function playGantry(svg) {
     await pause(500);
   }
 
-  // 10. the trusses swing back the same way to where they were, leaving the front support on its place; at the same time
+  // 16. the trusses swing back the same way to where they were, leaving the front support on its place; at the same time
   // it turns about its own middle to the angle it has there (its whole turn on the move is N.front.turn, and the swing
-  // has done `turn` of it). The third support swings back with the trusses, ending where step 8 left it.
+  // has done `turn` of it). The third support swings back with the trusses, ending where step 14 left it.
   // The front support's own turn is played if the ends of its beam would move far enough to see, even without the swing.
   const frontEnds = (halfLength(frontBeam, svg) * Math.abs(N.front.turn - turn) * Math.PI) / 180,
     tenMoves = [
@@ -555,16 +613,15 @@ export async function playGantry(svg) {
     await pause(500);
   }
 
-  // 11. the trusses slide back until their middle is halfway between the fourth support and the second support. The
-  // third and front supports stay where they are, and the trolley stays still over the second support, as in step 6.
+  // 17. the trusses slide back until their middle is halfway between the fourth support and the second support. The
+  // third and front supports stay where they are, and the trolley stays still over the fourth support, as in step 12.
   // How far the fourth support has gone along the trusses: its moves are kept as x, y on the map (alongOf).
-  const fourthAlong = alongOf(fourth),
-    halfway = (beamAt.y + fourthAlong + secondAt.y) / 2,
+  const halfway = (beamAt.y + fourthAlong + secondAt.y + alongOf(secondGap) + backUp) / 2,
     toMiddle = halfway - (trussMiddleY + trusses.at);
   await Promise.all([trusses.by(toMiddle, 3000), moveTrolley(trolleyY - toMiddle, 3000)]);
   await pause(500);
 
-  // 12. the trolley slides back to stop over the third support, now the one at the rear. The third support is where it
+  // 18. the trolley slides back to stop over the third support, now the one at the rear. The third support is where it
   // started plus its slide (third.at); the trolley's own offset is measured inside the trusses, which have moved
   // (trusses.at), so that is taken off.
   await moveTrolley(thirdAt.y + third.at - trolleyAt.y - trusses.at, 3000);
@@ -579,15 +636,15 @@ export async function playGantry(svg) {
     fourthFinal = fourthAngle + N.fourth.turn - acrossNow,
     fourthLengthwise = fourthFinal - acrossNext;
 
-  // 13. the third support turns about its own middle (where it started plus its slide) to lie lengthwise, the way the
-  // fourth support lies on the next span unless that's a double girder span (step 14 turns it across then); of the ways
+  // 19. the third support turns about its own middle (where it started plus its slide) to lie lengthwise, the way the
+  // fourth support lies on the next span unless that's a double girder span (step 20 turns it across then); of the ways
   // round, the one nearest a quarter turn. swing() turns in the map's frame, so it keeps its shape.
   const slidThird = along(third.at),
     thirdTurn = nearest(fourthLengthwise - thirdAngle, 90);
   await third.swing({ x: thirdStart.x + slidThird.x, y: thirdStart.y + slidThird.y }, thirdTurn, 2000);
   await pause(500);
 
-  // 14. the trolley carries the third support to the fourth support's place on the next span (N.fourth.to). The gap is
+  // 20. the trolley carries the third support to the fourth support's place on the next span (N.fourth.to). The gap is
   // split into the part along the trusses (alongOf), which the trolley follows, and what's left over, a small move
   // sideways that only the support makes. (The slide's `translate` sits outside the turn, so the turned support moves
   // as it is.)
@@ -606,13 +663,13 @@ export async function playGantry(svg) {
     await pause(500);
   }
 
-  // 15. the trolley slides on its own to stop over the fourth support, leaving the third support where step 14 put it.
-  // The fourth support hasn't moved since step 11, so it is still where it started plus fourthAlong; take off the
-  // trolley's drawn position and the trusses' slide, as in step 12.
+  // 21. the trolley slides on its own to stop over the fourth support, leaving the third support where step 20 put it.
+  // The fourth support hasn't moved since step 17, so it is still where it started plus fourthAlong; take off the
+  // trolley's drawn position and the trusses' slide, as in step 18.
   await moveTrolley(beamAt.y + fourthAlong - trolleyAt.y - trusses.at, 2500);
   await pause(500);
 
-  // 16. the trusses slide forward until their front ends (where the yellow truss lines stop) are just past the front
+  // 22. the trusses slide forward until their front ends (where the yellow truss lines stop) are just past the front
   // support, and the trolley stays still over the fourth support. Measured as things are now: the browser counts the
   // animations so far when it measures, and the truss frame moves with the trusses, so the front support's position
   // there is where it is relative to the trusses. "Front" edges depend on which way along y is forward (`ahead`).
@@ -627,7 +684,7 @@ export async function playGantry(svg) {
   await Promise.all([trusses.by(past, 2500), moveTrolley(trolleyY - past, 2500)]);
   await pause(500);
 
-  // 17. the trusses turn and shift onto the line they have on the next span: through N.body.to (where their middle goes)
+  // 23. the trusses turn and shift onto the line they have on the next span: through N.body.to (where their middle goes)
   // at their angle at the start plus their turn on the move (N.body.turn). They swing about the fourth support's middle,
   // where the trolley is parked, after a shift straight across: the shift has to put their middle line through the
   // point that the swing then carries onto N.body.to, which is N.body.to turned back about the pivot.
@@ -658,60 +715,69 @@ export async function playGantry(svg) {
     await pause(500);
   }
 
-  // 18. the trusses slide forward until their rear ends (where the yellow truss lines stop at the back) are over the
-  // middle of the second support, and the trolley stays still over the fourth support. Measured in the truss frame,
-  // which has moved and turned with the trusses, so y there is along the trusses as they lie now (step 17's angle): the
-  // second support's middle there is where it is relative to them. `lines` (step 16) are the truss lines' reach, which
-  // doesn't change in their own frame.
-  // REAR_PAST: how far past the second support's middle the rear ends stop. Bigger goes further forward, negative stops
-  // short of the middle.
-  const REAR_PAST = 0;
-  const secondNow = centreIn(secondBeam, truss).y,
-    rearEnd = ahead > 0 ? Math.min(...lines.map((r) => r.lo)) : Math.max(...lines.map((r) => r.hi)),
-    forward18 = secondNow + ahead * REAR_PAST - rearEnd;
-  // by() takes the slide as an x, y move on the map: a move of 1 along the trusses as they lie now is (c, d) of the truss
+  // by() takes a slide as an x, y move on the map: a move of 1 along the trusses as they lie now is (c, d) of the truss
   // frame's matrix onto the map, as `along` was for their old direction
   const nowOnMap = between(truss, svg),
-    unitNow = { x: nowOnMap.c, y: nowOnMap.d },
-    slide = { x: unitNow.x * forward18, y: unitNow.y * forward18 };
-  await Promise.all([trusses.by(0, 3000, slide), moveTrolley(trolleyY - forward18, 3000)]);
-  await pause(500);
+    unitNow = { x: nowOnMap.c, y: nowOnMap.d };
 
-  // 19. the trusses carry the second support to the rear support's place on the next span (N.rear.to), turning it to
-  // the angle the rear support has there (the third support's angle at the start plus its turn on the move,
-  // N.rear.turn), and the trolley stays still over the fourth support. The trusses slide along themselves by the part
-  // of the gap that runs along them; the support also makes the small move sideways. Its slide is started before its
-  // turn, so it turns about its middle as the slide leaves it (as in step 17).
-  const rearGap = { x: N.rear.to.x - secondStart.x, y: N.rear.to.y - secondStart.y },
-    forward19 = (rearGap.x * unitNow.x + rearGap.y * unitNow.y) / (unitNow.x * unitNow.x + unitNow.y * unitNow.y),
-    slide19 = { x: unitNow.x * forward19, y: unitNow.y * forward19 };
-  await Promise.all([
-    trusses.by(0, 2000, slide19),
-    second.by(0, 2000, rearGap),
-    second.swing(N.rear.to, nearest(thirdAngle + N.rear.turn - secondAngle, 0), 2000),
-    moveTrolley(trolleyY - forward19, 2000),
-  ]);
-  await pause(500);
-
-  // 20. the trusses slide forward on their own until their middle is on its place on the next span (N.body.to), and the
-  // trolley stays still over the fourth support. Step 17 put them on the right line, so this slide runs along it. The
+  // 24. the trusses slide forward on their own until their middle is on its place on the next span (N.body.to), and the
+  // trolley stays still over the fourth support. Step 23 put them on the right line, so this slide runs along it. The
   // trolley's cancelling move is that slide in truss units, measured against a move of 1 along the trusses as they lie
-  // now (the dot product again).
+  // now (the dot product again). It is played in three parts, 24, 25 and 26 below: the slide stops when the trolley has
+  // come as close to the blue tips at the trusses' rear end as it may, the trolley drives to the middle support, and the
+  // slide goes on.
+  // TIP_GAP_SHARE: the closest the trolley may come to a blue tip, as a share of the tip's length (the result is rounded
+  // to a whole number of truss units)
+  const TIP_GAP_SHARE = 0.5;
   const middleNow = trussesMiddle(),
     slide20 = { x: N.body.to.x - middleNow.x, y: N.body.to.y - middleNow.y },
     forward20 = (slide20.x * unitNow.x + slide20.y * unitNow.y) / (unitNow.x * unitNow.x + unitNow.y * unitNow.y);
-  // step 19 usually leaves the trusses all but there, and then the slide is skipped (UNSEEN)
-  if (!unseen(Math.hypot(slide20.x, slide20.y))) {
-    await Promise.all([trusses.by(0, 3000, slide20), moveTrolley(trolleyY - forward20, 3000)]);
+  // how much of the slide the trolley can take before it gets too close to the rear tips: the trusses slide past it, so
+  // it moves towards their rear end. `gapNow` is how far its rear edge is from the tips' inner edge now.
+  const tipReaches = [...gantry.querySelectorAll(".clipper-tip")].map((t) => reachIn(t, truss)),
+    tipLength = tipReaches[0].hi - tipReaches[0].lo,
+    rearTips = tipReaches.filter((r) => ahead * (r.lo + r.hi) < ahead * 2 * trussMiddleY),
+    tipInner = ahead > 0 ? Math.max(...rearTips.map((r) => r.hi)) : Math.min(...rearTips.map((r) => r.lo)),
+    trolleyReach = reachIn(trolley, truss),
+    gapNow = ahead * ((ahead > 0 ? trolleyReach.lo : trolleyReach.hi) - tipInner),
+    room = Math.max(0, gapNow - Math.round(tipLength * TIP_GAP_SHARE)),
+    first = forward20 * ahead > 0 ? Math.sign(forward20) * Math.min(room, Math.abs(forward20)) : forward20,
+    firstSlide = {
+      x: forward20 ? (slide20.x * first) / forward20 : 0,
+      y: forward20 ? (slide20.y * first) / forward20 : 0,
+    },
+    rest = forward20 - first;
+
+  // the slide as far as the trolley may go. On a short slide (the trusses are all but there) it is skipped (UNSEEN)
+  if (!unseen(Math.hypot(firstSlide.x, firstSlide.y))) {
+    await Promise.all([
+      trusses.by(0, 3000 * (first / forward20), firstSlide),
+      moveTrolley(trolleyY - first, 3000 * (first / forward20)),
+    ]);
     await pause(500);
   }
 
-  // 21. the trolley drives back to where it started on the trusses. Its offset is measured inside the trusses from where
+  // 25. the trolley drives on its own to stop over the middle support (secondBeam), the next support ahead of it that lies
+  // across the guideway: the third support, between it and the trolley, lies lengthwise, so it doesn't count. It is measured on the trusses as they lie now, after the
+  // slide so far. Skipped when the trusses have no slide left.
+  if (!unseen(Math.hypot(slide20.x - firstSlide.x, slide20.y - firstSlide.y))) {
+    await moveTrolley(centreIn(secondBeam, truss).y - trolleyAt.y, 2500);
+    await pause(500);
+
+    // 26. the trusses slide the rest of the way, the trolley staying still over the middle support
+    await Promise.all([
+      trusses.by(0, 3000 * (rest / forward20), { x: slide20.x - firstSlide.x, y: slide20.y - firstSlide.y }),
+      moveTrolley(trolleyY - rest, 3000 * (rest / forward20)),
+    ]);
+    await pause(500);
+  }
+
+  // 27. the trolley drives back to where it started on the trusses. Its offset is measured inside the trusses from where
   // it is drawn, so its starting place there is an offset of 0, wherever the trusses have gone.
   await moveTrolley(0, 3000);
   await pause(1000);
 
-  // 22. the drawing is reset as if status.yaml said the next span with `hung: false`, as MapView draws it when the page
+  // 28. the drawing is reset as if status.yaml said the next span with `hung: false`, as MapView draws it when the page
   // loads: every animation on the gantry is cancelled (each piece goes back to where placeGantry put it), the gantry is
   // put on the next span, and the spans behind it are drawn as hung (gantryProgress, with complete = false). Only the
   // drawing changes: the progress card still shows status.yaml's span. It's a sudden snap, not an animation: cancelling
