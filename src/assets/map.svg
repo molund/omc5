@@ -6541,7 +6541,7 @@
                 />
               </g>
             </g>
-            <!-- Clayton Clipper trolley crane (blue): centred on the trusses, height 22.95 -->
+            <!-- Clayton Clipper trolley crane (blue): centred on the trusses, height 22.95; a thin outline in the walkways' blue at their opacity (the fill keeps its own, so it's fill-opacity) -->
             <g
               class="gantry-body"
               data-anchor="body"
@@ -6551,7 +6551,10 @@
                 transform="matrix(0.999538 -0.016711 0.055243 0.999538 -26.5959 5.3554)"
               >
                 <rect
-                  opacity="0.43"
+                  fill-opacity="0.43"
+                  stroke="#174B83"
+                  stroke-opacity="0.65"
+                  stroke-width="1"
                   id="clipper-trolley"
                   x="266.5"
                   y="522.13"
