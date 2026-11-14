@@ -2,14 +2,16 @@
  * Where each support of the gantry goes on its span, keyed by the anchor's name. `span`: S plus this; `end`: which end of
  * that span; `edge`: which edge of the support is lined up with that end (the middle of the edge on the middle of the
  * end); `gap`: how far in from the end, into the span, as a fraction of the support's width; `along`: keep the along
- * offset it is drawn with.
- * @type {Record<string, { span: number, end?: string, edge?: string, gap?: number, along?: boolean }>}
+ * offset it is drawn with; `lies`: S plus this is the span the support stands on, and `cap`: which end of that span
+ * has the bent cap it stands at. A support with a cap is kept square to that cap, one without parallel or perpendicular
+ * to its span.
+ * @type {Record<string, { span: number, lies: number, cap?: string, end?: string, edge?: string, gap?: number, along?: boolean }>}
  */
 const SUPPORTS = {
-  front: { span: 0, end: "front", edge: "rear" },
-  second: { span: 0, end: "back", edge: "front" },
-  rear: { span: -1, end: "back", edge: "rear", gap: 1 / 3 },
-  fourth: { span: -1, along: true },
+  front: { span: 0, lies: 0, cap: "front", end: "front", edge: "rear" },
+  second: { span: 0, lies: 0, cap: "back", end: "back", edge: "front" },
+  rear: { span: -1, lies: -1, cap: "back", end: "back", edge: "rear", gap: 1 / 3 },
+  fourth: { span: -1, lies: -1, along: true },
 };
 
 /**
@@ -43,6 +45,11 @@ export const cardSpan = (span) => (DOUBLE_GIRDER.has(span) ? span - 1 : span);
  *   with, and the fourth its along offset too, turned with the span); on a double girder S-1 it is turned across the span and
  *   centred across the double girder
  * - body: centred on S's midpoint, between its outer edges, and parallel to them
+ *
+ * Every support ends exactly square to the bent cap it stands at (the front support at S's front end, the second at its
+ * back end, the rear at the back end of S-1), or, for the fourth, parallel or perpendicular to S-1: the turn is the
+ * change in direction of the cap (or span), less any skew the support is drawn with, so a few tenths of a degree in the
+ * drawing don't carry from span to span.
  *
  * @param {SVGSVGElement} root The map's <svg>.
  * @returns {{ x: number, y: number }|undefined} The middle of the span the gantry is on, in canvas units, for views that
@@ -125,13 +132,14 @@ export function gantryMoves(root, D, S) {
   });
   const caps = [...root.querySelectorAll("rect.g")]
     .filter((el) => !gantry.contains(el))
-    .map((el) =>
-      toCanvas(
-        el,
-        +el.getAttribute("x") + +el.getAttribute("width") / 2,
-        +el.getAttribute("y") + +el.getAttribute("height") / 2,
-      ),
-    );
+    .map((el) => {
+      const x = +el.getAttribute("x"),
+        y = +el.getAttribute("y"),
+        c = toCanvas(el, x + +el.getAttribute("width") / 2, y + +el.getAttribute("height") / 2);
+      // its middle, and the direction of its x axis on the canvas (a cap is about as wide as it is long, so which axis
+      // doesn't matter: only the angle to within a quarter turn is used)
+      return { x: c.x, y: c.y, dir: unit(sub(toCanvas(el, x + 1, y), toCanvas(el, x, y))) };
+    });
   const nearest = (list, p, at = (q) => q) => {
     let best = null,
       d = Infinity;
@@ -187,6 +195,8 @@ export function gantryMoves(root, D, S) {
     return {
       c,
       u,
+      // the directions of the bent caps at its ends
+      cap: { back: back.dir, front: front.dir },
       v: { x: -u.y, y: u.x },
       back: on(back),
       front: on(front),
@@ -205,6 +215,15 @@ export function gantryMoves(root, D, S) {
     const b = el.getBBox();
     return toCanvas(el, b.x + b.width / 2, b.y + b.height / 2);
   };
+  // how far a support's long side is from parallel or perpendicular to direction u, in degrees (−45 to 45): the angle it is
+  // drawn at, less the nearest quarter turn from u
+  const skewFrom = (el, u) => {
+    const b = el.getBBox(),
+      p = toCanvas(el, b.x, b.y),
+      q = b.width > b.height ? toCanvas(el, b.x + b.width, b.y) : toCanvas(el, b.x, b.y + b.height),
+      off = angle(sub(q, p)) - angle(u);
+    return off - 90 * Math.round(off / 90);
+  };
   // the canvas-space move for each anchor: turn by `turn` degrees about `from`, then move `from` onto `to`
   const moves = {};
   Object.entries(SUPPORTS).forEach(([a, rule]) => {
@@ -212,9 +231,23 @@ export function gantryMoves(root, D, S) {
     if (!key) return;
     const from = centre(key),
       was = spans[D + rule.span],
-      now = spans[S + rule.span];
+      now = spans[S + rule.span],
+      // the span the support stands on, before and after
+      wasLies = spans[D + rule.lies],
+      nowLies = spans[S + rule.lies],
+      // what it is kept square to: the bent cap at its end of that span, or the span itself
+      wasFace = rule.cap ? wasLies.cap[rule.cap] : wasLies.u,
+      nowFace = rule.cap ? nowLies.cap[rule.cap] : nowLies.u;
+    // a support always ends exactly square to its cap, or parallel or perpendicular to its span: the turn that carries it
+    // from the direction of that now to its direction then (a cap's direction is only known to within a quarter turn, so
+    // it is the one nearest the span's own change of direction), less whatever skew it is drawn with
+    let change = angle(nowLies.u) - angle(wasLies.u);
+    if (rule.cap) {
+      const d = angle(nowFace) - angle(wasFace);
+      change = d - 90 * Math.round((d - change) / 90);
+    }
     let to,
-      turn = angle(now.u) - angle(was.u);
+      turn = change - skewFrom(key, wasFace);
     if (rule.along) {
       const t = dot(sub(from, was.back), was.u) / dot(sub(was.front, was.back), was.u);
       let across = dot(sub(from, was.c), was.v);
