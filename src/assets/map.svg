@@ -6189,7 +6189,7 @@
             <!-- Layers (bottom to top): supports + their walkways; trusses, cross beams and side walkways; blue tips; trolley. Labels are drawn later, above everything. -->
             <!-- Anchoring: the gantry works on the span set in status.yaml (the Clayton Clipper span numbers, 1-105), which the page puts in data-span here; to move it, change status.yaml. Everything below is drawn for span data-drawn-at, and src/lib/placeGantry.js moves each data-anchor group from there to data-span when the page loads. front: the short support, just ahead of the span, its rear edge flush with the span's front end; second: just behind the span, its front edge flush with the span's back end; rear: fully on the span behind, its rear edge (beam and walkway) a third of its width in from that span's back end; fourth: the lengthwise support on the span behind, at the same fraction of the way along it; body: the trusses, walkways and trolley, centred on the span midpoint between its outer edges and parallel to them. The supports keep the along and across offsets they are drawn with. -->
             <!-- Clipper centreline over span 32: x = 300.5 + 0.0732*(y - 400) -->
-            <g data-anchor="fourth" transform="matrix(0.999711 0.013226 -0.043722 0.999711 39.071393 355.907082)">
+            <g data-anchor="fourth" transform="matrix(0.999711 0.013226 -0.043722 0.999711 39.071332 355.907082)">
               <rect
                 opacity="1"
                 id="gantry-support-c"
@@ -6203,7 +6203,7 @@
                 transform="rotate(176.63 335.18 702.00)"
               />
             </g>
-            <g data-anchor="rear" transform="matrix(0.999225 0.021651 -0.071574 0.999225 70.677515 493.713695)">
+            <g data-anchor="rear" transform="matrix(0.999225 0.021651 -0.071573 0.999225 70.677192 493.713738)">
               <rect
                 opacity="1"
                 id="gantry-support-b"
@@ -6217,7 +6217,7 @@
                 transform="rotate(-1.504 307.1 484)"
               />
             </g>
-            <g data-anchor="second" transform="matrix(0.999965 -0.004565 0.01509 0.999965 33.37921 744.605704)">
+            <g data-anchor="second" transform="matrix(0.999965 -0.004579 0.015138 0.999965 33.362604 744.610184)">
               <rect
                 opacity="1"
                 id="gantry-support-a"
@@ -6230,7 +6230,7 @@
                 stroke-width="2"
               />
             </g>
-            <g data-anchor="front" transform="matrix(0.999965 -0.004565 0.01509 0.999965 21.442623 586.457928)">
+            <g data-anchor="front" transform="matrix(0.999969 0.004325 -0.014299 0.999969 39.545152 583.660753)">
               <rect
                 opacity="1"
                 id="gantry-support-front"
@@ -6244,7 +6244,7 @@
               />
             </g>
             <!-- Support walkways (blue, 2/3 the side-walkway thickness, full length of their support beam, same x and width as the beam): east side of the long supports, west side of the short one; move with their support -->
-            <g data-anchor="fourth" transform="matrix(0.999711 0.013226 -0.043722 0.999711 39.071393 355.907082)">
+            <g data-anchor="fourth" transform="matrix(0.999711 0.013226 -0.043722 0.999711 39.071332 355.907082)">
               <rect
                 opacity="0.65"
                 class="gantry-support-walkway"
@@ -6256,7 +6256,7 @@
                 transform="rotate(176.63 335.18 702.00)"
               />
             </g>
-            <g data-anchor="rear" transform="matrix(0.999225 0.021651 -0.071574 0.999225 70.677515 493.713695)">
+            <g data-anchor="rear" transform="matrix(0.999225 0.021651 -0.071573 0.999225 70.677192 493.713738)">
               <rect
                 opacity="0.65"
                 class="gantry-support-walkway"
@@ -6268,7 +6268,7 @@
                 transform="rotate(-1.504 307.1 484)"
               />
             </g>
-            <g data-anchor="second" transform="matrix(0.999965 -0.004565 0.01509 0.999965 33.37921 744.605704)">
+            <g data-anchor="second" transform="matrix(0.999965 -0.004579 0.015138 0.999965 33.362604 744.610184)">
               <rect
                 opacity="0.65"
                 class="gantry-support-walkway"
@@ -6279,7 +6279,7 @@
                 fill="#174B83"
               />
             </g>
-            <g data-anchor="front" transform="matrix(0.999965 -0.004565 0.01509 0.999965 21.442623 586.457928)">
+            <g data-anchor="front" transform="matrix(0.999969 0.004325 -0.014299 0.999969 39.545152 583.660753)">
               <rect
                 opacity="0.65"
                 class="gantry-support-walkway"
@@ -6291,7 +6291,7 @@
               />
             </g>
             <!-- Support wheel assemblies: solid blue, above their beams and walkways but below the trusses; move with their support. -->
-            <g data-anchor="fourth" transform="matrix(0.999711 0.013226 -0.043722 0.999711 39.071393 355.907082)">
+            <g data-anchor="fourth" transform="matrix(0.999711 0.013226 -0.043722 0.999711 39.071332 355.907082)">
               <rect
                 class="gantry-support-wheels"
                 x="327.50"
@@ -6302,7 +6302,7 @@
                 transform="rotate(176.63 335.18 702.00)"
               />
             </g>
-            <g data-anchor="fourth" transform="matrix(0.999711 0.013226 -0.043722 0.999711 39.071393 355.907082)">
+            <g data-anchor="fourth" transform="matrix(0.999711 0.013226 -0.043722 0.999711 39.071332 355.907082)">
               <rect
                 class="gantry-support-wheels"
                 x="327.50"
@@ -6313,7 +6313,7 @@
                 transform="rotate(176.63 335.18 702.00)"
               />
             </g>
-            <g data-anchor="rear" transform="matrix(0.999225 0.021651 -0.071574 0.999225 70.677515 493.713695)">
+            <g data-anchor="rear" transform="matrix(0.999225 0.021651 -0.071573 0.999225 70.677192 493.713738)">
               <rect
                 class="gantry-support-wheels"
                 x="282.368"
@@ -6324,7 +6324,7 @@
                 transform="rotate(-1.504 307.1 484)"
               />
             </g>
-            <g data-anchor="rear" transform="matrix(0.999225 0.021651 -0.071574 0.999225 70.677515 493.713695)">
+            <g data-anchor="rear" transform="matrix(0.999225 0.021651 -0.071573 0.999225 70.677192 493.713738)">
               <rect
                 class="gantry-support-wheels"
                 x="326.204"
@@ -6335,7 +6335,7 @@
                 transform="rotate(-1.504 307.1 484)"
               />
             </g>
-            <g data-anchor="second" transform="matrix(0.999965 -0.004565 0.01509 0.999965 33.37921 744.605704)">
+            <g data-anchor="second" transform="matrix(0.999965 -0.004579 0.015138 0.999965 33.362604 744.610184)">
               <rect
                 class="gantry-support-wheels"
                 x="280.251"
@@ -6345,7 +6345,7 @@
                 fill="#4D76A3"
               />
             </g>
-            <g data-anchor="second" transform="matrix(0.999965 -0.004565 0.01509 0.999965 33.37921 744.605704)">
+            <g data-anchor="second" transform="matrix(0.999965 -0.004579 0.015138 0.999965 33.362604 744.610184)">
               <rect
                 class="gantry-support-wheels"
                 x="324.121"
@@ -6355,7 +6355,7 @@
                 fill="#4D76A3"
               />
             </g>
-            <g data-anchor="front" transform="matrix(0.999965 -0.004565 0.01509 0.999965 21.442623 586.457928)">
+            <g data-anchor="front" transform="matrix(0.999969 0.004325 -0.014299 0.999969 39.545152 583.660753)">
               <rect
                 class="gantry-support-wheels"
                 x="289.581"
@@ -6365,7 +6365,7 @@
                 fill="#4D76A3"
               />
             </g>
-            <g data-anchor="front" transform="matrix(0.999965 -0.004565 0.01509 0.999965 21.442623 586.457928)">
+            <g data-anchor="front" transform="matrix(0.999969 0.004325 -0.014299 0.999969 39.545152 583.660753)">
               <rect
                 class="gantry-support-wheels"
                 x="333.451"
