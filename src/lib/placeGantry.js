@@ -86,8 +86,53 @@ export function placeGantry(root) {
       `matrix(${[M.a, M.b, M.c, M.d, M.e, M.f].map((x) => +x.toFixed(6)).join(" ")}) ${g.dataset.drawnTransform}`.trim(),
     );
   });
+  stackSupports(root);
   // the middle of the span the gantry is on, in canvas units, for views that centre on it
   return spans[S].c;
+}
+
+/**
+ * Stacks the supports: a support that lies lengthwise (along the trusses) is drawn above, parts and all, those that lie
+ * across them. A support is carried over the others lengthwise, lifted up between the trusses, and drawn alone it would
+ * blend with the support under it. SVG draws in document order, so the groups are put in order, each support's own pieces
+ * in their drawn order (beam, walkway, wheels); the gantry's other groups are still above them all.
+ * @param {SVGSVGElement} root The map's <svg>.
+ * @param {string[]} [lifted] Anchors of supports to count as lengthwise whichever way they lie now: a support being lifted
+ * to turn lengthwise, or turning back across while it is still in the air.
+ */
+export function stackSupports(root, lifted = []) {
+  const gantry = root.querySelector("#clayton-clipper"),
+    truss = gantry?.querySelector(".clipper-truss"),
+    firstBody = gantry?.querySelector(':scope > [data-anchor="body"]');
+  if (!truss || !firstBody) return;
+  const groups = [...gantry.querySelectorAll(":scope > [data-anchor]")].filter((g) => g.dataset.anchor !== "body");
+  // the drawn order, noted the first time
+  groups.forEach((g, i) => (g.dataset.stackOrder ??= i));
+  // the gantry's own styles hide it, and a hidden element has no box to measure
+  const display = gantry.style.display;
+  gantry.style.display = "inline";
+  const toRoot = ctm(root).inverse();
+  const toCanvas = (el, x, y) => new DOMPoint(x, y).matrixTransform(ctm(el)).matrixTransform(toRoot);
+  // the direction of an element's long side on the canvas
+  const longSide = (el) => {
+    const b = el.getBBox(),
+      p = toCanvas(el, b.x, b.y),
+      q = b.width > b.height ? toCanvas(el, b.x + b.width, b.y) : toCanvas(el, b.x, b.y + b.height);
+    return { x: q.x - p.x, y: q.y - p.y };
+  };
+  const along = longSide(truss),
+    lengthwise = {};
+  new Set(groups.map((g) => g.dataset.anchor)).forEach((a) => {
+    const v = longSide(gantry.querySelector(`:scope > [data-anchor="${a}"] > *`)),
+      cos = Math.abs(v.x * along.x + v.y * along.y) / (Math.hypot(v.x, v.y) * Math.hypot(along.x, along.y));
+    lengthwise[a] = lifted.includes(a) || cos > Math.SQRT1_2;
+  });
+  gantry.style.display = display;
+  const rank = (g) => (lengthwise[g.dataset.anchor] ? 1000 : 0) + +g.dataset.stackOrder;
+  const ordered = [...groups].sort((a, b) => rank(a) - rank(b));
+  // only touch the document when the order changes: moving an element in it is not free
+  if (ordered.every((g, i) => g === groups[i])) return;
+  ordered.forEach((g) => gantry.insertBefore(g, firstBody));
 }
 
 /**
