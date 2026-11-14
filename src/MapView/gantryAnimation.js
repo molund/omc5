@@ -19,8 +19,9 @@ const SPEEDS = [1, 2, 3, 4, 5];
 let SPEED = SPEEDS[0];
 
 /**
- * Whether the map zooms onto the gantry when the animation starts and keeps it centred while it plays (MapView does
- * both). false leaves the map where it is, for watching one part of a move up close.
+ * Whether the map zooms onto the gantry when the animation starts and pans to keep it on the screen while it plays (MapView
+ * does both; it pans only when the gantry nears the edge it is heading for). false leaves the map where it is, for
+ * watching one part of a move up close.
  */
 export const FOLLOW_GANTRY = true;
 
