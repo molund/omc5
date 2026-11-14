@@ -994,6 +994,8 @@ const hangers = new Set();
 /** A hanger's size against the gantry's blue tips: HANGER_LENGTH times as long, HANGER_WIDTH times as wide. */
 const HANGER_LENGTH = 1.2;
 const HANGER_WIDTH = 0.8;
+/** The colour of a piece's first and last hanger (the middle ones keep the walkways' blue): bright burgundy. */
+const HANGER_END_COLOUR = "#8E1B33";
 
 /** Takes the fills' hangers away. */
 function clearHangers() {
@@ -1058,9 +1060,10 @@ function fillIn(svg, el, was) {
 
   // HANGERS: as each step fills, a hanger is drawn on it: a rectangle sized from the gantry's blue tips (.clipper-tip),
   // HANGER_LENGTH times as long and HANGER_WIDTH times as wide, in the darker blue and the opacity of the gantry's
-  // walkways (.clipper-walkway; the tips' solid blue if there are none), its long side across the guideway, centred on
-  // the step. The tip's two sides are measured in the map's frame, where the gantry's squash doesn't bend them. They go
-  // in a group just above the piece, in its coordinates.
+  // walkways (.clipper-walkway; the tips' solid blue if there are none), except the piece's first and last, which are
+  // HANGER_END_COLOUR; its long side across the guideway, centred on the step. The tip's two sides are measured in the
+  // map's frame, where the gantry's squash doesn't bend them. They go in a group just above the piece, in its
+  // coordinates.
   const tip = svg.querySelector(".clipper-tip"),
     walkway = svg.querySelector(".clipper-walkway"),
     colour = walkway?.getAttribute("fill") ?? tip?.getAttribute("fill") ?? "currentColor",
@@ -1098,7 +1101,7 @@ function fillIn(svg, el, was) {
         .map((p) => `${p.x},${p.y}`)
         .join(" "),
     );
-    hanger.setAttribute("fill", colour);
+    hanger.setAttribute("fill", i === 0 || i === steps - 1 ? HANGER_END_COLOUR : colour);
     if (opacity) hanger.setAttribute("opacity", opacity);
     group.append(hanger);
   };
