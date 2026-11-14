@@ -208,9 +208,11 @@ export async function playGantry(svg) {
 
   // 0. the span the gantry is on is drawn complete (all its segments hung) before the gantry moves: as MapView draws it
   // when status.yaml says `hung: true`, but only in the drawing (status.yaml isn't touched). Each piece that turns
-  // finished fills in like a progress bar, from its east end to its west end, over FILL_TIME, in steps (more for a
-  // longer span) (fillIn). The trolley takes part (followFill): it hurries to the east end, follows the fill front to
-  // the west end, and hurries back. With nothing to fill (the span was already drawn hung), it just pauses.
+  // finished fills in like a progress bar, over FILL_TIME, in steps (more for a longer span) (fillIn): the first half
+  // from its east end towards the middle, then the second half from its west end, ending at the middle (an odd step
+  // goes to the first half). The trolley takes part (followFill): it hurries to the east end, follows the fill front to
+  // the middle, hurries to the west end, follows the fill front back to the middle, and hurries back to where it
+  // started. With nothing to fill (the span was already drawn hung), it just pauses.
   const unfinished = [...svg.querySelectorAll("polygon.guideway.cc.unfinished")].map((el) => [
     el,
     el.getAttribute("class"),
@@ -1004,32 +1006,38 @@ function clearHangers() {
 }
 
 /**
- * Fills in a guideway piece that has just turned finished, like a progress bar: its finished look fills from its east
- * end to its west end over FILL_TIME, in a number of equal steps for its length (fillSteps), with a hanger on each,
- * over a copy of the piece in the look it had before (shown or hidden by the layer switches like any unfinished piece).
- * The finished piece is clipped by a strip that grows across it; the strip is worked out in the map's own frame
- * (axisOf: east is to the right, whatever the view's turn) and drawn in the piece's coordinates. The piece shows
- * unfinished until start() is called.
+ * Fills in a guideway piece that has just turned finished, like a progress bar: its finished look fills in a number of
+ * equal steps for its length (fillSteps), with a hanger on each, over a copy of the piece in the look it had before
+ * (shown or hidden by the layer switches like any unfinished piece). The trolley hangs the first half from the east end
+ * towards the middle (start(1)), then the second half from the west end, ending at the middle (start(2)); each half
+ * takes half of FILL_TIME, and an odd step goes to the first half. The finished piece is clipped by two strips that
+ * grow across it, one from each end; they are worked out in the map's own frame (axisOf: east is to the right,
+ * whatever the view's turn) and drawn in the piece's coordinates. The piece shows unfinished until start(1) is called.
  * @param {SVGSVGElement} svg The map's <svg>.
  * @param {SVGPolygonElement} el The piece, now finished.
  * @param {string} was Its class before it turned finished.
- * @returns {{ east: DOMPoint, west: DOMPoint, length: number, start: () => void }|null} The middles of the piece's east
- * and west ends on the screen (where the fill starts and stops), its length, and start(), which starts the fill; null
- * for a piece with no shape to fill.
+ * @returns {{ east: DOMPoint, west: DOMPoint, middle: DOMPoint, length: number, start: (half: 1|2) => void }|null} The
+ * middles of the piece's east and west ends on the screen (where the two halves of the fill start), the point where
+ * they meet, its length, and start(), which starts the first or second half of the fill; null for a piece with no shape
+ * to fill.
  */
 function fillIn(svg, el, was) {
   const axis = axisOf(svg, el);
   if (!axis) return null;
   const { turn, toPiece, cx, cy, u, v, from, to, across } = axis,
     // how many steps (and hangers) this piece fills in by, for its length
-    steps = fillSteps(svg, axis.length);
-  // the strip from the east end to `s` along the piece, in the piece's own coordinates
-  const strip = (s) =>
+    steps = fillSteps(svg, axis.length),
+    // the first half's steps (the odd one too), the second half's, and how far along the piece the steps' edges are
+    first = Math.ceil(steps / 2),
+    second = steps - first,
+    at = (k) => from + ((to - from) * k) / steps;
+  // the strip from `a` to `b` along the piece, in the piece's own coordinates
+  const strip = (a, b) =>
     [
-      [from, -across],
-      [s, -across],
-      [s, across],
-      [from, across],
+      [a, -across],
+      [b, -across],
+      [b, across],
+      [a, across],
     ]
       .map(([a, b]) => new DOMPoint(cx + u.x * a + v.x * b, cy + u.y * a + v.y * b).matrixTransform(toPiece))
       .map((p) => `${p.x},${p.y}`)
@@ -1038,11 +1046,13 @@ function fillIn(svg, el, was) {
     id = `fill-clip-${++fillCount}`,
     clip = document.createElementNS(ns, "clipPath"),
     shape = document.createElementNS(ns, "polygon"),
+    shapeWest = document.createElementNS(ns, "polygon"),
     under = el.cloneNode(false);
   clip.id = id;
   clip.setAttribute("clipPathUnits", "userSpaceOnUse");
-  shape.setAttribute("points", strip(from));
-  clip.append(shape);
+  shape.setAttribute("points", strip(from, from));
+  shapeWest.setAttribute("points", strip(to, to));
+  clip.append(shape, shapeWest);
   under.removeAttribute("id");
   under.setAttribute("class", was);
   under.setAttribute("aria-hidden", "true");
@@ -1060,8 +1070,8 @@ function fillIn(svg, el, was) {
 
   // HANGERS: as each step fills, a hanger is drawn on it: a rectangle sized from the gantry's blue tips (.clipper-tip),
   // HANGER_LENGTH times as long and HANGER_WIDTH times as wide, in the darker blue and the opacity of the gantry's
-  // walkways (.clipper-walkway; the tips' solid blue if there are none), except the piece's first and last, which are
-  // HANGER_END_COLOUR; its long side across the guideway, centred on the step. The tip's two sides are measured in the
+  // walkways (.clipper-walkway; the tips' solid blue if there are none), except the one at each end of the piece, which
+  // is HANGER_END_COLOUR; its long side across the guideway, centred on the step. The tip's two sides are measured in the
   // map's frame, where the gantry's squash doesn't bend them. They go in a group just above the piece, in its
   // coordinates.
   const tip = svg.querySelector(".clipper-tip"),
@@ -1085,9 +1095,10 @@ function fillIn(svg, el, was) {
   if (el.getAttribute("transform")) group.setAttribute("transform", el.getAttribute("transform"));
   group.setAttribute("class", "clipper-hangers");
   group.setAttribute("aria-hidden", "true");
-  const hang = (i) => {
+  // the hanger on step `p`, counted from the east end
+  const hang = (p) => {
     if (!tip) return;
-    const a = from + ((to - from) * (i + 0.5)) / steps,
+    const a = from + ((to - from) * (p + 0.5)) / steps,
       hanger = document.createElementNS(ns, "polygon");
     hanger.setAttribute(
       "points",
@@ -1101,7 +1112,7 @@ function fillIn(svg, el, was) {
         .map((p) => `${p.x},${p.y}`)
         .join(" "),
     );
-    hanger.setAttribute("fill", i === 0 || i === steps - 1 ? HANGER_END_COLOUR : colour);
+    hanger.setAttribute("fill", p === 0 || p === steps - 1 ? HANGER_END_COLOUR : colour);
     if (opacity) hanger.setAttribute("opacity", opacity);
     group.append(hanger);
   };
@@ -1112,25 +1123,33 @@ function fillIn(svg, el, was) {
   return {
     east: endAt(from),
     west: endAt(to),
+    middle: endAt(at(first)),
     length: to - from,
-    start() {
-      // timed by clock(), so a held gantry's fill waits where it is
+    start(half) {
+      // each half takes half of FILL_TIME, timed by clock(), so a held gantry's fill waits where it is
       const t0 = clock(),
-        fillTime = FILL_TIME / SPEED;
+        halfTime = FILL_TIME / 2 / SPEED,
+        count = half === 1 ? first : second;
       let shown = 0;
-      el.after(group);
-      hangers.add(group);
+      if (half === 1) {
+        el.after(group);
+        hangers.add(group);
+      }
       const step = () => {
-        // the steps filled so far: one more every fillTime / steps, the last one when fillTime is up; each step
-        // that has just filled gets its hanger
-        const k = Math.min(steps, Math.floor(((clock() - t0) / fillTime) * steps)),
+        // the steps filled so far in this half: one more every halfTime / count, the last one when halfTime is up;
+        // each step that has just filled gets its hanger (the first half from the east end, the second from the west)
+        const k = Math.min(count, Math.floor(((clock() - t0) / halfTime) * count)),
           was = shown;
-        while (shown < k) hang(shown++);
-        if (k === steps) return end();
-        if (shown !== was) shape.setAttribute("points", strip(from + ((to - from) * k) / steps));
+        while (shown < k) hang(half === 1 ? shown++ : steps - 1 - shown++);
+        if (shown !== was) {
+          if (half === 1) shape.setAttribute("points", strip(from, at(k)));
+          else shapeWest.setAttribute("points", strip(at(steps - k), to));
+        }
+        if (k === count) return half === 2 || !second ? end() : undefined;
         frame = requestAnimationFrame(step);
       };
-      frame = requestAnimationFrame(step);
+      if (count) frame = requestAnimationFrame(step);
+      else if (half === 2) end();
     },
   };
 }
@@ -1143,8 +1162,9 @@ const FILL_TROLLEY_TIME = 1500;
 
 /**
  * The trolley's part in a fill: it hurries along the trusses to the east end of the span (where the fill starts),
- * starts the fills, follows the fill front to the west end over FILL_TIME, then hurries back to where it was. It
- * follows the longest piece that fills; the ends are measured in the truss frame (the trolley's parent group, where the
+ * starts the first half of the fills and follows the fill front to the middle, hurries to the west end, starts the
+ * second half and follows the fill front back to the middle (each half takes half of FILL_TIME), then hurries back to
+ * where it was. It follows the longest piece that fills; the ends are measured in the truss frame (the trolley's parent group, where the
  * trusses run along y), from where the trolley is drawn, as moveTrolley() measures it.
  * @param {SVGGraphicsElement} trolley #clipper-trolley, with no move of its own under way.
  * @param {ReturnType<typeof fillIn>[]} pieces The pieces filling in.
@@ -1156,7 +1176,8 @@ async function followFill(trolley, pieces) {
     drawnAt = centreIn(trolley, truss).y,
     longest = pieces.reduce((a, b) => (b.length > a.length ? b : a)),
     east = longest.east.matrixTransform(toTruss).y - drawnAt,
-    west = longest.west.matrixTransform(toTruss).y - drawnAt;
+    west = longest.west.matrixTransform(toTruss).y - drawnAt,
+    middle = longest.middle.matrixTransform(toTruss).y - drawnAt;
   const go = (from, to, ms, easing) =>
     trolley.animate([{ translate: `0 ${from}px` }, { translate: `0 ${to}px` }], {
       duration: ms,
@@ -1164,8 +1185,11 @@ async function followFill(trolley, pieces) {
       fill: "forwards",
     }).finished;
   await go(0, east, FILL_TROLLEY_TIME / SPEED, "ease-in-out");
-  pieces.forEach((p) => p.start());
-  // the fill's time, divided by SPEED like the fill itself, and at a steady pace like the fill's equal steps
-  await go(east, west, FILL_TIME / SPEED, "linear");
-  await go(west, 0, FILL_TROLLEY_TIME / SPEED, "ease-in-out");
+  pieces.forEach((p) => p.start(1));
+  // half the fill's time, divided by SPEED like the fill itself, and at a steady pace like the fill's equal steps
+  await go(east, middle, FILL_TIME / 2 / SPEED, "linear");
+  await go(middle, west, FILL_TROLLEY_TIME / SPEED, "ease-in-out");
+  pieces.forEach((p) => p.start(2));
+  await go(west, middle, FILL_TIME / 2 / SPEED, "linear");
+  await go(middle, 0, FILL_TROLLEY_TIME / SPEED, "ease-in-out");
 }
