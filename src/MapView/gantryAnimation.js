@@ -89,9 +89,9 @@ function reachIn(el, frame) {
 
 /**
  * How far, in pixels on the screen, a step has to move something to be played: a step whose move would be shorter is
- * skipped, with its pause (on straight track the swings in steps 14 and 15, the turn in step 22 and the slide in step 23
- * come out at next to nothing, and would only hold the animation still). The drawing still ends up right: step 25 snaps
- * every piece to where placeGantry() puts it on the next span.
+ * skipped, with its pause (on straight track the swings in steps 14 and 15, the turn in step 22 and the slides in steps
+ * 23 and 25 come out at next to nothing, and would only hold the animation still). The drawing still ends up right: step
+ * 27 snaps every piece to where placeGantry() puts it on the next span.
  */
 const UNSEEN = 2;
 
@@ -716,22 +716,61 @@ export async function playGantry(svg) {
   // 23. the trusses slide forward on their own until their middle is on its place on the next span (N.body.to), and the
   // trolley stays still over the fourth support. Step 22 put them on the right line, so this slide runs along it. The
   // trolley's cancelling move is that slide in truss units, measured against a move of 1 along the trusses as they lie
-  // now (the dot product again).
+  // now (the dot product again). It is played in three parts, 23, 24 and 25 below: the slide stops when the trolley has
+  // come as close to the blue tips at the trusses' rear end as it may, the trolley drives to the middle support, and the
+  // slide goes on.
+  // TIP_GAP_SHARE: the closest the trolley may come to a blue tip, as a share of the tip's length (the result is rounded
+  // to a whole number of truss units)
+  const TIP_GAP_SHARE = 0.5;
   const middleNow = trussesMiddle(),
     slide20 = { x: N.body.to.x - middleNow.x, y: N.body.to.y - middleNow.y },
     forward20 = (slide20.x * unitNow.x + slide20.y * unitNow.y) / (unitNow.x * unitNow.x + unitNow.y * unitNow.y);
-  // on a short slide (the trusses are all but there) it is skipped (UNSEEN)
-  if (!unseen(Math.hypot(slide20.x, slide20.y))) {
-    await Promise.all([trusses.by(0, 3000, slide20), moveTrolley(trolleyY - forward20, 3000)]);
+  // how much of the slide the trolley can take before it gets too close to the rear tips: the trusses slide past it, so
+  // it moves towards their rear end. `gapNow` is how far its rear edge is from the tips' inner edge now.
+  const tipReaches = [...gantry.querySelectorAll(".clipper-tip")].map((t) => reachIn(t, truss)),
+    tipLength = tipReaches[0].hi - tipReaches[0].lo,
+    rearTips = tipReaches.filter((r) => ahead * (r.lo + r.hi) < ahead * 2 * trussMiddleY),
+    tipInner = ahead > 0 ? Math.max(...rearTips.map((r) => r.hi)) : Math.min(...rearTips.map((r) => r.lo)),
+    trolleyReach = reachIn(trolley, truss),
+    gapNow = ahead * ((ahead > 0 ? trolleyReach.lo : trolleyReach.hi) - tipInner),
+    room = Math.max(0, gapNow - Math.round(tipLength * TIP_GAP_SHARE)),
+    first = forward20 * ahead > 0 ? Math.sign(forward20) * Math.min(room, Math.abs(forward20)) : forward20,
+    firstSlide = {
+      x: forward20 ? (slide20.x * first) / forward20 : 0,
+      y: forward20 ? (slide20.y * first) / forward20 : 0,
+    },
+    rest = forward20 - first;
+
+  // the slide as far as the trolley may go. On a short slide (the trusses are all but there) it is skipped (UNSEEN)
+  if (!unseen(Math.hypot(firstSlide.x, firstSlide.y))) {
+    await Promise.all([
+      trusses.by(0, 3000 * (first / forward20), firstSlide),
+      moveTrolley(trolleyY - first, 3000 * (first / forward20)),
+    ]);
     await pause(500);
   }
 
-  // 24. the trolley drives back to where it started on the trusses. Its offset is measured inside the trusses from where
+  // 24. the trolley drives on its own to stop over the middle support (secondBeam), the next support ahead of it that lies
+  // across the guideway: the third support, between it and the trolley, lies lengthwise, so it doesn't count. It is measured on the trusses as they lie now, after the
+  // slide so far. Skipped when the trusses have no slide left.
+  if (!unseen(Math.hypot(slide20.x - firstSlide.x, slide20.y - firstSlide.y))) {
+    await moveTrolley(centreIn(secondBeam, truss).y - trolleyAt.y, 2500);
+    await pause(500);
+
+    // 25. the trusses slide the rest of the way, the trolley staying still over the middle support
+    await Promise.all([
+      trusses.by(0, 3000 * (rest / forward20), { x: slide20.x - firstSlide.x, y: slide20.y - firstSlide.y }),
+      moveTrolley(trolleyY - rest, 3000 * (rest / forward20)),
+    ]);
+    await pause(500);
+  }
+
+  // 26. the trolley drives back to where it started on the trusses. Its offset is measured inside the trusses from where
   // it is drawn, so its starting place there is an offset of 0, wherever the trusses have gone.
   await moveTrolley(0, 3000);
   await pause(1000);
 
-  // 25. the drawing is reset as if status.yaml said the next span with `hung: false`, as MapView draws it when the page
+  // 27. the drawing is reset as if status.yaml said the next span with `hung: false`, as MapView draws it when the page
   // loads: every animation on the gantry is cancelled (each piece goes back to where placeGantry put it), the gantry is
   // put on the next span, and the spans behind it are drawn as hung (gantryProgress, with complete = false). Only the
   // drawing changes: the progress card still shows status.yaml's span. It's a sudden snap, not an animation: cancelling
