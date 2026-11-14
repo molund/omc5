@@ -161,26 +161,82 @@
     return { x: c.x - (f.left + f.width / 2), y: c.y - (f.top + f.height / 2) };
   }
 
+  /** How near an edge of the stage the gantry may come before the map pans, as a share of the stage's size. */
+  const EDGE_MARGIN = 0.1;
+  /** How far in from that edge the pan puts the gantry, as a share of the stage's size. */
+  const EDGE_COMFORT = 0.25;
+  /** How long such a pan takes, in milliseconds. */
+  const PAN_TIME = 1000;
+
   /**
-   * Keeps the gantry's centre point (gantryCentre) in the middle of the stage while it animates: every frame, the map
-   * scrolls by however far the point has moved. It stops when the animation does. Zooming by hand still works (the point
-   * stays in the middle); panning by hand is undone on the next frame, except while the animation is paused.
+   * Scrolls the map by (dx, dy) screen pixels, eased in and out like the zoom in frameGantry. Each frame adds its share of
+   * the move to the real scroll position (browsers round it to whole pixels, so a kept fractional one would count every
+   * rounding twice).
+   * @param {number} dx
+   * @param {number} dy
+   * @returns {Promise<void>} Done when the pan is.
+   */
+  function panBy(dx, dy) {
+    const ease = (t) => (1 - Math.cos(Math.PI * t)) / 2;
+    return new Promise((done) => {
+      let t0 = null,
+        last = 0;
+      const step = (now) => {
+        t0 ??= now;
+        const t = Math.min(1, (now - t0) / PAN_TIME),
+          e = ease(t);
+        stage.scrollLeft += (e - last) * dx;
+        stage.scrollTop += (e - last) * dy;
+        last = e;
+        if (t < 1 && ui.gantryPlaying) requestAnimationFrame(step);
+        else done();
+      };
+      requestAnimationFrame(step);
+    });
+  }
+
+  /**
+   * Keeps the gantry on the screen while it animates, leaving the map still while it can. The map pans only when the
+   * gantry's box (its trusses and all four supports) is within EDGE_MARGIN of an edge of the stage, or past it, and the
+   * gantry is moving towards that edge. The pan is just far enough to put it EDGE_COMFORT in from that edge, along that
+   * axis only. If the gantry is bigger than the stage on an axis, its centre is kept in the stage's middle on that axis
+   * instead. It stops when the animation does. Panning by hand is not undone, except during a pan of its own.
    * @returns {void}
    */
   function followGantry() {
+    let panning = false,
+      before = null;
+    // how far to pan along one axis: low and high are the gantry's box and the stage's edges on that axis, move is the
+    // way the gantry went since the last frame
+    const need = (lo, hi, from, to, move, size) => {
+      if (hi - lo > to - from - 2 * EDGE_MARGIN * size) return move ? (lo + hi) / 2 - (from + to) / 2 : 0;
+      if (move < 0 && lo < from + EDGE_MARGIN * size) return lo - (from + EDGE_COMFORT * size);
+      if (move > 0 && hi > to - EDGE_MARGIN * size) return hi - (to - EDGE_COMFORT * size);
+      return 0;
+    };
     const look = () => {
       if (!ui.gantryPlaying) return;
       // while it's paused, the map is left where it is, so it can be panned around
       if (ui.gantryPaused) return requestAnimationFrame(look);
-      // measured from where the map actually is: browsers round the scroll position to whole pixels, so keeping a
-      // fractional one and adding each frame's offset to it counts every rounding twice, and the map flicks back and
-      // forth a pixel every few frames. From the real scroll position, the map only moves once the point is half a pixel
-      // or more off centre, and always the way the gantry is going.
       const gantry = els.svg?.querySelector("#clayton-clipper");
       if (gantry?.getBoundingClientRect().width) {
-        const off = offCentre(gantry);
-        if (Math.abs(off.x) >= 0.5) stage.scrollLeft += off.x;
-        if (Math.abs(off.y) >= 0.5) stage.scrollTop += off.y;
+        const c = gantryCentre(gantry);
+        // under half a pixel a frame is jitter, not a move (and a turn of the trusses can shift the middle a little)
+        const move = before ? { x: c.x - before.x, y: c.y - before.y } : { x: 0, y: 0 };
+        before = c;
+        if (!panning) {
+          const box = gantry.getBoundingClientRect(),
+            f = stage.getBoundingClientRect(),
+            dx = need(box.left, box.right, f.left, f.right, Math.abs(move.x) < 0.5 ? 0 : move.x, f.width),
+            dy = need(box.top, box.bottom, f.top, f.bottom, Math.abs(move.y) < 0.5 ? 0 : move.y, f.height);
+          if (Math.abs(dx) >= 1 || Math.abs(dy) >= 1) {
+            panning = true;
+            panBy(dx, dy).then(() => {
+              panning = false;
+              before = null;
+            });
+          }
+        }
       }
       requestAnimationFrame(look);
     };
