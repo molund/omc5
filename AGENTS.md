@@ -111,7 +111,7 @@ Svelte 5 + Vite site, deployed to GitHub Pages (https://clayton-clipper.olund.ca
   are down". `status.yaml`'s `hung:` and the map's drawing are only about the segments; the progress card counts the
   span the gantry is on.
 - Titles: sentence case for everything, posts included ("The curious case of Clayton Clipper span 50").
-- Gantries: the full name first ("Clayton Clipper", "Surrey Sprinter"); "the Clipper", "the Sprinter" or "the gantry" after.
+- Gantries: the full name first ("Clayton Clipper", "Surrey Sprinter"); "the Sprinter" or "the gantry" after. Never "the Clipper": to shorten "Clayton Clipper", say "the gantry".
 - Segments: always "segments", never "rocks".
 - Pillar, support, tulip, hammerhead: use the word as written in the note.
 - Supports by name: "where spans 70 and 71 meet" in the text; "70/71" is fine in titles and short form.
