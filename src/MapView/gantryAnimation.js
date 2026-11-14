@@ -430,7 +430,6 @@ export async function playGantry(svg) {
   // put on the finished span come down
   await moveTrolley(beamAt.y - trolleyAt.y, 3000);
   clearHangers();
-  await pause(500);
 
   // THE FOURTH SUPPORT'S TRIP (steps 2 and 3): from where it starts (`middle`) towards the second support's place on the
   // next span (N.second.to), as far as the point where it turns
