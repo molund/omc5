@@ -1521,7 +1521,7 @@
           height="10"
           rx="2"
         />
-        <!-- Bent / hammerhead / tulip column dots (bent layer, under the Clipper) -->
+        <!-- Bent / hammerhead / tulip column dots (bent layer, under the Clayton Clipper) -->
         <circle cx="274.13" cy="284.22" r="2.5" fill="#D7D7D7" />
         <circle cx="317.97" cy="287.31" r="2.5" fill="#D7D7D7" />
         <circle cx="259.86" cy="406.00" r="2.5" fill="#D7D7D7" />
@@ -6175,7 +6175,7 @@
   <!-- The gantry is not clipped to the aerial photo outline like the rest of the view zoom: it works on spans past the photo's edge -->
   <g transform="translate(0 1200) scale(1.11) translate(0 -1200)">
     <g transform="translate(2160 1074) rotate(124)">
-        <!-- Clipper: no group opacity; every piece is 65% on its own, so each layer blends with everything beneath it down to the solid track -->
+        <!-- Clayton Clipper: no group opacity; every piece is 65% on its own, so each layer blends with everything beneath it down to the solid track -->
         <!-- Gantry pivoted where it crosses the 31/32 support; centreline x = 307.1; shortened 8.3% about its centre y=550 (scale(1 0.91675)); the trolley only 3.5% (scale(1 0.965)) -->
         <g
           transform="translate(278.16 0) scale(0.55 1) translate(-278.16 0)"
@@ -6188,7 +6188,7 @@
           >
             <!-- Layers (bottom to top): supports + their walkways; trusses, cross beams and side walkways; blue tips; trolley. Labels are drawn later, above everything. -->
             <!-- Anchoring: the gantry works on the span set in status.yaml (the Clayton Clipper span numbers, 1-105), which the page puts in data-span here; to move it, change status.yaml. Everything below is drawn for span data-drawn-at, and src/lib/placeGantry.js moves each data-anchor group from there to data-span when the page loads. front: the short support, just ahead of the span, its rear edge flush with the span's front end; second: just behind the span, its front edge flush with the span's back end; rear: fully on the span behind, its rear edge (beam and walkway) a third of its width in from that span's back end; fourth: the lengthwise support on the span behind, at the same fraction of the way along it; body: the trusses, walkways and trolley, centred on the span midpoint between its outer edges and parallel to them. The supports keep the along and across offsets they are drawn with. -->
-            <!-- Clipper centreline over span 32: x = 300.5 + 0.0732*(y - 400) -->
+            <!-- Clayton Clipper centreline over span 32: x = 300.5 + 0.0732*(y - 400) -->
             <g data-anchor="fourth" transform="matrix(0.999966 -0.004579 0.015139 0.999966 -2.334449 361.696483)">
               <rect
                 opacity="1"
@@ -6380,7 +6380,7 @@
               <g
                 transform="matrix(0.999538 -0.016711 0.055243 0.999538 -26.5959 5.3554)"
               >
-                <!-- Clipper side walkways (blue), one typical span plus 32% long (158.7), centred on the trusses like the trolley -->
+                <!-- Clayton Clipper side walkways (blue), one typical span plus 32% long (158.7), centred on the trusses like the trolley -->
                 <rect
                   opacity="0.65"
                   class="clipper-walkway"
@@ -6502,7 +6502,7 @@
                   fill="#F2A51F"
                   transform="translate(6.6 0) translate(0 550) scale(1 0.91675) translate(0 -550)"
                 />
-                <!-- Clipper blue truss tips (end legs; solid #4D76A3 to match the wheel assemblies and decks as rendered): inner half of each truss (5 wide), 11.2 long, recessed 8.6 from each truss end (trimmed by a third from the outer end); y = truss start + 8.6 and truss end - 19.8 -->
+                <!-- Clayton Clipper blue truss tips (end legs; solid #4D76A3 to match the wheel assemblies and decks as rendered): inner half of each truss (5 wide), 11.2 long, recessed 8.6 from each truss end (trimmed by a third from the outer end); y = truss start + 8.6 and truss end - 19.8 -->
                 <rect
                   class="clipper-tip"
                   x="278.5"
@@ -6541,7 +6541,7 @@
                 />
               </g>
             </g>
-            <!-- Clipper trolley crane (blue): centred on the trusses, height 22.95 -->
+            <!-- Clayton Clipper trolley crane (blue): centred on the trusses, height 22.95 -->
             <g
               class="gantry-body"
               data-anchor="body"

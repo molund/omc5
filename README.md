@@ -1,7 +1,7 @@
 # Clayton Clipper Tracker
 
 A hand-drawn (later corrected against aerial photos) map tracking construction of the Surrey Langley SkyTrain guideway
-along the Clayton Clipper's route in Surrey, BC. It shows progress as the Clipper gantry
+along the Clayton Clipper's route in Surrey, BC. It shows progress as the gantry
 and mobile cranes build the guideway, updated from regular walks along the
 line.
 
@@ -55,7 +55,7 @@ Progress updates are posted with the Clipper Leash Log, the site's admin app: an
 Piper to post updates from the construction site as they happen. It lives in its own repo,
 [molund/omc5-admin](https://github.com/molund/omc5-admin), and also runs as an artifact in the Claude app, which is only
 used when making changes to the app from the Claude iPhone app. It edits `status.yaml` and keeps its own records in
-`gantry-cycles.yaml` (the steps of the Clipper's cycle and notes to self), which it turns into the Clipper's velocity. The site
+`gantry-cycles.yaml` (the steps of the Clayton Clipper's cycle and notes to self), which it turns into its velocity. The site
 reads only that velocity from `gantry-cycles.yaml`, when it's built, for the progress card's chart.
 
 ## Velocity calculation

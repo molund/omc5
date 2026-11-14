@@ -24,7 +24,7 @@ notes:
   - 2026-11-14T09:15-07:00: "Clayton Clipper construction update for Saturday, Nov. 14, 2026"
     summary: "The Clayton Clipper is closing in on Hwy 15, which could change my lunch plans next week."
     block:
-      - "The Clipper is at span 41, just two spans from the Highway 15 section. Piper and I might be eating a lot of Budapest Langos from the food truck at the Honeybee Centre next week so I can watch the gantry cross the five-span double-girder section."
+      - "The Clayton Clipper is at span 41, just two spans from the Highway 15 section. Piper and I might be eating a lot of Budapest Langos from the food truck at the Honeybee Centre next week so I can watch the gantry cross the five-span double-girder section."
       - photo:
           file: 2026-11-14-the-clipper-is-now-a-span.jpg
           caption: "The Clayton Clipper is getting ready to lift the first segment for span 41."
@@ -186,6 +186,6 @@ notes:
       caption: "The earliest version I still have, from soon after the hand drawing went into Claude on Oct 13, 2026: eleven gantry spans to go, a handful of precast girders done, and labels that only made sense to me."
     block:
       - "The plan was simple: post diagram updates to the SkyscraperPage forum every couple of weeks, showing actual progress and a refined prediction of what the Clayton Clipper would build. Then I started fixing it. The spans got traced against high-resolution aerial imagery, the supports got matched to within about a foot, and the drawing grew from one stretch by the SFMSF to the Clipper's whole route."
-      - "The turning point was almost an accident. I asked Claude to make me a better viewer for the SVG, and it threw in checkboxes for every layer in the drawing without being asked. I started customizing them, then kept going, and eventually decided to see if I could get the whole thing onto GitHub. On Oct 28 it became a small website: a live map, a progress card counting the Clipper's spans, and a status file behind it all. A few days later it had comments, photos, this Trackside page and its own address."
+      - "The turning point was almost an accident. I asked Claude to make me a better viewer for the SVG, and it threw in checkboxes for every layer in the drawing without being asked. I started customizing them, then kept going, and eventually decided to see if I could get the whole thing onto GitHub. On Oct 28 it became a small website: a live map, a progress card counting the Clayton Clipper's spans, and a status file behind it all. A few days later it had comments, photos, this Trackside page and its own address."
       - "The coolest part is how I run it. From the Claude app, I can post updates, change features and fix code while I'm out on my bike or walking the dogs. Then, when I get back to my computer, Claude Code does the heavy lifting."
       - "Not bad for something that started as a few boxes on a screen. If you've been following along, thanks for reading, and let me know in the comments what you'd like to see next."
