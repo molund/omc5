@@ -604,15 +604,15 @@ export async function playGantry(svg) {
   // it turns about its own middle to the angle it has there (its whole turn on the move is N.front.turn, and the swing
   // has done `turn` of it). The third support swings back with the trusses, ending where step 14 left it.
   // The front support's own turn is played if the ends of its beam would move far enough to see, even without the swing.
+  // Otherwise it is made at once, with no pause, so the support still ends exactly parallel or perpendicular to its span.
   const frontEnds = (halfLength(frontBeam, svg) * Math.abs(N.front.turn - turn) * Math.PI) / 180,
+    frontSeen = !unseen(frontEnds),
     tenMoves = [
       ...(swings ? [trusses.swing(pivot, -turn, 3000), third.swing(pivot, -turn, 3000)] : []),
-      ...(unseen(frontEnds) ? [] : [front.swing(frontTo, N.front.turn - turn, 3000)]),
+      front.swing(frontTo, N.front.turn - turn, frontSeen || swings ? 3000 : 0),
     ];
-  if (tenMoves.length) {
-    await Promise.all(tenMoves);
-    await pause(500);
-  }
+  await Promise.all(tenMoves);
+  if (swings || frontSeen) await pause(500);
 
   // 17. the trusses slide back until their middle is halfway between the fourth support and the second support. The
   // third and front supports stay where they are, and the trolley stays still over the fourth support, as in step 12.

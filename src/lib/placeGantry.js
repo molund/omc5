@@ -44,6 +44,10 @@ export const cardSpan = (span) => (DOUBLE_GIRDER.has(span) ? span - 1 : span);
  *   centred across the double girder
  * - body: centred on S's midpoint, between its outer edges, and parallel to them
  *
+ * Every support ends exactly parallel or perpendicular to the span it is on (the span its rule names): the turn is the
+ * span's change of direction, less any skew the support is drawn with, so a few tenths of a degree in the drawing don't
+ * carry from span to span.
+ *
  * @param {SVGSVGElement} root The map's <svg>.
  * @returns {{ x: number, y: number }|undefined} The middle of the span the gantry is on, in canvas units, for views that
  * centre on it; undefined when the drawing has no gantry or no span for it.
@@ -205,6 +209,15 @@ export function gantryMoves(root, D, S) {
     const b = el.getBBox();
     return toCanvas(el, b.x + b.width / 2, b.y + b.height / 2);
   };
+  // how far a support's long side is from parallel or perpendicular to direction u, in degrees (−45 to 45): the angle it is
+  // drawn at, less the nearest quarter turn from u
+  const skewFrom = (el, u) => {
+    const b = el.getBBox(),
+      p = toCanvas(el, b.x, b.y),
+      q = b.width > b.height ? toCanvas(el, b.x + b.width, b.y) : toCanvas(el, b.x, b.y + b.height),
+      off = angle(sub(q, p)) - angle(u);
+    return off - 90 * Math.round(off / 90);
+  };
   // the canvas-space move for each anchor: turn by `turn` degrees about `from`, then move `from` onto `to`
   const moves = {};
   Object.entries(SUPPORTS).forEach(([a, rule]) => {
@@ -213,8 +226,10 @@ export function gantryMoves(root, D, S) {
     const from = centre(key),
       was = spans[D + rule.span],
       now = spans[S + rule.span];
+    // a support always ends exactly parallel or perpendicular to the span it is on: the turn that carries it from span `was`
+    // to span `now`, less whatever skew it is drawn with
     let to,
-      turn = angle(now.u) - angle(was.u);
+      turn = angle(now.u) - angle(was.u) - skewFrom(key, was.u);
     if (rule.along) {
       const t = dot(sub(from, was.back), was.u) / dot(sub(was.front, was.back), was.u);
       let across = dot(sub(from, was.c), was.v);
