@@ -532,6 +532,18 @@
         stroke-linecap="round"
         stroke-linejoin="round"
       />
+      <!-- 2026-11-14: SFMSF retention pond, a dry triangle dug in the sand inside the yard's north-west corner (seen in a drone
+           video, faint in aerial-zoom-1.jpg): straight sides with rounded corners, dashed while it holds no water, thinner than
+           the thinnest creek -->
+      <path
+        class="creeks"
+        d="M-1709.6 -671.4 L-1633.5 -643.9 Q-1630.7 -642.9 -1633.3 -641.6 L-1735.9 -591.1 Q-1738.6 -589.8 -1737.7 -592.6 L-1713.3 -669.5 Q-1712.4 -672.4 -1709.6 -671.4 Z"
+        fill="none"
+        stroke="#4D76A3"
+        stroke-width="0.8"
+        stroke-dasharray="3 2"
+        stroke-linejoin="round"
+      />
       <!-- Ditch/creek along the south side of the Fraser Hwy walking path from the fence corner east (COSMOS drainage layer), ending south-west of the second tulip east of span 28 -->
       <!-- 72 Ave shoulder: white band ~9 units wider each side than the road; faint dashed outer edge where it meets textured ground north of Fraser -->
       <clipPath id="northOfFraser">
