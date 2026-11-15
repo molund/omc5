@@ -9,8 +9,8 @@ differs. The normal-span rule (C in front of A, then A carried behind the front 
 
 ## The steps
 
-Written for span 41 going to 42. Span 51 repeats it, with the front support going to the tulip between 55 and 56, and span 30 too (before span 31), with the
-tulip between 32 and 33 (inferred).
+Written for span 41 going to 42. Span 51 repeats it, with the front support going to the tulip between 55 and 56, and span 30 too (before span 31), where the front support goes to the hammerhead between 32 and 33 (a hammerhead, not a
+tulip), centred on the unfinished gantry-built guideway in the drawing, not on the whole hammerhead.
 
 1. The normal cycle runs until Support C has been set down behind the forward support.
 2. **The crane move, not drawn.** The forward support "teleports" to the tulip between 48 and 49 (55 / 56 for span 51). A
@@ -32,7 +32,8 @@ Support B does the front support's job.
 - Only the front support is moved. This is settled from theory, not from observation: it hasn't been seen yet.
 - No temporary tower is used.
 - The destination is the tulip one support past the first support after the crawl: 48 / 49 for the 43 to 47 crawl,
-  55 / 56 for the 52 to 54 crawl.
+  55 / 56 for the 52 to 54 crawl. For span 30 it is a hammerhead, between 32 and 33, centred on the unfinished gantry-built
+  guideway in the drawing and not on the whole hammerhead.
 
 ## Open in this file
 

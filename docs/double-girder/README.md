@@ -31,11 +31,11 @@ This file holds what they share.
 - That happens three times: span 30 (before the crawl over span 31), span 42 (front support to the tulip between spans 48
   and 49) and span 51 (front support to the tulip between spans 55 and 56).
 
-| Gantry is on | Crane move                              | Crawl over     | Front support waits at                       |
-| ------------ | --------------------------------------- | -------------- | -------------------------------------------- |
-| Span 30      | Same again                              | Span 31        | Tulip between 32 / 33 (inferred, to confirm) |
-| Span 42      | Front support moved ahead of the gantry | Spans 43 to 47 | Tulip between 48 / 49                        |
-| Span 51      | Same again (confirmed by Mike)          | Spans 52 to 54 | Tulip between 55 / 56                        |
+| Gantry is on | Crane move                              | Crawl over     | Front support waits at                                           |
+| ------------ | --------------------------------------- | -------------- | ---------------------------------------------------------------- |
+| Span 30      | Same again                              | Span 31        | Hammerhead between 32 / 33, centred on the gantry-built guideway |
+| Span 42      | Front support moved ahead of the gantry | Spans 43 to 47 | Tulip between 48 / 49                                            |
+| Span 51      | Same again (confirmed by Mike)          | Spans 52 to 54 | Tulip between 55 / 56                                            |
 
 Double girder spans: 31, 43, 44, 45, 46, 47, 52, 53, 54. The gantry follows the same pattern on every one of them, for
 engineering and operational simplicity. The concrete supports underneath are irrelevant to it. They only mattered before
@@ -94,6 +94,8 @@ Clipper and Surrey Sprinter. Two of the four are lattice style and two are beam 
 - The crane isn't animated and neither is the ballast. The type and model of the crane and flatbed don't matter, and neither
   does how many flatbeds there are. The support just teleports.
 - Only the front support gets moved by the flatbed. Settled from theory, not observation.
+- Span 30's front support goes to the hammerhead between 32 and 33, not a tulip, centred on the unfinished gantry-built
+  guideway in the drawing and not on the whole hammerhead.
 - Span 31 follows the same rules as the other two double girder stretches, and the new code works on it. The moves from 29 to 30, 41 to 42 and 50 to 51 follow the same rule. The tower at 29 and the structure for 50 are ignored.
 - The trolley's limit on the trusses: it can't go past the same place the animation stops it at the rear (just short of the
   blue tips), and the same relative place at the front.
@@ -106,7 +108,7 @@ Clipper and Surrey Sprinter. Two of the four are lattice style and two are beam 
 
 ## Open questions
 
-- Where the front support goes for span 30's crane move: by the pattern, the tulip between 32 and 33 (inferred).
+- Whether the front support at 42 and 51 is also centred on the unfinished gantry-built guideway, as it is at span 30.
 - Deferred to a later plan, after seeing where the crawl finishes: everything in file 3, including how the gantry hands over
   from Support B to the waiting front support at the tulip.
 - The calculated maximum for `2 x Dmax` (from the trusses and the trolley's rear and front stopping points), and how many moves each section needs
