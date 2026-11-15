@@ -36,7 +36,7 @@
 
   let stage;
   let drag = $state(null);
-  // the Play pill: the gantry moves on span by span to the last span (span 48 in the two SFMSF views),
+  // the Play pill: the gantry moves on span by span to the last span (there's no animation in the two SFMSF views),
   // then the pill comes back. Only ui.gantryPlaying is watched; the moves themselves are untracked, so nothing they read
   // starts them again. `running` is whether a run is still under way, so the Reset button (which clears ui.gantryPlaying)
   // can be told from a run that has reached its last span; `runs` keeps a stopped run's end from clearing a newer one.
@@ -53,7 +53,7 @@
         requestAnimationFrame(() => {
           frameGantry().then(followGantry);
         });
-      playToEnd(els.svg, layers.sfmsfDrawing || layers.sfmsfAerial ? 48 : undefined).finally(() => {
+      playToEnd(els.svg).finally(() => {
         if (run !== runs) return;
         running = false;
         ui.gantryPlaying = false;
