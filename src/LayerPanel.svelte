@@ -141,7 +141,7 @@
               {#if k === "gantry" && !(status.span >= 105)}
                 <!-- a small link that plays the gantry's moves span by span to the last span, as the Play pill does
                      (MapView does the moving): it ticks the Gantry box first if it's off, and on a phone closes the menu
-                     so the map shows. While the moves play it reads "turn off" and puts everything back to the gantry's
+                     so the map shows. While the moves play it reads "reset" and puts everything back to the gantry's
                      current status, as the Reset button does -->
                 <button
                   class="animate-link"
@@ -149,7 +149,7 @@
                     if (ui.gantryPlaying) return stopAnimation();
                     animateGantry();
                     if (ui.phone) ui.collapsed = true;
-                  }}>{ui.gantryPlaying ? "turn off" : "animate"}</button
+                  }}>{ui.gantryPlaying ? "reset" : "animate"}</button
                 >
               {/if}
               {#if k === "aerial"}
