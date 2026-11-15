@@ -96,6 +96,9 @@ Clipper and Surrey Sprinter. Two of the four are lattice style and two are beam 
 - Only the front support gets moved by the flatbed. Settled from theory, not observation.
 - Span 30's front support goes to the hammerhead between 32 and 33, not a tulip, centred on the unfinished gantry-built
   guideway in the drawing and not on the whole hammerhead.
+- The same placing code is used at spans 30, 42 and 51: centre the front support on the unfinished gantry-built guideway in the
+  drawing. On a tulip that guideway is already centred, so either target works there. Using the same code in all three
+  places is simpler.
 - Span 31 follows the same rules as the other two double girder stretches, and the new code works on it. The moves from 29 to 30, 41 to 42 and 50 to 51 follow the same rule. The tower at 29 and the structure for 50 are ignored.
 - The trolley's limit on the trusses: it can't go past the same place the animation stops it at the rear (just short of the
   blue tips), and the same relative place at the front.
@@ -108,7 +111,6 @@ Clipper and Surrey Sprinter. Two of the four are lattice style and two are beam 
 
 ## Open questions
 
-- Whether the front support at 42 and 51 is also centred on the unfinished gantry-built guideway, as it is at span 30.
 - Deferred to a later plan, after seeing where the crawl finishes: everything in file 3, including how the gantry hands over
   from Support B to the waiting front support at the tulip.
 - The calculated maximum for `2 x Dmax` (from the trusses and the trolley's rear and front stopping points), and how many moves each section needs

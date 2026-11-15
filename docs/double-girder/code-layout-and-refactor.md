@@ -52,6 +52,10 @@ Keep `gantryAnimation.js` as the public face so nothing that imports it has to c
 | `gantryAnimation/afterCrawl.js`  | The move at the end of the crawl. Deferred: an empty placeholder until it is planned. |
 | `lib/doubleGirder.js`            | `DOUBLE_GIRDER` and `cardSpan`, with the same name as in molund/omc5-admin.           |
 
+The front support's placing (file 1) is one shared piece of code used for spans 30, 42 and 51: it centres the support on
+the unfinished gantry-built guideway in the drawing. It belongs in `beforeCrawl.js`, and the crawl and the move after it
+don't need it.
+
 The numbering of steps in the code comments stays the same, so the step pictures in `animation-steps` still match.
 
 ## Rules to remove

@@ -32,7 +32,7 @@ Support B does the front support's job.
 - Only the front support is moved. This is settled from theory, not from observation: it hasn't been seen yet.
 - No temporary tower is used.
 - The destination is the tulip one support past the first support after the crawl: 48 / 49 for the 43 to 47 crawl,
-  55 / 56 for the 52 to 54 crawl. For span 30 it is a hammerhead, between 32 and 33, centred on the unfinished gantry-built
+  55 / 56 for the 52 to 54 crawl. For span 30 it is a hammerhead, between 32 and 33. The same code is used for all three spans: the support is centred on the unfinished gantry-built
   guideway in the drawing and not on the whole hammerhead.
 
 ## Open in this file
