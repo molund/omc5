@@ -13,9 +13,9 @@ Written for span 41 going to 42. Span 51 repeats it, with the front support goin
 tulip), centred on the unfinished gantry-built guideway in the drawing, not on the whole hammerhead.
 
 1. The normal cycle runs until Support C has been set down behind the forward support.
-2. **The crane move, not drawn.** The forward support "teleports" to the tulip between 48 and 49 (55 / 56 for span 51). A
-   crane and a flatbed truck do this on site, but the animation only shows the support teleporting. How many flatbeds there are
-   doesn't matter.
+2. **The crane move, not drawn.** The forward support "teleports" to the tulip between 48 and 49 (55 / 56 for span 51). On site it
+   takes three steps (see below), but the animation only shows the support teleporting. How many flatbeds there are doesn't
+   matter.
 3. The trusses slide back and pick up Support B.
 4. The front lifting jacks carry Support B to where the forward support used to be. It lands across both the westbound and
    eastbound double girders, in the position the forward support would have taken. B is now the front for the crawl.
@@ -27,8 +27,10 @@ Support B does the front support's job.
 
 ## The crane move, what is expected
 
-- A large mobile crane and a flatbed truck move the support. The flatbed brings the support to the crane, or carries it
-  part of the way. No temporary tower is used.
+- On site, the support is moved in three steps:
+  1. The trolley crane lifts the front support onto a flatbed.
+  2. The flatbed carries it to its new support past the double girder section (the destination is below).
+  3. A crane lifts it onto that support.
 - Only the front support is moved. This is settled from theory, not from observation: it hasn't been seen yet.
 - No temporary tower is used.
 - The destination is the tulip one support past the first support after the crawl: 48 / 49 for the 43 to 47 crawl,

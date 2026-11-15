@@ -26,8 +26,10 @@ This file holds what they share.
 
 - On a double girder span the gantry doesn't place its front support on a concrete support. It crawls over the span on
   its three long supports and the trolley crane.
-- Before each crawl, a crane takes the front support and sets it down on a concrete support past the end of the crawl, so
-  it is waiting there when the gantry arrives.
+- Before each crawl, the front support is moved ahead to the next support after the double girder section, so it is
+  waiting there when the gantry arrives. On site it takes three steps: the trolley crane lifts it onto a flatbed, the
+  flatbed carries it to that support, and a crane lifts it onto the support. The animation shows none of this: the support
+  just teleports.
 - That happens three times: span 30 (before the crawl over span 31), span 42 (front support to the tulip between spans 48
   and 49) and span 51 (front support to the tulip between spans 55 and 56).
 
