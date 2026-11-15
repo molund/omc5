@@ -5,6 +5,10 @@ placed on a concrete support, so the concrete supports under the section don't m
 Overview and shared notes: [`README.md`](README.md). Before: [`1-before-the-crawl.md`](1-before-the-crawl.md). After:
 [`3-after-the-crawl.md`](3-after-the-crawl.md).
 
+## Where the trolley starts
+
+Before the first crawl move, the trolley is where it would have ended the previous move on a regular stretch of guideway.
+
 ## The leapfrog, step by step
 
 Each crawl move, as Mike describes it:
