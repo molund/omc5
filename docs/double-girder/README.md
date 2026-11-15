@@ -69,8 +69,7 @@ Mike describes them:
 
 The ballast doesn't need to be drawn. The crawl itself (the three long supports and the trolley crane) doesn't use it, so
 it doesn't enter `Dmax`. It only matters for the two moves that use the front jacks, the one at the start (file 1) and the
-one at the end (file 3), and neither is part of `L`. The ballast is a concrete segment (Mike's "guideway support"), and
-that only matters for its weight (about 28 tonnes, the published segment weight).
+one at the end (file 3), and neither is part of `L`. The ballast is a concrete segment (Mike's "guideway support"). Its weight isn't needed.
 
 ## Where this touches the code today
 
@@ -103,7 +102,7 @@ that only matters for its weight (about 28 tonnes, the published segment weight)
 - The trolley's limit on the trusses (background only): it can't go past the same place the animation stops it at the rear (just short of the
   blue tips), and the same relative place at the front.
 - Support B takes over as the front across both girders.
-- The ballast is a concrete segment, and only its weight matters.
+- The ballast is a concrete segment. Its weight isn't needed.
 - The Leash Log changes for this are already planned, with the rules, in the handover document, so they aren't tracked here.
 - The leapfrog and the limits on `Dmax` are in file 2.
 - `L` does not include the move at the start or the move at the end, which both use the front lifting jacks and the ballast.
