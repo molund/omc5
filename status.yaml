@@ -15,8 +15,8 @@ spans-per-week: 2.82
 #   note with the same title gets -2). To keep the anchor when a title is edited, add `slug: words-here` under the note.
 # - `post: true` makes a note a post instead of a status update: it never shows on the progress card, and its key can be a
 #   date alone ("2026-11-01").
-# - The progress card shows the newest note's summary, or its newest follow-up's, only when that time stamp is `updated`;
-#   otherwise it has no text and a Trackside button. Set `updated` to the newest time stamp.
+# - The progress card shows the newest note's summary, or its newest follow-up's, until midnight BC time at the end of the
+#   day of that time stamp; after that it has no text and a Trackside button. Set `updated` to the newest time stamp.
 # - Summaries, paragraphs and captions can have links, [text](https://…), and bold, **text** or __text__ (src/lib/inline.js).
 #   No other markdown: anything else shows as typed.
 # Notes to self, and the steps of the gantry's cycle seen at each time stamp, are in gantry-cycles.yaml, not here.
