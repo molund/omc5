@@ -25,7 +25,7 @@ let keepOthers = true;
 const placeKey = () => `${ui.view}|${ui.span}`;
 /**
  * Whether the address says ?animate=true: from when an animation starts (the Play pill, or the address itself)
- * until another view or span is picked, the gantry is turned off or the Stop button pressed (each stops it). A run that
+ * until another view or span is picked, the gantry is turned off or the Reset button pressed (each stops it). A run that
  * finishes leaves it on.
  */
 let animateInAddress = false,
@@ -74,7 +74,7 @@ $effect.root(() => {
       stopsNow = ui.gantryStops;
     if (openedOn !== null && place !== openedOn) keepOthers = false;
     // ?animate=true goes on when an animation starts, and off when another view or span is picked, the gantry turned
-    // off or the Stop button pressed (a run stopped that way is still finishing, so `playing` can't be used for that)
+    // off or the Reset button pressed (a run stopped that way is still finishing, so `playing` can't be used for that)
     if (playing && !wasPlaying) animateInAddress = true;
     if ((lastPlace !== null && place !== lastPlace) || !layers.gantry || stopsNow !== stopsWere)
       animateInAddress = false;

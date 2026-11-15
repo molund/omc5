@@ -38,7 +38,7 @@
   let drag = $state(null);
   // the Play pill: the gantry moves on span by span to the last span (span 48 in the two SFMSF views),
   // then the pill comes back. Only ui.gantryPlaying is watched; the moves themselves are untracked, so nothing they read
-  // starts them again. `running` is whether a run is still under way, so the Stop button (which clears ui.gantryPlaying)
+  // starts them again. `running` is whether a run is still under way, so the Reset button (which clears ui.gantryPlaying)
   // can be told from a run that has reached its last span; `runs` keeps a stopped run's end from clearing a newer one.
   let running = false,
     runs = 0;
@@ -61,10 +61,15 @@
       });
     });
   });
-  // the Stop button clears ui.gantryPlaying while a run is under way: that stops the moves and puts the drawing back, as
-  // turning the gantry off does
+  // the Reset button clears ui.gantryPlaying while a run is under way: that stops the moves and puts the drawing back as
+  // status.yaml has it, with the supports above the spans again, and frames the gantry on its span (as Play does)
   $effect(() => {
-    if (!ui.gantryPlaying && running) untrack(() => stopGantry(els.svg));
+    if (!ui.gantryPlaying && running)
+      untrack(() => {
+        stopGantry(els.svg);
+        raiseSupports();
+        requestAnimationFrame(() => frameGantry(true));
+      });
   });
   // the Pause button holds the moves where they are, and Play plays them on from there
   $effect(() => {
@@ -91,10 +96,11 @@
    * side, fills GANTRY_FILL of the stage, and centres it, over ZOOM_TIME. Each frame zooms about the gantry's centre point
    * (gantryCentre), so it stays put while the map grows around it, and scrolls it the matching part of the way to the
    * stage's middle. The zoom grows by the same ratio each step (it is eased between the two zooms' logarithms), so it
-   * looks steady rather than speeding up as it gets closer.
+   * looks steady rather than speeding up as it gets closer. It gives up if the animation stops, unless `always`.
+   * @param {boolean} [always] Zoom all the way even with no animation playing (the Reset button's framing).
    * @returns {Promise<void>} Done when the zoom is.
    */
-  function frameGantry() {
+  function frameGantry(always = false) {
     const gantry = els.svg?.querySelector("#clayton-clipper"),
       box = gantry?.getBoundingClientRect();
     if (!box?.width) return Promise.resolve();
@@ -127,7 +133,7 @@
         const now_ = offCentre(gantry);
         stage.scrollLeft += now_.x - start.x * (1 - e);
         stage.scrollTop += now_.y - start.y * (1 - e);
-        if (t < 1 && ui.gantryPlaying) requestAnimationFrame(step);
+        if (t < 1 && (always || ui.gantryPlaying)) requestAnimationFrame(step);
         else done();
       };
       requestAnimationFrame(step);

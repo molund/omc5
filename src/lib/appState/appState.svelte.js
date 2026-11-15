@@ -196,8 +196,7 @@ const ANIMATION_SWITCHES = ["arrows", "spanNumbers", "guideway", "unfinished", "
 /**
  * The switches as they were before the first animation since the view was picked (ANIMATION_SWITCHES, the gantry and
  * whether anything had been changed), for turning the gantry off to put back; null when there's nothing to put back.
- * Stop leaves it, so a later animation doesn't save the animation's own switches; picking a view, Reset and Show all
- * clear it.
+ * The animation's Reset button (stopAnimation()), picking a view, the layer panel's Reset and Show all clear it.
  * @type {{ switches: Record<string, boolean>, gantry: boolean, changed: boolean }|null}
  */
 let beforeAnimation = null;
@@ -225,12 +224,19 @@ export function animateGantry() {
 }
 
 /**
- * Stops the gantry animation (the Stop button): MapView stops the moves and puts the drawing back, as turning the gantry
- * off does, and ?animate=true leaves the address. The Play pill starts it again.
+ * Resets the gantry animation to the gantry's current status (the Reset button): MapView stops the moves, puts the
+ * drawing back as status.yaml has it, with the supports above the spans again, and frames the gantry on its span; the
+ * layer switches the animation changed go back to how they were before it (the Gantry box stays ticked), and
+ * ?animate=true leaves the address. The Play pill starts it again.
  * @returns {void}
  */
 export function stopAnimation() {
   if (!ui.gantryPlaying) return;
+  if (beforeAnimation) {
+    Object.assign(layers, beforeAnimation.switches);
+    ui.changed = beforeAnimation.changed || !beforeAnimation.gantry;
+    beforeAnimation = null;
+  }
   ui.gantryPlaying = false;
   ui.gantryPaused = false;
   ui.gantryStops++;
