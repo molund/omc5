@@ -28,8 +28,9 @@ This file holds what they share.
   its three long supports and the trolley crane.
 - Before each crawl, the front support is moved ahead to the next support after the double girder section, so it is
   waiting there when the gantry arrives. On site it takes three steps: the trolley crane lifts it onto a flatbed, the
-  flatbed carries it to that support, and a crane lifts it onto the support. The animation shows none of this: the support
-  just teleports.
+  flatbed carries it to that support, and a crane lifts it onto the support. The animation shows only the first part: the trolley crane
+  picks up the front support and carries it forward a little, then the support disappears while the trolley is still
+  holding it, and reappears on its new support further down the line.
 - That happens three times: span 30 (before the crawl over span 31), span 42 (front support to the tulip between spans 48
   and 49) and span 51 (front support to the tulip between spans 55 and 56).
 
@@ -93,8 +94,10 @@ Clipper and Surrey Sprinter. Two of the four are lattice style and two are beam 
 - When the crane move happens: right after Support C is set down behind the forward support, before the trusses move back
   for Support B (Mike, Nov. 15).
 - Which support goes behind the forward support: Support C, not A.
-- The crane isn't animated and neither is the ballast. The type and model of the crane and flatbed don't matter, and neither
-  does how many flatbeds there are. The support just teleports.
+- The flatbed, the crane that lifts the support onto its new support, and the ballast aren't animated. Their type and model
+  don't matter, and neither does how many flatbeds there are. The trolley crane is animated: it picks up the front support
+  and carries it forward a little, the support disappears while the trolley is holding it, and it reappears on its new
+  support.
 - Only the front support gets moved by the flatbed. Settled from theory, not observation.
 - Span 30's front support goes to the hammerhead between 32 and 33, not a tulip, centred on the unfinished gantry-built
   guideway in the drawing and not on the whole hammerhead.

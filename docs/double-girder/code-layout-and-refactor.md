@@ -27,7 +27,7 @@ Four kinds of move, from the files in this folder:
 
 1. **Normal move.** What `playGantry` does today.
 2. **Before the crawl** (span 30, 42 and 51). Steps 1 to 11 as normal, with Support C behind the forward support, then the
-   forward support teleports, the trusses go back for Support B, and the front jacks carry B across both girders.
+   trolley crane carries the forward support forward a little and it disappears, reappearing on its new support, the trusses go back for Support B, and the front jacks carry B across both girders.
 3. **The crawl** (spans 43 to 47, and 52 to 54). Repeated leapfrog moves of the three long supports, with equal steps from
    `Dmax`, `Smin` and `L`.
 
