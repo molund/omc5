@@ -2,8 +2,9 @@
 
 What the Clayton Clipper is expected to do at the three double girder stretches (span 31, spans 43 to 47 and spans 52 to 54),
 and the one-off moves at spans 30, 42 and 51 that set them up. The new code has to work on 31 too, which follows the same
-rules as the other two. Nothing here is built yet. The goal is to work out what happens
-next so the animation can be ready before the gantry gets there, with the real figures dropped in later.
+rules as the other two. The move before each crawl is built (file 1, `beforeCrawl.js`); the crawl and the move after it are
+not. The goal is to work out what happens next so the animation can be ready before the gantry gets there, with the real
+figures dropped in later.
 
 Everything is Mike's description from watching the site, unless it says "inferred". Inferred means Claude worked it out
 from what Mike said and it still needs checking against what actually happens.
@@ -12,8 +13,8 @@ from what Mike said and it still needs checking against what actually happens.
 
 Read them in this order:
 
-1. [`1-before-the-crawl.md`](1-before-the-crawl.md): the one-off move at span 42 (or 51, or 30): the front support goes ahead by
-   crane, and Support B takes its place across the girders.
+1. [`1-before-the-crawl.md`](1-before-the-crawl.md): the one-off move at span 42 (or 51, or 30), as the animation plays it: the
+   short support is moved around and sent ahead by crane, and Support C takes the front support's place across the girders.
 2. [`2-the-crawl.md`](2-the-crawl.md): the crawl over the double girder spans on the three long supports: the leapfrog, and
    `Dmax`, `Smin` and `L`.
 3. [`3-after-the-crawl.md`](3-after-the-crawl.md): the one-off move at the end: the move over span 48 (or 55 / 56) and the
@@ -29,9 +30,11 @@ This file holds what they share.
 - Before each crawl, the front support is moved ahead to the next support after the double girder section (the support at the
   section's far end counts as part of the section), so it is
   waiting there when the gantry arrives. On site it takes three steps: the trolley crane lifts it onto a flatbed, the
-  flatbed carries it to that support, and a crane lifts it onto the support. The animation shows only the first part: the trolley crane
-  picks up the front support and carries it forward a little, then the support disappears while the trolley is still
-  holding it, and reappears on its new support further down the line.
+  flatbed carries it to that support, and a crane lifts it onto the support. The animation shows only the first part, and
+  the support is moved twice. First the trolley crane carries it forward, turns it, carries it back, turns it again and sets
+  it down behind Support C. Later it carries it back, turns it lengthwise and carries it into the unfinished span, and then
+  the support disappears while the trolley is still holding it and reappears on its new support further down the line, at
+  the end of span 48 (or 55, or 32). File 1 has the steps.
 - That happens three times: span 30 (before the crawl over span 31), span 42 (front support to the tulip between spans 48
   and 49) and span 51 (front support to the tulip between spans 55 and 56).
 
@@ -72,12 +75,21 @@ The ballast doesn't need to be drawn. The crawl itself (the three long supports 
 it doesn't enter `Dmax`. It only matters for the two moves that use the front jacks, the one at the start (file 1) and the
 one at the end (file 3), and neither is part of `L`. The ballast is a concrete segment (Mike's "guideway support"). Its weight isn't needed.
 
+## When the trusses can move (new)
+
+The trusses can only move while the trolley crane is sitting still over one of the three long supports (A, B or C). This is
+true of every truss move, in the normal move, before the crawl, in the crawl and after it. Over the short support, or
+between supports, they don't move. File 2 has the detail, and checks it against file 1 (no truss move there breaks it).
+
 ## Where this touches the code today
 
-- `DOUBLE_GIRDER` in `src/lib/placeGantry.js` here, and `src/lib/doubleGirder.js` in molund/omc5-admin. Keep them the same.
+- `DOUBLE_GIRDER` in `src/lib/doubleGirder.js` here, and `src/lib/doubleGirder.js` in molund/omc5-admin. Keep them the same.
 - On a double girder span only the gantry's arrival is logged: no Hung and no cycle steps. The progress card shows one span
   less until the gantry arrives at the next (`cardSpan`).
-- The animation (`src/MapView/gantryAnimation.js`) draws Support C turned across the span on a double girder span, with a
+- The move before a crawl is `src/MapView/gantryAnimation/beforeCrawl.js`. `playGantry` in `gantryAnimation.js` plays it when
+  the gantry is on span 29, 41 or 50 (`BEFORE_CRAWL`), and the normal move otherwise. It reuses some of `normalMove.js`'s step
+  functions.
+- The animation (`src/MapView/gantryAnimation/normalMove.js`) draws Support C turned across the span on a double girder span, with a
   quarter turn when it picks it up. The existing move still puts the front support on a concrete support. The crawl
   would replace that on these spans.
 - Leash Log: the stage picker is fixed to "arrived at span" on a double girder span (`stageToPost` in
@@ -90,8 +102,8 @@ one at the end (file 3), and neither is part of `L`. The ballast is a concrete s
 - Which support goes behind the forward support: Support C, not A.
 - The flatbed, the crane that lifts the support onto its new support, and the ballast aren't animated. Their type and model
   don't matter, and neither does how many flatbeds there are. The trolley crane is animated: it picks up the front support
-  and carries it forward a little, the support disappears while the trolley is holding it, and it reappears on its new
-  support.
+  and carries it, the support disappears while the trolley is holding it, and it reappears on its new support (file 1 has
+  the moves).
 - Only the front support gets moved by the flatbed. Settled from theory, not observation.
 - Span 30's front support goes to the hammerhead between 32 and 33, not a tulip, centred on the unfinished gantry-built
   guideway in the drawing and not on the whole hammerhead.
@@ -102,7 +114,8 @@ one at the end (file 3), and neither is part of `L`. The ballast is a concrete s
 - `2 x Dmax` won't be calculated: Mike fills it in from observation, for example "it moved about 2/3 the length of a span".
 - The trolley's limit on the trusses (background only): it can't go past the same place the animation stops it at the rear (just short of the
   blue tips), and the same relative place at the front.
-- Support B takes over as the front across both girders.
+- Support C, not Support B, is carried to the front support's place and set across both girders (centred on them, with its
+  wheels on the unfinished span). B is the counterweight on the rear lifting jacks and is moved later. Built; file 1 has it.
 - The ballast is a concrete segment. Its weight isn't needed.
 - The Leash Log changes for this are already planned, with the rules, in the handover document, so they aren't tracked here.
 - The leapfrog and the limits on `Dmax` are in file 2.

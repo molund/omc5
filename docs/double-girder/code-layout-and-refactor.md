@@ -1,10 +1,17 @@
 # Code layout and the refactor
 
 Notes on how the animation code is laid out today, how it could be laid out for the double girder moves, and the order the
-refactor would be done in. **This is a proposal, not an agreed plan.** Nothing is built, and nothing here changes until
-Mike says so. Overview: [`README.md`](README.md).
+refactor is being done in. Overview: [`README.md`](README.md).
 
-## How it is laid out today
+**Status.** The normal move has been cut into one function per step (`normalMove.js`), and `beforeCrawl.js` is built and plays
+when the gantry is on span 29, 41 or 50: `playGantry` in `gantryAnimation.js` picks between it and the normal move. File 1
+(`1-before-the-crawl.md`) records what it does. `crawl.js` is built (one move checked, see file 2) and `afterCrawl.js` doesn't exist yet, and none of the old rules are
+removed. The sections below were written before `beforeCrawl.js`, so where they say it is a proposal, it is now built. See
+"Order of the refactor".
+
+## How it was laid out before the refactor
+
+This is the layout on `main`. The branch has changed it: see "Layout on the `animation-refactor` branch" below.
 
 - `src/MapView/gantryAnimation.js` (about 1,200 lines) holds everything about the gantry's animation.
   - `playGantry(svg)` is one async function of about 600 lines. It does the whole move for a normal span: step 0 (the span
@@ -36,21 +43,48 @@ Four kinds of move, from the files in this folder:
 
 Choosing which one to play would depend on the span the gantry is on, like `DOUBLE_GIRDER` does now.
 
-## Proposed layout
+## Layout on the `animation-refactor` branch
 
-Keep `gantryAnimation.js` as the public face so nothing that imports it has to change: it still exports `playGantry`,
-`playToEnd`, `holdGantry`, `resumeGantry`, `stopGantry`, `lowerSupports`, `raiseSupports` and `FOLLOW_GANTRY`. Behind it:
+Done so far. `gantryAnimation.js` is the public face (about 130 lines) and still exports `playGantry`, `playToEnd`,
+`holdGantry`, `resumeGantry`, `stopGantry`, `lowerSupports`, `raiseSupports` and `FOLLOW_GANTRY`, so nothing that imports it
+changed. Behind it:
+
+| File                            | Holds                                                                                                  |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `gantryAnimation.js`            | The public functions above. `playGantry` calls `playNormalMove`; it doesn't pick between moves yet.    |
+| `gantryAnimation/measure.js`    | `between`, `screen`, `halfLength`, `centreIn`, `reachIn`: measuring through the screen.                |
+| `gantryAnimation/clock.js`      | `SPEED`, the animation's own clock, the waits between moves (`pause`) and Pause / Play (`holdGantry`). |
+| `gantryAnimation/fill.js`       | Step 0: the span fill, its hangers, and the trolley following the fill.                                |
+| `gantryAnimation/normalMove.js` | The normal move: `findGantry`, `prepare`, the step functions, and `playNormalMove` that runs them.     |
+| `lib/doubleGirder.js`           | `DOUBLE_GIRDER` and `cardSpan`, with the same name as in molund/omc5-admin.                            |
+
+How `normalMove.js` is cut up:
+
+- `prepare` does all the measuring before anything moves and works out the next span's rules (`gantryMoves`). It returns
+  one shared object, `m`, that every step takes.
+- Each step function plays one step, named with its number and what it does (`step1TrolleyToFourthSupport`, `step13CarryFrontSupportForward`, ...), with the same numbering and comments as `animation-steps`. A step picks what it needs out of
+  `m`, and puts any value a later step needs back on it. The trolley's and fourth support's positions are read live from `m`
+  (`m.trolleyY`, `m.fourth`), because moves change them during a step.
+- One function per step, not groups. Steps 25 and 26 are one function, because 26 sits inside 25's `if`.
+- The numbering of steps in the code comments is unchanged, so the pictures in `animation-steps` still match.
+
+How it was checked: a script plays one move from each of 16 spans in headless Chrome and records every animation call,
+every change to the drawing and the final drawing, on `main` and after each commit. They matched each time (a fill step
+timed by the real clock now and then differs by one frame and matches on a re-run). The Pause, Play and Reset buttons were not
+tested.
+
+Still to come, as a proposal:
+
+## Proposed layout for the new moves
+
+On top of the files above, `playGantry` would pick the move, and three more files would hold the new ones:
 
 | File                             | Holds                                                                                 |
 | -------------------------------- | ------------------------------------------------------------------------------------- |
-| `gantryAnimation.js`             | The public functions above. `playGantry` only picks which move to play and plays it.  |
-| `gantryAnimation/measure.js`     | The measuring helpers, and the setup that finds the pieces and measures them.         |
-| `gantryAnimation/fill.js`        | Step 0: the span fill, hangers and trolley following the fill.                        |
-| `gantryAnimation/normalMove.js`  | Steps 1 to 28 as they are today, one function per group of steps.                     |
+| `gantryAnimation.js`             | `playGantry` only picks which move to play and plays it.                              |
 | `gantryAnimation/beforeCrawl.js` | The move at span 30, 42 and 51.                                                       |
 | `gantryAnimation/crawl.js`       | The crawl.                                                                            |
 | `gantryAnimation/afterCrawl.js`  | The move at the end of the crawl. Deferred: an empty placeholder until it is planned. |
-| `lib/doubleGirder.js`            | `DOUBLE_GIRDER` and `cardSpan`, with the same name as in molund/omc5-admin.           |
 
 The front support's placing (file 1) is one shared piece of code used for spans 30, 42 and 51: it centres the support on
 the unfinished gantry-built guideway in the drawing. It belongs in `beforeCrawl.js`, and the crawl and the move after it
@@ -67,7 +101,7 @@ Where they are today:
 - `src/lib/placeGantry.js`, in `gantryMoves()`: the branch for `DOUBLE_GIRDER.has(S + rule.span)`. It turns the support a
   further quarter turn and centres it across the double girder, midway between the outer edges of its two girders, by
   measuring the guideway polygons.
-- `src/MapView/gantryAnimation.js`:
+- `src/MapView/gantryAnimation/normalMove.js` (`step2CarryFourthSupportForward`, `step7TurnSecondSupportLengthwise`, `step19TurnThirdSupportLengthwise`, `step20CarryThirdSupportToFourthPlace` and `prepare`):
   - step 2: the fourth support drawn turned across the span when it is picked up on a double girder span, with a quarter turn
     first (`DOUBLE_GIRDER.has(S - 1)`).
   - the carry angle for that support (`fourthAngle + 90` on a double girder span).
@@ -91,26 +125,30 @@ Two things to check before removing anything:
 The idea is that every change is small, does one thing, and leaves the animation looking exactly as it does now. The
 project's rules apply to each one: one change, one commit, Prettier, and `npm run build` passing.
 
-1. Move `DOUBLE_GIRDER` and `cardSpan` into `src/lib/doubleGirder.js`. Re-export them from `placeGantry.js` so nothing else
-   changes.
-2. Move the span fill (step 0, hangers, trolley following the fill) out into `fill.js`.
-3. Move the measuring helpers and the setup out into `measure.js`.
-4. Cut the numbered steps of `playGantry` into functions in `normalMove.js`, a few steps at a time. The steps share many
-   local variables, so these functions will need a shared object for them.
-5. Make `playGantry` pick which move to play. At this point it always picks the normal one.
-6. Only then add `beforeCrawl.js` and `crawl.js`, and the rule that picks them. `afterCrawl.js` waits for its own plan.
-7. Remove the old perpendicular rules (see above) once the new moves are in place to replace them. This one does change
+1. **Done.** Move `DOUBLE_GIRDER` and `cardSpan` into `src/lib/doubleGirder.js`. Instead of a re-export from
+   `placeGantry.js`, the three files that use them now import from the new file.
+2. **Done.** Move the measuring helpers out into `measure.js`. This went before the fill, because the fill needs them.
+3. **Done.** Move the clock, speed and waits into `clock.js`. A new file, not in the first plan: the fill needs the clock
+   and the speed, and so does every move.
+4. **Done.** Move the span fill (step 0, hangers, trolley following the fill) out into `fill.js`.
+5. **Done.** Move the normal move into `normalMove.js`, then cut it into `prepare` and one function per step, with a shared
+   object for the local variables.
+6. **Done, in a simple form.** `playGantry` picks which move to play: `playBeforeCrawl` when the gantry is on a span in
+   `BEFORE_CRAWL` (29, 41 and 50), and `playNormalMove` otherwise. The crawl and the move after it will need their own rules.
+7. **Partly done.** `beforeCrawl.js` is built (file 1 records it); it reuses some of `normalMove.js`'s step functions (those are
+   exported), and `normalMove.js`'s steps 22, 23 and 25 take an optional support so the normal move and this one can share
+   them. `crawl.js` isn't built, and `afterCrawl.js` waits for its own plan.
+8. Remove the old perpendicular rules (see above) once the new moves are in place to replace them. This one does change
    how the animation looks on double girder spans.
 
-Steps 1 to 5 change no behaviour. Mike checks after each one that the animation looks the same; a run of span 103 to 104
-with a picture of each step is what `animation-steps` already uses.
+Steps 1 to 6 change no behaviour. Each one was checked by replaying the same moves and comparing every animation call and the
+final drawing with `main`'s; Mike can still look at a run to see it is the same.
 
 ## Things to decide before starting
 
 - Whether the folder name `gantryAnimation/` next to a file `gantryAnimation.js` is acceptable, or the entry file should be
   `gantryAnimation/index.js`.
-- Whether the step 4 split goes by groups of steps (for example 1 to 4, 5 to 10, 11 to 16, 17 to 21, 22 to 28) or one
-  function per step. Claude would suggest groups.
+- (Decided while doing it: one function per step, not groups.)
 - Where the crawl's constants (`Dmax`, `Smin`, move counts) live, so Mike can adjust them without searching.
 
 ## Not part of the refactor

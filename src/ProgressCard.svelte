@@ -14,7 +14,7 @@
   } from "./lib/appState/appState.svelte.js";
   import { status, asOf, dayOf } from "./lib/status.js";
   import { inline } from "./lib/inline.js";
-  import { cardSpan } from "./lib/placeGantry.js";
+  import { cardSpan } from "./lib/doubleGirder.js";
   import { term, fetchCounts, SITE } from "./lib/comments.js";
   import { track } from "./lib/track.js";
   import Icon from "./Icon.svelte";

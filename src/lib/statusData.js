@@ -1,7 +1,7 @@
 // The Clayton Clipper's status as data for machines, written when the site is built (trackside/prerender.js): dist/status.json,
 // and the schema.org Dataset in the map page's <head> that describes it, so crawlers and apps can find and read it. It is
 // dedicated to the public domain (CC0 1.0). Plain JS, no Svelte, so the build can run it.
-import { cardSpan } from "./placeGantry.js";
+import { cardSpan } from "./doubleGirder.js";
 import { SITE } from "./comments.js";
 
 /** The route's span count, as the progress card's "of" figure (the span numbers in map.svg). */
