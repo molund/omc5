@@ -202,14 +202,20 @@ const ANIMATION_SWITCHES = ["arrows", "spanNumbers", "guideway", "unfinished", "
 let beforeAnimation = null;
 
 /**
- * Starts the gantry animation (MapView plays it while ui.gantryPlaying is set): the Gantry box is ticked if it's off, the
+ * Whether the gantry animation can play: in every view but the two SFMSF ones, which have no animation.
+ * @returns {boolean}
+ */
+export const canAnimate = () => !(layers.sfmsfDrawing || layers.sfmsfAerial);
+
+/**
+ * Starts the gantry animation (MapView plays it while ui.gantryPlaying is set), except in the SFMSF views (canAnimate): the Gantry box is ticked if it's off, the
  * finished spans and supports are shown, the unfinished spans, span numbers and arrows hidden, and the progress card
  * closed so it doesn't cover the gantry (its information button brings it back). Used by the Play pill, the Gantry
  * switch's "animate" link and ?animate=true in the address.
  * @returns {void}
  */
 export function animateGantry() {
-  if (ui.gantryPlaying) return;
+  if (ui.gantryPlaying || !canAnimate()) return;
   beforeAnimation ??= {
     switches: Object.fromEntries(ANIMATION_SWITCHES.map((k) => [k, layers[k]])),
     gantry: layers.gantry,

@@ -10,6 +10,7 @@
     stopAnimation,
     pauseAnimation,
     resumeAnimation,
+    canAnimate,
   } from "./lib/appState/appState.svelte.js";
   import { status, asOf, dayOf } from "./lib/status.js";
   import { inline } from "./lib/inline.js";
@@ -166,10 +167,11 @@
 {/if}
 <!-- while the gantry doesn't animate, a Play pill where the Pause and Reset buttons go (as wide as the two together), left of
      the info button, or left of the progress card when that is open (on a phone, only once the card is closed: there's no
-     room beside it, so the pill would end up under the menu button); none once status.yaml has the gantry on the last
+     room beside it, so the pill would end up under the menu button); none in the two SFMSF views, which have no animation,
+     or once status.yaml has the gantry on the last
      span, 105: there's nowhere left to move it. It ticks the Gantry box first if it's off and, on a phone, closes the menu
      so the map shows. While the animation plays, the Reset button puts everything back to the gantry's current status -->
-{#if ui.gantry && !ui.gantryPlaying && !(status.span >= 105) && !(ui.phone && !ui.cardHidden)}
+{#if ui.gantry && !ui.gantryPlaying && canAnimate() && !(status.span >= 105) && !(ui.phone && !ui.cardHidden)}
   <button
     class={["play-pill absolute top-3 z-5", ui.cardHidden ? "right-13" : "right-65"]}
     title="Play the animation"

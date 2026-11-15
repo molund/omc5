@@ -16,6 +16,7 @@
     centreView,
     animateGantry,
     stopAnimation,
+    canAnimate,
   } from "./lib/appState/appState.svelte.js";
 
   // each press of zoom in or out changes the zoom by this factor, about the middle of the stage; Fit's zoom depends on the
@@ -137,8 +138,9 @@
                   onchange={(e) => change(e, k)}
                 />{label}
               </label>
-              <!-- no "animate" link once status.yaml has the gantry on the last span, 105: there's nowhere left to move it -->
-              {#if k === "gantry" && !(status.span >= 105)}
+              <!-- no "animate" link in the two SFMSF views, which have no animation, or once status.yaml has the gantry on
+                   the last span, 105: there's nowhere left to move it -->
+              {#if k === "gantry" && canAnimate() && !(status.span >= 105)}
                 <!-- a small link that plays the gantry's moves span by span to the last span, as the Play pill does
                      (MapView does the moving): it ticks the Gantry box first if it's off, and on a phone closes the menu
                      so the map shows. While the moves play it reads "reset" and puts everything back to the gantry's
