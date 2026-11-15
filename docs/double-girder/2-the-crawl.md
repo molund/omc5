@@ -27,8 +27,8 @@ The crawl itself doesn't use the front lifting jacks or the ballast.
    the length of a long gantry support in the drawing: half that length plus about 2 m of clearance. It doesn't have to be
    exact.
 
-The starting value for `Dmax` is half the length of span 44, to be read from the map (a span is about 40 m in the drawing,
-so about 20 m, but use span 44's own length). Only `Dmax` needs later adjusting; `Smin` comes from the drawing. The shorter
+The starting value for `2 x Dmax` is the length of span 44, to be read from the map (a span is about 40 m in the drawing,
+but use span 44's own length). So `Dmax` starts at half of that, about 20 m. Only `Dmax` needs later adjusting; `Smin` comes from the drawing. The shorter
 crawl (52 to 54) should need fewer moves than the five-span one, which makes the two a good check on the first estimate.
 
 ## The limit on `2 x Dmax`
