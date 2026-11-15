@@ -203,8 +203,9 @@ let beforeAnimation = null;
 
 /**
  * Starts the gantry animation (MapView plays it while ui.gantryPlaying is set): the Gantry box is ticked if it's off, the
- * finished spans and supports are shown, and the unfinished spans, span numbers and arrows hidden. Used by the Play pill
- * and by ?animate=true in the address.
+ * finished spans and supports are shown, the unfinished spans, span numbers and arrows hidden, and the progress card
+ * closed so it doesn't cover the gantry (its information button brings it back). Used by the Play pill, the Gantry
+ * switch's "animate" link and ?animate=true in the address.
  * @returns {void}
  */
 export function animateGantry() {
@@ -220,6 +221,7 @@ export function animateGantry() {
   setSwitch("guideway", true);
   setSwitch("unfinished", false);
   setSwitch("supports", true);
+  ui.cardHidden = true;
   ui.gantryPlaying = true;
 }
 
