@@ -71,7 +71,7 @@ const view = saved?.view ?? (defaults.progress ? "progress" : defaults.sfmsfDraw
  *   then plays the gantry's moves span by span to the last span, and clears it when they're done.
  * - gantryPaused: whether the Pause button has the animation held where it is (pauseAnimation()); Play
  *   (resumeAnimation()) plays it on from there. Cleared whenever the animation ends or is stopped.
- * - gantryStops: counts the times the Stop button has stopped an animation (stopAnimation()), so the address can drop
+ * - gantryStops: counts the times the Reset button has stopped an animation (stopAnimation()), so the address can drop
  *   ?animate=true.
  */
 export const ui = $state({

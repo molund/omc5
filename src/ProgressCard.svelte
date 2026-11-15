@@ -137,9 +137,9 @@
   >
 {/snippet}
 
-<!-- while the gantry animates, in every view, a Pause and a Stop button left of the top-right corner's button; the progress
+<!-- while the gantry animates, in every view, a Pause and a Reset button left of the top-right corner's button; the progress
      card, drawn after them, opens over them. Pause holds the gantry where it is and turns into Play, which plays it on from
-     there; Stop ends the animation (the Play pill starts it again) -->
+     there; Reset puts everything back to the gantry's current status (the Play pill starts it again) -->
 {#if ui.gantry && ui.gantryPlaying}
   {#if ui.gantryPaused}
     <button
@@ -158,16 +158,15 @@
   {/if}
   <button
     class="absolute top-3 right-13 z-5 p-1.5 shadow-float"
-    title="Stop the animation"
-    aria-label="Stop the animation"
-    onclick={stopAnimation}><Icon kind="stop" /></button
+    title="Reset to the gantry's current status"
+    aria-label="Reset to the gantry's current status"
+    onclick={stopAnimation}><Icon kind="reset" /></button
   >
 {/if}
-<!-- while the gantry doesn't animate, a Play pill where the Pause and Stop buttons go (as wide as the two together), left of
+<!-- while the gantry doesn't animate, a Play pill where the Pause and Reset buttons go (as wide as the two together), left of
      the info button, or left of the progress card when that is open; none once status.yaml has the gantry on the last
      span, 105: there's nowhere left to move it. It ticks the Gantry box first if it's off and, on a phone, closes the menu
-     so the map shows. While the animation plays, the Stop button stops it and the layer switches stay as the animation
-     set them -->
+     so the map shows. While the animation plays, the Reset button puts everything back to the gantry's current status -->
 {#if ui.gantry && !ui.gantryPlaying && !(status.span >= 105)}
   <button
     class={["play-pill absolute top-3 z-5", ui.cardHidden ? "right-13" : "right-65"]}
@@ -312,7 +311,7 @@
 <style>
   @reference "./app.css";
 
-  /* the idle Play pill: as wide as the Pause and Stop buttons are together (2 + 0.5 + 2 rem), with an accent border so it
+  /* the idle Play pill: as wide as the Pause and Reset buttons are together (2 + 0.5 + 2 rem), with an accent border so it
      reads as the thing to press, and a ring that pulses three times when the map loads */
   .play-pill {
     @apply flex w-18 items-center justify-center gap-1.5 border-(--accent) px-0 font-medium shadow-float;
