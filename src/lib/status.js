@@ -319,7 +319,7 @@ export const status = parse(text);
  * @param {Date|number} t
  * @returns {string}
  */
-const dayOf = (t) => new Intl.DateTimeFormat("en-CA", { timeZone: "America/Dawson_Creek" }).format(t);
+export const dayOf = (t) => new Intl.DateTimeFormat("en-CA", { timeZone: "America/Dawson_Creek" }).format(t);
 
 /**
  * A time as "6:45 a.m. on Oct 29, 2026", BC time, rounded to the nearest quarter hour. With `relative`, a time today or

@@ -11,7 +11,7 @@
     pauseAnimation,
     resumeAnimation,
   } from "./lib/appState/appState.svelte.js";
-  import { status, asOf } from "./lib/status.js";
+  import { status, asOf, dayOf } from "./lib/status.js";
   import { inline } from "./lib/inline.js";
   import { cardSpan } from "./lib/placeGantry.js";
   import { term, fetchCounts, SITE } from "./lib/comments.js";
@@ -19,12 +19,13 @@
 
   // "today" or "yesterday" on the card (Trackside keeps full dates)
   const when = asOf(status.updated, true);
-  // the newest update's latest word: its newest follow-up if it has any, else its note. It shows only when it is from the
-  // time the card was last updated (a position-only check-in leaves `updated` later than every note), otherwise the card has
-  // no text and a Trackside button instead of Comments
+  // the newest update's latest word: its newest follow-up if it has any, else its note. It shows until midnight BC time at
+  // the end of the day it was posted, by the visitor's clock (a later position check-in doesn't hide it, and a follow-up
+  // the next day starts a new day); after that the card has no text and a Trackside button instead of Comments. The page
+  // has to be loaded again to see it go.
   const newest = status.latest;
   const word = status.followUps[0] ?? newest;
-  const current = !!word && +word.time === +status.updated;
+  const current = !!word && dayOf(word.time) === dayOf(new Date());
   const note = current ? status.followUps[0]?.summary || status.note : "";
   // a link in the note: an address on this site that's only `?…` was written for Trackside, so it goes there from the map
   const noteLink = (href) => (href.startsWith("?") ? `${import.meta.env.BASE_URL}trackside/${href}` : href);
