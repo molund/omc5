@@ -72,12 +72,6 @@ it doesn't enter `Dmax`. It only matters for the two moves that use the front ja
 one at the end (file 3), and neither is part of `L`. The ballast is a concrete segment (Mike's "guideway support"), and
 that only matters for its weight (about 28 tonnes, the published segment weight).
 
-## Weights
-
-The only published figures: the gantry is over 440 tonnes and a segment is about 28 tonnes. Nothing is published for the
-supports, the trolley crane or the trusses. The Langley Launcher and Fleetwood Flyer are probably heavier than the Clayton
-Clipper and Surrey Sprinter. Two of the four are lattice style and two are beam style.
-
 ## Where this touches the code today
 
 - `DOUBLE_GIRDER` in `src/lib/placeGantry.js` here, and `src/lib/doubleGirder.js` in molund/omc5-admin. Keep them the same.

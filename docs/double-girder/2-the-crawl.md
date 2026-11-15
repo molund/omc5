@@ -17,8 +17,7 @@ The crawl itself doesn't use the front lifting jacks or the ballast.
 
 ## How far it can move (inferred method)
 
-1. `Dmax`: the most the gantry can advance in one move without tipping. The trolley crane and the support it is holding are
-   the lopsided part of the balance, like a giant teeter-totter. Physics probably makes this matter more than it looks.
+1. `Dmax`: the most the gantry can advance in one move without tipping.
 2. `moves = ceil(L / Dmax)`, where `L` is the length of the crawl on the three long supports. `L` leaves out the move at
    the start (file 1) and the move over span 48, or 55 / 56, at the end (file 3): both use the front lifting jacks and the
    ballast, so they aren't part of it.
@@ -28,8 +27,8 @@ The crawl itself doesn't use the front lifting jacks or the ballast.
    exact.
 
 The starting value for `2 x Dmax` is the length of span 44, to be read from the map (a span is about 40 m in the drawing,
-but use span 44's own length). So `Dmax` starts at half of that, about 20 m. It is only a starting value: `2 x Dmax` won't be calculated, Mike will fill it in
-from what he sees from the ground. `Smin` comes from the drawing. The shorter
+but use span 44's own length). So `Dmax` starts at half of that, about 20 m. It is only a starting value, and probably a conservative one: `2 x Dmax` won't be calculated, Mike will fill it in
+from what he sees from the ground, increasing or decreasing it after the first move. `Smin` comes from the drawing. The shorter
 crawl (52 to 54) should need fewer moves than the five-span one, which makes the two a good check on the first estimate.
 
 ## The limit on `2 x Dmax`
