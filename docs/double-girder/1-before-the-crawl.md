@@ -37,8 +37,9 @@ Support B does the front support's job.
   3. A crane lifts it onto that support.
 - Only the front support is moved. This is settled from theory, not from observation: it hasn't been seen yet.
 - No temporary tower is used.
-- The destination is the tulip one support past the first support after the crawl: 48 / 49 for the 43 to 47 crawl,
-  55 / 56 for the 52 to 54 crawl. For span 30 it is a hammerhead, between 32 and 33. The same code is used for all three spans: the support is centred on the unfinished gantry-built
+- The destination is the next support after the double section. The support at the section's far end (47 / 48, 54 / 55, or
+  31 / 32) counts as part of the section, because the double girders rest on it. So it is 48 / 49 for the 43 to 47 crawl,
+  55 / 56 for the 52 to 54 crawl. For span 30 (the crawl over span 31) it is a hammerhead, between 32 and 33. The same code is used for all three spans: the support is centred on the unfinished gantry-built
   guideway in the drawing and not on the whole hammerhead.
 
 ## Open in this file
