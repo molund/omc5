@@ -18,6 +18,7 @@ tulip), centred on the unfinished gantry-built guideway in the drawing, not on t
    is still holding it there, and reappears further down the line on its new support: the tulip
    between 48 and 49 (55 / 56 for span 51). On site it takes three steps (see below), but the animation shows only this
    first part. The flatbed and the crane that sets it down aren't drawn, and how many flatbeds there are doesn't matter.
+   The trolley doesn't go anywhere else after that: it just slides right back.
 3. The trusses slide back and pick up Support B.
 4. The front lifting jacks carry Support B to where the forward support used to be. It lands across both the westbound and
    eastbound double girders, in the position the forward support would have taken. B is now the front for the crawl.
@@ -41,5 +42,4 @@ Support B does the front support's job.
 
 ## Open in this file
 
-- Where the trolley goes after the support has disappeared (it is about 8 m ahead of the usual front support position, holding
-  nothing), before the trusses slide back for Support B in step 3.
+Nothing.
