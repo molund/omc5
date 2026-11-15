@@ -28,7 +28,8 @@ The crawl itself doesn't use the front lifting jacks or the ballast.
    exact.
 
 The starting value for `2 x Dmax` is the length of span 44, to be read from the map (a span is about 40 m in the drawing,
-but use span 44's own length). So `Dmax` starts at half of that, about 20 m. Only `Dmax` needs later adjusting; `Smin` comes from the drawing. The shorter
+but use span 44's own length). So `Dmax` starts at half of that, about 20 m. It is only a starting value: `2 x Dmax` won't be calculated, Mike will fill it in
+from what he sees from the ground. `Smin` comes from the drawing. The shorter
 crawl (52 to 54) should need fewer moves than the five-span one, which makes the two a good check on the first estimate.
 
 ## The limit on `2 x Dmax`
@@ -37,14 +38,15 @@ The total distance across the three supports is limited by the trusses. With equ
 limit applies to `2 x Dmax`.
 
 **The 3/4 is only a figure of speech.** Mike says "about 3/4 of the truss length" in conversation, as a rough idea of the
-size. It is not a constant to put in the code, and `Dmax` is not to be set as 3/8 of the truss length. The real maximum for
-`2 x Dmax` has to be calculated, from the trusses and the points on them the trolley crane can't go past.
+size. It is not a constant to put in the code, and `Dmax` is not to be set as 3/8 of the truss length. The real value of
+`2 x Dmax` will not be calculated. Mike will fill it in from observation: from the ground he expects to see something like
+"it moved about 2/3 the length of a span", and that kind of reading sets the number.
 
-Those points are the ones the animation already uses (`TIP_GAP_SHARE` in `gantryAnimation.js`). Plainly: the trolley may
+The trolley's stopping points are recorded here as background, not as a way to calculate the value. They are the ones the animation already uses (`TIP_GAP_SHARE` in `gantryAnimation.js`). Plainly: the trolley may
 not come closer to the blue tips at the rear end of the trusses than half a tip's length. Mike confirms the rear limit is
 that same place, and that the front limit is the same place relative to the front end of the trusses.
 
 ## Open in this file
 
-- The calculated maximum for `2 x Dmax`, from the rear and front stopping points.
+- The observed value of `2 x Dmax`, to be filled in by Mike from the ground.
 - How many moves each section needs, from the span lengths on the map.
