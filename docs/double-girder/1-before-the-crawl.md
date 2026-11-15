@@ -13,8 +13,9 @@ Written for span 41 going to 42. Span 51 repeats it, with the front support goin
 tulip), centred on the unfinished gantry-built guideway in the drawing, not on the whole hammerhead.
 
 1. The normal cycle runs until Support C has been set down behind the forward support.
-2. **The crane move.** The trolley crane picks up the forward support and carries it forward a little. The support then
-   disappears while the trolley is still holding it, and reappears further down the line on its new support: the tulip
+2. **The crane move.** The trolley first moves to the front support and stops over it, then picks it up and moves with it to
+   a position about 8 m ahead of the usual position for the front support. The support then disappears while the trolley
+   is still holding it there, and reappears further down the line on its new support: the tulip
    between 48 and 49 (55 / 56 for span 51). On site it takes three steps (see below), but the animation shows only this
    first part. The flatbed and the crane that sets it down aren't drawn, and how many flatbeds there are doesn't matter.
 3. The trusses slide back and pick up Support B.
@@ -40,4 +41,5 @@ Support B does the front support's job.
 
 ## Open in this file
 
-- Where the trolley is, and what it is holding, once the support has disappeared, before the trusses slide back in step 3.
+- Where the trolley goes after the support has disappeared (it is about 8 m ahead of the usual front support position, holding
+  nothing), before the trusses slide back for Support B in step 3.
