@@ -22,7 +22,7 @@ spans-per-week: 2.40
 # Notes to self, and the steps of the gantry's cycle seen at each time stamp, are in gantry-cycles.yaml, not here.
 notes:
   - 2026-11-16T09:00-07:00: "Clayton Clipper construction update for Monday, Nov. 16, 2026"
-    summary: "Heavy rain cost the Clayton Clipper a night shift."
+    summary: "Last night’s lightning storm cost the Clayton Clipper a night shift."
     block:
       - "That put a major dent in the velocity, on top of my weekend bug fix that had already knocked it down from 2.82 to 2.60."
   - 2026-11-14T09:15-07:00: "Clayton Clipper construction update for Saturday, Nov. 14, 2026"
