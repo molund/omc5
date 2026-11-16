@@ -4,6 +4,7 @@
 #   stage: the step of the gantry's cycle it had reached by then (see docs/gantry-cycle.md), one of:
 #     arrived at span, hanging started, hung, gluing started, glued,
 #     post-tensioning started, cables down, hangers down, supports started
+#   progress: how far through the step it was, 0 to 99 per cent, when that was recorded
 #   note: a memo, one line
 # Every entry about the gantry has a stage, and one that marks its span hung is at "hung" or later. A time stamp can match a
 # note or follow-up in status.yaml, or stand alone (a step seen with no post about it).
@@ -46,8 +47,9 @@ irregular-shutdowns:
 # the week up to the latest step reported (the weekly shutdown allowed for). calculated-chart-data is the figure at each
 # step of the past 96 hours, newest first, the first being spans-per-week itself; the site's build draws it as the progress
 # card's chart. status.yaml has a copy of spans-per-week
-spans-per-week: 2.60
+spans-per-week: 2.40
 calculated-chart-data:
+  - 2026-11-16T09:00-07:00: 2.40
   - 2026-11-14T15:30-07:00: 2.60
   - 2026-11-14T09:15-07:00: 2.60
   - 2026-11-13T13:45-07:00: 2.61
@@ -56,9 +58,11 @@ calculated-chart-data:
   - 2026-11-12T20:45-07:00: 2.69
   - 2026-11-12T19:30-07:00: 2.69
   - 2026-11-12T10:15-07:00: 2.65
-  - 2026-11-11T06:00-07:00: 2.66
-  - 2026-11-10T21:00-07:00: 2.66
 entries:
+  - 2026-11-16T09:00-07:00:
+      span: 41
+      stage: gluing started
+      progress: 9
   - 2026-11-14T15:30-07:00:
       span: 41
       stage: hung
