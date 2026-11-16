@@ -59,6 +59,10 @@ calculated-chart-data:
   - 2026-11-12T19:30-07:00: 2.84
   - 2026-11-12T10:15-07:00: 2.80
 entries:
+  - 2026-11-16T16:30-07:00:
+      span: 41
+      stage: gluing started
+      progress: 99
   - 2026-11-16T13:45-07:00:
       span: 41
       stage: gluing started
