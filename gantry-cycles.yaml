@@ -43,6 +43,16 @@ irregular-shutdowns:
     type: holiday
     start: 2026-11-11T06:00-07:00
     hours: 24
+# night-shift-off: stretches of nights with no night shift, added by hand. The day shift still works. Each one has:
+#   start: the first night off, a date (2026-11-16): the night shift from 8 p.m. that day
+#   end: the last night off, a date; leave it out while the night shift is still off
+# The shift clock, which the stage shares and the estimated steps use, leaves those nights out. The lost nights count
+# against the pace.
+# Example (take out the "# "):
+#   - start: 2026-11-16
+#     end: 2026-12-04
+night-shift-off:
+  - start: 2026-11-16
 # the Clayton Clipper's velocity, written by the Leash Log on every push: spans per week, from how far the gantry got in
 # the week up to the latest step reported (the weekly shutdown allowed for). calculated-chart-data is the figure at each
 # step of the past 96 hours, newest first, the first being spans-per-week itself; the site's build draws it as the progress
