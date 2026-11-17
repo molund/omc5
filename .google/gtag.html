@@ -10,5 +10,14 @@
     dataLayer.push(arguments);
   }
   gtag("js", new Date());
+
+  const cleanUrl = new URL(window.location.href);
+  cleanUrl.searchParams.delete("fbclid");
+  // these values differ per visit or per update; rewrite them so those page views roll up in the reports
+  ["giscus", "post", "span"].forEach((p) => {
+    if (cleanUrl.searchParams.has(p)) cleanUrl.searchParams.set(p, "any");
+  });
+  gtag("set", "page_location", cleanUrl.toString());
+
   gtag("config", "G-M86QSPJJZN");
 </script>
