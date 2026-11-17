@@ -45,6 +45,7 @@ entries:
   - 2026-11-14T09:15-07:00:
       span: 41
       stage: hanging started
+      progress: 0
   - 2026-11-13T20:30-07:00:
       span: 40
       stage: supports started
@@ -62,7 +63,8 @@ entries:
       stage: post-tensioning started
   - 2026-11-12T19:30-07:00:
       span: 40
-      stage: glued
+      stage: gluing started
+      progress: 95
       note: "All the blocks are in place but there’s still plastic on the ground. I think dayshift is still working. And night shift starts in about 25 minutes. The span 35 exit ramp is probably going up tonight. The seven axle cranes are running."
   - 2026-11-12T10:15-07:00:
       span: 40
@@ -94,10 +96,12 @@ entries:
   - 2026-11-09T08:30-07:00:
       span: 39
       stage: gluing started
+      progress: 83
       note: "10/12 glued"
   - 2026-11-08T22:00-07:00:
       span: 39
       stage: hanging started
+      progress: 50
       note: "6/12 spans hung"
   - 2026-11-07T18:00-07:00:
       span: 39
@@ -108,10 +112,12 @@ entries:
   - 2026-11-07T10:45-07:00:
       span: 38
       stage: supports started
+      progress: 35
       note: "They are hooking up the front lifting jacks to the forward support. It hasn’t moved yet."
   - 2026-11-07T08:15-07:00:
       span: 38
       stage: supports started
+      progress: 20
       note: "The sideways support is behind the front support. The gantry hasn’t backed up to pick up the front support yet."
   - 2026-11-06T22:00-07:00:
       span: 38
@@ -132,6 +138,7 @@ entries:
   - 2026-11-05T21:30-07:00:
       span: 38
       stage: gluing started
+      progress: 50
       note: "6/12 segments glued"
   - 2026-11-05T17:15-07:00:
       span: 38
@@ -155,9 +162,11 @@ entries:
   - 2026-11-02T20:30-07:00:
       span: 36
       stage: cables down
+      progress: 50
   - 2026-11-02T17:45-07:00:
       span: 36
       stage: cables down
+      progress: 0
   - 2026-11-02T09:15-07:00:
       span: 36
       stage: post-tensioning started
@@ -176,9 +185,11 @@ entries:
   - 2026-10-31T11:45-07:00:
       span: 36
       stage: hanging started
+      progress: 50
   - 2026-10-31T09:30-07:00:
       span: 36
       stage: hanging started
+      progress: 25
   - 2026-10-30T20:45-07:00:
       span: 36
       stage: arrived at span
@@ -194,6 +205,7 @@ entries:
   - 2026-10-26T20:00-07:00:
       span: 34
       stage: hanging started
+      progress: 92
   - 2026-10-23T16:30-07:00:
       span: 33
       stage: glued
