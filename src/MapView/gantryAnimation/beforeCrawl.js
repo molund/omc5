@@ -11,6 +11,7 @@ import { girderEdges } from "./guideway.js";
 import { playCrawl } from "./crawl.js";
 import { cMiddle, slideC, swingC } from "./supports.js";
 import { between, centreIn, halfLength, reachIn } from "./measure.js";
+import { holders } from "./holders.js"; // TEMP
 import {
   startMove,
   step0FillSpan,
@@ -45,6 +46,27 @@ const B_AHEAD_METRES = 12;
 const A_FROM_B_METRES = 12;
 /** How much room, in metres, it keeps between its sweep as it turns and C's rear edge, on top of half its length. */
 const SPIN_CLEARANCE_METRES = 1.5;
+/** How far back, in metres, the front support is carried from where it was picked up. */
+const CARRY_BACK_METRES = 15.5;
+/** How much of the trusses' length (tip to tip) overhangs past the front end of the span the gantry is on, in step 14. */
+const OVERHANG_SHARE = 0.1;
+/** How far forward, in metres, the trolley carries A in step 16 before it turns lengthwise. */
+const A_FORWARD_METRES = 4;
+/** How far across the span behind the one the gantry is on (back end to front end) B's middle is carried in step 5. */
+const B_INTO_SPAN_SHARE = 0.2;
+/**
+ * How far across that span the trolley then carries B, in step 14b, before A is moved. Not in step 5: with B that far
+ * forward, the trusses' middle would be behind B at the end of step 13, and the gantry would tip.
+ */
+const B_CRANE_SHARE = 0.8;
+/** The closest the trolley may come to a rear blue tip, as a share of the tip's length (as in the normal move's step 24). */
+const TIP_GAP_SHARE = 0.5;
+/** How much further forward than the normal move's step 2 leaves it, in metres, C is carried in step 2. */
+const C_FURTHER_METRES = 4;
+/** How far, in metres, the trusses slide forward in step 33, after B is moved onto the span the gantry is on. */
+const TRUSSES_FORWARD_METRES = 14;
+/** The gap, in metres, left between C and A (the whole of each, blue deck included) when C is set down behind A in step 25. */
+const C_A_GAP_METRES = 0.05;
 /** How far behind C's rear edge, in metres, the front support is set down. */
 const SET_DOWN_GAP_METRES = 1;
 
@@ -562,6 +584,439 @@ async function step36TurnAAcross(m) {
 }
 
 /**
+ * Step 4: the trolley stays anchored over C (where step 3 turned it) while the trusses slide back until their rear tips
+ * (the rear lifting jacks) are over Support B's middle.
+ */
+async function step4RearJacksBackToB(m) {
+  console.log("[gantry] before the crawl, step 4: RearJacksBackToB"); // TEMP
+  const { gantry, truss, ahead, trusses, moveTrolley, thirdBeam } = m;
+  const tips = [...gantry.querySelectorAll(".clipper-tip")].map((t) => centreIn(t, truss).y),
+    rearTip = ahead > 0 ? Math.min(...tips) : Math.max(...tips),
+    d = yNow(m, thirdBeam) - rearTip;
+  await Promise.all([trusses.by(d, 3000), moveTrolley(m.trolleyY - d, 3000)]);
+  await pause(500);
+}
+
+/**
+ * Step 5: the rear lifting jacks pick up B and the trusses carry it forward along the trusses until its middle is
+ * B_INTO_SPAN_SHARE of the way across the span behind the one the gantry is on (span 40 for the move from 41), and set it
+ * down. The trolley stays still over C.
+ */
+async function step5CarryBIntoSpanBehind(m) {
+  console.log("[gantry] before the crawl, step 5: CarryBIntoSpanBehind"); // TEMP
+  const { trusses, third, moveTrolley } = m;
+  const d = bTripIntoSpanBehind(m, B_INTO_SPAN_SHARE);
+  if (d == null) return;
+  await Promise.all([trusses.by(d, 3500), third.by(d, 3500), moveTrolley(m.trolleyY - d, 3500)]);
+  await pause(500);
+}
+
+/**
+ * How far B has to go along the trusses (truss units) for its middle to be `share` of the way across the span behind the
+ * one the gantry is on (back end to front end); undefined when the drawing has no such span.
+ */
+function bTripIntoSpanBehind(m, share) {
+  const { svg, truss, S, thirdBeam } = m;
+  const behind = gantryMoves(svg, S, S)?.spans[S - 1];
+  if (!behind) return;
+  const { back, front } = behind.ends,
+    target = { x: back.x + (front.x - back.x) * share, y: back.y + (front.y - back.y) * share },
+    toTruss = between(truss, svg).inverse();
+  return toTruss.b * target.x + toTruss.d * target.y + toTruss.f - yNow(m, thirdBeam);
+}
+
+/** Step 14a: the trolley slides on its own to stop over the middle of B, wherever it was last set down. */
+async function step14aTrolleyToB(m) {
+  console.log("[gantry] before the crawl, step 14a: TrolleyToB"); // TEMP
+  await m.moveTrolley(yNow(m, m.thirdBeam) - m.trolleyAt.y, 2500);
+  await pause(500);
+}
+
+/** Step 12: the trusses slide back until the front tip is over the front support's middle (nudged by PICKUP), ready to pick it up. A stays under the trolley. */
+async function step12TrussesBackForFrontSupport(m) {
+  console.log("[gantry] before the crawl, step 12: TrussesBackForFrontSupport"); // TEMP
+  const { frontAt, tipAt, PICKUP, trusses, moveTrolley } = m;
+  // less the trusses' slide so far (steps 4 and 5): tipAt was measured before they moved
+  const back = frontAt.y - tipAt.y + PICKUP - trusses.at;
+  await Promise.all([trusses.by(back, 3000), moveTrolley(m.trolleyY - back, 3000)]);
+  await pause(500);
+}
+
+/**
+ * Step 13: the front lifting jacks pick up the front support and the trusses carry it back, CARRY_BACK_METRES, and set it
+ * down. It doesn't turn. The trolley stays still over A (moved forward inside the trusses as they go back).
+ */
+async function step13CarryFrontSupportBack(m) {
+  console.log("[gantry] before the crawl, step 13: CarryFrontSupportBack"); // TEMP
+  const trip = -alongMetres(m, CARRY_BACK_METRES);
+  await Promise.all([m.trusses.by(trip, 4000), m.front.by(trip, 4000), m.moveTrolley(m.trolleyY - trip, 4000)]);
+  await pause(500);
+}
+
+/**
+ * Step 14: the trusses slide forward until OVERHANG_SHARE of their length (tip to tip) overhangs past the front end of the
+ * span the gantry is on (the finished span). The trolley stays still (moved back inside the trusses as they go forward).
+ */
+async function step14TrussesOverhangFinishedSpan(m) {
+  console.log("[gantry] before the crawl, step 14: TrussesOverhangFinishedSpan"); // TEMP
+  const { svg, gantry, truss, ahead, S, trusses, moveTrolley } = m;
+  // the front end of the finished span: the rear end of the span after it
+  const end = gantryMoves(svg, S, S + 1)?.spans[S + 1]?.ends.back;
+  if (!end) return;
+  // the tips are fixed in the truss frame; the span's end is put into it as the trusses lie now
+  const tips = [...gantry.querySelectorAll(".clipper-tip")].map((t) => centreIn(t, truss).y),
+    length = Math.max(...tips) - Math.min(...tips),
+    frontTip = ahead > 0 ? Math.max(...tips) : Math.min(...tips),
+    toTruss = between(truss, svg).inverse(),
+    endY = toTruss.b * end.x + toTruss.d * end.y + toTruss.f,
+    d = endY + ahead * OVERHANG_SHARE * length - frontTip;
+  await Promise.all([trusses.by(d, 3500), moveTrolley(m.trolleyY - d, 3500)]);
+  await pause(500);
+}
+
+/** Where Support A's middle is on the map now. */
+const aMiddle = (m) => centreIn(m.secondBeam, m.svg);
+
+/**
+ * Step 14b: the trolley picks up B and carries it forward along the trusses until its middle is B_CRANE_SHARE of the way
+ * across the span behind the one the gantry is on, and sets it down. It doesn't turn.
+ */
+async function step14bCarryBFurtherIntoSpan(m) {
+  console.log("[gantry] before the crawl, step 14b: CarryBFurtherIntoSpan"); // TEMP
+  const d = bTripIntoSpanBehind(m, B_CRANE_SHARE);
+  if (d == null) return;
+  await Promise.all([m.third.by(d, 3500), m.moveTrolley(m.trolleyY + d, 3500)]);
+  await pause(500);
+}
+
+/** Step 15: the trolley slides on its own back from B to stop over the middle of Support A. */
+async function step15TrolleyToA(m) {
+  console.log("[gantry] before the crawl, step 15: TrolleyToA"); // TEMP
+  await m.moveTrolley(yNow(m, m.secondBeam) - m.trolleyAt.y, 2500);
+  await pause(500);
+}
+
+/** Step 16: the trolley picks up A and carries it forward along the trusses, A_FORWARD_METRES, still across the guideway. */
+async function step16CarryAForward(m) {
+  console.log("[gantry] before the crawl, step 16: CarryAForward"); // TEMP
+  const d = alongMetres(m, A_FORWARD_METRES);
+  await Promise.all([m.second.by(d, 2500), m.moveTrolley(m.trolleyY + d, 2500)]);
+  await pause(500);
+}
+
+/** Step 17: A turns a quarter turn clockwise about its own middle, to lie lengthwise. */
+async function step17TurnALengthwise(m) {
+  console.log("[gantry] before the crawl, step 17: TurnALengthwise"); // TEMP
+  stackSupports(m.svg, ["second"]);
+  await m.second.swing(aMiddle(m), 90, 2000);
+  await pause(500);
+}
+
+/**
+ * Step 18: the trolley carries A, lengthwise, to its final place at the front edge of the span the gantry is on: where the
+ * normal move puts it, its place on the next span (N.second.to), its front edge flush with the end of the span once it is
+ * turned across. A long support can't stand on the bare tulip past it. The trip is split as in step 22: the part along
+ * the trusses, which the trolley follows, and a small move sideways that only A makes.
+ */
+async function step18CarryAToEdgeOfSpan(m) {
+  console.log("[gantry] before the crawl, step 18: CarryAToEdgeOfSpan"); // TEMP
+  const { N, along, alongOf, moveTrolley } = m;
+  const a = aMiddle(m),
+    gap = { x: N.second.to.x - a.x, y: N.second.to.y - a.y },
+    trip = alongOf(gap),
+    straight = along(trip),
+    sideways = { x: gap.x - straight.x, y: gap.y - straight.y };
+  await Promise.all([m.second.by(trip, 3500, sideways), moveTrolley(m.trolleyY + trip, 3500)]);
+  await pause(500);
+}
+
+/**
+ * Step 19: A turns another quarter turn clockwise about its own middle, across the guideway again but facing the other way
+ * (half a turn in all, so its deck faces the other way: it takes over the front support's role), to the angle it has on the
+ * next span (its turn on the move, N.second.turn, as in the normal move), and is set down.
+ */
+async function step19TurnAAcross(m) {
+  console.log("[gantry] before the crawl, step 19: TurnAAcross"); // TEMP
+  await m.second.swing(aMiddle(m), m.N.second.turn + 90, 2000);
+  // it lies across the trusses now, so it goes back under the supports that are lengthwise
+  stackSupports(m.svg);
+  await pause(500);
+}
+
+/** Step 21: the trolley picks up the short support and turns it a quarter turn clockwise about its own middle, to lie lengthwise. */
+async function step21TurnShortSupportLengthwise(m) {
+  console.log("[gantry] before the crawl, step 21: TurnShortSupportLengthwise"); // TEMP
+  stackSupports(m.svg, ["front"]);
+  await m.front.swing(frontMiddle(m), 90, 2000);
+  await pause(500);
+}
+
+/**
+ * How far back along the trusses (truss units, never negative) the trolley may still go: until its rear edge is
+ * TIP_GAP_SHARE of a tip's length from the inner edge of the rear tips, the limit the normal move's step 24 keeps.
+ */
+function trolleyRearRoom(m) {
+  const { gantry, truss, trolley, ahead, trussMiddleY } = m;
+  const tipReaches = [...gantry.querySelectorAll(".clipper-tip")].map((t) => reachIn(t, truss)),
+    tipLength = tipReaches[0].hi - tipReaches[0].lo,
+    rearTips = tipReaches.filter((r) => ahead * (r.lo + r.hi) < ahead * 2 * trussMiddleY),
+    tipInner = ahead > 0 ? Math.max(...rearTips.map((r) => r.hi)) : Math.min(...rearTips.map((r) => r.lo)),
+    trolleyReach = reachIn(trolley, truss),
+    gapNow = ahead * ((ahead > 0 ? trolleyReach.lo : trolleyReach.hi) - tipInner);
+  return Math.max(0, gapNow - Math.round(tipLength * TIP_GAP_SHARE));
+}
+
+/**
+ * Step 22: the trolley carries the short support back along the trusses as far as it may go: until its rear edge is
+ * TIP_GAP_SHARE of a tip's length from the inner edge of the rear tips, the limit the normal move's step 24 keeps.
+ */
+async function step22CarryShortSupportToRearLimit(m) {
+  console.log("[gantry] before the crawl, step 22: CarryShortSupportToRearLimit"); // TEMP
+  const d = -m.ahead * trolleyRearRoom(m);
+  await Promise.all([m.front.by(d, 3500), m.moveTrolley(m.trolleyY + d, 3500)]);
+  await pause(500);
+}
+
+/** Step 23: the short support turns a quarter turn counter-clockwise about its own middle, across the guideway again. */
+async function step23TurnShortSupportAcross(m) {
+  console.log("[gantry] before the crawl, step 23: TurnShortSupportAcross"); // TEMP
+  await m.front.swing(frontMiddle(m), -90, 2000);
+  // it lies across the trusses now, so it goes back under the supports that are lengthwise
+  stackSupports(m.svg);
+  await pause(500);
+}
+
+/**
+ * How far a support reaches along the trusses as it lies now, all of it (beam, blue deck and wheels): the lowest and
+ * highest y, in the truss frame, of all the groups with its data-anchor.
+ */
+function supportReach(m, anchor) {
+  const reaches = [...m.gantry.querySelectorAll(`:scope > [data-anchor="${anchor}"]`)].map((g) => reachIn(g, m.truss));
+  return { lo: Math.min(...reaches.map((r) => r.lo)), hi: Math.max(...reaches.map((r) => r.hi)) };
+}
+
+/**
+ * Step 25: the trolley picks up C and carries it along the trusses until it is just behind A: its front edge
+ * C_A_GAP_METRES behind A's rear edge, with all of each counted (the blue deck too), so they don't overlap. It doesn't turn.
+ */
+async function step25SetCBehindA(m) {
+  console.log("[gantry] before the crawl, step 25: SetCBehindA"); // TEMP
+  const { ahead, moveTrolley } = m;
+  const a = supportReach(m, "second"),
+    c = supportReach(m, "fourth"),
+    aRear = ahead > 0 ? a.lo : a.hi,
+    cFront = ahead > 0 ? c.hi : c.lo,
+    d = aRear - alongMetres(m, C_A_GAP_METRES) - cFront;
+  await Promise.all([slideC(m, d, 3000), moveTrolley(m.trolleyY + d, 3000)]);
+  await pause(500);
+}
+
+/**
+ * Step 26: the trolley is parked over B while the trusses slide back until the front tip (the front lifting jacks) is over
+ * A's middle, nudged by PICKUP as in step 12.
+ */
+async function step26TrussesBackForA(m) {
+  console.log("[gantry] before the crawl, step 26: TrussesBackForA"); // TEMP
+  const { gantry, truss, ahead, PICKUP, trusses, moveTrolley, secondBeam } = m;
+  const tips = [...gantry.querySelectorAll(".clipper-tip")].map((t) => centreIn(t, truss).y),
+    frontTip = ahead > 0 ? Math.max(...tips) : Math.min(...tips),
+    d = yNow(m, secondBeam) - frontTip + PICKUP;
+  await Promise.all([trusses.by(d, 3500), moveTrolley(m.trolleyY - d, 3500)]);
+  await pause(500);
+}
+
+/**
+ * Step 27: the front lifting jacks pick up A and the trusses carry it forward until their rear tips (the rear lifting
+ * jacks) are over the short support's middle. The trolley stays still over B.
+ */
+async function step27CarryAToRearJacksOverShortSupport(m) {
+  console.log("[gantry] before the crawl, step 27: CarryAToRearJacksOverShortSupport"); // TEMP
+  const { gantry, truss, ahead, trusses, second, moveTrolley, frontBeam } = m;
+  const tips = [...gantry.querySelectorAll(".clipper-tip")].map((t) => centreIn(t, truss).y),
+    rearTip = ahead > 0 ? Math.min(...tips) : Math.max(...tips),
+    d = yNow(m, frontBeam) - rearTip;
+  await Promise.all([trusses.by(d, 3500), second.by(d, 3500), moveTrolley(m.trolleyY - d, 3500)]);
+  await pause(500);
+}
+
+/**
+ * Slides Support A's wheel assemblies along its beam by `by` (a move on the map), in `ms`, as slideCWheels() does for C.
+ * A's groups already use `translate` for their slides, so the wheels' own rects are moved instead, in their group's frame
+ * as it lies now.
+ */
+function slideAWheels(m, by, ms) {
+  return Promise.all(
+    [...m.gantry.querySelectorAll(':scope > [data-anchor="second"] > .gantry-support-wheels')].map((w) => {
+      const fromMap = between(w.parentNode, m.svg).inverse(),
+        to = `${fromMap.a * by.x + fromMap.c * by.y}px ${fromMap.b * by.x + fromMap.d * by.y}px`;
+      return w.animate([{ translate: "0px 0px" }, { translate: to }], {
+        duration: ms / SPEED,
+        easing: "ease-in-out",
+        fill: "forwards",
+      }).finished;
+    }),
+  );
+}
+
+/**
+ * Step 28: the rear lifting jacks pick up the short support, and the trusses carry it and A (on the front lifting jacks)
+ * forward, as the normal move's steps 13 and 14 carry the front support. The trusses will pivot about C, where it stands
+ * at the front edge of the span the gantry is on, and the swing in step 29 doesn't change A's distance from C, so A first
+ * slides to the point on its slide line that is as far from C as its place across the two double girders (cAim, see
+ * aimC). The trolley stays still over B.
+ */
+async function step28CarryAToSwingPoint(m) {
+  console.log("[gantry] before the crawl, step 28: CarryAToSwingPoint"); // TEMP
+  const { one, alongOf, trusses, second, front, moveTrolley, cAim } = m;
+  const pivot = cMiddle(m),
+    aStart = aMiddle(m),
+    w = { x: aStart.x - pivot.x, y: aStart.y - pivot.y },
+    qa = one.x * one.x + one.y * one.y,
+    qb = 2 * (w.x * one.x + w.y * one.y),
+    qc = w.x * w.x + w.y * w.y - ((cAim.x - pivot.x) ** 2 + (cAim.y - pivot.y) ** 2),
+    root = Math.sqrt(Math.max(0, qb * qb - 4 * qa * qc)),
+    plain = alongOf({ x: cAim.x - aStart.x, y: cAim.y - aStart.y }),
+    trip = [(-qb + root) / (2 * qa), (-qb - root) / (2 * qa)].reduce((a, b) =>
+      Math.abs(b - plain) < Math.abs(a - plain) ? b : a,
+    );
+  await Promise.all([
+    trusses.by(trip, 3500),
+    second.by(trip, 3500),
+    front.by(trip, 3500),
+    moveTrolley(m.trolleyY - trip, 3500),
+  ]);
+  await pause(500);
+  Object.assign(m, { aPivot: pivot });
+}
+
+/**
+ * Step 29: the trusses pivot about C and swing, carrying A to its place across the two double girders (cAim), as the
+ * normal move's step 15. The short support swings with them on the rear lifting jacks.
+ */
+async function step29SwingTrussesWithA(m) {
+  console.log("[gantry] before the crawl, step 29: SwingTrussesWithA"); // TEMP
+  const { trusses, second, front, deg, small, aPivot: pivot, cAim } = m;
+  const a = aMiddle(m),
+    turn = small(deg({ x: cAim.x - pivot.x, y: cAim.y - pivot.y }) - deg({ x: a.x - pivot.x, y: a.y - pivot.y })),
+    // always played unless there is no turn at all: A's place across the girders is a small move sideways that unseen()
+    // would skip, and close up it shows (A was left off-centre)
+    swings = Math.abs(turn) > 1e-6;
+  if (swings) {
+    await Promise.all([
+      trusses.swing(pivot, turn, 3000),
+      second.swing(pivot, turn, 3000),
+      front.swing(pivot, turn, 3000),
+    ]);
+    await pause(500);
+  }
+  Object.assign(m, { aSwing: turn, aSwings: swings });
+}
+
+/**
+ * Step 30: A is set down across the two double girders. The trusses and the short support swing back, A turns about its
+ * own middle to the front support's angle on the next span (its deck still facing the way step 19 turned it), and its
+ * wheel assemblies slide along its beam to the unfinished span's middle (wheelShift, see aimC), as the normal move's step
+ * 16 and the old step 17 did for C.
+ */
+async function step30SetADownAcrossGirders(m) {
+  console.log("[gantry] before the crawl, step 30: SetADownAcrossGirders"); // TEMP
+  const { trusses, front, second, N, nearest, frontAngle, secondAngle, aPivot: pivot, aSwing: turn, aSwings } = m;
+  // A's long side lies at its starting angle plus its turns so far (half a turn in steps 17 and 19, which nearest()
+  // ignores, plus N.second.turn) and the swing
+  const aTurn = nearest(frontAngle + N.front.turn - (secondAngle + N.second.turn + turn), 0);
+  await Promise.all([
+    ...(aSwings ? [trusses.swing(pivot, -turn, 3000), front.swing(pivot, -turn, 3000)] : []),
+    second.swing(aMiddle(m), aTurn, 3000),
+    pause(500).then(() => slideAWheels(m, m.wheelShift, 2500)),
+  ]);
+  await pause(500);
+}
+
+/**
+ * Step 31: the trusses back up until their middle is halfway between C and the short support (middle to middle, along
+ * the trusses), leaving the short support where step 30 set it down. The trolley stays still.
+ */
+async function step31TrussesBetweenCAndShortSupport(m) {
+  console.log("[gantry] before the crawl, step 31: TrussesBetweenCAndShortSupport"); // TEMP
+  const { trussMiddleY, trusses, moveTrolley, beam, frontBeam } = m;
+  // the trusses' middle is fixed in their own frame; C and the short support are measured in it as it lies now
+  const d = (yNow(m, beam) + yNow(m, frontBeam)) / 2 - trussMiddleY;
+  await Promise.all([trusses.by(d, 3500), moveTrolley(m.trolleyY - d, 3500)]);
+  await pause(500);
+}
+
+/**
+ * Step 32: the trolley picks up B and carries it forward along the trusses until it is fully on the span the gantry is on
+ * (span 41 for the move from 41): the rear edge of the whole support (blue deck and wheels too) flush with the span's back
+ * end. It doesn't turn.
+ */
+async function step32CarryBOntoSpan(m) {
+  console.log("[gantry] before the crawl, step 32: CarryBOntoSpan"); // TEMP
+  const { svg, truss, S, ahead, third, moveTrolley } = m;
+  const back = gantryMoves(svg, S, S)?.spans[S]?.ends.back;
+  if (!back) return;
+  const toTruss = between(truss, svg).inverse(),
+    backY = toTruss.b * back.x + toTruss.d * back.y + toTruss.f,
+    b = supportReach(m, "rear"),
+    d = backY - (ahead > 0 ? b.lo : b.hi);
+  await Promise.all([third.by(d, 3500), moveTrolley(m.trolleyY + d, 3500)]);
+  await pause(500);
+}
+
+/** Step 33: the trusses slide forward TRUSSES_FORWARD_METRES. The trolley stays still over B. */
+async function step33TrussesForward(m) {
+  console.log("[gantry] before the crawl, step 33: TrussesForward"); // TEMP
+  const d = alongMetres(m, TRUSSES_FORWARD_METRES);
+  await Promise.all([m.trusses.by(d, 3500), m.moveTrolley(m.trolleyY - d, 3500)]);
+  await pause(500);
+}
+
+/**
+ * Step 34: the trolley carries the short support (lengthwise since step 21) forward along the trusses until its middle is
+ * halfway between B's and C's, and sets it down there, still lengthwise.
+ */
+async function step34SetShortSupportBetweenBAndC(m) {
+  console.log("[gantry] before the crawl, step 34: SetShortSupportBetweenBAndC"); // TEMP
+  const { front, moveTrolley, thirdBeam, beam, frontBeam } = m;
+  const d = (yNow(m, thirdBeam) + yNow(m, beam)) / 2 - yNow(m, frontBeam);
+  await Promise.all([front.by(d, 3500), moveTrolley(m.trolleyY + d, 3500)]);
+  await pause(500);
+}
+
+/**
+ * Step 35: the trusses slide forward until their middle is halfway between C and A (middle to middle, along the
+ * trusses). The trolley stays still over B until it reaches its rear limit on the trusses (see trolleyRearRoom); then,
+ * as in the normal move's steps 24 to 26, the trusses stop, the trolley drives to C, and the trusses slide the rest of the
+ * way with the trolley still over C.
+ */
+async function step35TrussesBetweenCAndA(m) {
+  console.log("[gantry] before the crawl, step 35: TrussesBetweenCAndA"); // TEMP
+  const { ahead, trussMiddleY, trusses, moveTrolley, beam, secondBeam } = m;
+  const d = (yNow(m, beam) + yNow(m, secondBeam)) / 2 - trussMiddleY,
+    // a slide forward moves the trolley back along the trusses by as much; one back has no limit here
+    first = ahead * d > 0 ? Math.sign(d) * Math.min(trolleyRearRoom(m), Math.abs(d)) : d,
+    rest = d - first;
+  if (first) {
+    await Promise.all([
+      trusses.by(first, 3500 * Math.abs(first / d)),
+      moveTrolley(m.trolleyY - first, 3500 * Math.abs(first / d)),
+    ]);
+    await pause(500);
+  }
+  if (Math.abs(rest) > 1e-6) {
+    console.log("[gantry] before the crawl, step 35b: TrolleyToCAndSlideRest"); // TEMP
+    holders(m, "fourth", "second"); // TEMP
+    await m.moveTrolley(yNow(m, beam) - m.trolleyAt.y, 2500);
+    await pause(500);
+    await Promise.all([
+      trusses.by(rest, 3500 * Math.abs(rest / d)),
+      moveTrolley(m.trolleyY - rest, 3500 * Math.abs(rest / d)),
+    ]);
+    await pause(500);
+  }
+}
+
+/**
  * The move before a crawl, from the span the gantry is on (29, 41 or 50) to the next one. docs/double-girder/1-before-the-crawl.md
  * lists its steps. It ends with the fill of the new span and Support A moved between B and C, with the pieces left where it
  * put them: there is no snap.
@@ -573,58 +1028,58 @@ export async function playBeforeCrawl(svg) {
   const m = await startMove(svg);
   if (!m) return false;
   Object.assign(m, aimC(m), { trolleyAfterSnap: trolleyAfterSnap(m) });
+  holders(m, "second", "front"); // TEMP
   await step1TrolleyToFourthSupport(m);
-  await step2CarryFourthSupportForward(m);
+  await step2CarryFourthSupportForward(m, alongMetres(m, C_FURTHER_METRES));
   await step3TurnFourthSupport(m);
-  await step4SetCBehindFrontSupport(m);
-  await step5TrolleyToFrontSupport(m);
-  await step6CarryFrontSupportForward(m);
-  await step7TurnFrontSupportLengthwise(m);
-  await step8CarryFrontSupportBack(m);
-  await step9TurnFrontSupportAcross(m);
-  await step10SetFrontSupportBehindC(m);
+  await step4RearJacksBackToB(m);
+  await step5CarryBIntoSpanBehind(m);
+  // The steps are being rebuilt from here (C stays where step 3 turned it), so the run ends after the front support is set
+  // down. The old steps above (4 to 36) are kept for reuse.
   await step11TrolleyBackToSupportA(m);
-  await step12TrussesBackForC(m);
-  await step13CarryCForward(m);
-  await step14FinishCTrip(m);
-  await step15SwingTrussesWithC(m);
-  await step16SwingTrussesBackFromC(m);
-  await step17TrussesToHalfway(m);
-  await step18TrolleyToThirdSupport(m);
-  await step19TurnThirdSupportLengthwise(m);
-  await step20CarryBAheadOfFrontSupport(m);
-  await step21TurnBBack(m);
-  await step22SetBWhereCWas(m);
-  await step23TrolleyToSupportA(m);
-  await step22TrussesPastFrontSupport(m, m.beam);
-  await step23TurnTrussesOntoNextSpan(m, m.thirdBeam);
+  // B holds the trusses once the rear lifting jacks let go of it, at step 12
+  holders(m, "rear", "front"); // TEMP
+  await step12TrussesBackForFrontSupport(m);
+  holders(m, "rear", "fourth"); // TEMP
+  await step13CarryFrontSupportBack(m);
+  holders(m, "rear", "fourth"); // TEMP
+  await step14TrussesOverhangFinishedSpan(m);
+  // the short support goes back first, or lifting B in step 14b would tip the gantry
   await step24TrolleyToShortSupport(m);
-  await step25CarryShortSupportBack(m);
-  await step26TurnShortSupportLengthwise(m);
-  await step27CarryShortSupportIntoSpan(m);
-  await step28MoveShortSupportToJoint(m);
-  await step23TrolleyToSupportA(m);
-  await step24SlideTrussesToNextSpan(m);
-  await step25TrolleyToMiddleSupportAndSlideRest(m, m.thirdBeam);
-  await step29TrolleyToSnapPlace(m);
-  // the gantry is now on the next span, which fills in as step 0 does at the start of every move
-  m.gantry.dataset.span = m.S + 1;
-  await step0FillSpan(m.svg, m.trolley);
+  holders(m, "rear", "fourth"); // TEMP
+  await step21TurnShortSupportLengthwise(m);
+  await step22CarryShortSupportToRearLimit(m);
+  await step23TurnShortSupportAcross(m);
+  holders(m, "front", "fourth"); // TEMP
+  await step14aTrolleyToB(m);
+  await step14bCarryBFurtherIntoSpan(m);
+  await step15TrolleyToA(m);
+  await step16CarryAForward(m);
+  await step17TurnALengthwise(m);
+  await step18CarryAToEdgeOfSpan(m);
+  await step19TurnAAcross(m);
+  holders(m, "front", "second"); // TEMP
   await step30TrolleyToC(m);
-  // the hangers the fill put on the span come down, as in step 1 of the normal move
-  clearHangers();
-  await step31RearTipsToA(m);
-  await step32CarryAOnJacks(m);
-  await step33TrolleyToA(m);
-  await step34TurnALengthwise(m);
-  await step35CarryAHalfwayBetweenBAndC(m);
-  await step36TurnAAcross(m);
-  // the move before the crawl is one cycle, and each move of the crawl is another: the speed goes on to the next of SPEEDS
-  // after each, as it does after each normal move (playToEnd)
-  nextSpeed();
-  await playCrawl(m);
-  // the pieces are not placed on the next span (there is no snap), so a move played after this one would start from the
-  // drawing as it is placed for the span before, and the supports would jump back to it. Until the crawl is built, the run
-  // ends here: false stops playToEnd's loop.
+  await step25SetCBehindA(m);
+  holders(m, "front", "fourth"); // TEMP
+  await step14aTrolleyToB(m);
+  await step26TrussesBackForA(m);
+  holders(m, "front", "fourth"); // TEMP
+  await step27CarryAToRearJacksOverShortSupport(m);
+  holders(m, "rear", "fourth"); // TEMP
+  await step28CarryAToSwingPoint(m);
+  await step29SwingTrussesWithA(m);
+  await step30SetADownAcrossGirders(m);
+  holders(m, "front", "fourth"); // TEMP
+  await step31TrussesBetweenCAndShortSupport(m);
+  await step14aTrolleyToB(m);
+  await step32CarryBOntoSpan(m);
+  await step33TrussesForward(m);
+  await step24TrolleyToShortSupport(m);
+  holders(m, "rear", "fourth"); // TEMP
+  await step21TurnShortSupportLengthwise(m);
+  await step34SetShortSupportBetweenBAndC(m);
+  await step14aTrolleyToB(m);
+  await step35TrussesBetweenCAndA(m);
   return false;
 }

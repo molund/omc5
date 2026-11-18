@@ -7,6 +7,7 @@ import { gantryProgress } from "../gantryProgress.js";
 import { SPEED, pause } from "./clock.js";
 import { between, screen, halfLength, centreIn, reachIn } from "./measure.js";
 import { clearHangers, fillIn, followFill, FILL_TROLLEY_TIME } from "./fill.js";
+import { holders } from "./holders.js"; // TEMP
 
 /** Smooth starts and stops, and stay put at the end. */
 const SMOOTH = { easing: "ease-in-out", fill: "forwards" };
@@ -332,8 +333,11 @@ export async function step1TrolleyToFourthSupport(m) {
   clearHangers();
 }
 
-/** Step 2: the trolley and the fourth support move forward together. */
-export async function step2CarryFourthSupportForward(m) {
+/**
+ * Step 2: the trolley and the fourth support move forward together.
+ * @param {number} [further] How much further than usual to carry it, in truss units (the move before a crawl uses it).
+ */
+export async function step2CarryFourthSupportForward(m, further = 0) {
   console.log("[gantry] step 2: CarryFourthSupportForward"); // TEMP
   const { svg, moveTrolley, moveFourth, S, N, alongOf, FOURTH_TURNS_AT, along, middle } = m;
   // THE FOURTH SUPPORT'S TRIP (steps 2 and 3): from where it starts (`middle`) towards the second support's place on the
@@ -351,7 +355,7 @@ export async function step2CarryFourthSupportForward(m) {
     await moveFourth({ ...m.fourth, turn: m.fourth.turn + 90 }, 2000);
     await pause(500);
   }
-  const leg1 = fourthTrip * FOURTH_TURNS_AT;
+  const leg1 = fourthTrip * FOURTH_TURNS_AT + further;
   const step = along(leg1);
   await Promise.all([
     moveTrolley(m.trolleyY + leg1, 2500),
@@ -952,11 +956,13 @@ export async function startMove(svg) {
 export async function playNormalMove(svg) {
   const m = await startMove(svg);
   if (!m) return false;
+  holders(m, "second", "front"); // TEMP
   await step1TrolleyToFourthSupport(m);
   await step2CarryFourthSupportForward(m);
   await step3TurnFourthSupport(m);
   await step4SetFourthSupportDown(m);
   await step5TrolleyToSecondSupport(m);
+  holders(m, "fourth", "front"); // TEMP
   await step6LiftSecondSupportAndBackUp(m);
   await step7TurnSecondSupportLengthwise(m);
   await step8CarrySecondSupportForward(m);
@@ -964,10 +970,13 @@ export async function playNormalMove(svg) {
   await step10SetSecondSupportDown(m);
   await step11TrolleyBackToFourthSupport(m);
   await step12TrussesBackForFrontSupport(m);
+  holders(m, "rear", "second"); // TEMP
   await step13CarryFrontSupportForward(m);
+  holders(m, "fourth", "second"); // TEMP
   await step14FinishFrontSupportTrip(m);
   await step15SwingTrussesWithFrontSupport(m);
   await step16SwingTrussesBack(m);
+  holders(m, "fourth", "front"); // TEMP
   await step17TrussesToHalfway(m);
   await step18TrolleyToThirdSupport(m);
   await step19TurnThirdSupportLengthwise(m);
@@ -976,6 +985,7 @@ export async function playNormalMove(svg) {
   await step22TrussesPastFrontSupport(m);
   await step23TurnTrussesOntoNextSpan(m);
   await step24SlideTrussesToNextSpan(m);
+  holders(m, "second", "front"); // TEMP
   await step25TrolleyToMiddleSupportAndSlideRest(m);
   await step27TrolleyBackToStart(m);
   step28SnapToNextSpan(m);

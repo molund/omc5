@@ -6,7 +6,7 @@
  * the times written in the steps, and 1 plays them as written. After the Play pill, the moves play at SPEEDS in
  * turn, and every move after the last of them at that last speed (playToEnd sets it).
  */
-export const SPEEDS = [6, 3, 1, 1, 1];
+export const SPEEDS = [3, 2, 2, 2, 2];
 export let SPEED = SPEEDS[0];
 
 /** Which of SPEEDS is playing now. */
