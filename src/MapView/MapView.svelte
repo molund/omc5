@@ -8,15 +8,7 @@
   import { tagBuiltBy } from "./builtBy.js";
   import { gantryProgress } from "./gantryProgress.js";
   import { placeGantry } from "../lib/placeGantry.js";
-  import {
-    playToEnd,
-    stopGantry,
-    holdGantry,
-    resumeGantry,
-    lowerSupports,
-    raiseSupports,
-    FOLLOW_GANTRY,
-  } from "./gantryAnimation.js";
+  import { playToEnd, stopGantry, holdGantry, resumeGantry, lowerSupports, FOLLOW_GANTRY } from "./gantryAnimation.js";
   import { status } from "../lib/status.js";
   import {
     layers,
@@ -62,12 +54,11 @@
     });
   });
   // the Reset button clears ui.gantryPlaying while a run is under way: that stops the moves and puts the drawing back as
-  // status.yaml has it, with the supports above the spans again, and frames the gantry on its span (as Play does)
+  // status.yaml has it, and frames the gantry on its span (as Play does)
   $effect(() => {
     if (!ui.gantryPlaying && running)
       untrack(() => {
         stopGantry(els.svg);
-        raiseSupports();
         requestAnimationFrame(() => frameGantry(true));
       });
   });
@@ -77,10 +68,9 @@
     else resumeGantry();
   });
 
-  // once the gantry animates, the supports are drawn below the spans, and they stay there when it stops (picking another
-  // view or turning the gantry off puts them back above)
+  // the supports are drawn below the spans, as they stand under the guideway, in every view
   $effect(() => {
-    if (ui.ready && ui.gantryPlaying) lowerSupports(els.svg);
+    if (ui.ready) lowerSupports(els.svg);
   });
 
   /** While the gantry animates, how much of the stage's width or height the whole gantry fills. */
@@ -249,24 +239,17 @@
     requestAnimationFrame(look);
   }
   // picking another view preset stops the gantry's moves and puts the drawing back as status.yaml has it (the moves give
-  // up, and the Play pill comes back when playToEnd ends), with the supports above the spans again
+  // up, and the Play pill comes back when playToEnd ends)
   let viewWas = ui.view;
   $effect(() => {
     const view = ui.view;
     if (view === viewWas) return;
     viewWas = view;
-    untrack(() => {
-      stopGantry(els.svg);
-      raiseSupports();
-    });
+    untrack(() => stopGantry(els.svg));
   });
-  // turning the gantry off does the same, supports included
+  // turning the gantry off does the same
   $effect(() => {
-    if (!layers.gantry)
-      untrack(() => {
-        stopGantry(els.svg);
-        raiseSupports();
-      });
+    if (!layers.gantry) untrack(() => stopGantry(els.svg));
   });
   let touchDrag = null;
   // whether the map is still where its view opened it, untouched by a pan or zoom on it (and the zoom the opening framing
