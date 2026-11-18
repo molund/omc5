@@ -23,6 +23,9 @@ calculated-chart-data:
   - 2026-11-13T13:45-07:00: 2.75
   - 2026-11-13T13:15-07:00: 2.74
 entries:
+  - 2026-11-17T17:45-07:00:
+      span: 41
+      stage: post-tensioning started
   - 2026-11-17T12:30-07:00:
       span: 41
       stage: post-tensioning started
