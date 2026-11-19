@@ -21,6 +21,9 @@ calculated-chart-data:
   - 2026-11-16T20:30-07:00: 2.42
   - 2026-11-16T09:00-07:00: 2.24
 entries:
+  - 2026-11-19T08:15-07:00:
+      span: 41
+      stage: supports started
   - 2026-11-18T17:15-07:00:
       span: 41
       stage: supports started
