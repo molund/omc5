@@ -22,7 +22,7 @@ spans-per-week: 1.87
 # Notes to self, and the steps of the gantry's cycle seen at each time stamp, are in gantry-cycles.yaml, not here.
 notes:
   - 2026-11-19T08:15-07:00: "Clayton Clipper construction update for Thursday, Nov. 19, 2026"
-    summary: "Clayton Clipper’s velocity is holding at 1.87—for now."
+    summary: "The Clayton Clipper’s velocity is holding at 1.87—for now."
     block:
       - "The code won’t change it until the crew moves to the next gantry-cycle stage. Moving the gantry to the next position counts as a single stage. I’m expecting a significant drop before work starts on span 42."
   - 2026-11-18T07:30-07:00: "The Surrey Langley SkyTrain thread is back"
