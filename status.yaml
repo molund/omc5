@@ -1,6 +1,6 @@
 # Clayton Clipper status. The site reads it (src/lib/status.js); running the deploy workflow by hand or through the API updates
 # it (see .github/workflows/deploy.yml). Times are BC time (UTC−7), rounded to the nearest quarter hour.
-updated: 2026-11-19T08:15-07:00
+updated: 2026-11-19T16:00-07:00
 # the span the gantry is working on (Clayton Clipper span numbers, 3-104)
 span: 41
 # whether all that span's segments are hung. The map draws it hung; the progress card counts the span either way.
@@ -21,6 +21,14 @@ spans-per-week: 1.87
 #   No other markdown: anything else shows as typed.
 # Notes to self, and the steps of the gantry's cycle seen at each time stamp, are in gantry-cycles.yaml, not here.
 notes:
+  - 2026-11-19T16:00-07:00: "Clayton Clipper construction update for Thursday, Nov. 19, 2026"
+    summary: "Clayton Clipper’s supports are changing places in a sequence I never would’ve guessed."
+    block:
+      - "The front support is off its long blue legs, and one of the longer supports is now in the front position. Down on the ground, the support used as counter ballast during moves is about to be lifted to the other side of span 42 by a mobile crane."
+      - "It sure is a good thing I gave up on the animation for this part."
+      - photo:
+          file: 2026-11-19-clippers-supports-are-changing-places-in.jpg
+          caption: "Mobile crane moving a Clayton Clipper support to the other side of span 42"
   - 2026-11-19T08:15-07:00: "Clayton Clipper construction update for Thursday, Nov. 19, 2026"
     summary: "The Clayton Clipper’s velocity is holding at 1.87—for now."
     block:
