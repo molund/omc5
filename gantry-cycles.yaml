@@ -21,9 +21,6 @@ calculated-chart-data:
   - 2026-11-17T09:30-07:00: 2.16
   - 2026-11-16T20:30-07:00: 2.42
 entries:
-  - 2026-11-20T10:45-07:00:
-      span: 42
-      stage: arrived at span
   - 2026-11-20T10:30-07:00:
       span: 42
       stage: arrived at span
