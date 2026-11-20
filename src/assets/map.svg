@@ -1154,10 +1154,10 @@
           points="280.08,1014.30 302.28,1014.30 303.30,1136.20 281.09,1136.20"
         />
         <polygon
-          class="guideway unfinished"
-          fill="#FFFFFF"
-          stroke="#888780"
-          stroke-width="0.825"
+          class="guideway"
+          fill="#888780"
+          stroke="#5F5E5A"
+          stroke-width="1.5"
           points="305.58,1014.30 315.23,1014.30 316.24,1136.20 306.60,1136.20"
         />
         <polygon
@@ -1933,6 +1933,18 @@
         text-anchor="middle"
         style="font-size: 17.6px; fill: #eeeeee"
         transform="rotate(33.8 -935.27 -258.76)"
+      >
+        &#x2192;
+      </text>
+      <!-- eastbound -->
+      <!-- Span 36 direction arrow (eastbound precast), placed on its span as the span 35 arrow is on 35 -->
+      <text
+        class="n guideway"
+        x="-1036.07"
+        y="-318.44"
+        text-anchor="middle"
+        style="font-size: 17.6px; fill: #eeeeee"
+        transform="rotate(33.6 -1036.07 -325.44)"
       >
         &#x2192;
       </text>
