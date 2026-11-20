@@ -5,6 +5,7 @@
 
 import { gantryMoves, placeGantry, stackSupports } from "../../lib/placeGantry.js";
 import { UNITS_PER_METRE } from "../../lib/layerSwitches.js";
+import { DOUBLE_GIRDER } from "../../lib/doubleGirder.js";
 import { SPEED, nextSpeed, pause } from "./clock.js";
 import { clearHangers } from "./fill.js";
 import { girderEdges } from "./guideway.js";
@@ -863,13 +864,13 @@ async function step27CarryAToRearJacksOverShortSupport(m) {
 }
 
 /**
- * Slides Support A's wheel assemblies along its beam by `by` (a move on the map), in `ms`, as slideCWheels() does for C.
- * A's groups already use `translate` for their slides, so the wheels' own rects are moved instead, in their group's frame
- * as it lies now.
+ * Slides Support A's wheel assemblies (or another slider's, by its data-anchor) along its beam by `by` (a move on the map),
+ * in `ms`, as slideCWheels() does for C. A's groups already use `translate` for their slides, so the wheels' own rects are
+ * moved instead, in their group's frame as it lies now.
  */
-function slideAWheels(m, by, ms) {
+function slideAWheels(m, by, ms, anchor = "second") {
   return Promise.all(
-    [...m.gantry.querySelectorAll(':scope > [data-anchor="second"] > .gantry-support-wheels')].map((w) => {
+    [...m.gantry.querySelectorAll(`:scope > [data-anchor="${anchor}"] > .gantry-support-wheels`)].map((w) => {
       const fromMap = between(w.parentNode, m.svg).inverse(),
         to = `${fromMap.a * by.x + fromMap.c * by.y}px ${fromMap.b * by.x + fromMap.d * by.y}px`;
       return w.animate([{ translate: "0px 0px" }, { translate: to }], {
@@ -1254,6 +1255,49 @@ async function p26TrussesBackForShortSupport(m) {
 }
 
 /**
+ * Where the crews had the supports on Nov. 19, from span 41, put there at once (no animation): A and C in their places half
+ * way through the normal move (after its steps 10 and 4), the short support off its long blue legs on C's place on the
+ * next span (lengthwise behind A, where the snap would put C), and B (lifted there by a mobile crane, which isn't drawn) across the two double girders at the
+ * front support's place on the next span (cAim), its deck facing west and its wheel assemblies on the unfinished span
+ * (wheelShift). The trusses and the trolley stay where placeGantry() put them.
+ */
+async function placeNowLayout(m) {
+  const { svg, gantry, N, nearest, small, fourthAngle, secondAngle, thirdAngle, frontAngle, middle, S } = m;
+  const sub = (a, b) => ({ x: a.x - b.x, y: a.y - b.y });
+  // C: the normal move's steps 3 and 4 (the same turns, so it lies the way it does there)
+  const turn3 = nearest(secondAngle + N.second.turn - fourthAngle, -90),
+    turn4 = turn3 + nearest(thirdAngle + N.rear.turn - (fourthAngle + turn3), 0);
+  const moves = [m.moveFourth({ ...sub(N.rear.to, middle), turn: turn4 }, 0)];
+  // A: the normal move's steps 6 to 10 end with it on N.second.to, turned by step 7's and step 9's turns about its middle
+  const carryAngle = fourthAngle + (DOUBLE_GIRDER.has(S - 1) ? 90 : 0),
+    sideways = nearest(carryAngle - secondAngle, 90),
+    aTurn = sideways + nearest(N.second.turn - sideways, -90);
+  moves.push(m.second.by(0, 0, sub(N.second.to, m.secondStart)));
+  if (Math.abs(aTurn) > 0.01) moves.push(m.second.swing(N.second.to, aTurn, 0));
+  // the short support: on C's place on the next span (where the snap would put C, lengthwise on the span the gantry is
+  // on, behind A), turned to C's angle there
+  moves.push(m.front.by(0, 0, sub(N.fourth.to, m.frontStart)));
+  const sTurn = nearest(fourthAngle + N.fourth.turn - frontAngle, 0);
+  if (Math.abs(sTurn) > 0.01) moves.push(m.front.swing(N.fourth.to, sTurn, 0));
+  // B: across the girders at cAim, at the front support's angle there, its deck on the forward (west) side (which side
+  // its deck is on, measured from its middle before it moves)
+  const deck = gantry.querySelector(':scope > [data-anchor="rear"] > .gantry-support-walkway'),
+    d0 = deck ? sub(centreIn(deck, svg), m.thirdStart) : { x: 0, y: 0 },
+    fwd = m.along(m.ahead),
+    base = small(frontAngle + N.front.turn - thirdAngle),
+    forward = (t) => {
+      const r = (t * Math.PI) / 180;
+      return (d0.x * Math.cos(r) - d0.y * Math.sin(r)) * fwd.x + (d0.x * Math.sin(r) + d0.y * Math.cos(r)) * fwd.y > 0;
+    },
+    bTurn = [base, base + 180, base - 180].filter(forward).sort((a, b) => Math.abs(a) - Math.abs(b))[0] ?? base;
+  moves.push(m.third.by(0, 0, sub(m.cAim, m.thirdStart)), m.third.swing(m.cAim, bTurn, 0));
+  // the moves take effect once they have started; the wheels are slid in B's frame as it lies then
+  await Promise.all(moves);
+  await slideAWheels(m, m.wheelShift, 0, "rear");
+  stackSupports(svg);
+}
+
+/**
  * The move before a crawl, from the span the gantry is on (29, 41 or 50) to the next one. docs/double-girder/1-before-the-crawl.md
  * lists its steps. It ends with the fill of the new span and Support A moved between B and C, with the pieces left where it
  * put them: there is no snap.
@@ -1266,6 +1310,11 @@ export async function playBeforeCrawl(svg) {
   if (!m) return false;
   Object.assign(m, aimC(m), { trolleyAfterSnap: trolleyAfterSnap(m) });
   holders(m, "second", "front"); // TEMP
+  if (m.S === 41) {
+    // span 41 starts where the crews had the supports on Nov. 19 (placeNowLayout); the walk goes on from there
+    await placeNowLayout(m);
+    return playWalk(m);
+  }
   // the first move, as the crews make it: Support C is carried forward and set down behind the front support
   await step1TrolleyToFourthSupport(m);
   await step2CarryFourthSupportForward(m);

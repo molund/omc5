@@ -97,6 +97,9 @@ between supports, they don't move. File 2 has the detail, and checks it against 
 
 ## Settled
 
+- Nov. 19, observed: a mobile crane lifted Support B, not the short support, across the double girders at the 42/43 joint
+  (deck facing west). A took the front position at the 41/42 tulip, C went to its usual mid-cycle place, and the short
+  support came off its long blue legs and was laid lengthwise behind A, in C's place for span 42. From span 41 the animation now starts there (file 1).
 - When the crane move happens: right after Support C is set down behind the forward support, before the trusses move back
   for Support B (Mike, Nov. 15).
 - Which support goes behind the forward support: Support C, not A.

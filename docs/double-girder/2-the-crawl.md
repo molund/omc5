@@ -8,9 +8,26 @@ Overview and shared notes: [`README.md`](README.md). Before: [`1-before-the-craw
 
 ## The walk (built)
 
-`walk.js` (`playWalk`) plays the walk from where the move before the crawl ends, after span 42 fills in, to `placeGantry()`'s
-layout for span 47, where the normal move takes over. It is 44 steps, worked out with the same model of the move as file 1,
-with these rules:
+`walk.js` (`playWalk`) plays the walk from the layout the crews had on Nov. 19 (file 1, "Observed, Nov. 19") to the
+normal move's half-way layout for the move from span 47 to 48, where the normal move takes over at its step 11. It is kept as plain as it can be: almost all of it
+is the loop, and the start and the end are made of the same kind of move.
+
+- **Start (`ENTRY`, 8 steps).** The trusses slide onto span 42, held by A at 41/42 and B at 42/43, and the span fills in.
+  The short support (lying lengthwise behind A) is turned across a little further back, at 20 m, so it can hold the trusses
+  while C is carried. Then A, C and the short support are carried forward to the loop's places, a spacing apart behind B.
+  They already stand in an order that works (C, S, A, B from the back), so nothing has to swap places.
+- **The loop (`LOOP`, 14 times round).** The spacing is 15.64 m, so the short support's last carry lands on the 47/48
+  hammerhead, 14 spacings past B. B's deck faces east again after its first carry.
+- **End (`EXIT`, 4 steps).** After the loop's last carry (the short support onto the 47/48 hammerhead) the trusses slide
+  forward, A is carried to its place just behind the short support (as the normal move's step 10 places it), C goes back
+  to its place on span 47 (step 4's), the trusses go back to their place on span 47, and B goes back behind C as far as the
+  trusses allow (233.2 m; any further and the trusses' middle would be behind the last support holding them). That is
+  the normal move's half-way layout for the move from span 47 to 48, and the normal move goes on from its step 11
+  (`playSecondHalf` in `normalMove.js`, told by `gantry.dataset.halfway`). It picks B up on the rear jacks where it
+  stands, in step 13.
+
+The supports end in the normal move's half-way layout, each letter in its normal role. The margin never goes below 3.97.
+It was worked out with the same model of the move as file 1, with these rules:
 
 - The tipping margin stays at 3.93 : 1 or more.
 - No support is ever set down lengthwise on the double girders. A support can be turned in the air during a carry.

@@ -35,7 +35,24 @@ The animation names them as the normal move's steps do (see [`../animation-steps
 While the move is being worked on, temporary letters A, B and C are drawn on the supports (`addSupportLetters` in
 `normalMove.js`, marked `// TEMP`), and every step logs to the console (also `// TEMP`).
 
-## The steps
+## Observed, Nov. 19 (what plays from span 41)
+
+The crews didn't do it the way the steps below guessed. By the afternoon of Nov. 19 (Mike, from the ground):
+
+- **Support A** is in its regular place half way through the normal move (after the normal step 10): just behind span 42,
+  at the 41/42 tulip, in the front position.
+- **Support C** is in its regular place half way through the normal move (after the normal step 4): the rear support's
+  place on span 41.
+- **The short support** is off its long blue legs, lying lengthwise behind A, in C's place for span 42 (where the snap to span 42 would put C).
+- **Support B** was lifted by a mobile crane (not the short support, as the steps below have it) across the two double
+  girders at the east end of the double girder section (the 42/43 joint), with its deck facing west. Its wheel assemblies
+  are on the unfinished span 42.
+
+From span 41 the animation starts in that layout (`placeNowLayout` in `beforeCrawl.js`, with no animation, and the
+trusses where `placeGantry()` puts them) and plays the walk from there (file 2). The steps below are the earlier guess, and
+they no longer play from span 41. They still play from spans 29 and 50, which haven't been watched.
+
+## The steps (the earlier guess)
 
 The sequence was worked out with a model of the move (`P` steps in the code, 29 of them), keeping the tipping margin at 3.93 : 1
 or more throughout, with the trusses at 75% of the gantry's 440 t, the trolley 3.5 long supports and the short support 1/1.3 of

@@ -979,8 +979,12 @@ export async function startMove(svg) {
  * placeGantry's rules to find.
  */
 export async function playNormalMove(svg) {
+  const gantry = svg.querySelector("#clayton-clipper"),
+    halfway = gantry?.dataset.halfway === "true";
+  if (halfway) delete gantry.dataset.halfway;
   const m = await startMove(svg);
   if (!m) return false;
+  if (halfway) return playSecondHalf(m);
   holders(m, "second", "front"); // TEMP
   await step1TrolleyToFourthSupport(m);
   await step2CarryFourthSupportForward(m);
@@ -993,6 +997,21 @@ export async function playNormalMove(svg) {
   await step8CarrySecondSupportForward(m);
   await step9TurnSecondSupportToItsAngle(m);
   await step10SetSecondSupportDown(m);
+  return playSecondHalf(m);
+}
+
+/**
+ * The normal move from its step 11 on: the front support carried to the next span, the third support to the fourth's
+ * place, and the trusses onto the next span. A walk that ends in the half-way layout (the fourth and second supports
+ * already on their places, measured there by startMove()) starts here: neither has anything left to go (`secondGap`,
+ * `backUp`).
+ * @param {object} m What the steps share (startMove()), after step 10 or measured in the half-way layout.
+ * @returns {Promise<boolean>} true: the gantry has moved on.
+ */
+async function playSecondHalf(m) {
+  m.secondGap ??= { x: 0, y: 0 };
+  m.backUp ??= 0;
+  holders(m, "fourth", "front"); // TEMP
   await step11TrolleyBackToFourthSupport(m);
   await step12TrussesBackForFrontSupport(m);
   holders(m, "rear", "second"); // TEMP

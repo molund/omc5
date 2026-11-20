@@ -45,7 +45,9 @@ const small = (a) => ((((a + 180) % 360) + 360) % 360) - 180;
 function middleLine(svg, gantry, S, last) {
   const pieces = [];
   let start = 0,
-    zero = 0;
+    zero = 0,
+    // where the line steps across onto the girders' middle: the start of the first double girder span, from the 40/41 joint
+    jog = null;
   for (let n = S - 3; n <= last + 1; n++) {
     const sp = gantryMoves(svg, n, n)?.spans[n];
     if (!sp) continue;
@@ -55,11 +57,16 @@ function middleLine(svg, gantry, S, last) {
       b = add(sp.ends.front, mul(sp.v, shift)),
       len = Math.hypot(b.x - a.x, b.y - a.y);
     if (n === S) zero = start;
+    if (e && jog == null) jog = start;
     pieces.push({ a, b, len, start, u: mul(sub(b, a), 1 / len), v: sp.v });
     start += len;
   }
   const find = (s) => pieces.find((p) => s * UNITS_PER_METRE + zero <= p.start + p.len) ?? pieces[pieces.length - 1];
   return {
+    // the step across, in metres along the line
+    get jog() {
+      return jog == null ? null : (jog - zero) / UNITS_PER_METRE;
+    },
     at(s) {
       const p = find(s),
         t = s * UNITS_PER_METRE + zero - p.start;
@@ -101,9 +108,11 @@ function supportsOf(m) {
  * @param {object} m What the steps share (startMove()).
  * @param {object[]} steps The walk (see the top of this file).
  * @param {number} last The last double girder span, where the normal move takes over.
+ * @param {{ halfway?: boolean }} [options] halfway: the steps end in the normal move's half-way layout (after its step 10),
+ * so the normal move goes on from its step 11 (gantry.dataset.halfway tells it).
  * @returns {Promise<boolean>} true, so playToEnd() goes on with the normal move.
  */
-export async function playSteps(m, steps, last) {
+export async function playSteps(m, steps, last, { halfway = false } = {}) {
   const { svg, gantry, truss, trusses, S } = m;
   const line = middleLine(svg, gantry, S, last),
     sups = supportsOf(m),
@@ -193,24 +202,39 @@ export async function playSteps(m, steps, last) {
     under.sort((a, b) => a.s - b.s);
     return under.length >= 2 ? [under[0].n, under[under.length - 1].n] : null;
   };
+  // where a support's wheel assemblies are, between them: the trusses ride on them (its beam's middle, unless they have been
+  // slid along it)
+  const wheelsMid = (n) => {
+    const w = [...gantry.querySelectorAll(`:scope > [data-anchor="${sups[n].anchor}"] > .gantry-support-wheels`)].map(
+      (e) => centreIn(e, svg),
+    );
+    return w.length ? mul(w.reduce(add, { x: 0, y: 0 }), 1 / w.length) : mid(n);
+  };
   // lines the trusses up again on their two main supports: a swing about the rear one and a slide across, skipped when too
-  // small to see; what the jacks hold goes with them
+  // small to see; what the jacks hold goes with them. When the two stand either side of the step across onto the girders'
+  // middle (one on the span just built, one on the double girders), the trusses don't aim from one to the other, which
+  // would turn them across the guideway: they stay parallel to the guideway, halfway between the two
   const lineUp = async () => {
     const pair = mains();
     if (!pair) return;
     const p = mid(pair[0]),
       q = mid(pair[1]),
-      want = deg(sub(q, p)),
+      ap = line.arc(p),
+      aq = line.arc(q),
+      straddle = line.jog != null && ap < line.jog !== aq < line.jog,
+      want = straddle ? deg(line.u((ap + aq) / 2)) : deg(sub(wheelsMid(pair[1]), wheelsMid(pair[0]))),
+      through = straddle ? mul(add(wheelsMid(pair[0]), wheelsMid(pair[1])), 0.5) : wheelsMid(pair[0]),
       { dir } = frame(),
       turn = small(want - deg(dir)),
       far = 110 * UNITS_PER_METRE;
     if (!m.unseen((Math.abs(turn) * Math.PI * far) / 180)) {
       await Promise.all([trusses.swing(p, turn, 1500), ...[...riding.keys()].map((n) => sups[n].swing(p, turn, 1500))]);
     }
-    // across: the trusses' middle line through the rear main support
+    // across: the trusses' middle line through the rear main support's wheel assemblies (or halfway between the two
+    // supports' wheel assemblies)
     const l = m.trussLine(between(truss, svg)),
       across = { x: -l.dir.y, y: l.dir.x },
-      off = mul(across, dot(sub(p, l.at), across));
+      off = mul(across, dot(sub(through, l.at), across));
     if (!m.unseen(Math.hypot(off.x, off.y))) await slideTrusses(off, 1000);
   };
   // turns a support about its own middle so it lies across the guideway there, its deck facing `facing` (E, back, or W,
@@ -293,13 +317,14 @@ export async function playSteps(m, steps, last) {
     }
   };
 
-  // A's wheel assemblies were slid along its beam to the middle of span S + 1 when it was set down across the girders
-  // (step 30 of the move before the crawl); the first time A moves in the walk they slide back to the middle of its beam
-  let aWheelsCentred = false;
-  const centreAWheels = async () => {
-    if (aWheelsCentred) return;
-    aWheelsCentred = true;
-    const wheels = [...gantry.querySelectorAll(':scope > [data-anchor="second"] > .gantry-support-wheels')];
+  // a support set down across the girders before the walk (B, by placeNowLayout()) has its wheel assemblies slid along its
+  // beam to the middle of span S + 1, under the trusses; the first time it moves in the walk they slide back to the middle
+  // of its beam (for one whose wheels are in the middle already, nothing moves)
+  const wheelsCentred = new Set();
+  const centreWheels = async (n) => {
+    if (wheelsCentred.has(n)) return;
+    wheelsCentred.add(n);
+    const wheels = [...gantry.querySelectorAll(`:scope > [data-anchor="${sups[n].anchor}"] > .gantry-support-wheels`)];
     await Promise.all(
       wheels.map(
         (w) =>
@@ -312,7 +337,26 @@ export async function playSteps(m, steps, last) {
     );
   };
 
+  // TEMP: where everything is, in metres along the middle line, for checking the steps against the model
+  const layout = () => {
+    const facing = (n) => {
+      const deck = gantry.querySelector(`:scope > [data-anchor="${sups[n].anchor}"] > .gantry-support-walkway`);
+      return deck && dot(sub(centreIn(deck, svg), mid(n)), line.u(line.arc(mid(n)))) > 0 ? "W" : "E";
+    };
+    const sp = Object.keys(sups).map(
+      (n) =>
+        `${n} ${line.arc(mid(n)).toFixed(1)}${lengthwise(n) ? " L" : ` x${facing(n)}`}${riding.has(n) ? " riding" : ""}`,
+    );
+    return `${sp.join(", ")}, R ${rearEnd().toFixed(1)}, trolley ${line.arc(trolleyMid()).toFixed(1)}`;
+  };
+  console.log(`[gantry] walk layout: ${layout()}`); // TEMP
+  console.log(
+    `[gantry] walk joints: ${Object.entries(joints)
+      .map(([n, a]) => `${n}/${+n + 1} ${a.toFixed(1)}`)
+      .join(", ")}, ${S}/${S + 1} ${line.arc(gantryMoves(svg, S, S)?.spans[S].ends.front).toFixed(1)}`,
+  ); // TEMP
   for (const [i, step] of steps.entries()) {
+    if (i) console.log(`[gantry] walk layout: ${layout()}`); // TEMP
     console.log(`[gantry] walk ${i + 1}: ${JSON.stringify(step)}`); // TEMP
     // the arrows: the two outermost supports holding the trusses during this step (the short one too, when it stands
     // across under them), leaving out the one being carried or picked up
@@ -322,7 +366,7 @@ export async function playSteps(m, steps, last) {
     if (step.op === "trusses") {
       await driveTo(step.anchor);
       if (step.pick) riding.set(step.pick.who, step.pick.jacks);
-      if (step.pick?.who === "A") await centreAWheels();
+      if (step.pick) await centreWheels(step.pick.who);
       const { dir } = frame(),
         total = (step.R - rearEnd()) * UNITS_PER_METRE;
       let first = total;
@@ -347,7 +391,7 @@ export async function playSteps(m, steps, last) {
       await pause(500);
     } else if (step.op === "carry") {
       await driveTo(step.who);
-      if (step.who === "A") await centreAWheels();
+      await centreWheels(step.who);
       if (step.turnFirst) await turnTo(step.who, "L");
       const target = line.at(step.to),
         v = sub(target, mid(step.who)),
@@ -392,8 +436,9 @@ export async function playSteps(m, steps, last) {
   gantry.dataset.span = last;
   gantryProgress(svg, false);
   // the last span turns to the progress colour only once two supports are at or past its far joint: in the normal move,
-  // when its second support is set down there (step 10)
-  markReached(svg, last, false);
+  // when its second support is set down there (step 10). Handing over half way, A is there already
+  markReached(svg, last, halfway);
+  if (halfway) gantry.dataset.halfway = "true";
   console.log("[gantry] walk: snapped"); // TEMP
   return true;
 }
