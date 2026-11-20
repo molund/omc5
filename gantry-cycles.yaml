@@ -24,6 +24,7 @@ entries:
   - 2026-11-19T18:30-07:00:
       span: 41
       stage: supports started
+      progress: 95
   - 2026-11-19T16:00-07:00:
       span: 41
       stage: supports started
