@@ -18,6 +18,7 @@
     stopAnimation,
     canAnimate,
   } from "./lib/appState/appState.svelte.js";
+  import { track } from "./lib/track.js";
 
   // each press of zoom in or out changes the zoom by this factor, about the middle of the stage; Fit's zoom depends on the
   // stage and canvas shape, so it is worked out when pressed
@@ -53,7 +54,10 @@
     setSwitch(k, e.currentTarget.checked);
     // the mode logic can put the switch straight back (e.g. unticking Full), so match the box to the state
     e.currentTarget.checked = layers[k];
+    track("toggle_layer", { layer: k, on: layers[k], view: ui.view });
   }
+  // a zoom button, for Google Analytics: in, out, fit or centre
+  const zoomed = (method) => track("map_zoom", { method, view: ui.view });
 </script>
 
 <!-- on a phone it slides in from the left -->
@@ -81,7 +85,10 @@
         title={ui.phone ? "Close the menu" : "Hide the layer panel"}
         aria-label={ui.phone ? "Close the menu" : "Hide the layer panel"}
         class="p-1.5"
-        onclick={() => (ui.collapsed = true)}><Icon kind={ui.phone ? "close" : "panel"} /></button
+        onclick={() => {
+          ui.collapsed = true;
+          track("panel", { action: "close", phone: ui.phone });
+        }}><Icon kind={ui.phone ? "close" : "panel"} /></button
       >
     </div>
     <div class="mt-3.5 mb-1 text-base font-bold text-(--mute)">View presets</div>
@@ -93,7 +100,10 @@
           class:on={layers[k]}
           aria-pressed={layers[k]}
           onclick={() => {
-            if (!layers[k]) setSwitch(k, true);
+            if (!layers[k]) {
+              setSwitch(k, true);
+              track("select_view", { view: k, source: "panel" });
+            }
             // on a phone, picking a view closes the menu to show it
             if (ui.phone) ui.collapsed = true;
           }}>{label}</button
@@ -148,8 +158,8 @@
                 <button
                   class="animate-link"
                   onclick={() => {
-                    if (ui.gantryPlaying) return stopAnimation();
-                    animateGantry();
+                    if (ui.gantryPlaying) return stopAnimation("link");
+                    animateGantry("link");
                     if (ui.phone) ui.collapsed = true;
                   }}>{ui.gantryPlaying ? "reset" : "animate"}</button
                 >
@@ -182,7 +192,10 @@
     <!-- the links, set apart from the map controls above: Trackside (named for what it holds, since its own name isn't known
          yet) and the source code, each with its mark -->
     <p class="fine-print mt-8">
-      <a class={LINK} href="{import.meta.env.BASE_URL}trackside/"
+      <a
+        class={LINK}
+        href="{import.meta.env.BASE_URL}trackside/"
+        onclick={() => track("open_trackside", { where: "panel" })}
         ><Icon kind="comment" />Trackside: updates and comments</a
       >
     </p>
@@ -216,7 +229,10 @@
           title="Zoom out"
           aria-label="Zoom out"
           disabled={isFit()}
-          onclick={() => setZoom(ui.zoom / ZOOM_STEP)}><Icon kind="minus" /></button
+          onclick={() => {
+            setZoom(ui.zoom / ZOOM_STEP);
+            zoomed("button_out");
+          }}><Icon kind="minus" /></button
         >
         <output
           class="flex flex-1 items-center justify-center border-x border-(--line) text-sm text-(--mute) tabular-nums"
@@ -226,7 +242,10 @@
           class="{STEP_BUTTON} {DISABLED}"
           title="Zoom in"
           aria-label="Zoom in"
-          onclick={() => setZoom(ui.zoom * ZOOM_STEP)}><Icon kind="plus" /></button
+          onclick={() => {
+            setZoom(ui.zoom * ZOOM_STEP);
+            zoomed("button_in");
+          }}><Icon kind="plus" /></button
         >
       </div>
       <button
@@ -235,14 +254,20 @@
         title="Zoom to fit"
         aria-label="Zoom to fit"
         aria-pressed={isFit()}
-        onclick={() => setZoom(fitZoom())}><Icon kind="fit" /></button
+        onclick={() => {
+          setZoom(fitZoom());
+          zoomed("fit");
+        }}><Icon kind="fit" /></button
       >
       <button
         class="{ICON_BUTTON} {DISABLED}"
         title="Center without zooming"
         aria-label="Center without zooming"
         disabled={isFit()}
-        onclick={centreView}><Icon kind="centre" /></button
+        onclick={() => {
+          centreView();
+          zoomed("centre");
+        }}><Icon kind="centre" /></button
       >
     </footer>
   {/if}

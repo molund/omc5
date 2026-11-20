@@ -7,6 +7,7 @@
   import { status, asOf, followUpTime } from "../src/lib/status.js";
   import { inline, plainText } from "../src/lib/inline.js";
   import { term, fetchCounts, SITE } from "../src/lib/comments.js";
+  import { track } from "../src/lib/track.js";
   import Icon from "../src/Icon.svelte";
 
   let { view = { page: 1 } } = $props();
@@ -130,6 +131,7 @@
   async function copyPermalink(e, n) {
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
     e.preventDefault();
+    track("copy_permalink", { where: "trackside", slug: n.slug });
     try {
       await navigator.clipboard.writeText(full(`${TRACKSIDE}${n.slug}/`));
       copied = true;
@@ -142,6 +144,7 @@
   // a date heading's click: the address becomes ?post=<slug> and the update scrolls into view, with no hash anchor
   function jumpTo(e, slug) {
     e.preventDefault();
+    track("select_post", { slug });
     const params = new URLSearchParams(location.search);
     params.set("post", slug);
     params.delete("comments");
@@ -158,6 +161,13 @@
       document.getElementById(id)?.scrollIntoView();
     }
   });
+  // a span link or a photo in an update, for Google Analytics; the update is the article the link is in
+  const slugOf = (e) => e.currentTarget.closest("article")?.id;
+  // the comments button: only opening them goes to Google Analytics
+  function toggleComments(slug) {
+    open = open === slug ? null : slug;
+    if (open) track("open_comments", { where: "trackside", slug });
+  }
   // load giscus into the element for this update's thread
   function giscus(el, t) {
     const s = document.createElement("script");
@@ -193,6 +203,7 @@
 {#snippet piece(p)}{#if p.href}<a class="text-(--link)" href={p.href}>{p.text}</a>{:else if p.span}<a
       class="text-(--link)"
       href="{MAP}?span={p.span}"
+      onclick={(e) => track("span_link", { span: p.span, slug: slugOf(e) })}
       title="Zoom to span {p.span} on the map">{p.text}</a
     >{:else}{p.text}{/if}{/snippet}
 {#snippet linked(pieces)}{#each pieces as p}{#if p.bold}<strong>{@render piece(p)}</strong>{:else}{@render piece(
@@ -202,7 +213,7 @@
 <!-- a photo and its caption, under a note or among its further paragraphs -->
 {#snippet photo(p, plan)}
   <figure class="mx-0 mt-2.5 mb-0">
-    <a href={p.src}
+    <a href={p.src} onclick={(e) => track("photo_open", { slug: slugOf(e) })}
       ><img
         class="block h-auto w-full rounded-md"
         src={p.src}
@@ -291,7 +302,7 @@
         <button
           class="cursor-pointer border-0 bg-transparent p-0 text-sm text-(--link)"
           aria-expanded={open === n.slug}
-          onclick={() => (open = open === n.slug ? null : n.slug)}
+          onclick={() => toggleComments(n.slug)}
           ><span aria-hidden="true">💬</span>
           {open === n.slug
             ? "Hide comments"

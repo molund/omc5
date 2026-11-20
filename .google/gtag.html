@@ -18,5 +18,10 @@
   });
   gtag("set", "page_location", cleanUrl.toString());
 
-  gtag("config", "G-M86QSPJJZN");
+  // the view the map page opened on (?view=, "span" for a span link, or "progress" for a clean address), so the page view
+  // says where visitors landed; picking another view afterwards is an event (src/lib/track.js), not a page view
+  const opened = new URLSearchParams(window.location.search);
+  const landingView = opened.has("span") ? "span" : (opened.get("view") ?? "progress");
+
+  gtag("config", "G-M86QSPJJZN", window.location.pathname === "/" ? { landing_view: landingView } : {});
 </script>
