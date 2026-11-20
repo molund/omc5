@@ -16,6 +16,7 @@
   import { inline } from "./lib/inline.js";
   import { cardSpan } from "./lib/placeGantry.js";
   import { term, fetchCounts, SITE } from "./lib/comments.js";
+  import { track } from "./lib/track.js";
   import Icon from "./Icon.svelte";
 
   // "today" or "yesterday" on the card (Trackside keeps full dates)
@@ -39,6 +40,7 @@
   // not from a link in the note or after selecting some of its text; keyboard users have the Comments button itself
   function openComments(e) {
     if (e.target.closest("a") || getSelection()?.toString()) return;
+    track("open_comments", { where: "card_note", slug: newest.slug });
     if (e.metaKey || e.ctrlKey || e.shiftKey) window.open(COMMENTS, "_blank");
     else location.href = COMMENTS;
   }
@@ -63,12 +65,21 @@
     pace: "<strong>Approximate.</strong> Based on 2-3 site visits per day during the 168 hours preceding the last check-in. A statutory holiday extends the week by the hours without gantry work, up to 24. Significant figures are for entertainment purposes only.",
   });
   let tip = $state(null);
-  const toggle = (k) => (tip = tip === k ? null : k);
+  // a click with a mouse shows the tip (hovering already has); a tap or a key shows it, or hides it if it's showing. Only
+  // a tip shown this way goes to Google Analytics, not one shown by hovering
+  function clickTip(e, k) {
+    const show = e.pointerType === "mouse" || tip !== k;
+    tip = show ? k : null;
+    if (show) track("show_tip", { tip: k });
+  }
   // a tap anywhere else, or Escape, closes the tip
   function outside(e) {
     if (!e.target.closest("[data-num]")) tip = null;
     // on a phone a touch anywhere off the card closes it
-    if (ui.phone && card && !card.contains(e.target)) ui.cardHidden = true;
+    if (ui.phone && card && !card.contains(e.target) && !ui.cardHidden) {
+      ui.cardHidden = true;
+      track("progress_card", { action: "hide", source: "outside" });
+    }
   }
 
   // closing: the card funnels into the information button at its top right corner, like a genie into a bottle
@@ -91,6 +102,7 @@
   async function copyPermalink(e) {
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
     e.preventDefault();
+    track("copy_permalink", { where: "map", view: ui.view });
     try {
       await navigator.clipboard.writeText(new URL("play/", SITE).href);
       copied = true;
@@ -103,6 +115,7 @@
   function close() {
     tip = null;
     ui.cardHidden = true;
+    track("progress_card", { action: "hide", source: "button" });
     // back to the button that reopens it, once it's drawn
     tick().then(() => showButton?.focus());
   }
@@ -134,7 +147,7 @@
     ]}
     aria-describedby={tip === k ? "progress-tip" : undefined}
     aria-label="{value}: {stripHtml(TIPS[k])}"
-    onclick={(e) => (e.pointerType === "mouse" ? (tip = k) : toggle(k))}
+    onclick={(e) => clickTip(e, k)}
     onpointerenter={(e) => e.pointerType === "mouse" && (tip = k)}
     onpointerleave={(e) => e.pointerType === "mouse" && tip === k && (tip = null)}
     onblur={() => tip === k && (tip = null)}
@@ -169,7 +182,7 @@
     class="absolute top-3 right-13 z-5 p-1.5 shadow-float"
     title="Reset to the gantry's current status"
     aria-label="Reset to the gantry's current status"
-    onclick={stopAnimation}><Icon kind="reset" /></button
+    onclick={() => stopAnimation("button")}><Icon kind="reset" /></button
   >
 {/if}
 <!-- while the gantry doesn't animate, a Play pill where the Pause and Reset buttons go (as wide as the two together), left of
@@ -184,7 +197,7 @@
     title="Play the animation"
     aria-label="Play the animation"
     onclick={() => {
-      animateGantry();
+      animateGantry("pill");
       if (ui.phone) ui.collapsed = true;
     }}><Icon kind="play" /><span>Play</span></button
   >
@@ -204,7 +217,10 @@
     class="absolute top-3 right-3 z-5 p-1.5 shadow-float"
     title="Show the progress card"
     aria-label="Show the progress card"
-    onclick={() => (ui.cardHidden = false)}><Icon kind="info" /></button
+    onclick={() => {
+      ui.cardHidden = false;
+      track("progress_card", { action: "show", source: "button" });
+    }}><Icon kind="info" /></button
   >
 {:else if ui.gantry}
   {@const { ahead, total } = ui.gantry}
@@ -298,12 +314,15 @@
     {#if newest && !current}
       <a
         class="btn mt-2.5 flex min-h-8 justify-center gap-1.5 border-(--button-line) bg-(--button-bg) px-2.5 text-sm font-semibold text-(--button-ink) hover:bg-(--bg)"
-        href={TRACKSIDE}><span>Trackside</span><span aria-hidden="true">→</span></a
+        href={TRACKSIDE}
+        onclick={() => track("open_trackside", { where: "card" })}
+        ><span>Trackside</span><span aria-hidden="true">→</span></a
       >
     {:else if newest}
       <a
         class="btn mt-2.5 flex min-h-8 gap-1.5 border-(--line) bg-(--panel) px-2.5 text-sm font-normal text-(--ink) hover:bg-(--bg)"
         href={COMMENTS}
+        onclick={() => track("open_comments", { where: "card_button", slug: newest.slug })}
         ><Icon kind="comment" /><span>Comments{activity?.comments ? ` (${activity.comments})` : ""}</span
         >{#if activity?.reactions.length}<span class="ml-auto flex gap-2 text-(--mute)"
             >{#each activity.reactions as [e, c]}<span>{e} {c}</span>{/each}</span

@@ -1,4 +1,5 @@
 import { ui, layers, setSwitch, showSpan, animateGantry } from "./appState.svelte.js";
+import { track } from "../track.js";
 
 /**
  * Bookmarkable views: each view but Progress has its own address (?view=aerial), so a link or bookmark opens on that view;
@@ -45,6 +46,7 @@ export function applyAddress() {
   const span = Number(params.get("span")?.match(/^\d{1,3}$/)?.[0] ?? old.match(/^span-(\d{1,3})$/)?.[1]) || null;
   if (span) {
     if (ui.span !== span) showSpan(span);
+    track("select_span", { span, source: "address" });
   } else {
     const name = params.get("view") ?? old;
     // the old Full aerial address: Progress, with the gantry on as in Progress, but without Progress purple
@@ -55,12 +57,14 @@ export function applyAddress() {
     }
     const v = Object.keys(VIEW_PARAMS).find((k) => VIEW_PARAMS[k] === name) ?? (name ? null : "progress");
     if (v && ui.view !== v) setSwitch(v, true);
+    // a view the address names (not a clean address, which is always Progress), for Google Analytics
+    if (v && name) track("select_view", { view: v, source: "address" });
   }
   openedOn = placeKey();
   // a frame later: switching view stops any animation (MapView), and that has to happen before this one starts, or it
   // would stop it too. The parameter stays in the address until another view or span is picked, so a reload or bookmark
   // starts it again.
-  if (params.get("animate") === "true") requestAnimationFrame(animateGantry);
+  if (params.get("animate") === "true") requestAnimationFrame(() => animateGantry("address"));
 }
 
 // Keep the address in step with the view, without adding a history entry for every view picked. While the map is on the

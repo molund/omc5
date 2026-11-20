@@ -2,6 +2,7 @@ import { saved, autosave } from "./persist.svelte.js";
 import { layers, ui } from "./state.svelte.js";
 import { setView, fillView, progressView, horizontalView, setZoom, centreOn } from "./viewport.svelte.js";
 import { SPAN_CENTRES } from "../spanCentres.js";
+import { track } from "../track.js";
 import {
   defaults,
   basemapFor,
@@ -188,6 +189,7 @@ export function setSwitch(k, on) {
 export function setBasemap(basemap) {
   ui.basemap = basemap;
   ui.changed = true;
+  track("select_basemap", { basemap, view: ui.view });
 }
 
 /** The switches animateGantry() sets, besides the gantry itself. */
@@ -212,10 +214,12 @@ export const canAnimate = () => !(layers.sfmsfDrawing || layers.sfmsfAerial);
  * finished spans and supports are shown, the unfinished spans, span numbers and arrows hidden, and the progress card
  * closed so it doesn't cover the gantry (its information button brings it back). Used by the Play pill, the Gantry
  * switch's "animate" link and ?animate=true in the address.
+ * @param {string} source What started it, for Google Analytics: "pill", "link" or "address".
  * @returns {void}
  */
-export function animateGantry() {
+export function animateGantry(source) {
   if (ui.gantryPlaying || !canAnimate()) return;
+  track("animation", { action: "play", view: ui.view, source });
   beforeAnimation ??= {
     switches: Object.fromEntries(ANIMATION_SWITCHES.map((k) => [k, layers[k]])),
     gantry: layers.gantry,
@@ -236,10 +240,12 @@ export function animateGantry() {
  * drawing back as status.yaml has it, with the supports above the spans again, and frames the gantry on its span; the
  * layer switches the animation changed go back to how they were before it (the Gantry box stays ticked), and
  * ?animate=true leaves the address. The Play pill starts it again.
+ * @param {string} source Which control, for Google Analytics: "button" (beside the card) or "link" (in the panel).
  * @returns {void}
  */
-export function stopAnimation() {
+export function stopAnimation(source) {
   if (!ui.gantryPlaying) return;
+  track("animation", { action: "reset", view: ui.view, source });
   if (beforeAnimation) {
     Object.assign(layers, beforeAnimation.switches);
     ui.changed = beforeAnimation.changed || !beforeAnimation.gantry;
@@ -256,7 +262,9 @@ export function stopAnimation() {
  * @returns {void}
  */
 export function pauseAnimation() {
-  if (ui.gantryPlaying) ui.gantryPaused = true;
+  if (!ui.gantryPlaying) return;
+  ui.gantryPaused = true;
+  track("animation", { action: "pause", view: ui.view, source: "button" });
 }
 
 /**
@@ -265,6 +273,7 @@ export function pauseAnimation() {
  */
 export function resumeAnimation() {
   ui.gantryPaused = false;
+  track("animation", { action: "resume", view: ui.view, source: "button" });
 }
 
 /** The zoom a span link opens at, as the number the zoom readout shows (a multiple of Fit). */
@@ -293,6 +302,7 @@ export function showSpan(n) {
  * @returns {void}
  */
 export function showAll() {
+  track("layers_action", { action: "show_all", view: ui.view });
   beforeAnimation = null;
   Object.keys(layers).forEach((k) => {
     if (
@@ -328,6 +338,7 @@ function viewSwitches(view) {
  * @returns {void}
  */
 export function reset() {
+  track("layers_action", { action: "reset", view: ui.view });
   beforeAnimation = null;
   Object.assign(layers, viewSwitches(ui.view));
   ui.basemap = basemapFor(ui.view);

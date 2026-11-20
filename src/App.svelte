@@ -5,6 +5,7 @@
   import { layerCss } from "./lib/layerSwitches.js";
   import { fade } from "svelte/transition";
   import { layers, ui, PHONE } from "./lib/appState/appState.svelte.js";
+  import { track } from "./lib/track.js";
 
   // the layer rules wait until MapView has tagged the drawing, which needs it laid out as map.svg draws it on its own
   const css = $derived(ui.ready ? layerCss(layers) : "");
@@ -59,6 +60,9 @@
     title={ui.phone ? "Open the menu" : "Show the layer panel"}
     aria-label={ui.phone ? "Open the menu" : "Show the layer panel"}
     aria-expanded="false"
-    onclick={() => (ui.collapsed = false)}><Icon kind={ui.phone ? "menu" : "panel"} /></button
+    onclick={() => {
+      ui.collapsed = false;
+      track("panel", { action: "open", phone: ui.phone });
+    }}><Icon kind={ui.phone ? "menu" : "panel"} /></button
   >
 {/if}

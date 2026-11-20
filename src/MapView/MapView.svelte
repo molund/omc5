@@ -25,6 +25,7 @@
   } from "../lib/appState/appState.svelte.js";
   import { applyAddress } from "../lib/appState/hash.svelte.js";
   import ProgressCard from "../ProgressCard.svelte";
+  import { track, trackOnce } from "../lib/track.js";
 
   let stage;
   let drag = $state(null);
@@ -47,6 +48,8 @@
         });
       playToEnd(els.svg).finally(() => {
         if (run !== runs) return;
+        // still playing: the run reached the last span by itself, rather than being stopped by the Reset button
+        if (ui.gantryPlaying) track("animation", { action: "finish", view: ui.view });
         running = false;
         ui.gantryPlaying = false;
         ui.gantryPaused = false;
@@ -399,6 +402,7 @@
       if (!(e.ctrlKey || e.metaKey)) return;
       e.preventDefault();
       untouched = false;
+      trackOnce("map_zoom", { method: "gesture" });
       // a mouse wheel notch is much bigger than a touchpad pinch event, so it gets a gentler factor
       const dy = e.deltaY * (e.deltaMode === 1 ? 16 : 1),
         k = e.metaKey && !e.ctrlKey ? 0.002 : 0.01;
@@ -408,6 +412,7 @@
     const gesturestart = (e) => {
       e.preventDefault();
       untouched = false;
+      trackOnce("map_zoom", { method: "gesture" });
       gz = ui.zoom;
     };
     const gesturechange = (e) => {
