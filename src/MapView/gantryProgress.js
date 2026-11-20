@@ -154,3 +154,20 @@ function westboundAhead(root, pieces, anchors, span, toCanvas) {
   });
   return counted.size;
 }
+
+/**
+ * Marks span `n` reached or not, as gantryProgress() does for the spans behind the gantry: its guideway pieces and arrows
+ * ("reached", the progress colour) and its number ("on-reached"). The walk over the double girders marks each span as the
+ * supports get past it, rather than all at once.
+ * @param {SVGSVGElement} root The map's <svg>.
+ * @param {number} n The span.
+ * @param {boolean} [on] false to take the marks off.
+ */
+export function markReached(root, n, on = true) {
+  root.querySelectorAll(`polygon.guideway.cc[data-span="${n}"], text.guideway[data-span="${n}"]`).forEach((el) => {
+    el.classList.toggle("reached", on);
+  });
+  root.querySelectorAll("text.ccnumber").forEach((t) => {
+    if (+t.textContent.trim() === +n) t.classList.toggle("on-reached", on);
+  });
+}

@@ -37,131 +37,33 @@ While the move is being worked on, temporary letters A, B and C are drawn on the
 
 ## The steps
 
-The steps are `step…` functions in `beforeCrawl.js`, run in the order below, and are numbered here 1 to 42 in the order they
-play. The numbers in the code's function names are different, because the move reuses the normal move's steps (marked
-"normal" below, with the normal move's own step number) and numbers its own steps 4 to 36 around them, so some numbers
-appear twice in the code. The right-hand column of the map below gives the function for each step here.
+The sequence was worked out with a model of the move (`P` steps in the code, 29 of them), keeping the tipping margin at 3.93 : 1
+or more throughout, with the trusses at 75% of the gantry's 440 t, the trolley 3.5 long supports and the short support 1/1.3 of
+a long one. The trolley never moves while a lifting jack holds a support over open air, and the short support never holds
+the trusses during a swing.
 
-| Here  | In the code                                                                             |
-| ----- | --------------------------------------------------------------------------------------- |
-| 1-3   | the normal steps 1 to 3 (step 0, the fill, runs first as the move starts)               |
-| 4-11  | `step4SetCBehindFrontSupport` to `step11TrolleyBackToSupportA`                          |
-| 12-17 | `step12TrussesBackForC` to `step17TrussesToHalfway`                                     |
-| 18-19 | the normal steps 18 and 19                                                              |
-| 20-22 | `step20CarryBAheadOfFrontSupport`, `step21TurnBBack`, `step22SetBWhereCWas`             |
-| 23    | `step23TrolleyToSupportA`                                                               |
-| 24-25 | the normal steps 22 and 23 (with C and B)                                               |
-| 26-30 | `step24TrolleyToShortSupport` to `step28MoveShortSupportToJoint`                        |
-| 31    | `step23TrolleyToSupportA` again                                                         |
-| 32-33 | the normal steps 24 and 25 (with B)                                                     |
-| 34    | `step29TrolleyToSnapPlace`                                                              |
-| 35    | the fill, `step0FillSpan` (the normal step 0), with the span number put up by one first |
-| 36-42 | `step30TrolleyToC` to `step36TurnAAcross` (36 also clears the hangers)                  |
+| P     | What happens                                                                                                                                                                                  |
+| ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1-3   | The trolley takes C lengthwise to 19.5 m from the 40/41 joint and turns it across                                                                                                             |
+| 4     | The trusses go back as far as they can with the short support still in the trolley's reach; B comes under them                                                                                |
+| 5-7   | The short support goes back lengthwise over A and is set down lengthwise, 26 m behind span 41                                                                                                 |
+| 8-11  | A goes lengthwise to the edge of span 41 and is turned across facing the other way (it takes the front role)                                                                                  |
+| 12-13 | C goes to just behind A, the beams touching                                                                                                                                                   |
+| 14-15 | The short support is turned across: the rear holder                                                                                                                                           |
+| 16-17 | The trolley goes to B; the trusses go back until the front lifting jacks are over A                                                                                                           |
+| 18-20 | B goes lengthwise over the short support onto span 41 and is turned across                                                                                                                    |
+| 21-22 | The front jacks carry A to the swing point (the rear jacks taking the short support on the way); the swing about C; A set down across the double girders. The trolley stays over B throughout |
+| 23-24 | The rear jacks carry the short support forward and set it down; the trusses go back until it is in reach                                                                                      |
+| 25-27 | The trolley takes the short support lengthwise to between B and C                                                                                                                             |
+| 28-29 | The trusses go forward until centred between C and A                                                                                                                                          |
 
-The trolley is always the trolley crane; "stays still over X" means it is moved back along the trusses by the same amount as
-they move, so it doesn't move on the map.
-
-**1. Shared start (normal steps 0 to 3).**
-
-1. The span the gantry is on fills in (hangers go on).
-2. The trolley slides over Support C and the hangers come down.
-3. The trolley carries C forward, and then C turns to lie the way the second support will on the next span.
-
-**2. Support C goes behind the short support.**
-
-4. The trolley carries C forward, with the span, and sets it down behind the short support, its front edge against the short
-   support's rear edge, turned to the same angle as the short support.
-
-**3. The crane move: the short support goes behind C.**
-
-5. The trolley slides on its own over the middle of the short support.
-6. It picks the short support up and carries it forward 6 m (`FORWARD_METRES`).
-7. The short support turns a quarter turn counter-clockwise about its own middle, to lie lengthwise. It is drawn above the
-   supports that lie across the trusses while it does.
-8. The trolley carries it back, over C, until its middle is half its length plus 1.5 m (`SPIN_CLEARANCE_METRES`) behind C's
-   rear edge: far enough back for it to turn without its ends touching C.
-9. It turns a quarter turn clockwise, across the guideway again.
-10. The trolley carries it forward to 1 m (`SET_DOWN_GAP_METRES`) behind C's rear edge, and sets it down.
-11. The trolley slides back on its own over the middle of Support A. A doesn't move in this move until step 38.
-
-**4. C is carried to the front support's place (the normal move's steps 12 to 17, with other supports).**
-
-12. The trusses slide back until their front tip is over C's middle. The trolley stays still over A.
-13. The trusses carry C forward, the first part of its trip.
-14. The rest of its trip, with Support B riding along on the rear lifting jacks.
-15. The trusses pivot about the short support and swing, carrying C to its place. B swings with them as a counterweight.
-16. The trusses and B swing back, and C turns about its own middle to the angle it has on the next span.
-17. The trusses slide back until their middle is halfway between the short support and Support A. C's wheel assemblies slide
-    along its beam, starting 500 ms after the trusses start to move.
-
-C's place is not the normal front support place. Along the guideway it is the normal place (the front support's place on the
-next span). Across, its beam is centred on the two double girders of the span after the one about to be built (midway
-between their outer edges). Its two wheel assemblies are centred on the unfinished span about to be built, and are slid
-along the beam to get there (step 17). The pivot is the short support, not A: A hasn't been carried.
-
-**5. B is carried out of the way and put where C was.**
-
-18. The trolley slides back to stop over B (the normal step 18).
-19. B turns to lie lengthwise (the normal step 19).
-20. The trolley carries B forward until its middle is 12 m (`B_AHEAD_METRES`) ahead of the short support's middle.
-21. B turns a quarter turn about its own middle, opposite to its turn in step 19, so it lies across the guideway again.
-22. The trolley backs up with B and sets it down where C was set down in step 4, in front of the short support.
-
-**6. The trusses move onto the next span.**
-
-23. The trolley slides over Support A and stays there.
-24. The normal step 22: the trusses slide forward until their front ends are just past C.
-25. The normal step 23: the trusses shift across and turn onto the next span's line, pivoting about B.
-
-**7. The short support goes to its joint.**
-
-26. The trolley slides over the short support.
-27. It carries it back 12 m (`SHORT_BACK_METRES`) along the trusses.
-28. The short support turns a quarter turn counter-clockwise, to lie lengthwise. The trolley keeps holding it.
-29. The trolley carries it forward until its middle is 12 m (`SHORT_INTO_SPAN_METRES`) in from the rear end of the unfinished
-    span about to be built.
-30. The short support disappears and reappears at once at the end of span 48 (the 48/49 joint, from span 41). It lies across
-    the guideway on the west side of the joint (the next span's side, as spans are numbered westward), its edge against the
-    joint, centred across on the unfinished gantry-built guideway there, not on the whole tulip. The flatbed and the crane
-    that lift it are not drawn. The trolley is left where it is.
-
-**8. The trusses finish their slide.**
-
-31. The trolley slides back over Support A.
-32. The normal step 24: the trusses slide forward onto the next span, as far as the trolley can go before it is half a blue
-    tip (the blue rectangles) from the trusses' rear tips.
-33. The normal step 25, with B: the trolley drives to B, and the trusses slide the rest of the way, the trolley staying still.
-    This is why the trolley doesn't drive off the end of the trusses.
-34. The trolley drives to where the snap would put it on the map (`step29TrolleyToSnapPlace`). There is no snap now, so
-    this is left over from an earlier version and may go.
-
-**9. The new span fills in; A is moved forward.**
-
-35. The gantry's span number goes up by one, and the span it is now on fills in (the normal step 0). Nothing else resets:
-    the pieces stay where the animation left them.
-36. The trolley slides over C, and stays there. The hangers the fill put on come down.
-37. The trusses slide so their rear tips (the blue tips) are over A.
-38. A is lifted by the rear lifting jacks, and the trusses carry it forward until it is 12 m (`A_FROM_B_METRES`) behind B,
-    middle to middle. The trolley stays still over C.
-39. The trolley slides over A.
-40. A turns a quarter turn counter-clockwise, to lie lengthwise.
-41. The trolley carries A to halfway between B and C.
-42. A turns a quarter turn clockwise, across the guideway again, and is left there. This is the end of `beforeCrawl.js`.
+Then the walk over the double girders follows (file 2).
 
 ## The numbers
 
-| Constant                 | Value | What it sets                                                                        |
-| ------------------------ | ----- | ----------------------------------------------------------------------------------- |
-| `FORWARD_METRES`         | 6 m   | How far the short support is carried forward before it turns (step 6).              |
-| `SPIN_CLEARANCE_METRES`  | 1.5 m | Room kept beyond half its length when it carries back to turn (step 8).             |
-| `SET_DOWN_GAP_METRES`    | 1 m   | The gap behind C's rear edge when it is set down (step 10).                         |
-| `B_AHEAD_METRES`         | 12 m  | How far B is carried ahead of the short support (step 20).                          |
-| `SHORT_BACK_METRES`      | 12 m  | How far the short support is carried back before it is turned lengthwise (step 27). |
-| `SHORT_INTO_SPAN_METRES` | 12 m  | How far in from the rear end of the unfinished span it is carried (step 29).        |
-| `A_FROM_B_METRES`        | 12 m  | How far behind B support A is carried on the rear jacks (step 38).                  |
-| `SHORT_JOINT`            |       | The span whose front end the short support goes to, for span 29, 41 or 50.          |
-
-Metres are turned into drawing units with `UNITS_PER_METRE` (3 units, shown 1.11 times larger: about 3.33 per metre).
+Named constants in `beforeCrawl.js`: `C_TURNS_AT_METRES` (19.5), `SHORT_REAR_METRES` (26), `SHORT_DROP_METRES` (20.5) and
+`C_A_GAP_METRES` (0, C's beam against A's). The rear lifting jacks are `PICKUP` past the rear tip's middle, outwards, mirroring
+the front ones (`rearJackY`).
 
 ## Differences from the first plan
 

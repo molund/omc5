@@ -6,6 +6,26 @@ placed on a concrete support, so the concrete supports under the section don't m
 Overview and shared notes: [`README.md`](README.md). Before: [`1-before-the-crawl.md`](1-before-the-crawl.md). After:
 [`3-after-the-crawl.md`](3-after-the-crawl.md).
 
+## The walk (built)
+
+`walk.js` (`playWalk`) plays the walk from where the move before the crawl ends, after span 42 fills in, to `placeGantry()`'s
+layout for span 47, where the normal move takes over. It is 44 steps, worked out with the same model of the move as file 1,
+with these rules:
+
+- The tipping margin stays at 3.93 : 1 or more.
+- No support is ever set down lengthwise on the double girders. A support can be turned in the air during a carry.
+- During any swing or turn the short support holds nothing: it hangs from the jacks, is out from under the trusses, or
+  stands between the two main long supports without holding them. Turns too small for the animation to show don't count.
+  The bends between spans are measured from the map (41/42 1.9 degrees, 43/44 -1.6 degrees, and so on).
+- The trusses only move with the trolley parked over a long support standing across.
+- The short support ends on the hammerhead at the end of span 47 (47/48), A in its normal place just behind span 47, and every
+  deck in its regular position (long supports' decks east, the short support's west).
+- Repeated identical steps are preferred: two identical steps count as 0.85 steps each (A, B and C count as the same).
+
+After each truss move the trusses are lined up again on their two main supports, with a swing where the curve calls for one.
+The leapfrog below was the earlier plan. It is not played any more (`crawl.js` is unused and can go once the walk has been
+watched).
+
 ## Where the crawl starts
 
 The crawl starts where `beforeCrawl.js` ends (file 1), with the three long supports in this order along the guideway:

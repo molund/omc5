@@ -3,7 +3,7 @@
 
 import { gantryMoves, placeGantry, stackSupports } from "../../lib/placeGantry.js";
 import { DOUBLE_GIRDER } from "../../lib/doubleGirder.js";
-import { gantryProgress } from "../gantryProgress.js";
+import { gantryProgress, markReached } from "../gantryProgress.js";
 import { SPEED, pause } from "./clock.js";
 import { between, screen, halfLength, centreIn, reachIn } from "./measure.js";
 import { clearHangers, fillIn, followFill, FILL_TROLLEY_TIME } from "./fill.js";
@@ -47,6 +47,12 @@ export async function step0FillSpan(svg, trolley) {
     el,
     el.getAttribute("class"),
   ]);
+  // a double girder span is already built (the gantry walked over it): nothing fills in, the trolley stays put, and the
+  // span turns to the progress colour later, in step 10, once two supports are at or past its far joint
+  if (DOUBLE_GIRDER.has(+svg.querySelector("#clayton-clipper")?.dataset.span)) {
+    await pause(1000);
+    return;
+  }
   gantryProgress(svg, true);
   const filling = unfinished
     .filter(([el]) => !el.classList.contains("unfinished"))
@@ -482,6 +488,9 @@ async function step10SetSecondSupportDown(m) {
   const secondLeg2 = secondTrip - secondLeg1,
     secondSide = { x: secondGap.x - along(secondTrip).x, y: secondGap.y - along(secondTrip).y };
   await Promise.all([moveTrolley(m.trolleyY + secondLeg2, 2500), second.by(secondLeg2, 2500, secondSide)]);
+  // on a double girder span, the second support is now at the span's far joint, with the front support past it: two
+  // supports at or past the joint, so the span turns to the progress colour (step 0 left it alone)
+  if (DOUBLE_GIRDER.has(m.S)) markReached(m.svg, m.S);
   await pause(500);
 }
 
@@ -516,7 +525,22 @@ async function step12TrussesBackForFrontSupport(m) {
 /** Step 13: the trusses carry the front support forward, the first part of its trip. */
 async function step13CarryFrontSupportForward(m) {
   console.log("[gantry] step 13: CarryFrontSupportForward"); // TEMP
-  const { gantry, truss, thirdAt, ahead, moveTrolley, trusses, front, N, one, alongOf, pivot, frontStart, back } = m;
+  const {
+    gantry,
+    truss,
+    thirdAt,
+    ahead,
+    moveTrolley,
+    trusses,
+    front,
+    N,
+    one,
+    alongOf,
+    pivot,
+    frontStart,
+    back,
+    PICKUP,
+  } = m;
   // THE FRONT SUPPORT'S TRIP along the trusses: after the swing in step 15 it has to be on its place on the next span
   // (N.front.to). The swing turns it about the pivot without changing its distance from it, so first it slides to the
   // point on its slide line that is as far from the pivot as N.front.to is: |w + s × one|² = R², a quadratic in s, with
@@ -531,13 +555,14 @@ async function step13CarryFrontSupportForward(m) {
     frontTrip = [(-qb + root) / (2 * qa), (-qb - root) / (2 * qa)].reduce((a, b) =>
       Math.abs(b - plain) < Math.abs(a - plain) ? b : a,
     ),
-    // the third support rides along for the end of the trip: from when the rear tips reach it, their middle over its
-    // middle (the rear tip is the blue tip furthest back, measured in the truss frame; the trusses are `back` along by
-    // now, and the third support hasn't moved), kept within the trip
+    // the third support rides along for the end of the trip: from when the rear lifting jacks reach it, over its middle
+    // (the rear tip is the blue tip furthest back, measured in the truss frame; the jacks are PICKUP past its middle,
+    // outwards, as the front jacks are past the front tip's; the trusses are `back` along by now, and the third support
+    // hasn't moved), kept within the trip
     rearTipAt = [...gantry.querySelectorAll(".clipper-tip")]
       .map((t) => centreIn(t, truss))
       .reduce((a, b) => (ahead * b.y < ahead * a.y ? b : a)),
-    reached = (thirdAt.y - rearTipAt.y - back) / frontTrip,
+    reached = (thirdAt.y - (rearTipAt.y + ahead * PICKUP) - back) / frontTrip,
     alone = frontTrip * Math.min(1, Math.max(0, reached)),
     ride = frontTrip - alone;
 
