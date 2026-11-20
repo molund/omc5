@@ -35,6 +35,13 @@
   const TRACKSIDE = `${import.meta.env.BASE_URL}trackside/`;
   const COMMENTS = newest ? `${TRACKSIDE}?post=${newest.slug}&comments` : TRACKSIDE;
   let activity = $state(null);
+  // a tap or click on the note goes where the Comments button goes (a cmd-, ctrl- or shift-click opens it in a new tab), but
+  // not from a link in the note or after selecting some of its text; keyboard users have the Comments button itself
+  function openComments(e) {
+    if (e.target.closest("a") || getSelection()?.toString()) return;
+    if (e.metaKey || e.ctrlKey || e.shiftKey) window.open(COMMENTS, "_blank");
+    else location.href = COMMENTS;
+  }
   if (newest && current) fetchCounts().then((c) => (activity = c[term(newest.time)] ?? null));
   // the velocity the Leash Log writes, how far the gantry got in the last week, and its chart, drawn when the site is
   // built (trackside/prerender.js); a new address for each update, so a browser doesn't show an old one, and none shown
@@ -282,7 +289,8 @@
       </div>
       {#if tip === "pace"}{@render tipBox("-mt-1")}{/if}{/if}
     {#if when}<div class="mt-2 text-xs text-(--mute)">As of {when}</div>{/if}
-    {#if note}<div class="mt-2 text-sm">
+    {#if note}<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
+      <div class="card-note mt-2" onclick={openComments}>
         {#each inline(note) as p}{#if p.href}<a class="text-(--link)" href={noteLink(p.href)}
               >{#if p.bold}<strong>{p.text}</strong>{:else}{p.text}{/if}</a
             >{:else if p.bold}<strong>{p.text}</strong>{:else}{p.text}{/if}{/each}
@@ -314,6 +322,11 @@
 
 <style>
   @reference "./app.css";
+
+  /* the note on the card: tapping it opens the comments, like the Comments button under it */
+  .card-note {
+    @apply cursor-pointer text-sm;
+  }
 
   /* the idle Play pill: as wide as the Pause and Reset buttons are together (2 + 0.5 + 2 rem), with an accent border so it
      reads as the thing to press, and a ring that pulses three times when the map loads */
