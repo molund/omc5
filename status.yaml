@@ -22,7 +22,7 @@ spans-per-week: 1.87
 # Notes to self, and the steps of the gantry's cycle seen at each time stamp, are in gantry-cycles.yaml, not here.
 notes:
   - 2026-11-20T09:00-07:00: "Clayton Clipper construction update for Friday, Nov. 20, 2026"
-    summary: "The Clayton Clipper is almost across the gap to span 42."
+    summary: "The Clayton Clipper is almost across the gap to span 42. This is the last span it has to build before crossing Hwy 15."
     block:
       - "The gantry should reach the support within the hour. Semi trucks are waiting with segments for the span."
       - photo:
