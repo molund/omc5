@@ -37,7 +37,7 @@
   import { applyAddress } from "../lib/appState/hash.svelte.js";
   import ProgressCard from "../ProgressCard.svelte";
   import Caption from "./Caption.svelte";
-  import { captionNow, clearCaptions } from "./captions.js";
+  import { CAPTION_PAUSE, captionNow, clearCaptions } from "./captions.js";
   import { track, trackOnce } from "../lib/track.js";
 
   let stage;
@@ -61,7 +61,14 @@
           // not once the Reset button has cleared it
           if (!ui.gantryPlaying) return;
           ui.animationTime = (clock() - t0) / 1000;
-          caption = captionNow();
+          const now = captionNow();
+          caption = now.text;
+          // a caption worth stopping for holds the gantry for CAPTION_PAUSE, as the Pause button does (its time is left
+          // out of the clock, so the caption stays up as long as ever); not if the Pause button holds it by then
+          if (now.pause && !ui.gantryPaused) {
+            holdGantry(els.svg);
+            setTimeout(() => !ui.gantryPaused && resumeGantry(), CAPTION_PAUSE * 1000);
+          }
         }, 250);
       ui.animationTime = 0;
       clearCaptions();
