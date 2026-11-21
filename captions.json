@@ -16,5 +16,19 @@
     "parts": [
       "I wasn’t watching as closely back then, but I think the rear lifting jacks weren’t used again until span 32. Until then, a modified move with a ballast segment took their place. It isn’t shown in this animation."
     ]
+  },
+  {
+    "span": 29,
+    "step": 0,
+    "parts": [
+      "Span 29 crosses the future 72 Ave intersection. It has 16 segments, more than the 12 the gantry can hang, so crews built it on a temporary support tower. The animation simplifies this."
+    ]
+  },
+  {
+    "span": 50,
+    "step": 0,
+    "parts": [
+      "Span 50 will have 15 or 16 segments, more than the 12 the gantry can hang, so it will rest on a temporary support tower while they’re hung. The animation simplifies this."
+    ]
   }
 ]
