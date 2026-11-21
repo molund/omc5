@@ -5,6 +5,7 @@
 // keeps each piece where its last move left it.
 
 import { placeGantry } from "../lib/placeGantry.js";
+import { gantryProgress } from "./gantryProgress.js";
 import { SPEEDS, setSpeed, stops, stop, waits, holdGantry, resumeGantry } from "./gantryAnimation/clock.js";
 import { fills, clearHangers } from "./gantryAnimation/fill.js";
 import { startWalk } from "./gantryAnimation/walkStart.js";
@@ -81,6 +82,47 @@ export async function playToEnd(svg, last = 106) {
 
 /** What gantryProgress() marks as the gantry moves on: the guideway pieces, their arrows and the span numbers. */
 const PROGRESS_MARKED = "polygon.guideway, .arrow-pending, text.guideway, text.ccnumber";
+
+/** The classes on PROGRESS_MARKED as map.svg itself draws them, before status.yaml's span is marked: saved by keepDrawn(). */
+let drawn = null;
+
+/**
+ * Saves the classes map.svg itself has on what gantryProgress() marks, for startFrom() to go back to. MapView calls it
+ * once, before the first gantryProgress().
+ * @param {SVGSVGElement} svg The map's <svg>.
+ * @returns {void}
+ */
+export function keepDrawn(svg) {
+  drawn = [...svg.querySelectorAll(PROGRESS_MARKED)].map((el) => [el, el.getAttribute("class")]);
+}
+
+/**
+ * Puts the gantry on span `n` for an animation that starts there (?span=N with ?animate=true) instead of on status.yaml's
+ * span: the drawing goes back to how map.svg draws it, the gantry is put on span n with its segments not yet hung
+ * (gantryProgress() with complete = false, so the spans behind it are drawn hung and the first move fills n in), and, on a
+ * span part way through a walk, posed where the walk has it. The drawing as status.yaml has it is saved first, so
+ * stopGantry() (the Reset button) puts that back. Nothing happens for a span outside 1 to 105.
+ * @param {SVGSVGElement} svg The map's <svg>, with the gantry showing (a hidden gantry has no size to pose).
+ * @param {number} n The span to start on.
+ * @returns {Promise<void>}
+ */
+export async function startFrom(svg, n) {
+  const gantry = svg.querySelector("#clayton-clipper");
+  if (!gantry || !drawn || !(n >= 1 && n <= 105)) return;
+  // a pose still being set (poseGantry) finishes first, then goes, with anything else left on the gantry
+  await posing;
+  before ??= {
+    span: gantry.dataset.span,
+    classes: [...svg.querySelectorAll(PROGRESS_MARKED)].map((el) => [el, el.getAttribute("class")]),
+  };
+  gantry.getAnimations({ subtree: true }).forEach((a) => a.cancel());
+  drawn.forEach(([el, c]) => (c == null ? el.removeAttribute("class") : el.setAttribute("class", c)));
+  gantry.dataset.span = n;
+  delete gantry.dataset.halfway;
+  gantryProgress(svg, false);
+  placeGantry(svg);
+  await poseGantry(svg);
+}
 
 /** The drawing before the Play pill's first move, saved by playToEnd(); null when nothing has moved. */
 let before = null;

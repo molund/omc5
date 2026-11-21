@@ -114,6 +114,7 @@ export function setSwitch(k, on) {
   if (on && VIEWS.includes(k)) {
     ui.view = k;
     ui.span = null;
+    ui.animateFrom = null;
     // every view starts on its own basemap (basemapFor); each aerial view's dropdown can change it
     ui.basemap = basemapFor(k);
     // the progress card opens every time Progress is picked, even if it was closed before; no other view opens it
@@ -239,7 +240,7 @@ export function animateGantry(source) {
  * Resets the gantry animation to the gantry's current status (the Reset button): MapView stops the moves, puts the
  * drawing back as status.yaml has it, with the supports above the spans again, and frames the gantry on its span; the
  * layer switches the animation changed go back to how they were before it (the Gantry box stays ticked), and
- * ?animate=true leaves the address. The Play pill starts it again.
+ * ?animate=true (with any ?span=N it started on) leaves the address. The Play pill starts it again.
  * @param {string} source Which control, for Google Analytics: "button" (beside the card) or "link" (in the panel).
  * @returns {void}
  */
@@ -253,6 +254,7 @@ export function stopAnimation(source) {
   }
   ui.gantryPlaying = false;
   ui.gantryPaused = false;
+  ui.animateFrom = null;
   ui.gantryStops++;
 }
 

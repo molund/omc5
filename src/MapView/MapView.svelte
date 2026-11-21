@@ -15,6 +15,8 @@
     holdGantry,
     resumeGantry,
     lowerSupports,
+    keepDrawn,
+    startFrom,
     FOLLOW_GANTRY,
   } from "./gantryAnimation.js";
   import { status } from "../lib/status.js";
@@ -48,20 +50,29 @@
     untrack(() => {
       const run = ++runs;
       running = true;
+      // an address with ?span=N puts the gantry on span N first (startFrom), the next frame, once the Gantry layer
+      // animateGantry() may have just turned on is showing (a hidden gantry has no size)
+      const from = ui.animateFrom,
+        start = from
+          ? new Promise((r) => requestAnimationFrame(r)).then(() => startFrom(els.svg, from))
+          : Promise.resolve();
       // the next frame, once the Gantry layer the link may have just turned on is showing (a hidden gantry has no size);
       // not at all with FOLLOW_GANTRY off
       if (FOLLOW_GANTRY)
         requestAnimationFrame(() => {
-          frameGantry().then(followGantry);
+          start.then(() => frameGantry()).then(followGantry);
         });
-      playToEnd(els.svg).finally(() => {
-        if (run !== runs) return;
-        // still playing: the run reached the last span by itself, rather than being stopped by the Reset button
-        if (ui.gantryPlaying) track("animation", { action: "finish", view: ui.view });
-        running = false;
-        ui.gantryPlaying = false;
-        ui.gantryPaused = false;
-      });
+      // not if the Reset button stopped it while the gantry was being put on its span
+      start
+        .then(() => run === runs && ui.gantryPlaying && playToEnd(els.svg))
+        .finally(() => {
+          if (run !== runs) return;
+          // still playing: the run reached the last span by itself, rather than being stopped by the Reset button
+          if (ui.gantryPlaying) track("animation", { action: "finish", view: ui.view });
+          running = false;
+          ui.gantryPlaying = false;
+          ui.gantryPaused = false;
+        });
     });
   });
   // the Reset button clears ui.gantryPlaying while a run is under way: that stops the moves and puts the drawing back as
@@ -419,6 +430,8 @@
     // the gantry's span and whether it is complete come from status.yaml
     const gantry = svg.querySelector("#clayton-clipper");
     if (gantry && status.span) gantry.dataset.span = status.span;
+    // the drawing as map.svg has it, for an animation that starts on another span (?span=N with ?animate=true)
+    keepDrawn(svg);
     els.gantrySpanCentre = placeGantry(svg);
     ui.gantry = gantryProgress(svg, status.span ? status.complete : null);
     // the turn that levels the Clayton Clipper route: the line from span 105's label to span 1's, turned flat
