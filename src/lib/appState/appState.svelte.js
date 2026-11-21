@@ -217,11 +217,12 @@ export const canAnimate = () => !(layers.sfmsfDrawing || layers.sfmsfAerial);
  * closed so it doesn't cover the gantry (its information button brings it back). Used by the Play pill, the Gantry
  * switch's "animate" link and ?animate=true in the address.
  * @param {string} source What started it, for Google Analytics: "pill", "link" or "address".
+ * @param {boolean} [quiet] No Google Analytics event: the caller sends its own (stepAnimation).
  * @returns {void}
  */
-export function animateGantry(source) {
+export function animateGantry(source, quiet = false) {
   if (ui.gantryPlaying || !canAnimate()) return;
-  track("animation", { action: "play", view: ui.view, source });
+  if (!quiet) track("animation", { action: "play", view: ui.view, source, span: ui.animateFrom ?? 0 });
   beforeAnimation ??= {
     switches: Object.fromEntries(ANIMATION_SWITCHES.map((k) => [k, layers[k]])),
     gantry: layers.gantry,
@@ -243,12 +244,14 @@ export function animateGantry(source) {
  * supports above the spans again, and frames the gantry on its span; the layer switches the animation changed go back to
  * how they were before it (the Gantry box stays ticked), and ?animate=true leaves the address (but for one that started on
  * a span: that stays, with its span, until another view is picked). The Play pill starts it again.
- * @param {string} source Which control, for Google Analytics: "button" (beside the card) or "link" (in the panel).
+ * @param {string} source Which control, for Google Analytics: "button" (beside the card, now Rewind) or "link" (in the
+ * panel).
+ * @param {boolean} [quiet] No Google Analytics event: the caller sends its own (stepAnimation).
  * @returns {void}
  */
-export function stopAnimation(source) {
+export function stopAnimation(source, quiet = false) {
   if (!ui.gantryPlaying) return;
-  track("animation", { action: "reset", view: ui.view, source });
+  if (!quiet) track("animation", { action: "reset", view: ui.view, source, span: ui.animateFrom ?? 0 });
   if (beforeAnimation) {
     Object.assign(layers, beforeAnimation.switches);
     ui.changed = beforeAnimation.changed || !beforeAnimation.gantry;
@@ -270,13 +273,16 @@ export function stopAnimation(source) {
  */
 export function stepAnimation(by) {
   if (!ui.gantryPlaying) return;
-  const to = Math.min(105, Math.max(1, markedSpan() + by)),
+  const from = markedSpan(),
+    to = Math.min(105, Math.max(1, from + by)),
     source = by > 0 ? "forward" : "back";
-  stopAnimation(source);
+  // one event for the step (not a reset and a play)
+  track("animation", { action: source, view: ui.view, source: "button", span: to, from });
+  stopAnimation(source, true);
   // after stopAnimation, which keeps an animation's start span: the drawing goes back to this span's start instead
   ui.animateFrom = to;
   // a frame later, once MapView has stopped the moves (as for an address's ?animate=true)
-  requestAnimationFrame(() => animateGantry(source));
+  requestAnimationFrame(() => animateGantry(source, true));
 }
 
 /**

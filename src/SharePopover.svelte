@@ -58,6 +58,7 @@
     if (e.key === "Escape") onclose();
   }
   tick().then(() => box?.querySelector("button")?.focus());
+  track("share", { action: "open", view: ui.view, span: span ?? 0 });
 </script>
 
 <svelte:window onpointerdown={outside} onkeydown={keydown} />
