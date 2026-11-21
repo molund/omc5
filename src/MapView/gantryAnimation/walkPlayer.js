@@ -480,11 +480,14 @@ export async function playSteps(m, steps, last, { halfway = false, done = 0, pos
       await driveTo(step.who);
       await centreWheels(step.who);
       if (step.turnFirst) await turnTo(step.who, "L");
-      // a long support lands on the girders' middle line (its wheel assemblies then slide to under the trusses); the short
-      // one, whose wheel assemblies hardly move on it, straight under the trusses' middle line, where it hangs
+      // a long support lands on the girders' middle line (its wheel assemblies then slide to under the trusses), and so does
+      // the short one on the double girders, so both its ends land on the girders (the support itself can be moved across, so
+      // it is set there even when the trusses lie off the girders' middle); elsewhere the short one, whose wheel assemblies
+      // hardly move on it, goes straight under the trusses' middle line, where it hangs
       const onLine = line.at(step.to),
         tl = m.trussLine(between(truss, svg)),
-        target = sups[step.who].long ? onLine : add(tl.at, mul(tl.dir, dot(sub(onLine, tl.at), tl.dir))),
+        onGirders = line.jog != null && step.to >= line.jog,
+        target = sups[step.who].long || onGirders ? onLine : add(tl.at, mul(tl.dir, dot(sub(onLine, tl.at), tl.dir))),
         v = sub(target, mid(step.who)),
         { dir } = frame(),
         along = mul(dir, dot(v, dir));
