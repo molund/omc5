@@ -97,6 +97,53 @@ export function keepDrawn(svg) {
 }
 
 /**
+ * The matrix from an element's own coordinates to the <svg>'s, from the transform attributes alone (so it works on a hidden
+ * layer, where nothing can be measured through the screen).
+ */
+function toSvg(el, svg) {
+  let m = new DOMMatrix();
+  for (let e = el; e && e !== svg; e = e.parentElement) {
+    const t = e.transform?.baseVal?.consolidate()?.matrix;
+    if (t) m = new DOMMatrix([t.a, t.b, t.c, t.d, t.e, t.f]).multiply(m);
+  }
+  return m;
+}
+
+/**
+ * map.svg draws the Clayton Clipper's gantry boxes as built (gi) up to the span it had reached when it was drawn; an animation
+ * that starts on an earlier span (startFrom()) draws the ones from span `n` on unbuilt again (p, unfinished), with the
+ * direction arrows on them waiting for their box (arrow-pending, tagged with the span), as map.svg draws the spans ahead.
+ * gantryProgress() then marks the ones behind span n built, as the animation goes on.
+ * @param {SVGSVGElement} svg The map's <svg>, after gantryProgress() has numbered the pieces (data-span).
+ * @param {number} n The span the animation starts on.
+ * @returns {void}
+ */
+function unbuild(svg, n) {
+  const boxes = [...svg.querySelectorAll("polygon.gi.guideway.cc")]
+    .filter((el) => +el.dataset.span >= n)
+    .map((el) => {
+      const m = toSvg(el, svg);
+      el.classList.remove("gi");
+      el.classList.add("p", "unfinished");
+      return { el, pts: [...el.points].map((q) => new DOMPoint(q.x, q.y).matrixTransform(m)) };
+    });
+  // whether point q is inside the polygon pts (ray casting)
+  const inside = (q, pts) =>
+    pts.reduce((acc, a, i) => {
+      const b = pts[(i + 1) % pts.length];
+      return a.y > q.y !== b.y > q.y && q.x < ((b.x - a.x) * (q.y - a.y)) / (b.y - a.y) + a.x ? !acc : acc;
+    }, false);
+  svg.querySelectorAll("text.guideway.cc:not(.arrow-pending)").forEach((el) => {
+    // the arrow's visual centre, half its font size above the baseline (map.svg's arrows: baseline - 6.25)
+    const q = new DOMPoint(+el.getAttribute("x"), +el.getAttribute("y") - 6.25).matrixTransform(toSvg(el, svg)),
+      box = boxes.find((b) => inside(q, b.pts));
+    if (!box) return;
+    el.classList.add("arrow-pending");
+    el.dataset.span = box.el.dataset.span;
+  });
+}
+
+/**
  * Puts the gantry on span `n` for an animation that starts there (?span=N with ?animate=true) instead of on status.yaml's
  * span: the drawing goes back to how map.svg draws it, the gantry is put on span n with its segments not yet hung
  * (gantryProgress() with complete = false, so the spans behind it are drawn hung and the first move fills n in), and, on a
@@ -117,6 +164,7 @@ export async function startFrom(svg, n) {
   };
   gantry.getAnimations({ subtree: true }).forEach((a) => a.cancel());
   drawn.forEach(([el, c]) => (c == null ? el.removeAttribute("class") : el.setAttribute("class", c)));
+  unbuild(svg, n);
   gantry.dataset.span = n;
   delete gantry.dataset.halfway;
   gantryProgress(svg, false);
