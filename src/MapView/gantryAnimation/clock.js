@@ -26,9 +26,6 @@ export const setInstant = (on) => {
   SPEED = on ? Infinity : SPEEDS[speedIndex];
 };
 
-/** Goes on to the next of SPEEDS (the last one stays), for a move that plays a number of cycles in one call. */
-export const nextSpeed = () => setSpeed(Math.min(speedIndex + 1, SPEEDS.length - 1));
-
 /**
  * Counts the stops: stopGantry() adds one. A move notes it as it starts waiting, and gives up if it has changed by the
  * time the wait is over.
