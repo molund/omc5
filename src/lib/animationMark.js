@@ -45,6 +45,9 @@ export function markStep(s, n) {
   listeners.forEach((fn) => fn(span, step));
 }
 
+/** The span the move under way started on (as markStep() last had it). */
+export const markedSpan = () => span;
+
 /**
  * The address's hash value for now.
  * @param {number} seconds How long the animation has played.

@@ -8,6 +8,7 @@
     layers,
     animateGantry,
     stopAnimation,
+    stepAnimation,
     pauseAnimation,
     resumeAnimation,
     canAnimate,
@@ -158,32 +159,44 @@
   >
 {/snippet}
 
-<!-- while the gantry animates, in every view, a Rewind and then a Pause button left of the top-right corner's button; the
-     progress card, drawn after them, opens over them. Pause holds the gantry where it is and turns into Play, which plays it on from
+<!-- while the gantry animates, in every view, Rewind, −1 (back a span), Pause and +1 (on a span) buttons left of the
+     top-right corner's button; the progress card, drawn after them, opens over them. Pause holds the gantry where it is and turns into Play, which plays it on from
      there; Rewind (the Reset button in the code) puts everything back to where the animation started (the Play pill starts
      it again) -->
 {#if ui.gantry && ui.gantryPlaying}
   <button
-    class="absolute top-3 right-23 z-5 p-1.5 shadow-float"
+    class="absolute top-3 right-43 z-5 p-1.5 shadow-float"
     title="Rewind to the start"
     aria-label="Rewind to the start"
     onclick={() => stopAnimation("button")}><Icon kind="rewind" /></button
   >
+  <button
+    class="absolute top-3 right-33 z-5 p-1.5 shadow-float"
+    title="Back one span"
+    aria-label="Back one span"
+    onclick={() => stepAnimation(-1)}><Icon kind="back" /></button
+  >
   {#if ui.gantryPaused}
     <button
-      class="absolute top-3 right-13 z-5 p-1.5 shadow-float"
+      class="absolute top-3 right-23 z-5 p-1.5 shadow-float"
       title="Play the animation"
       aria-label="Play the animation"
       onclick={resumeAnimation}><Icon kind="play" /></button
     >
   {:else}
     <button
-      class="absolute top-3 right-13 z-5 p-1.5 shadow-float"
+      class="absolute top-3 right-23 z-5 p-1.5 shadow-float"
       title="Pause the animation"
       aria-label="Pause the animation"
       onclick={pauseAnimation}><Icon kind="pause" /></button
     >
   {/if}
+  <button
+    class="absolute top-3 right-13 z-5 p-1.5 shadow-float"
+    title="Forward one span"
+    aria-label="Forward one span"
+    onclick={() => stepAnimation(1)}><Icon kind="forward" /></button
+  >
 {/if}
 <!-- while the gantry doesn't animate, a Play pill where the Pause and Reset buttons go (as wide as the two together), left of
      the info button, or left of the progress card when that is open (on a phone, only once the card is closed: there's no
