@@ -7,7 +7,7 @@
 //   text: the caption
 //   seconds: how long it shows; left out, long enough to read (READ_BASE plus READ_PER_WORD a word)
 //   point: a part of the gantry for an arrow to point at while it shows (captionArrow.js: support-a, support-b, support-c,
-//          short-support, trolley, front-jacks, rear-jacks)
+//          short-support, trolley, front-jacks, rear-jacks), or a guideway support by the spans either side ("12/13")
 //   pause: true to hold the gantry for CAPTION_PAUSE as it shows, for news worth stopping for (every pause is that long)
 // A caption's time goes by clock(), so it waits while the Pause button holds the gantry.
 
