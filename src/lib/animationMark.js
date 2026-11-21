@@ -21,6 +21,17 @@ const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789
 
 let span = 0,
   step = 0;
+/** What to tell as each step starts (onStep()). @type {Set<(span: number, step: number) => void>} */
+const listeners = new Set();
+
+/**
+ * Has `fn` told the span and step each time a step starts (the captions, MapView/captions.js).
+ * @param {(span: number, step: number) => void} fn
+ * @returns {void}
+ */
+export function onStep(fn) {
+  listeners.add(fn);
+}
 
 /**
  * Notes the step that is starting.
@@ -31,6 +42,7 @@ let span = 0,
 export function markStep(s, n) {
   span = Math.max(0, Math.min(127, Math.round(+s) || 0));
   step = Math.max(0, Math.min(127, n));
+  listeners.forEach((fn) => fn(span, step));
 }
 
 /**
