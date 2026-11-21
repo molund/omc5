@@ -13,7 +13,7 @@ normal move's half-way layout for the move from span 47 to 48, where the normal 
 is the loop, and the start and the end are made of the same kind of move.
 
 - **Start (`ENTRY`, 8 steps).** The trusses slide onto span 42, held by A at 41/42 and B at 42/43, and the span fills in.
-  The short support (lying lengthwise behind A) is turned across a little further back, at 20 m, so it can hold the trusses
+  The short support (standing across 15 ft behind A) is carried a little further back, to 20 m, so it can hold the trusses
   while C is carried. Then A, C and the short support are carried forward to the loop's places, a spacing apart behind B.
   They already stand in an order that works (C, S, A, B from the back), so nothing has to swap places.
 - **The loop (`LOOP`, 14 times round).** The spacing is 15.64 m, so the short support's last carry lands on the 47/48

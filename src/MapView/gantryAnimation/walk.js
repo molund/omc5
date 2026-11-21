@@ -1,5 +1,5 @@
 // The Highway 15 crossing from where the crews had the supports on Nov. 19 (placeNowLayout() in beforeCrawl.js: A and C
-// half way through the normal move, the short support off its long blue legs on C's place behind A, B craned across the
+// half way through the normal move, the short support off its long blue legs 15 ft behind A, B craned across the
 // double girders at the 42/43 joint, its deck facing west): span 42 built and the supports spread out a spacing apart
 // (ENTRY), the crawl over the double girder spans 43 to 47 as a loop (LOOP: four supports a spacing apart, the trolley
 // carrying the back one to the front each time, no lifting jacks), and the supports brought into the normal move's
@@ -12,14 +12,14 @@ import { playSteps } from "./walkPlayer.js";
 
 /**
  * From the Nov. 19 layout to the start of the loop: the trusses slide onto span 42 on A (41/42) and B (42/43) and it is
- * built; the short support (lying lengthwise behind A) is turned across a little further back, so it can hold the trusses
+ * built; the short support (standing across 15 ft behind A) is carried a little further back, so it can hold the trusses
  * while C is carried; then A, C and the short support are carried forward to the loop's places, a spacing apart behind B,
  * in the order they already stand (C, S, A, B), and the trusses go to where the loop starts.
  */
 const ENTRY = [
-  { op: "trusses", R: 9.5, anchor: "A" },
+  { op: "trusses", R: 4.0, anchor: "A" },
   { op: "fill" },
-  { op: "carry", who: "S", to: 20.0, turnLast: true, deck: "W" },
+  { op: "carry", who: "S", to: 20.0 },
   { op: "trusses", R: -5.0, anchor: "A" },
   { op: "carry", who: "A", to: 66.46 },
   { op: "carry", who: "C", to: 35.18, turnFirst: true, turnLast: true, deck: "E" },
@@ -55,6 +55,9 @@ const EXIT = [
 
 /** The span the walk ends on: the last double girder span, where the normal move takes over. */
 const WALK_ENDS_ON = { 41: 47 };
+
+/** Whether there is a walk from span S (only from 41 so far: the crossings from 29 and 50 aren't worked out). */
+export const hasWalk = (S) => S in WALK_ENDS_ON;
 /** Half the trusses' length (tip to tip), in metres: the trusses' middle stands over the third support from the back. */
 const HALF_TRUSSES = 103.93 / 2;
 

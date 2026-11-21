@@ -43,7 +43,7 @@ The crews didn't do it the way the steps below guessed. By the afternoon of Nov.
   at the 41/42 tulip, in the front position.
 - **Support C** is in its regular place half way through the normal move (after the normal step 4): the rear support's
   place on span 41.
-- **The short support** is off its long blue legs, lying lengthwise behind A, in C's place for span 42 (where the snap to span 42 would put C).
+- **The short support** is off its long blue legs, standing across the guideway 15 ft behind A (the gap between the two beams).
 - **Support B** was lifted by a mobile crane (not the short support, as the steps below have it) across the two double
   girders at the east end of the double girder section (the 42/43 joint), with its deck facing west. Its wheel assemblies
   are on the unfinished span 42.

@@ -9,6 +9,7 @@ import { SPEEDS, setSpeed, stops, stop, waits, holdGantry, resumeGantry } from "
 import { fills, clearHangers } from "./gantryAnimation/fill.js";
 import { BEFORE_CRAWL, playBeforeCrawl } from "./gantryAnimation/beforeCrawl.js";
 import { playNormalMove } from "./gantryAnimation/normalMove.js";
+import { hasWalk } from "./gantryAnimation/walk.js";
 
 export { holdGantry, resumeGantry };
 
@@ -21,12 +22,15 @@ export const FOLLOW_GANTRY = true;
 
 /**
  * A whole gantry move, from the span the gantry is on to the next one: the move before a crawl (see playBeforeCrawl) on
- * the spans that have one, the normal move (see playNormalMove) on the rest.
+ * the spans that have one and a walk worked out after it (walk.js), the normal move (see playNormalMove) on the rest. From
+ * a span with no walk yet (29, 50) the move before a crawl would stop half way, so the normal move plays there for now.
  * @param {SVGSVGElement} svg The map's <svg>, after placeGantry() has put the gantry on its span.
  * @returns {Promise<boolean>} Whether it moved the gantry on.
  */
-export const playGantry = (svg) =>
-  BEFORE_CRAWL.has(+svg.querySelector("#clayton-clipper")?.dataset.span) ? playBeforeCrawl(svg) : playNormalMove(svg);
+export function playGantry(svg) {
+  const span = +svg.querySelector("#clayton-clipper")?.dataset.span;
+  return BEFORE_CRAWL.has(span) && hasWalk(span) ? playBeforeCrawl(svg) : playNormalMove(svg);
+}
 
 /**
  * Plays gantry moves one after another, span by span, until the gantry is on span `last` or can't go any further.

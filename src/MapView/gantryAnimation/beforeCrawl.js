@@ -1254,10 +1254,13 @@ async function p26TrussesBackForShortSupport(m) {
   await pause(500);
 }
 
+/** The gap between the short support's beam and A's on Nov. 19, the short support behind (Mike: 15 ft). */
+const SHORT_GAP_METRES = 15 * 0.3048;
+
 /**
  * Where the crews had the supports on Nov. 19, from span 41, put there at once (no animation): A and C in their places half
- * way through the normal move (after its steps 10 and 4), the short support off its long blue legs on C's place on the
- * next span (lengthwise behind A, where the snap would put C), and B (lifted there by a mobile crane, which isn't drawn) across the two double girders at the
+ * way through the normal move (after its steps 10 and 4), the short support off its long blue legs, standing across the
+ * guideway 15 ft behind A (SHORT_GAP_METRES), and B (lifted there by a mobile crane, which isn't drawn) across the two double girders at the
  * front support's place on the next span (cAim), its deck facing west and its wheel assemblies on the unfinished span
  * (wheelShift). The trusses and the trolley stay where placeGantry() put them.
  */
@@ -1274,11 +1277,14 @@ async function placeNowLayout(m) {
     aTurn = sideways + nearest(N.second.turn - sideways, -90);
   moves.push(m.second.by(0, 0, sub(N.second.to, m.secondStart)));
   if (Math.abs(aTurn) > 0.01) moves.push(m.second.swing(N.second.to, aTurn, 0));
-  // the short support: on C's place on the next span (where the snap would put C, lengthwise on the span the gantry is
-  // on, behind A), turned to C's angle there
-  moves.push(m.front.by(0, 0, sub(N.fourth.to, m.frontStart)));
-  const sTurn = nearest(fourthAngle + N.fourth.turn - frontAngle, 0);
-  if (Math.abs(sTurn) > 0.01) moves.push(m.front.swing(N.fourth.to, sTurn, 0));
+  // the short support: across the guideway as it stood at the front, slid back to SHORT_GAP_METRES behind A. It stood with
+  // its rear edge against the joint and A's front edge is against it now, so the gap between the two beams is how far
+  // past A's middle its middle is now, less the two halves (the same distance), plus the gap
+  const onward = m.along(m.ahead),
+    unit = { x: onward.x / Math.hypot(onward.x, onward.y), y: onward.y / Math.hypot(onward.x, onward.y) },
+    ahead = sub(m.frontStart, N.second.to),
+    back = (ahead.x * unit.x + ahead.y * unit.y) * 2 + SHORT_GAP_METRES * UNITS_PER_METRE;
+  moves.push(m.front.by(0, 0, { x: -unit.x * back, y: -unit.y * back }));
   // B: across the girders at cAim, at the front support's angle there, its deck on the forward (west) side (which side
   // its deck is on, measured from its middle before it moves)
   const deck = gantry.querySelector(':scope > [data-anchor="rear"] > .gantry-support-walkway'),
