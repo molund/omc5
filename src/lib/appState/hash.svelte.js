@@ -36,15 +36,19 @@ let animateInAddress = false,
 
 /**
  * Switches to the view or span the address the page was opened with names, then, with ?animate=true (on its own, for
- * Progress, or alongside ?view= or ?span=), starts the gantry animation in it. Called by MapView once the map is ready; an
- * unknown view is left alone.
+ * Progress, or alongside ?view=), starts the gantry animation in it. Alongside ?animate=true, ?span=N is the span the
+ * animation starts on (ui.animateFrom), in the view ?view= names (Progress without one), rather than a span link. Called
+ * by MapView once the map is ready; an unknown view is left alone.
  * @returns {void}
  */
 export function applyAddress() {
   const params = new URLSearchParams(opened.search),
     old = opened.hash.replace(/^#/, "");
-  const span = Number(params.get("span")?.match(/^\d{1,3}$/)?.[0] ?? old.match(/^span-(\d{1,3})$/)?.[1]) || null;
-  if (span) {
+  const span = Number(params.get("span")?.match(/^\d{1,3}$/)?.[0] ?? old.match(/^span-(\d{1,3})$/)?.[1]) || null,
+    animate = params.get("animate") === "true";
+  // with ?animate=true, the span is where the animation starts (ui.animateFrom, set below), in the view the address
+  // names; without it, a span link
+  if (span && !animate) {
     if (ui.span !== span) showSpan(span);
     track("select_span", { span, source: "address" });
   } else {
@@ -60,11 +64,13 @@ export function applyAddress() {
     // a view the address names (not a clean address, which is always Progress), for Google Analytics
     if (v && name) track("select_view", { view: v, source: "address" });
   }
+  // after the view is picked, which clears it: MapView puts the gantry on this span before the animation starts
+  if (span && animate) ui.animateFrom = span;
   openedOn = placeKey();
   // a frame later: switching view stops any animation (MapView), and that has to happen before this one starts, or it
   // would stop it too. The parameter stays in the address until another view or span is picked, so a reload or bookmark
   // starts it again.
-  if (params.get("animate") === "true") requestAnimationFrame(() => animateGantry("address"));
+  if (animate) requestAnimationFrame(() => animateGantry("address"));
 }
 
 // Keep the address in step with the view, without adding a history entry for every view picked. While the map is on the
@@ -85,10 +91,12 @@ $effect.root(() => {
     stopsWere = stopsNow;
     wasPlaying = playing;
     lastPlace = place;
-    // always in this order: the view (or span), then ?animate, then any others the opening address had
+    // always in this order: the view (or span link), then the span an animation started on, then ?animate, then any
+    // others the opening address had
     const params = new URLSearchParams();
     if (ui.span) params.set("span", ui.span);
     else if (VIEW_PARAMS[ui.view]) params.set("view", VIEW_PARAMS[ui.view]);
+    if (animateInAddress && ui.animateFrom) params.set("span", ui.animateFrom);
     if (animateInAddress) params.set("animate", "true");
     if (keepOthers)
       new URLSearchParams(location.search).forEach((value, key) => {

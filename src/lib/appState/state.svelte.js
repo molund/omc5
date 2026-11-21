@@ -50,6 +50,7 @@ const view = saved?.view ?? (defaults.progress ? "progress" : defaults.sfmsfDraw
  *   ready: boolean,
  *   gantry: GantryProgress|null,
  *   gantryPlaying: boolean,
+ *   animateFrom: number|null,
  *   gantryPaused: boolean,
  * }}
  * - view: the view last picked (a View group key).
@@ -69,6 +70,8 @@ const view = saved?.view ?? (defaults.progress ? "progress" : defaults.sfmsfDraw
  * - gantry: the Clayton Clipper's span number out of the total, and the spans ahead of it.
  * - gantryPlaying: set by animateGantry() (the Play pill, or ?animate=true in the address): MapView
  *   then plays the gantry's moves span by span to the last span, and clears it when they're done.
+ * - animateFrom: the span an animation address (?span=N with ?animate=true) has the animation start on, instead of
+ *   status.yaml's span, until the Reset button is pressed or another view is picked; null for status.yaml's span.
  * - gantryPaused: whether the Pause button has the animation held where it is (pauseAnimation()); Play
  *   (resumeAnimation()) plays it on from there. Cleared whenever the animation ends or is stopped.
  * - gantryStops: counts the times the Reset button has stopped an animation (stopAnimation()), so the address can drop
@@ -89,6 +92,7 @@ export const ui = $state({
   ready: false,
   gantry: null,
   gantryPlaying: false,
+  animateFrom: null,
   gantryPaused: false,
   gantryStops: 0,
 });
