@@ -33,13 +33,17 @@
     <!-- the launcher for the gantry animation, linked from the blog and nowhere on the site: it opens the map in the view
          that suits the screen, with ?animate=true, so the animation starts by itself. Taller than wide (a phone): the
          Vertical view; wider than tall (a computer): the Horizontal view. location.replace keeps this page out of the
-         back button's history. A span number (/play/?span=42) goes along, so the animation starts on that span. -->
+         back button's history. A span number (/play/?span=42) goes along, so the animation starts on that span.
+         /play/?animate=false picks the view the same way without starting the animation (and without a span: a span link
+         opens in Progress). -->
     <script>
-      const span = new URLSearchParams(location.search).get("span");
+      const params = new URLSearchParams(location.search),
+        span = params.get("span"),
+        still = params.get("animate") === "false";
       location.replace(
         `/?view=${innerHeight > innerWidth ? "vertical" : "horizontal"}` +
-          (/^\d{1,3}$/.test(span ?? "") ? `&span=${span}` : "") +
-          "&animate=true",
+          (!still && /^\d{1,3}$/.test(span ?? "") ? `&span=${span}` : "") +
+          (still ? "" : "&animate=true"),
       );
     </script>
     <script type="module" src="/play/main.js"></script>

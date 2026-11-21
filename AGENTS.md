@@ -41,7 +41,8 @@ Svelte 5 + Vite site, deployed to GitHub Pages (https://clayton-clipper.olund.ca
 - `trackside/` — Trackside (`/trackside/`), the updates page; read `trackside/README.md` before changing it.
 - `play/` — `/play/`, the gantry animation launcher for the blog: it sends phones to `/?view=vertical&animate=true` and
   computers to `/?view=horizontal&animate=true`; `/play/?span=42` passes the span on, so the animation starts on span 42
-  (`?span=N` alongside `?animate=true` does that in any address). Not in the sitemap (it only redirects), and nothing on the site links
+  (`?span=N` alongside `?animate=true` does that in any address); `/play/?animate=false` picks the view the same way
+  without playing. Not in the sitemap (it only redirects), and nothing on the site links
   to it.
 - `captions.json` — captions over the gantry animation, each tied to a span and step (the address's hash while it plays,
   `src/lib/animationMark.js`), so they show at the same moment from any start span; the format is at the top of
