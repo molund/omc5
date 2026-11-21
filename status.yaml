@@ -41,6 +41,8 @@ notes:
           photo:
             file: 2026-11-20-photo-3.jpg
             caption: "Three out of twelve"
+      - 2026-11-20T18:00-07:00:
+          summary: "All 12 segments for span 42 were hung today. We can expect gluing tomorrow, post-tensioning on Monday, and the start of the crawl across Highway 15 on Tuesday or Wednesday."
   - 2026-11-19T16:00-07:00: "Mobile crane lifts a Clayton Clipper support into place"
     slug: construction-update-for-thursday-nov-19-2026-2
     summary: "A mobile crane is doing a job the Clayton Clipper can’t do by itself: lifting one of its supports from the ground up to the other side of span 42."
