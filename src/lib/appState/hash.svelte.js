@@ -88,7 +88,8 @@ $effect.root(() => {
     // ?animate=true goes on when an animation starts, and off when another view or span is picked, the gantry turned
     // off or the Reset button pressed (a run stopped that way is still finishing, so `playing` can't be used for that)
     if (playing && !wasPlaying) animateInAddress = true;
-    if ((lastPlace !== null && place !== lastPlace) || !layers.gantry || stopsNow !== stopsWere)
+    // (the Reset button leaves an animation that started on a span in the address: Reset goes back to that span)
+    if ((lastPlace !== null && place !== lastPlace) || !layers.gantry || (stopsNow !== stopsWere && !ui.animateFrom))
       animateInAddress = false;
     stopsWere = stopsNow;
     wasPlaying = playing;
