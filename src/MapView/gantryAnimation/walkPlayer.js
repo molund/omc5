@@ -275,9 +275,12 @@ export async function playSteps(m, steps, last, { halfway = false, done = 0, pos
   // so the span just built stays under the hangers
   // where a line-up puts the trusses, with their rear end at `rear`: the rear main support's middle (the swing's pivot), the
   // direction they lie in and a point their middle line goes through; null with fewer than two main supports
-  const lineUpAim = (rear) => {
+  // `toward`: a point their middle line goes through instead, aimed at from the rear main support (where the short support
+  // will be set down next, shortLanding())
+  const lineUpAim = (rear, toward) => {
     const pair = mains([], rear);
     if (!pair) return null;
+    if (toward) return { p: mid(pair[0]), want: deg(sub(toward, mid(pair[0]))), through: toward };
     const p = mid(pair[0]),
       q = mid(pair[1]),
       ap = line.arc(p),
@@ -303,8 +306,8 @@ export async function playSteps(m, steps, last, { halfway = false, done = 0, pos
       then = { x: -Math.sin(r), y: Math.cos(r) };
     return mul(now, dot(sub(p, l.at), now) - dot(sub(p, through), then));
   };
-  const lineUp = async () => {
-    const aim = lineUpAim(rearEnd());
+  const lineUp = async (toward) => {
+    const aim = lineUpAim(rearEnd(), toward);
     if (!aim) return;
     const { p, want, through } = aim,
       { dir } = frame(),
@@ -316,6 +319,24 @@ export async function playSteps(m, steps, last, { halfway = false, done = 0, pos
     // across: the trusses' middle line through the guideway's middle line (or halfway between the two supports' wheel
     // assemblies)
     const off = acrossTo(through);
+    if (!m.unseen(Math.hypot(off.x, off.y))) await slideTrusses(off, 1000);
+  };
+  // the short support bears the trusses only once they roll on its wheel assemblies. The line-up before it is set down on the
+  // double girders already aims the trusses there (shortLanding()); for anything left over, the trusses swing about the long
+  // main support furthest from it until their middle line goes through its wheel assemblies, with a slide across; skipped
+  // when too small to see
+  const ontoShort = async (n) => {
+    const q = wheelsMid(n),
+      pair = mains();
+    if (!pair) return;
+    const s = line.arc(q),
+      far = pair.reduce((a, b) => (Math.abs(line.arc(mid(b)) - s) > Math.abs(line.arc(mid(a)) - s) ? b : a)),
+      p = wheelsMid(far),
+      v = sub(q, p);
+    let turn = small(deg(v) - deg(m.trussLine(between(truss, svg)).dir));
+    if (Math.abs(turn) > 90) turn = small(turn + 180);
+    if (!m.unseen((Math.abs(turn) * Math.PI * Math.hypot(v.x, v.y)) / 180)) await swingTrusses(p, turn, 1500);
+    const off = acrossTo(q);
     if (!m.unseen(Math.hypot(off.x, off.y))) await slideTrusses(off, 1000);
   };
   // turns a support about its own middle so it lies across the guideway there, its deck facing `facing` (E, back, or W,
@@ -433,6 +454,16 @@ export async function playSteps(m, steps, last, { halfway = false, done = 0, pos
       .map(([n, a]) => `${n}/${+n + 1} ${a.toFixed(1)}`)
       .join(", ")}, ${S}/${S + 1} ${line.arc(gantryMoves(svg, S, S)?.spans[S].ends.front).toFixed(1)}`,
   ); // TEMP
+  // where the short support is set down on the double girders next (on the girders' middle, see the carry), when that comes
+  // before the trusses line up again after step i: the line-up at step i aims their middle line there, so they already
+  // roll on its wheel assemblies when it is set down (the slides in between keep the line); null otherwise
+  const shortLanding = (i) => {
+    for (const st of steps.slice(i + 1)) {
+      if (st.op === "trusses" && st.align !== false) return null;
+      if (st.op === "carry" && st.who === "S" && line.jog != null && st.to >= line.jog) return line.at(st.to);
+    }
+    return null;
+  };
   for (const [i, step] of steps.entries()) {
     // the steps already made are over: the rest plays at speed, with the gantry showing again
     setInstant(i < done);
@@ -460,7 +491,8 @@ export async function playSteps(m, steps, last, { halfway = false, done = 0, pos
       }
       // the move across that the line-up afterwards would make goes into the slide, so the trusses drift over to the
       // guideway's middle line as they go instead of stepping across at the end
-      const aim = step.align !== false && !step.then && !step.drop?.length && lineUpAim(step.R),
+      const toward = step.align !== false ? shortLanding(i) : null,
+        aim = step.align !== false && !step.then && !step.drop?.length && lineUpAim(step.R, toward),
         side = aim ? acrossBeforeSwing(aim) : { x: 0, y: 0 };
       await slideTrusses(add(mul(dir, first), side), 3500 * Math.min(1, Math.abs(first / total) + 0.15));
       if (step.then && Math.abs(total - first) > 0.5) {
@@ -474,7 +506,7 @@ export async function playSteps(m, steps, last, { halfway = false, done = 0, pos
       }
       // lined up again on their two main supports, unless the step says not to (the loop does, when the short support
       // stands at the back or the front, so it never holds the trusses during a swing)
-      if (step.align !== false) await lineUp();
+      if (step.align !== false) await lineUp(toward);
       await pause(500);
     } else if (step.op === "carry") {
       await driveTo(step.who);
@@ -498,6 +530,7 @@ export async function playSteps(m, steps, last, { halfway = false, done = 0, pos
       // set down under the trusses: its wheel assemblies slide along its beam to under them
       if (!lengthwise(step.who))
         await Promise.all(wheelsFollow(m.trussLine(between(truss, svg)), rearEnd(), 800, step.who));
+      if (!sups[step.who].long && !lengthwise(step.who)) await ontoShort(step.who);
       await pause(500);
     } else if (step.op === "turn") {
       await driveTo(step.who);
