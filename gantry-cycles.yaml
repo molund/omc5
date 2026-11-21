@@ -26,7 +26,7 @@ entries:
   - 2026-11-21T08:30-07:00:
       span: 42
       stage: gluing started
-      note: "Apps not working. Pushed with Claude app."
+      note: "App not working. Pushed with Claude app."
   - 2026-11-20T18:00-07:00:
       span: 42
       stage: hung
