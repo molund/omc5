@@ -4,8 +4,9 @@
 //   step: the step's number, as in the address's hash (animationMark.js: 0 the fill, 1 to 28 the normal move, 29 B flies
 //         across, 30 the short support carried back, 32 on the walk's steps)
 //   at:   seconds after the step starts, at the speed the steps are written at (divided by SPEED as it plays); default 0
-//   text: the caption
-//   seconds: how long it shows; left out, long enough to read (READ_BASE plus READ_PER_WORD a word)
+//   parts: the caption's text, as a list: one after another, each for long enough to read it (READ_BASE plus READ_PER_WORD
+//          a word), with the same arrow throughout
+//   seconds: how long each part shows instead
 //   point: a part of the gantry for an arrow to point at while it shows (captionArrow.js: support-a, support-b, support-c,
 //          short-support, trolley, front-jacks, rear-jacks), or a guideway support by the spans either side ("12/13")
 //   pause: true to hold the gantry for CAPTION_PAUSE as it shows, for news worth stopping for (every pause is that long)
@@ -22,9 +23,10 @@ export const CAPTION_PAUSE = 1.5;
 const READ_BASE = 2000,
   READ_PER_WORD = 300;
 
-/** Captions waiting for their time, and the one showing (`until` on clock()). */
+/** Captions waiting for their time, and the parts of the one showing, each with its own time (`from` to `until` on
+ * clock()). */
 let pending = [],
-  showing = null;
+  showing = [];
 
 // a step that starts at speed (not one played with no time, setInstant) lines up its captions
 onStep((span, step) => {
@@ -43,21 +45,24 @@ export function captionNow() {
   const now = clock();
   let pause = false;
   for (const p of pending.filter((p) => p.from <= now)) {
-    const words = p.c.text.split(/\s+/).length;
-    showing = {
-      text: p.c.text,
-      point: p.c.point ?? null,
-      until: p.from + (p.c.seconds ? p.c.seconds * 1000 : READ_BASE + READ_PER_WORD * words),
-    };
+    // a caption that comes up takes over from one still showing; its parts follow one another
+    let from = p.from;
+    showing = p.c.parts.map((text) => {
+      const until = from + (p.c.seconds ? p.c.seconds * 1000 : READ_BASE + READ_PER_WORD * text.split(/\s+/).length),
+        part = { text, point: p.c.point ?? null, from, until };
+      from = until;
+      return part;
+    });
     pause ||= !!p.c.pause;
   }
   pending = pending.filter((p) => p.from > now);
-  if (showing && now >= showing.until) showing = null;
-  return { text: showing?.text ?? null, point: showing?.point ?? null, pause };
+  showing = showing.filter((s) => now < s.until);
+  const part = showing.find((s) => s.from <= now);
+  return { text: part?.text ?? null, point: part?.point ?? null, pause };
 }
 
 /** Drops every caption, waiting or showing (the run is over or stopped). */
 export function clearCaptions() {
   pending = [];
-  showing = null;
+  showing = [];
 }
