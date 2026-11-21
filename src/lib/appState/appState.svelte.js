@@ -255,6 +255,7 @@ export function stopAnimation(source) {
   ui.gantryPlaying = false;
   ui.gantryPaused = false;
   ui.animateFrom = null;
+  ui.animationTime = null;
   ui.gantryStops++;
 }
 

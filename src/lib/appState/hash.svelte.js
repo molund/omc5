@@ -43,7 +43,8 @@ let animateInAddress = false,
  */
 export function applyAddress() {
   const params = new URLSearchParams(opened.search),
-    old = opened.hash.replace(/^#/, "");
+    // an animation address's #t= (how long it had played) isn't an old view link
+    old = opened.hash.replace(/^#/, "").replace(/^t=.*/, "");
   const span = Number(params.get("span")?.match(/^\d{1,3}$/)?.[0] ?? old.match(/^span-(\d{1,3})$/)?.[1]) || null,
     animate = params.get("animate") === "true";
   // with ?animate=true, the span is where the animation starts (ui.animateFrom, set below), in the view the address
@@ -102,7 +103,10 @@ $effect.root(() => {
       new URLSearchParams(location.search).forEach((value, key) => {
         if (!["view", "span", "animate"].includes(key)) params.append(key, value);
       });
-    const search = params.size ? `?${params}` : "";
-    if (location.search !== search || location.hash) history.replaceState(null, "", location.pathname + search);
+    const search = params.size ? `?${params}` : "",
+      // while ?animate=true is in it, how long the animation has played, in seconds (ui.animationTime, every 100 ms)
+      hash = animateInAddress && ui.animationTime != null ? `#t=${ui.animationTime.toFixed(1)}` : "";
+    if (location.search !== search || location.hash !== hash)
+      history.replaceState(null, "", location.pathname + search + hash);
   });
 });

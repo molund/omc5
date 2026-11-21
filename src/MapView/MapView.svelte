@@ -7,6 +7,7 @@
   import { DRAW_VB, SFMSF_AERIAL_VB, GANTRY_LENGTH } from "../lib/layerSwitches.js";
   import { tagBuiltBy } from "./builtBy.js";
   import { gantryProgress } from "./gantryProgress.js";
+  import { clock } from "./gantryAnimation/clock.js";
   import { placeGantry } from "../lib/placeGantry.js";
   import {
     playToEnd,
@@ -50,6 +51,13 @@
     untrack(() => {
       const run = ++runs;
       running = true;
+      // how long it has played, every 100 ms, on the animation's own clock (the Pause button's time left out)
+      const t0 = clock(),
+        tick = setInterval(() => {
+          // not once the Reset button has cleared it
+          if (ui.gantryPlaying) ui.animationTime = (clock() - t0) / 1000;
+        }, 100);
+      ui.animationTime = 0;
       // an address with ?span=N puts the gantry on span N first (startFrom), the next frame, once the Gantry layer
       // animateGantry() may have just turned on is showing (a hidden gantry has no size)
       const from = ui.animateFrom,
@@ -66,6 +74,7 @@
       start
         .then(() => run === runs && ui.gantryPlaying && playToEnd(els.svg))
         .finally(() => {
+          clearInterval(tick);
           if (run !== runs) return;
           // still playing: the run reached the last span by itself, rather than being stopped by the Reset button
           if (ui.gantryPlaying) track("animation", { action: "finish", view: ui.view });
