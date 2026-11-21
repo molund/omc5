@@ -158,31 +158,32 @@
   >
 {/snippet}
 
-<!-- while the gantry animates, in every view, a Pause and a Reset button left of the top-right corner's button; the progress
-     card, drawn after them, opens over them. Pause holds the gantry where it is and turns into Play, which plays it on from
-     there; Reset puts everything back to the gantry's current status (the Play pill starts it again) -->
+<!-- while the gantry animates, in every view, a Rewind and then a Pause button left of the top-right corner's button; the
+     progress card, drawn after them, opens over them. Pause holds the gantry where it is and turns into Play, which plays it on from
+     there; Rewind (the Reset button in the code) puts everything back to where the animation started (the Play pill starts
+     it again) -->
 {#if ui.gantry && ui.gantryPlaying}
+  <button
+    class="absolute top-3 right-23 z-5 p-1.5 shadow-float"
+    title="Rewind to the start"
+    aria-label="Rewind to the start"
+    onclick={() => stopAnimation("button")}><Icon kind="rewind" /></button
+  >
   {#if ui.gantryPaused}
     <button
-      class="absolute top-3 right-23 z-5 p-1.5 shadow-float"
+      class="absolute top-3 right-13 z-5 p-1.5 shadow-float"
       title="Play the animation"
       aria-label="Play the animation"
       onclick={resumeAnimation}><Icon kind="play" /></button
     >
   {:else}
     <button
-      class="absolute top-3 right-23 z-5 p-1.5 shadow-float"
+      class="absolute top-3 right-13 z-5 p-1.5 shadow-float"
       title="Pause the animation"
       aria-label="Pause the animation"
       onclick={pauseAnimation}><Icon kind="pause" /></button
     >
   {/if}
-  <button
-    class="absolute top-3 right-13 z-5 p-1.5 shadow-float"
-    title="Reset to the gantry's current status"
-    aria-label="Reset to the gantry's current status"
-    onclick={() => stopAnimation("button")}><Icon kind="reset" /></button
-  >
 {/if}
 <!-- while the gantry doesn't animate, a Play pill where the Pause and Reset buttons go (as wide as the two together), left of
      the info button, or left of the progress card when that is open (on a phone, only once the card is closed: there's no
