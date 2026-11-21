@@ -94,7 +94,7 @@
   }
   let card = $state(),
     showButton = $state();
-  // while the gantry animates in any view but Progress, the info button gives way to a Permalink to /play/, the
+  // while the gantry animates, in every view, the info button gives way to a Permalink to /play/, the
   // animation's launcher: a real link (a cmd-, ctrl-, shift- or middle-click opens it), and a plain click opens the share
   // box (SharePopover.svelte), after YouTube's, to choose the link and copy it. It goes back to the info button when the
   // animation stops.
@@ -212,7 +212,7 @@
     }}><Icon kind="play" /><span>Play</span></button
   >
 {/if}
-{#if ui.gantry && ui.cardHidden && ui.gantryPlaying && ui.view !== "progress"}
+{#if ui.gantry && ui.cardHidden && ui.gantryPlaying}
   <a
     class="absolute top-3 right-3 z-5 block rounded-md border border-(--line) bg-(--panel) p-1.5 leading-none text-(--ink) shadow-float [touch-action:manipulation] hover:border-(--accent) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent)"
     href={PLAY}
