@@ -5,7 +5,7 @@
 
 {#if text}
   <div class="caption-row">
-    <p class="caption" aria-live="polite">{text}</p>
+    <p class="map-number caption" aria-live="polite">{text}</p>
   </div>
 {/if}
 
@@ -17,8 +17,9 @@
     @apply pointer-events-none absolute inset-x-0 bottom-10 z-10 flex justify-center;
   }
 
-  /* the caption itself: a card that reads over the aerial photo and the drawing */
+  /* the caption itself: black bold text with a white halo, like the map's span numbers (.map-number in app.css), with
+     nothing behind it, so the map shows through */
   .caption {
-    @apply mx-4 max-w-md rounded-md bg-(--panel) px-4 py-2.5 text-center text-base text-(--ink) shadow-(--shadow-card);
+    @apply mx-4 max-w-md text-center text-lg leading-snug font-bold text-black;
   }
 </style>
