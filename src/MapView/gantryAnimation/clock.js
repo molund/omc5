@@ -4,26 +4,84 @@
 /**
  * How fast the whole animation plays: every move's duration and every pause is divided by it, so 2 is twice as fast as
  * the times written in the steps, and 1 plays them as written. After the Play pill, the moves play at SPEEDS in
- * turn, and every move after the last of them at that last speed (playToEnd sets it).
+ * turn (one a cycle), and every move after the last of them at that last speed (playToEnd sets it). While a caption is up (or about to come up), everything plays at CAPTION_SPEED instead, and goes
+ * back once it has gone (setCaptionSlow, from captions.js). A change of speed takes effect at once, on the moves and waits
+ * under way too.
  */
-export const SPEEDS = [3, 2, 2, 2, 2];
+export const SPEEDS = [2, 4, 8];
+/** How fast everything plays while a caption is up. */
+export const CAPTION_SPEED = 2;
 export let SPEED = SPEEDS[0];
 
-/** Which of SPEEDS is playing now. */
-let speedIndex = 0;
+/** Which of SPEEDS is playing now, and whether a caption has it at CAPTION_SPEED. */
+let speedIndex = 0,
+  captionSlow = false;
 
-/** Sets how fast the moves play: SPEED is SPEEDS[i]. */
+/** The speed it should play at now. */
+const wanted = () => (captionSlow ? CAPTION_SPEED : SPEEDS[speedIndex]);
+
+/**
+ * The animation's time as written (milliseconds of the steps' own times, before SPEED divides them), the time held by the
+ * Pause button left out: what the fills and the captions go by, so a change of speed carries them along.
+ */
+let played = 0,
+  playedAt = performance.now();
+/** Brings `played` up to now, at the speed it has been playing at. */
+function settle() {
+  const now = performance.now();
+  if (heldAt == null && Number.isFinite(SPEED)) played += (now - playedAt) * SPEED;
+  playedAt = now;
+}
+/** The animation's time as written, now (see `played`). */
+export const playClock = () => {
+  settle();
+  return played;
+};
+
+/** Plays at wanted() from now on: the moves under way speed up or slow down where they are, and so do the waits. */
+function applySpeed() {
+  // while steps play with no time, setInstant(false) picks up the speed
+  if (!Number.isFinite(SPEED)) return;
+  const next = wanted();
+  if (next === SPEED) return;
+  settle();
+  const k = next / SPEED,
+    now = performance.now();
+  for (const a of document.getAnimations())
+    if (a.effect?.target instanceof SVGElement && (a.playState === "running" || a.playState === "paused"))
+      a.updatePlaybackRate(a.playbackRate * k);
+  for (const w of waits) {
+    if (heldAt != null) {
+      // held: holdGantry() has already taken off what they had waited
+      w.left /= k;
+      continue;
+    }
+    clearTimeout(w.timer);
+    w.left = Math.max(0, w.left - (now - w.from)) / k;
+    count(w);
+  }
+  SPEED = next;
+}
+
+/** Sets how fast the moves play: SPEEDS[i] (unless a caption is up). */
 export const setSpeed = (i) => {
   speedIndex = i;
-  SPEED = SPEEDS[i];
+  applySpeed();
+};
+
+/** Plays everything at CAPTION_SPEED while a caption is up or about to come up (on), or at SPEEDS again (off). */
+export const setCaptionSlow = (on) => {
+  captionSlow = on;
+  applySpeed();
 };
 
 /**
- * Plays every move and pause with no time at all (on), or at SPEEDS again (off): for steps that only set up where the
+ * Plays every move and pause with no time at all (on), or at the speed again (off): for steps that only set up where the
  * pieces start, such as the walk's steps the crews have already made (walk.js).
  */
 export const setInstant = (on) => {
-  SPEED = on ? Infinity : SPEEDS[speedIndex];
+  settle();
+  SPEED = on ? Infinity : wanted();
 };
 
 /**
@@ -86,6 +144,7 @@ export const pause = (ms) =>
  */
 export function holdGantry(svg) {
   if (heldAt != null || !svg) return;
+  settle();
   heldAt = performance.now();
   for (const w of waits) {
     clearTimeout(w.timer);
@@ -110,6 +169,7 @@ export function holdGantry(svg) {
  */
 export function resumeGantry() {
   if (heldAt == null) return;
+  settle();
   heldFor += performance.now() - heldAt;
   heldAt = null;
   heldMoves.forEach((a) => a.playState === "paused" && a.play());

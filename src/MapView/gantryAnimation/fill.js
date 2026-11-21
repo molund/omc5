@@ -1,7 +1,7 @@
 // Step 0, the fill: the span the gantry is on fills in like a progress bar, with a hanger on each step, while the trolley
 // follows the fill front along the trusses.
 
-import { SPEED, clock } from "./clock.js";
+import { SPEED, playClock } from "./clock.js";
 import { screen, centreIn } from "./measure.js";
 
 /** How long a span takes to fill in when it turns finished, in milliseconds as written (divided by SPEED like every move). */
@@ -224,9 +224,11 @@ export function fillIn(svg, el, was) {
     middle: endAt(at(first)),
     length: to - from,
     start(half) {
-      // each half takes half of FILL_TIME, timed by clock(), so a held gantry's fill waits where it is
-      const t0 = clock(),
-        halfTime = FILL_TIME / 2 / SPEED,
+      // each half takes half of FILL_TIME as written, timed by playClock(), so a held gantry's fill waits where it is and a
+      // change of speed carries it along (played with no time, it fills at once)
+      const t0 = playClock(),
+        instant = !Number.isFinite(SPEED),
+        halfTime = FILL_TIME / 2,
         count = half === 1 ? first : second;
       let shown = 0;
       if (half === 1) {
@@ -236,7 +238,7 @@ export function fillIn(svg, el, was) {
       const step = () => {
         // the steps filled so far in this half: one more every halfTime / count, the last one when halfTime is up;
         // each step that has just filled gets its hanger (the first half from the east end, the second from the west)
-        const k = Math.min(count, Math.floor(((clock() - t0) / halfTime) * count)),
+        const k = instant ? count : Math.min(count, Math.floor(((playClock() - t0) / halfTime) * count)),
           was = shown;
         while (shown < k) hang(half === 1 ? shown++ : steps - 1 - shown++);
         if (shown !== was) {

@@ -3,7 +3,9 @@
 //   span: the span the move starts on (a walk's from span 41 or 50); left out, every span
 //   step: the step's number, as in the address's hash (animationMark.js: 0 the fill, 1 to 28 the normal move, 29 B flies
 //         across, 30 the short support carried back, 32 on the walk's steps)
-//   at:   seconds after the step starts, at the speed the steps are written at (divided by SPEED as it plays); default 0
+//   at:   seconds after the step starts, in the steps' own time (as written, before SPEED divides it); default 0.
+//         Captions play at CAPTION_SPEED (clock.js, 2x): the animation slows to it as a caption comes up, so a caption
+//         that should show a second before a moment has `at` two seconds (as written) before it
 //   parts: the caption's text, as a list: one after another, with the same arrow throughout
 //   seconds: how long each screen shows instead of its reading time
 // Captions follow the usual subtitle rules (as Netflix's and the BBC's guidelines have them): a part longer than a screen
@@ -17,7 +19,7 @@
 
 import CAPTIONS from "../../captions.json";
 import { onStep } from "../lib/animationMark.js";
-import { SPEED, clock } from "./gantryAnimation/clock.js";
+import { SPEED, clock, playClock, setCaptionSlow } from "./gantryAnimation/clock.js";
 
 /** How long a caption with `pause` holds the gantry, in seconds (the same for every caption). */
 export const CAPTION_PAUSE = 1.5;
@@ -73,17 +75,31 @@ function split(sentence, most) {
 const readTime = (text, seconds) =>
   seconds ? seconds * 1000 : Math.min(READ_MAX, Math.max(READ_MIN, (text.length / READ_CPS) * 1000));
 
-/** Captions waiting for their time, and the parts of the one showing, each with its own time (`from` to `until` on
- * clock()). */
+/** Captions waiting for their time (`due` on playClock(), the steps' own time), and the parts of the one showing, each
+ * with its own time (`from` to `until` on clock(): read at the reader's pace). */
 let pending = [],
-  showing = [];
+  showing = [],
+  // the timer that slows the animation to CAPTION_SPEED the moment the next caption is due
+  timer = null;
+
+/** Slows the animation to CAPTION_SPEED as soon as a caption is due, so it doesn't play on past its moment before the next
+ * look (captionNow(), every 250 ms); then has the next one watched. */
+function watch() {
+  clearTimeout(timer);
+  if (!pending.length) return;
+  const left = Math.min(...pending.map((p) => p.due)) - playClock();
+  if (left <= 0) setCaptionSlow(true);
+  // at the speed now: a change of speed meanwhile only makes it look again sooner or later
+  else timer = setTimeout(watch, Number.isFinite(SPEED) ? left / SPEED : 0);
+}
 
 // a step that starts at speed (not one played with no time, setInstant) lines up its captions
 onStep((span, step) => {
   if (!Number.isFinite(SPEED)) return;
   for (const c of CAPTIONS)
     if (c.step === step && (c.span == null || c.span === span))
-      pending.push({ c, from: clock() + ((c.at ?? 0) * 1000) / SPEED });
+      pending.push({ c, due: playClock() + (c.at ?? 0) * 1000 });
+  watch();
 });
 
 /**
@@ -92,11 +108,12 @@ onStep((span, step) => {
  * gantry for CAPTION_PAUSE (true once only).
  */
 export function captionNow() {
-  const now = clock();
+  const now = clock(),
+    played = playClock();
   let pause = false;
-  for (const p of pending.filter((p) => p.from <= now)) {
-    // a caption that comes up takes over from one still showing; its parts follow one another
-    let from = p.from;
+  for (const p of pending.filter((p) => p.due <= played)) {
+    // a caption that comes up takes over from one still showing; its parts follow one another, from now
+    let from = now;
     showing = p.c.parts.flatMap(screens).map((text) => {
       const until = from + readTime(text, p.c.seconds),
         part = { text, point: p.c.point ?? null, from, until };
@@ -105,9 +122,12 @@ export function captionNow() {
     });
     pause ||= !!p.c.pause;
   }
-  pending = pending.filter((p) => p.from > now);
+  pending = pending.filter((p) => p.due > played);
   showing = showing.filter((s) => now < s.until);
   const part = showing.find((s) => s.from <= now);
+  // CAPTION_SPEED while a caption is up or due; back to the cycle's speed once it has gone
+  setCaptionSlow(!!part || pending.some((p) => p.due <= playClock()));
+  watch();
   return { text: part?.text ?? null, point: part?.point ?? null, pause };
 }
 
@@ -115,4 +135,6 @@ export function captionNow() {
 export function clearCaptions() {
   pending = [];
   showing = [];
+  clearTimeout(timer);
+  setCaptionSlow(false);
 }
