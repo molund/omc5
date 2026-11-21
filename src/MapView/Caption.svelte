@@ -17,9 +17,9 @@
     @apply pointer-events-none absolute inset-x-0 bottom-10 z-10 flex justify-center;
   }
 
-  /* the caption itself: black bold text with a white halo, like the map's span numbers (.map-number in app.css), with
+  /* the caption itself: black semibold text with a white halo, like the map's span numbers (.map-number in app.css), with
      nothing behind it, so the map shows through */
   .caption {
-    @apply mx-4 max-w-md text-center text-lg leading-snug font-bold text-black;
+    @apply mx-4 max-w-md text-center text-base leading-snug font-semibold text-black;
   }
 </style>
