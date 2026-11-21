@@ -23,6 +23,7 @@ import { slideC, swingC } from "./supports.js";
 import { step0FillSpan } from "./normalMove.js";
 import { holders } from "./holders.js"; // TEMP
 import { debugLog } from "./debug.js";
+import { STEPS, markStep } from "../../lib/animationMark.js";
 
 /** The trolley's closest approach to either end's blue tips, as a share of a tip's length (as TIP_GAP_SHARE elsewhere). */
 const TIP_GAP_SHARE = 0.5;
@@ -112,10 +113,11 @@ function supportsOf(m) {
  * @param {{ halfway?: boolean }} [options] halfway: the steps end in the normal move's half-way layout (after its step 10),
  * so the normal move goes on from its step 11 (gantry.dataset.halfway tells it); done: how many of the steps are already
  * made, played with no time while the gantry is see-through, which shows again as the rest starts; pose: only those
- * steps, then it stops (the gantry stays where they leave it, its pieces held there by their moves).
+ * steps, then it stops (the gantry stays where they leave it, its pieces held there by their moves); lead: how many of the
+ * steps come before the walk's own (playWalk()'s carryShort), numbered apart in the address (animationMark.js).
  * @returns {Promise<boolean>} true, so playToEnd() goes on with the normal move.
  */
-export async function playSteps(m, steps, last, { halfway = false, done = 0, pose = false } = {}) {
+export async function playSteps(m, steps, last, { halfway = false, done = 0, pose = false, lead = 0 } = {}) {
   const { svg, gantry, truss, trusses, S } = m;
   const line = middleLine(svg, gantry, S, last),
     sups = supportsOf(m),
@@ -472,6 +474,7 @@ export async function playSteps(m, steps, last, { halfway = false, done = 0, pos
     if (done && i === done) gantry.style.opacity = "";
     if (i) debugLog(`[gantry] walk layout: ${layout()}`); // TEMP
     debugLog(`[gantry] walk ${i + 1}: ${JSON.stringify(step)}`); // TEMP
+    markStep(S, i < lead ? STEPS.CARRY_SHORT_BACK : STEPS.WALK + i - lead);
     // the arrows: the two outermost supports holding the trusses during this step (the short one too, when it stands
     // across under them), leaving out the one being carried or picked up
     const moving = [step.who, step.pick?.who].filter(Boolean),

@@ -11,6 +11,7 @@ import { between, centreIn } from "./measure.js";
 import { holders } from "./holders.js";
 import { playWalk, walkPartWay } from "./walk.js";
 import { playFirstHalf, startMove } from "./normalMove.js";
+import { STEPS, markStep } from "../../lib/animationMark.js";
 
 /**
  * Where Support B is craned to, and how far its wheels slide along it. Its beam is centred across the two double girders of
@@ -109,6 +110,7 @@ async function placeNowLayout(m, animate = false) {
     bTurn = [base, base + 180, base - 180].filter(forward).sort((a, b) => Math.abs(a) - Math.abs(b))[0] ?? base;
   // flying, B is drawn over the rest of the gantry
   if (animate) stackSupports(svg, ["rear"]);
+  if (animate) markStep(S, STEPS.FLY_B);
   const fly = animate ? B_FLY_TIME : 0;
   moves.push(m.third.by(0, fly, sub(m.cAim, m.thirdStart)), m.third.swing(m.cAim, bTurn, fly));
   // the moves take effect once they have started; the wheels are slid in B's frame as it lies then

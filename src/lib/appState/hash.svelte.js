@@ -1,5 +1,6 @@
 import { ui, layers, setSwitch, showSpan, animateGantry } from "./appState.svelte.js";
 import { track } from "../track.js";
+import { encodeMark } from "../animationMark.js";
 
 /**
  * Bookmarkable views: each view but Progress has its own address (?view=aerial), so a link or bookmark opens on that view;
@@ -43,7 +44,8 @@ let animateInAddress = false,
  */
 export function applyAddress() {
   const params = new URLSearchParams(opened.search),
-    old = opened.hash.replace(/^#/, "");
+    // an animation address's hash (how long it had played and the step, animationMark.js) isn't an old view link
+    old = opened.hash.replace(/^#/, "").replace(/^[A-Za-z0-9_-]{5}$/, "");
   const span = Number(params.get("span")?.match(/^\d{1,3}$/)?.[0] ?? old.match(/^span-(\d{1,3})$/)?.[1]) || null,
     animate = params.get("animate") === "true";
   // with ?animate=true, the span is where the animation starts (ui.animateFrom, set below), in the view the address
@@ -102,7 +104,11 @@ $effect.root(() => {
       new URLSearchParams(location.search).forEach((value, key) => {
         if (!["view", "span", "animate"].includes(key)) params.append(key, value);
       });
-    const search = params.size ? `?${params}` : "";
-    if (location.search !== search || location.hash) history.replaceState(null, "", location.pathname + search);
+    const search = params.size ? `?${params}` : "",
+      // while ?animate=true is in it, how long the animation has played (ui.animationTime, every 250 ms) and the step under
+      // way, packed into five base64url characters with no key (animationMark.js)
+      hash = animateInAddress && ui.animationTime != null ? `#${encodeMark(ui.animationTime)}` : "";
+    if (location.search !== search || location.hash !== hash)
+      history.replaceState(null, "", location.pathname + search + hash);
   });
 });

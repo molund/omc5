@@ -186,5 +186,5 @@ export async function playWalk(m, done = 0, pose = false, carryShort = false) {
   // after the first half of a move into the start layout (placeNowLayout() in walkStart.js), the trolley carries the
   // short support back from the front to its place in it, behind A
   const lead = carryShort ? [{ op: "carry", who: "S", to: c.start.S, turnFirst: true, turnLast: true }] : [];
-  return playSteps(m, [...lead, ...walkSteps(c)], c.last, { halfway: true, done, pose });
+  return playSteps(m, [...lead, ...walkSteps(c)], c.last, { halfway: true, done, pose, lead: lead.length });
 }
