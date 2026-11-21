@@ -1,9 +1,9 @@
 // Plays a walk over double girder spans as a list of steps worked out with the model of the move (the rules Mike gave, the
 // tipping margin kept at 3.93 or more, repeated steps preferred), and snaps the gantry onto the last double girder span for
-// the normal move. Every crossing in walk.js plays through it. Positions are
+// the normal move. Every walk in walk.js plays through it. Positions are
 // metres along the guideway's middle line (the girders' middle on the double girder spans), from the back of span S (the
 // span the gantry is on when the move starts). Each truss move ends with the trusses lined up again along the guideway (a
-// swing where the curve calls for one). See docs/double-girder/2-the-crawl.md.
+// swing where the curve calls for one). See docs/double-girder/the-walk.md.
 //
 // Steps: trusses: slide until the rear tips' rear end is at R (the trolley parked over `anchor`, or over `then` once it
 // reaches its limit), a jack picking up (`pick`) or setting down (`drop`) a support, then lined up again (unless `align` is

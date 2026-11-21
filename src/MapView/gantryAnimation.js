@@ -7,7 +7,7 @@
 import { placeGantry } from "../lib/placeGantry.js";
 import { SPEEDS, setSpeed, stops, stop, waits, holdGantry, resumeGantry } from "./gantryAnimation/clock.js";
 import { fills, clearHangers } from "./gantryAnimation/fill.js";
-import { playBeforeCrawl } from "./gantryAnimation/beforeCrawl.js";
+import { startWalk } from "./gantryAnimation/walkStart.js";
 import { playNormalMove } from "./gantryAnimation/normalMove.js";
 import { hasWalk, walkPartWay } from "./gantryAnimation/walk.js";
 
@@ -21,10 +21,9 @@ export { holdGantry, resumeGantry };
 export const FOLLOW_GANTRY = true;
 
 /**
- * A whole gantry move, from the span the gantry is on to the next one: the move before a crawl (see playBeforeCrawl) on
- * the spans that have one and a walk worked out after it (walk.js), the normal move (see playNormalMove) on the rest. From
- * a span with no walk yet (29, 50) the move before a crawl would stop half way, so the normal move plays there for now. A
- * span part way through a walk (42) plays the rest of it (walkPartWay in walk.js).
+ * A whole gantry move, from the span the gantry is on to the next one: a walk over the double girder spans (see startWalk
+ * and walk.js) from span 41 or 50, or from a span part way through one; the normal move (see playNormalMove) everywhere
+ * else.
  * @param {SVGSVGElement} svg The map's <svg>, after placeGantry() has put the gantry on its span.
  * @returns {Promise<boolean>} Whether it moved the gantry on.
  */
@@ -32,7 +31,7 @@ export function playGantry(svg) {
   const gantry = svg.querySelector("#clayton-clipper"),
     span = +gantry?.dataset.span;
   // a walk that has just handed over half way (gantry.dataset.halfway) is followed by the rest of the normal move
-  return hasWalk(span) && gantry.dataset.halfway !== "true" ? playBeforeCrawl(svg) : playNormalMove(svg);
+  return hasWalk(span) && gantry.dataset.halfway !== "true" ? startWalk(svg) : playNormalMove(svg);
 }
 
 /** The pose under way (poseGantry()), for Play to wait for. */
@@ -48,7 +47,7 @@ let posing = Promise.resolve();
 export function poseGantry(svg) {
   const gantry = svg?.querySelector("#clayton-clipper");
   if (!gantry || !gantry.getBoundingClientRect().width || !walkPartWay(+gantry.dataset.span)) return posing;
-  posing = posing.then(() => playBeforeCrawl(svg, { pose: true })).catch(() => {});
+  posing = posing.then(() => startWalk(svg, { pose: true })).catch(() => {});
   return posing;
 }
 

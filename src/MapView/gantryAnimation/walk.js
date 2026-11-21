@@ -1,13 +1,12 @@
-// The walks over the double girder spans: the Highway 15 crossing (spans 43 to 47, from span 41) and the crossing over
-// spans 52 to 54 (from span 50), each from where the crews have the supports at the start (placeNowLayout() in
-// beforeCrawl.js: A and C half way through the normal move, the short support off its long blue legs 15 ft behind A, B
+// The walks over the double girder spans: spans 43 to 47 (from span 41, across Highway 15) and spans 52 to 54 (from
+// span 50), each from where the crews have the supports at the start (placeNowLayout() in walkStart.js: A and C half way through the normal move, the short support off its long blue legs 15 ft behind A, B
 // craned across the double girders at the first double girder joint, its deck facing west): the span after the start
-// built and the supports spread out a spacing apart (entry), the crawl over the double girder spans as a loop (four
+// built and the supports spread out a spacing apart (entry), the walk over the double girder spans as a loop (four
 // supports a spacing apart, the trolley carrying the back one to the front each time, no lifting jacks), and the supports
 // brought into the normal move's half-way layout for the move off the last double girder span (exit), where the normal
 // move takes over at its step 11. Worked out with the model of the move (every rule Mike gave, the tipping margin kept at
 // 3.93 or more) and played by walkPlayer.js. Positions are metres along the guideway's middle line from the back of the
-// span the walk starts from. See docs/double-girder/2-the-crawl.md.
+// span the walk starts from. See docs/double-girder/the-walk.md.
 
 import { playSteps } from "./walkPlayer.js";
 
@@ -29,7 +28,7 @@ const ENTRY_41 = [
 ];
 
 /**
- * The crawl: `times` carries, the trolley each time turning the back support lengthwise, carrying it over the others to
+ * The loop: `times` carries, the trolley each time turning the back support lengthwise, carrying it over the others to
  * `spacing` past the front one and turning it across the regular way (it lands on the girders' middle line by itself; B's
  * deck faces east again after its first carry), and the trusses moving on so their middle is over the third support from
  * the back, with the trolley parked over the support it carries next (over the front long support when that is the short
@@ -60,7 +59,7 @@ const EXIT_41 = [
 ];
 
 /**
- * The crossing over spans 52 to 54 from span 50, the same walk as the one from span 41 with the same rules (worked out with the same
+ * The walk over spans 52 to 54 from span 50, the same walk as the one from span 41 with the same rules (worked out with the same
  * model: the tipping margin 4.55 at the least, 15.3 in the normal move's steps 12 to 14), from the same kind of start: A
  * and C half way through the normal move, the short support across 15 ft behind A, and B craned across the double girders
  * at the 51/52 joint, its deck facing west (placeNowLayout(), as at span 41: nobody has seen this one yet). Positions are
@@ -79,7 +78,7 @@ const ENTRY_50 = [
 ];
 const LOOP_50 = { order: ["C", "S", "A", "B"], spacing: (240.42 - 79.2) / 10, times: 10 };
 /**
- * As the 41 crossing's: A to its place just behind the short support (238.41 m), C to the place the snap gives it on span
+ * As the 41 walk's: A to its place just behind the short support (238.41 m), C to the place the snap gives it on span
  * 55 (191.02 m), the trusses back until the trolley reaches behind C, and B back over C to one spacing behind it.
  */
 const EXIT_50 = [
@@ -93,11 +92,11 @@ const EXIT_50 = [
 const HALF_TRUSSES = 103.93 / 2;
 
 /**
- * The crossings, by the span the walk starts from: the last double girder span, where the normal move takes over (`last`);
+ * The walks, by the span each starts from: the last double girder span, where the normal move takes over (`last`);
  * the span built first (`built`); where the supports stand at the start (`start`, as placeNowLayout() puts them); the joints
  * at the far ends of the double girder spans before the last (`farJoint`); and the steps.
  */
-const CROSSINGS = {
+const WALKS = {
   41: {
     last: 47,
     built: 42,
@@ -139,7 +138,7 @@ function loopSteps({ start, entry, loop, exit }) {
   return steps;
 }
 
-/** A crossing's steps, start to end. */
+/** A walk's steps, start to end. */
 const walkSteps = (c) => [...c.entry, ...loopSteps(c), ...c.exit];
 
 /**
@@ -152,7 +151,7 @@ const walkSteps = (c) => [...c.entry, ...loopSteps(c), ...c.exit];
  * @returns {{ from: number, done: number }|null}
  */
 export function walkPartWay(S) {
-  for (const [from, c] of Object.entries(CROSSINGS)) {
+  for (const [from, c] of Object.entries(WALKS)) {
     if (S < c.built || S > c.last) continue;
     const steps = walkSteps(c);
     if (S === c.built) return { from: +from, done: steps.findIndex((st) => st.op === "fill") + 1 };
@@ -169,10 +168,10 @@ export function walkPartWay(S) {
 }
 
 /** Whether there is a walk from span S (41 or 50), or one under way on it (29 isn't worked out). */
-export const hasWalk = (S) => S in CROSSINGS || walkPartWay(S) != null;
+export const hasWalk = (S) => S in WALKS || walkPartWay(S) != null;
 
 /**
- * Plays the crossing on from its start (span S, about to build S + 1) and snaps the gantry onto the last double girder
+ * Plays the walk on from its start (span S, about to build S + 1) and snaps the gantry onto the last double girder
  * span, half way through its normal move, for the normal move to go on from step 11.
  * @param {object} m What the steps share (startMove()).
  * @param {number} [done] How many of the steps the crews have already made: played with no time (see walkPartWay).
@@ -180,7 +179,7 @@ export const hasWalk = (S) => S in CROSSINGS || walkPartWay(S) != null;
  * @returns {Promise<boolean>} true when it played, so playToEnd() goes on with the normal move.
  */
 export async function playWalk(m, done = 0, pose = false) {
-  const c = CROSSINGS[m.S];
+  const c = WALKS[m.S];
   if (!c) return false;
   return playSteps(m, walkSteps(c), c.last, { halfway: true, done, pose });
 }

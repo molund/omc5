@@ -1,6 +1,6 @@
-// The start of a crossing of the double girder spans (from span 41 or 50, about to build 42 or 51): the supports are set
+// The start of a walk over the double girder spans (from span 41 or 50, about to build 42 or 51): the supports are set
 // where the crews had them on Nov. 19 at span 41 (placeNowLayout()), and the walk (walk.js) plays from there. See
-// docs/double-girder/1-before-the-crawl.md.
+// docs/double-girder/README.md.
 
 import { gantryMoves, placeGantry, stackSupports } from "../../lib/placeGantry.js";
 import { UNITS_PER_METRE } from "../../lib/layerSwitches.js";
@@ -107,7 +107,7 @@ async function placeNowLayout(m) {
 }
 
 /**
- * The start of a crossing, from span 41 or 50, or from a span part way through one (walkPartWay() in walk.js): the
+ * The start of a walk, from span 41 or 50, or from a span part way through one (walkPartWay() in walk.js): the
  * supports set in the Nov. 19 layout, then the walk.
  * @param {SVGSVGElement} svg The map's <svg>, after placeGantry() has put the gantry on its span.
  * @param {{ pose?: boolean }} [options] pose: only set the gantry where the walk has it on a span part way through one
@@ -115,7 +115,7 @@ async function placeNowLayout(m) {
  * @returns {Promise<boolean>} true when the walk played and handed over to the normal move; false with `pose`, or when the
  * drawing has no gantry or no next span for placeGantry's rules to find.
  */
-export async function playBeforeCrawl(svg, { pose = false } = {}) {
+export async function startWalk(svg, { pose = false } = {}) {
   // part way through a walk (spans 42 to 47): the gantry is set up from the span the walk started on, see-through, and
   // its steps the crews have already made play with no time (walkPartWay in walk.js). With `pose`, only that, all of it
   // with no time, to show the gantry where the crews have it (poseGantry()); the gantry keeps status.yaml's span
@@ -136,7 +136,7 @@ export async function playBeforeCrawl(svg, { pose = false } = {}) {
     if (!m) return false;
     Object.assign(m, aimC(m));
     holders(m, "second", "front"); // TEMP
-    // a crossing starts where the crews had the supports on Nov. 19 at span 41 (placeNowLayout; the same at span 50); the
+    // a walk starts where the crews had the supports on Nov. 19 at span 41 (placeNowLayout; the same at span 50); the
     // walk goes on from there
     await placeNowLayout(m);
     return await playWalk(m, partWay?.done, pose);

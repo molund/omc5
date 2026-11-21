@@ -342,9 +342,8 @@ async function step1TrolleyToFourthSupport(m) {
 
 /**
  * Step 2: the trolley and the fourth support move forward together.
- * @param {number} [further] How much further than usual to carry it, in truss units (the move before a crawl uses it).
  */
-async function step2CarryFourthSupportForward(m, further = 0) {
+async function step2CarryFourthSupportForward(m) {
   debugLog("[gantry] step 2: CarryFourthSupportForward"); // TEMP
   const { svg, moveTrolley, moveFourth, S, N, alongOf, FOURTH_TURNS_AT, along, middle } = m;
   // THE FOURTH SUPPORT'S TRIP (steps 2 and 3): from where it starts (`middle`) towards the second support's place on the
@@ -362,7 +361,7 @@ async function step2CarryFourthSupportForward(m, further = 0) {
     await moveFourth({ ...m.fourth, turn: m.fourth.turn + 90 }, 2000);
     await pause(500);
   }
-  const leg1 = fourthTrip * FOURTH_TURNS_AT + further;
+  const leg1 = fourthTrip * FOURTH_TURNS_AT;
   const step = along(leg1);
   await Promise.all([
     moveTrolley(m.trolleyY + leg1, 2500),

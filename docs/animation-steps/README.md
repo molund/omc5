@@ -2,7 +2,7 @@
 
 The steps of the Clayton Clipper's normal move in `src/MapView/gantryAnimation/normalMove.js`, with the gantry, concrete guideway supports and finished spans
 after each one. Over the double girder spans 43 to 47 and 52 to 54 the gantry walks instead, and the normal move takes over
-half way, from step 11 (see [`../double-girder/2-the-crawl.md`](../double-girder/2-the-crawl.md)). The pictures are from the Horizontal view, on the gantry's move from span 103 to span 104.
+half way, from step 11 (see [`../double-girder/the-walk.md`](../double-girder/the-walk.md)). The pictures are from the Horizontal view, on the gantry's move from span 103 to span 104.
 
 In the step pictures, A, B and C mark the gantry's three wide supports. Each letter stays with its piece of the drawing
 as it moves. The front support isn't lettered: it is always the front one.
