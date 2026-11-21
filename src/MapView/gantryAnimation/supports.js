@@ -2,7 +2,7 @@
 // moveFourth(), which poses it in the map's frame, so these helpers do what a slider does for it.
 
 /** Where Support C's middle is on the map now: where it started, plus its moves (m.fourth). */
-export const cMiddle = (m) => ({ x: m.middle.x + m.fourth.x, y: m.middle.y + m.fourth.y });
+const cMiddle = (m) => ({ x: m.middle.x + m.fourth.x, y: m.middle.y + m.fourth.y });
 
 /**
  * Turns Support C about a point on the map, the way a slider's swing does for the trusses: its middle goes round the pivot

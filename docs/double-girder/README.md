@@ -1,133 +1,47 @@
-# Double girder spans: planning the animation
+# Double girder spans
 
-What the Clayton Clipper is expected to do at the three double girder stretches (span 31, spans 43 to 47 and spans 52 to 54),
-and the one-off moves at spans 30, 42 and 51 that set them up. The new code has to work on 31 too, which follows the same
-rules as the other two. The move before each crawl is built (file 1, `beforeCrawl.js`); the crawl and the move after it are
-not. The goal is to work out what happens next so the animation can be ready before the gantry gets there, with the real
-figures dropped in later.
+Spans 31, 43 to 47 and 52 to 54 have two precast girders instead of a gantry-built box, so the gantry can't set its
+front support down on them the normal way. It walks over them instead, for spans 43 to 47 (from span 41) and 52 to 54
+(from span 50). The walk over span 31 (from span 29) isn't worked out, and the normal move plays there.
 
-Everything is Mike's description from watching the site, unless it says "inferred". Inferred means Claude worked it out
-from what Mike said and it still needs checking against what actually happens.
+- [`the-walk.md`](the-walk.md): the walk, step by step, and starting part way through it.
+- [`code-layout.md`](code-layout.md): how the animation code is laid out.
 
-## The steps live in three files, and one for the code
+## What happens
 
-Read them in this order:
+1. **The span in front of the double girders (42, or 51) is built** with the supports in a one-off layout (below).
+2. **The gantry walks over the double girders** on its four supports: the trolley carries the back support over the
+   others to the front, again and again, with no lifting jacks.
+3. **At the end** the short support stands on the hammerhead at the end of the last double girder span (47/48, or 54/55),
+   with A just behind it, and the normal move takes over half way through, carrying the short support on to the next
+   tulip (48/49, or 55/56).
 
-1. [`1-before-the-crawl.md`](1-before-the-crawl.md): the one-off move at span 42 (or 51, or 30), as the animation plays it: the
-   short support is moved around and sent ahead by crane, and Support C takes the front support's place across the girders.
-2. [`2-the-crawl.md`](2-the-crawl.md): the crawl over the double girder spans on the three long supports: the leapfrog, and
-   `Dmax`, `Smin` and `L`.
-3. [`3-after-the-crawl.md`](3-after-the-crawl.md): the one-off move at the end: the move over span 48 (or 55 / 56) and the
-   return to the normal cycle. Deferred: it will be planned later, once Mike has seen where the crawl finishes.
-4. [`code-layout-and-refactor.md`](code-layout-and-refactor.md): how the animation code is laid out, and a proposed refactor.
+The front support can't follow the usual cycle at span 42 because the westbound girder at span 43 sits where it would
+land; at span 51 it is the westbound girder at span 52.
 
-This file holds what they share.
+## Where a walk starts
 
-## The short version
+Observed on Nov. 19 at span 41, and assumed the same at span 50 (nobody has seen that one yet):
 
-- On a double girder span the gantry doesn't place its front support on a concrete support. It crawls over the span on
-  its three long supports and the trolley crane.
-- Before each crawl, the front support is moved ahead to the next support after the double girder section (the support at the
-  section's far end counts as part of the section), so it is
-  waiting there when the gantry arrives. On site it takes three steps: the trolley crane lifts it onto a flatbed, the
-  flatbed carries it to that support, and a crane lifts it onto the support. The animation shows only the first part, and
-  the support is moved twice. First the trolley crane carries it forward, turns it, carries it back, turns it again and sets
-  it down behind Support C. Later it carries it back, turns it lengthwise and carries it into the unfinished span, and then
-  the support disappears while the trolley is still holding it and reappears on its new support further down the line, at
-  the end of span 48 (or 55, or 32). File 1 has the steps.
-- That happens three times: span 30 (before the crawl over span 31), span 42 (front support to the tulip between spans 48
-  and 49) and span 51 (front support to the tulip between spans 55 and 56).
+- **Support A** in its place half way through the normal move (after step 10): at the 41/42 tulip, in front.
+- **Support C** in its place half way through the normal move (after step 4).
+- **The short support** off its long blue legs, standing across the guideway 15 ft behind A, its deck facing west.
+- **Support B** craned across the double girders at their near end (42/43), its deck facing west, its wheel assemblies
+  slid along its beam over span 42.
+- **The trusses** where `placeGantry()` puts them on span 41.
 
-| Gantry is on | Crane move                              | Crawl over     | Front support waits at                                           |
-| ------------ | --------------------------------------- | -------------- | ---------------------------------------------------------------- |
-| Span 30      | Same again                              | Span 31        | Hammerhead between 32 / 33, centred on the gantry-built guideway |
-| Span 42      | Front support moved ahead of the gantry | Spans 43 to 47 | Tulip between 48 / 49                                            |
-| Span 51      | Same again (confirmed by Mike)          | Spans 52 to 54 | Tulip between 55 / 56                                            |
+## The rules
 
-Double girder spans: 31, 43, 44, 45, 46, 47, 52, 53, 54. The gantry follows the same pattern on every one of them, for
-engineering and operational simplicity. The concrete supports underneath are irrelevant to it. They only mattered before
-because the front support had to land on one.
+- The tipping margin stays at 3.93 : 1 or more.
+- The trusses only move while the trolley sits still over a long support (A, B or C) standing across.
+- The short support may hold the trusses, but never during a swing.
+- No support is set down lengthwise on the double girders, and a support is carried lengthwise when it passes over others.
+- The long supports stand far enough apart to turn across (about 15.5 m).
+- A long support's wheel assemblies slide along its beam, so the trusses can move across on it; the short support's
+  hardly move.
+- The trolley can't come closer to the blue tips at either end than half a tip's length.
 
-## Why spans 30, 42 and 51 are different
+## Open
 
-The westbound precast girder at span 43, the first double girder span, is sitting where the front support would normally
-land. It is the westbound girder at 43 that blocks it, not the eastbound girder at 42. At span 51 the blocker is the
-westbound girder at span 52, and span 51 has no eastbound girder. The front support can't go there, so it can't follow the
-usual cycle (steps 12 to 16 in [`../animation-steps/README.md`](../animation-steps/README.md)).
-
-Spans 30, 42 and 51 are not in the double girder list. They are the irregular ones that set up the crawl.
-
-## No tower
-
-Spans 30, 42 and 51 have no tower and no segments under the front support. It is set down on a real concrete support (the
-tulip). The temporary tower used at the extra long span 29, and the temporary structure for span 50, are ignored here. The gantry
-is on span 29 and span 50 when the one-off moves to 30 and 51 start, and those follow the same rule as the move from 41 to 42.
-
-## Ballast (not animated)
-
-A guideway segment is used as extra ballast only on moves that use the front lifting jacks. On those moves, the rules, as
-Mike describes them:
-
-- When the trolley anchors itself over a gantry support to move the trusses, it is always holding the ballast segment.
-- Any time the trolley needs to move a support, it puts the ballast down first.
-
-The ballast doesn't need to be drawn. The crawl itself (the three long supports and the trolley crane) doesn't use it, so
-it doesn't enter `Dmax`. It only matters for the two moves that use the front jacks, the one at the start (file 1) and the
-one at the end (file 3), and neither is part of `L`. The ballast is a concrete segment (Mike's "guideway support"). Its weight isn't needed.
-
-## When the trusses can move (new)
-
-The trusses can only move while the trolley crane is sitting still over one of the three long supports (A, B or C). This is
-true of every truss move, in the normal move, before the crawl, in the crawl and after it. Over the short support, or
-between supports, they don't move. File 2 has the detail, and checks it against file 1 (no truss move there breaks it).
-
-## Where this touches the code today
-
-- `DOUBLE_GIRDER` in `src/lib/doubleGirder.js` here, and `src/lib/doubleGirder.js` in molund/omc5-admin. Keep them the same.
-- On a double girder span only the gantry's arrival is logged: no Hung and no cycle steps. The progress card shows the
-  span as it is (the one-less rule, `cardSpan`, was dropped on Nov. 20).
-- The move before a crawl is `src/MapView/gantryAnimation/beforeCrawl.js`. `playGantry` in `gantryAnimation.js` plays it when
-  the gantry is on span 29, 41 or 50 (`BEFORE_CRAWL`), and the normal move otherwise. It reuses some of `normalMove.js`'s step
-  functions.
-- The animation (`src/MapView/gantryAnimation/normalMove.js`) draws Support C turned across the span on a double girder span, with a
-  quarter turn when it picks it up. The existing move still puts the front support on a concrete support. The crawl
-  would replace that on these spans.
-- Leash Log: the stage picker is fixed to "arrived at span" on a double girder span (`stageToPost` in
-  `src/components/StagePicker.js`).
-
-## Settled
-
-- Nov. 19, observed: a mobile crane lifted Support B, not the short support, across the double girders at the 42/43 joint
-  (deck facing west). A took the front position at the 41/42 tulip, C went to its usual mid-cycle place, and the short
-  support came off its long blue legs and was set down across the guideway 15 ft behind A. From span 41 the animation now starts there (file 1).
-- When the crane move happens: right after Support C is set down behind the forward support, before the trusses move back
-  for Support B (Mike, Nov. 15).
-- Which support goes behind the forward support: Support C, not A.
-- The flatbed, the crane that lifts the support onto its new support, and the ballast aren't animated. Their type and model
-  don't matter, and neither does how many flatbeds there are. The trolley crane is animated: it picks up the front support
-  and carries it, the support disappears while the trolley is holding it, and it reappears on its new support (file 1 has
-  the moves).
-- Only the front support gets moved by the flatbed. Settled from theory, not observation.
-- Span 30's front support goes to the hammerhead between 32 and 33, not a tulip, centred on the unfinished gantry-built
-  guideway in the drawing and not on the whole hammerhead.
-- The same placing code is used at spans 30, 42 and 51: centre the front support on the unfinished gantry-built guideway in the
-  drawing. On a tulip that guideway is already centred, so either target works there. Using the same code in all three
-  places is simpler.
-- Span 31 follows the same rules as the other two double girder stretches, and the new code works on it. The moves from 29 to 30, 41 to 42 and 50 to 51 follow the same rule. The tower at 29 and the structure for 50 are ignored.
-- `2 x Dmax` won't be calculated: Mike fills it in from observation, for example "it moved about 2/3 the length of a span".
-- The trolley's limit on the trusses (background only): it can't go past the same place the animation stops it at the rear (just short of the
-  blue tips), and the same relative place at the front.
-- Support C, not Support B, is carried to the front support's place and set across both girders (centred on them, with its
-  wheels on the unfinished span). B is the counterweight on the rear lifting jacks and is moved later. Built; file 1 has it.
-- The ballast is a concrete segment. Its weight isn't needed.
-- The Leash Log changes for this are already planned, with the rules, in the handover document, so they aren't tracked here.
-- The leapfrog and the limits on `Dmax` are in file 2.
-- `L` does not include the move at the start or the move at the end, which both use the front lifting jacks and the ballast.
-- Whether a girder is in the way during the crawl doesn't matter: ignore it.
-
-## Open questions
-
-- Deferred to a later plan, after seeing where the crawl finishes: everything in file 3, including how the gantry hands over
-  from Support B to the waiting front support at the tulip.
-- The observed value of `2 x Dmax`, filled in by Mike from the ground (it isn't calculated), and how many moves each section needs
-  from the span lengths on the map. (File 2.)
+- The walk over span 31, from span 29.
+- Whether the crews set span 50 up the way they set span 41 up.

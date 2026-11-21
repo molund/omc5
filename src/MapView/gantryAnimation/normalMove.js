@@ -330,7 +330,7 @@ function prepare(svg, els, unseen) {
 }
 
 /** Step 1: the trolley slides to the fourth support, and the hangers the fill put on come down. */
-export async function step1TrolleyToFourthSupport(m) {
+async function step1TrolleyToFourthSupport(m) {
   debugLog("[gantry] step 1: TrolleyToFourthSupport"); // TEMP
   const { trolleyAt, beamAt, moveTrolley } = m;
   // 1. the trolley slides from where it is (back at its start, after the fill) to stop over the middle of the fourth
@@ -342,9 +342,8 @@ export async function step1TrolleyToFourthSupport(m) {
 
 /**
  * Step 2: the trolley and the fourth support move forward together.
- * @param {number} [further] How much further than usual to carry it, in truss units (the move before a crawl uses it).
  */
-export async function step2CarryFourthSupportForward(m, further = 0) {
+async function step2CarryFourthSupportForward(m) {
   debugLog("[gantry] step 2: CarryFourthSupportForward"); // TEMP
   const { svg, moveTrolley, moveFourth, S, N, alongOf, FOURTH_TURNS_AT, along, middle } = m;
   // THE FOURTH SUPPORT'S TRIP (steps 2 and 3): from where it starts (`middle`) towards the second support's place on the
@@ -362,7 +361,7 @@ export async function step2CarryFourthSupportForward(m, further = 0) {
     await moveFourth({ ...m.fourth, turn: m.fourth.turn + 90 }, 2000);
     await pause(500);
   }
-  const leg1 = fourthTrip * FOURTH_TURNS_AT + further;
+  const leg1 = fourthTrip * FOURTH_TURNS_AT;
   const step = along(leg1);
   await Promise.all([
     moveTrolley(m.trolleyY + leg1, 2500),
@@ -372,7 +371,7 @@ export async function step2CarryFourthSupportForward(m, further = 0) {
 }
 
 /** Step 3: the fourth support turns to lie the way the second support will on the next span. */
-export async function step3TurnFourthSupport(m) {
+async function step3TurnFourthSupport(m) {
   debugLog("[gantry] step 3: TurnFourthSupport"); // TEMP
   const { svg, moveFourth, N, nearest, fourthAngle, secondAngle } = m;
   // 3. the fourth support turns to lie the way the second support will on the next span: the second support's angle now
@@ -649,7 +648,7 @@ async function step17TrussesToHalfway(m) {
 }
 
 /** Step 18: the trolley slides back to stop over the third support. */
-export async function step18TrolleyToThirdSupport(m) {
+async function step18TrolleyToThirdSupport(m) {
   debugLog("[gantry] step 18: TrolleyToThirdSupport"); // TEMP
   const { trolleyAt, thirdAt, moveTrolley, trusses, third } = m;
   // 18. the trolley slides back to stop over the third support, now the one at the rear. The third support is where it
@@ -660,7 +659,7 @@ export async function step18TrolleyToThirdSupport(m) {
 }
 
 /** Step 19: the third support turns to lie lengthwise. */
-export async function step19TurnThirdSupportLengthwise(m) {
+async function step19TurnThirdSupportLengthwise(m) {
   debugLog("[gantry] step 19: TurnThirdSupportLengthwise"); // TEMP
   const { svg, third, S, N, nearest, thirdStart, fourthAngle, thirdAngle, along } = m;
   // WHICH WAY THE FOURTH SUPPORT LIES ON THE NEXT SPAN, on span S (just behind it): lengthwise, or turned across on a
@@ -721,25 +720,6 @@ async function step20CarryThirdSupportToFourthPlace(m) {
   }
 }
 
-/**
- * Step 20, handed over from a walk with the fourth support already about on its place on the next span (playSecondHalf):
- * the trolley carries the third support straight to its own place there, the rear support's (placeGantry's), standing
- * across as it is: no other support is in the way, so it isn't turned lengthwise.
- * @param {object} m The shared object.
- * @param {{ x: number, y: number }} to Its place on the next span (placesOn()).
- */
-async function step20CarryThirdSupportToRearPlace(m, to) {
-  debugLog("[gantry] step 20: CarryThirdSupportToRearPlace"); // TEMP
-  const { moveTrolley, third, alongOf, thirdStart, along } = m;
-  const thirdNow = along(third.at),
-    gap = { x: to.x - (thirdStart.x + thirdNow.x), y: to.y - (thirdStart.y + thirdNow.y) },
-    forward = alongOf(gap),
-    straight = along(forward),
-    sideways = { x: gap.x - straight.x, y: gap.y - straight.y };
-  await Promise.all([third.by(forward, 2500, sideways), moveTrolley(m.trolleyY + forward, 2500)]);
-  await pause(500);
-}
-
 /** Step 21: the trolley slides to stop over the fourth support. */
 async function step21TrolleyOverFourthSupport(m) {
   debugLog("[gantry] step 21: TrolleyOverFourthSupport"); // TEMP
@@ -751,12 +731,8 @@ async function step21TrolleyOverFourthSupport(m) {
   await pause(500);
 }
 
-/**
- * Step 22: the trusses slide forward until their front ends are just past the front support.
- * @param {object} m The shared object.
- * @param {SVGGraphicsElement} [support] The support to go just past (the front support unless another move says so).
- */
-export async function step22TrussesPastFrontSupport(m, support = m.frontBeam) {
+/** Step 22: the trusses slide forward until their front ends are just past the front support. */
+async function step22TrussesPastFrontSupport(m) {
   debugLog("[gantry] step 22: TrussesPastFrontSupport"); // TEMP
   const { gantry, truss, ahead, moveTrolley, trusses } = m;
   // 22. the trusses slide forward until their front ends (where the yellow truss lines stop) are just past the front
@@ -768,27 +744,22 @@ export async function step22TrussesPastFrontSupport(m, support = m.frontBeam) {
   const GAP = 2;
   const lines = [...gantry.querySelectorAll(".clipper-truss line")].map((l) => reachIn(l, truss)),
     trussFront = ahead > 0 ? Math.max(...lines.map((r) => r.hi)) : Math.min(...lines.map((r) => r.lo)),
-    supportReach = reachIn(support, truss),
+    supportReach = reachIn(m.frontBeam, truss),
     supportFront = ahead > 0 ? supportReach.hi : supportReach.lo,
     past = supportFront + ahead * GAP - trussFront;
   await Promise.all([trusses.by(past, 2500), moveTrolley(m.trolleyY - past, 2500)]);
   await pause(500);
 }
 
-/**
- * Step 23: the trusses turn and shift onto the line they have on the next span.
- * @param {object} m The shared object.
- * @param {SVGGraphicsElement} [pivotBeam] The beam of the support they swing about (the fourth support unless another move
- * says so).
- */
-export async function step23TurnTrussesOntoNextSpan(m, pivotBeam = m.beam) {
+/** Step 23: the trusses turn and shift onto the line they have on the next span. */
+async function step23TurnTrussesOntoNextSpan(m) {
   debugLog("[gantry] step 23: TurnTrussesOntoNextSpan"); // TEMP
   const { svg, gantry, unseen, truss, trusses, N, deg, small, trussLine, startDir } = m;
   // 23. the trusses turn and shift onto the line they have on the next span: through N.body.to (where their middle goes)
   // at their angle at the start plus their turn on the move (N.body.turn). They swing about the fourth support's middle,
   // where the trolley is parked, after a shift straight across: the shift has to put their middle line through the
   // point that the swing then carries onto N.body.to, which is N.body.to turned back about the pivot.
-  const fourthMid = centreIn(pivotBeam, svg),
+  const fourthMid = centreIn(m.beam, svg),
     { at: lineAt, dir: lineDir } = trussLine(between(truss, svg)),
     lineUp = small(deg(startDir) + N.body.turn - deg(lineDir)),
     turnBack = (-lineUp * Math.PI) / 180,
@@ -817,7 +788,7 @@ export async function step23TurnTrussesOntoNextSpan(m, pivotBeam = m.beam) {
 }
 
 /** Step 24: the trusses slide forward onto their place on the next span. */
-export async function step24SlideTrussesToNextSpan(m) {
+async function step24SlideTrussesToNextSpan(m) {
   debugLog("[gantry] step 24: SlideTrussesToNextSpan"); // TEMP
   const { svg, gantry, trolley, unseen, truss, ahead, moveTrolley, trusses, trussMiddleY, N, trussesMiddle } = m;
   // by() takes a slide as an x, y move on the map: a move of 1 along the trusses as they lie now is (c, d) of the truss
@@ -865,14 +836,14 @@ export async function step24SlideTrussesToNextSpan(m) {
 }
 
 /** Step 25: the trolley drives to the middle support while the trusses slide the rest of the way (steps 25 and 26). */
-export async function step25TrolleyToMiddleSupportAndSlideRest(m, nextBeam = m.secondBeam) {
+async function step25TrolleyToMiddleSupportAndSlideRest(m) {
   debugLog("[gantry] step 25: TrolleyToMiddleSupportAndSlideRest"); // TEMP
   const { unseen, truss, trolleyAt, moveTrolley, trusses, slide20, forward20, firstSlide, rest } = m;
   // 25. the trolley drives on its own to stop over the middle support (secondBeam), the next support ahead of it that lies
   // across the guideway: the third support, between it and the trolley, lies lengthwise, so it doesn't count. It is measured on the trusses as they lie now, after the
   // slide so far. Skipped when the trusses have no slide left.
   if (!unseen(Math.hypot(slide20.x - firstSlide.x, slide20.y - firstSlide.y))) {
-    await moveTrolley(centreIn(nextBeam, truss).y - trolleyAt.y, 2500);
+    await moveTrolley(centreIn(m.secondBeam, truss).y - trolleyAt.y, 2500);
     await pause(500);
 
     debugLog("[gantry] step 26: SlideRestOfTheWay"); // TEMP
@@ -896,7 +867,7 @@ async function step27TrolleyBackToStart(m) {
 }
 
 /** Step 28: the drawing snaps to the next span. */
-export async function step28SnapToNextSpan(m) {
+async function step28SnapToNextSpan(m) {
   debugLog("[gantry] step 28: SnapToNextSpan"); // TEMP
   const { svg, gantry, S } = m;
   // 28. the drawing is reset as if status.yaml said the next span with `hung: false`, as MapView draws it when the page
@@ -1032,18 +1003,15 @@ export async function playNormalMove(svg) {
 async function playSecondHalf(m, handOff = false) {
   m.secondGap ??= { x: 0, y: 0 };
   m.backUp ??= 0;
-  // handed over from a walk (walk.js): the supports stand where the walk left them, not where this move's first half
-  // would have put them. When the fourth support already stands about where placeGantry() puts it on the next span, the
-  // third support only has to go to its own place there (the rear one) instead of the fourth's: see step 20 below
-  const places = handOff ? placesOn(m.svg, m.S + 1) : null,
-    fourthNow = places && centreIn(m.beam, m.svg),
-    toRearPlace =
-      places &&
-      Math.hypot(fourthNow.x - places.fourth.to.x, fourthNow.y - places.fourth.to.y) <
-        Math.hypot(fourthNow.x - places.rear.to.x, fourthNow.y - places.rear.to.y);
-  // the front support goes onto the place the snap gives it too (N's keeps how far across it stands now: under the trusses'
-  // middle line in a walk, not where placeGantry() draws it)
-  if (places) m.N.front.to = places.front.to;
+  // handed over from a walk (walk.js): the supports stand where the walk left them, not where this move's first half would
+  // have put them, so the front support and the third support go onto the places the snap gives them on the next span
+  // (N's are measured from where the supports stand now: the front support's keeps how far across it stands, under the
+  // trusses' middle line in a walk, and the fourth support's place runs past the span behind when it isn't on its own)
+  if (handOff) {
+    const places = placesOn(m.svg, m.S + 1);
+    m.N.front.to = places.front.to;
+    m.N.fourth.to = places.fourth.to;
+  }
   holders(m, "fourth", "front"); // TEMP
   await step11TrolleyBackToFourthSupport(m);
   await step12TrussesBackForFrontSupport(m);
@@ -1056,13 +1024,8 @@ async function playSecondHalf(m, handOff = false) {
   holders(m, "fourth", "front"); // TEMP
   await step17TrussesToHalfway(m);
   await step18TrolleyToThirdSupport(m);
-  if (toRearPlace) await step20CarryThirdSupportToRearPlace(m, places.rear.to);
-  else {
-    // the fourth support's place on the next span as the snap puts it (N's is measured from where it stands now)
-    if (places) m.N.fourth.to = places.fourth.to;
-    await step19TurnThirdSupportLengthwise(m);
-    await step20CarryThirdSupportToFourthPlace(m);
-  }
+  await step19TurnThirdSupportLengthwise(m);
+  await step20CarryThirdSupportToFourthPlace(m);
   await step21TrolleyOverFourthSupport(m);
   await step22TrussesPastFrontSupport(m);
   await step23TurnTrussesOntoNextSpan(m);

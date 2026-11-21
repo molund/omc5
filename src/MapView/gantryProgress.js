@@ -117,7 +117,7 @@ export function gantryProgress(root, complete) {
 }
 
 // Completed westbound spans ahead of the gantry: the spans numbered past it whose westbound track is already finished (crane
-// spans the Clayton Clipper will crawl over). A piece is westbound when it lies on the westbound side of its span's centre line,
+// spans the Clayton Clipper will walk over). A piece is westbound when it lies on the westbound side of its span's centre line,
 // the line between the bents at either end (the bent cap, rect.g, nearest the midpoint of each pair of labels). Westbound is
 // the side of positive cross product with the direction of increasing span numbers: where the gantry's own boxes are at
 // spans 31-42.
