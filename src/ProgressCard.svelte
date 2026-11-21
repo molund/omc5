@@ -14,7 +14,6 @@
   } from "./lib/appState/appState.svelte.js";
   import { status, asOf, dayOf } from "./lib/status.js";
   import { inline } from "./lib/inline.js";
-  import { cardSpan } from "./lib/placeGantry.js";
   import { term, fetchCounts, SITE } from "./lib/comments.js";
   import { track } from "./lib/track.js";
   import Icon from "./Icon.svelte";
@@ -60,7 +59,7 @@
       "<strong>Built ahead by mobile cranes.</strong> Parallel guideways count as one position. Single guideways do not count.",
     total: "<strong>Route total.</strong> Parallel guideways count as one position.",
     percent: ui.gantry
-      ? `<strong>${cardSpan(ui.gantry.span)} \u00f7 ${ui.gantry.total}.</strong> Excludes the ${ui.gantry.ahead} built ahead.`
+      ? `<strong>${ui.gantry.span} \u00f7 ${ui.gantry.total}.</strong> Excludes the ${ui.gantry.ahead} built ahead.`
       : "",
     pace: "<strong>Approximate.</strong> Based on 2-3 site visits per day during the 168 hours preceding the last check-in. A statutory holiday extends the week by the hours without gantry work, up to 24. Significant figures are for entertainment purposes only.",
   });
@@ -224,7 +223,7 @@
   >
 {:else if ui.gantry}
   {@const { ahead, total } = ui.gantry}
-  {@const span = cardSpan(ui.gantry.span)}
+  {@const span = ui.gantry.span}
   {@const percent = (span / total) * 100}
   <div
     bind:this={card}

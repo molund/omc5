@@ -1,7 +1,6 @@
 // The Clayton Clipper's status as data for machines, written when the site is built (trackside/prerender.js): dist/status.json,
 // and the schema.org Dataset in the map page's <head> that describes it, so crawlers and apps can find and read it. It is
 // dedicated to the public domain (CC0 1.0). Plain JS, no Svelte, so the build can run it.
-import { cardSpan } from "./placeGantry.js";
 import { SITE } from "./comments.js";
 
 /** The route's span count, as the progress card's "of" figure (the span numbers in map.svg). */
@@ -30,7 +29,7 @@ export function bcTime(date) {
  * @returns {object}
  */
 export function statusData(status, points, builtAt = new Date()) {
-  const shown = status.span == null ? null : cardSpan(status.span);
+  const shown = status.span ?? null;
   const spansPerWeek = status.spansPerWeek == null || isNaN(+status.spansPerWeek) ? null : +status.spansPerWeek;
   return {
     name: "Clayton Clipper status",
@@ -58,8 +57,7 @@ export function statusData(status, points, builtAt = new Date()) {
     definitions: {
       span: "The Clayton Clipper span the gantry has arrived at: the span number goes up when the gantry moves there.",
       segmentsHung: "Whether all that span's segments are hung.",
-      shownOnCard:
-        "The span number the progress card shows: one less than `current` while the gantry is on a double girder span, where only its arrival is logged.",
+      shownOnCard: "The span number the progress card shows: the same as `current`.",
       velocity:
         "An estimate of how far the gantry gets in a week, in spans, worked out from site visits and the weekly shutdown; see `method`.",
     },
