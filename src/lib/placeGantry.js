@@ -212,6 +212,14 @@ export function gantryMoves(root, D, S) {
   };
   const joint = (n) => {
     if (labels[n] && labels[n + 1]) return nearest(caps, mid(labels[n], labels[n + 1]))[0];
+    // the start of the line: no label for span n (before span 1), so on back from span 1's label, the way span 2's label
+    // points, to where joint n/n+1 would be (half a span back for 0/1, a span and a half for −1/0); the nearest cap counts
+    // only if it is within a quarter span of that, as at the end
+    if (n < 1 && labels[1] && labels[2]) {
+      const on = sub(labels[2], labels[1]),
+        [cap, d] = nearest(caps, add(labels[1], mul(on, n - 0.5)));
+      return d < Math.hypot(on.x, on.y) / 4 ? cap : null;
+    }
     // the end of the line: no label after span n, so half a span on from its label, the way the label before it points;
     // the nearest cap counts only if it is within a quarter span of that, so there is no joint past the last cap
     if (!labels[n] || !labels[n - 1]) return null;
