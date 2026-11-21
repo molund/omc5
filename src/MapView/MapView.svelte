@@ -179,6 +179,11 @@
   const EDGE_COMFORT = 0.25;
   /** How long such a pan takes, in milliseconds. */
   const PAN_TIME = 1000;
+  /**
+   * How much of forward has to go along an axis of the screen (the cosine of its angle to the axis) for the map to pan
+   * along it: 0.2 leaves out an axis within about 12 degrees of square to the route.
+   */
+  const FORWARD_AXIS = 0.2;
 
   /**
    * Scrolls the map by (dx, dy) screen pixels, eased in and out like the zoom in frameGantry. Each frame adds its share of
@@ -217,19 +222,25 @@
   function forwardOnScreen(gantry) {
     const span = +gantry.dataset.span,
       label = (n) => [...els.svg.querySelectorAll("text.ccnumber")].find((t) => +t.textContent.trim() === n),
-      a = label(span)?.getBoundingClientRect(),
-      b = label(span + 1)?.getBoundingClientRect();
+      // where a label is on the screen, from its own x and y: the views that hide the span numbers leave them no box to
+      // measure, but their place still follows the drawing's transforms
+      at = (t) => {
+        const m = t?.getScreenCTM();
+        return m && new DOMPoint(+t.getAttribute("x"), +t.getAttribute("y")).matrixTransform(m);
+      },
+      a = at(label(span)),
+      b = at(label(span + 1));
     if (!a || !b) return { x: -1, y: 0 };
-    const v = { x: b.left + b.width / 2 - (a.left + a.width / 2), y: b.top + b.height / 2 - (a.top + a.height / 2) };
+    const v = { x: b.x - a.x, y: b.y - a.y };
     const l = Math.hypot(v.x, v.y);
     return l ? { x: v.x / l, y: v.y / l } : { x: -1, y: 0 };
   }
 
   /**
-   * Keeps the front of the gantry on the screen while it animates, leaving the map still while it can. Only the forward edge
-   * counts: the map pans when the front end of the trusses is within EDGE_MARGIN of the stage's edge in the forward
-   * direction (the left edge on a desktop window, where forward is west) and the gantry is moving forward. The other edges,
-   * the rear one included, never move it. The pan is just far enough to put the front end EDGE_COMFORT in from that edge. It
+   * Keeps the front of the gantry on the screen while it animates, leaving the map still while it can. Only the forward
+   * edges count: the map pans when the front end of the trusses is within EDGE_MARGIN of a stage edge in the forward
+   * direction (the left edge on a desktop window, where forward is west, and the top or bottom one too where the route runs
+   * diagonally, as in Progress) and the gantry is moving forward. The other edges, the rear ones included, never move it. The pan is just far enough to put the front end EDGE_COMFORT in from that edge. It
    * is the trusses that are measured, not the whole gantry, which also holds the supports that are moved far ahead. It stops
    * when the animation does. Panning by hand is not undone, except during a pan of its own.
    * @returns {void}
@@ -267,14 +278,20 @@
             },
             f = stage.getBoundingClientRect(),
             fwd = forwardOnScreen(gantry),
-            // forward goes along one axis of the screen or the other; the other axis never pans
-            alongX = Math.abs(fwd.x) >= Math.abs(fwd.y),
             // how far it went forward since the last frame, under half a pixel being jitter (a turn of the trusses can
             // shift the middle a little)
             forwardMoved = move.x * fwd.x + move.y * fwd.y,
             moved = forwardMoved < 0.5 ? 0 : forwardMoved,
-            dx = alongX ? need(box.left, box.right, f.left, f.right, Math.sign(fwd.x), moved, f.width) : 0,
-            dy = alongX ? 0 : need(box.top, box.bottom, f.top, f.bottom, Math.sign(fwd.y), moved, f.height);
+            // each axis of the screen that forward goes along (both, where the route runs diagonally, as in Progress), or
+            // not at all when forward is all but square to it
+            dx =
+              Math.abs(fwd.x) >= FORWARD_AXIS
+                ? need(box.left, box.right, f.left, f.right, Math.sign(fwd.x), moved, f.width)
+                : 0,
+            dy =
+              Math.abs(fwd.y) >= FORWARD_AXIS
+                ? need(box.top, box.bottom, f.top, f.bottom, Math.sign(fwd.y), moved, f.height)
+                : 0;
           if (Math.abs(dx) >= 1 || Math.abs(dy) >= 1) {
             panning = true;
             panBy(dx, dy).then(() => {
