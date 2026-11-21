@@ -1,3 +1,5 @@
+import { DOUBLE_GIRDER } from "./doubleGirder.js";
+
 /**
  * Where each support of the gantry goes on its span, keyed by the anchor's name. `span`: S plus this; `end`: which end of
  * that span; `edge`: which edge of the support is lined up with that end (the middle of the edge on the middle of the
@@ -13,19 +15,6 @@ const SUPPORTS = {
   rear: { span: -1, lies: -1, cap: "back", end: "back", edge: "rear", gap: 1 / 3 },
   fourth: { span: -1, lies: -1, along: true },
 };
-
-/**
- * Spans with two girders. The fourth support can't lie lengthwise on one of these, so on them it is turned across the span,
- * like the other supports, and centred across the double girder.
- */
-export const DOUBLE_GIRDER = new Set([31, 43, 44, 45, 46, 47, 52, 53, 54]);
-
-/**
- * The span number the progress card shows. status.yaml's span goes up when the gantry arrives at a span; on a double girder
- * span only the arrival is logged, so the card stays one behind until the gantry arrives at the next. Every other span (extra
- * long ones included) is shown as it is.
- */
-export const cardSpan = (span) => (DOUBLE_GIRDER.has(span) ? span - 1 : span);
 
 /**
  * Anchors the Clayton Clipper gantry to the span it is working on. #clayton-clipper is drawn for span data-drawn-at; this
@@ -144,6 +133,30 @@ const ctm = (el) => {
   const m = el.getScreenCTM();
   return new DOMMatrix([m.a, m.b, m.c, m.d, m.e, m.f]);
 };
+
+/**
+ * Where placeGantry() would put each part of the gantry on span S, wherever the parts stand now: gantryMoves() from the
+ * drawn layout, as placeGantry() works it out (the fourth support's place depends on where it starts, so measuring from
+ * where it stands would only give its place when it stands on its own place on span S − 1). Each group is put back
+ * where it is drawn just for the measuring, and back where it was straight after, with nothing drawn in between. The
+ * groups must have no animations on them (a move's own `transform` and `translate` would win over the attribute).
+ * @param {SVGSVGElement} root The map's <svg>.
+ * @param {number} S The span.
+ * @returns {Record<string, { from: { x: number, y: number }, to: { x: number, y: number }, turn: number }>|null} Each
+ * anchor's place (`to`), as in gantryMoves(); null when there is no gantry or no span for its rules to find.
+ */
+export function placesOn(root, S) {
+  const gantry = root.querySelector("#clayton-clipper");
+  if (!gantry) return null;
+  const groups = [...gantry.querySelectorAll(":scope > [data-anchor]")].filter((g) => g.dataset.drawnTransform != null),
+    now = groups.map((g) => g.getAttribute("transform"));
+  groups.forEach((g) => g.setAttribute("transform", g.dataset.drawnTransform));
+  try {
+    return gantryMoves(root, +(gantry.dataset.drawnAt || S), S)?.moves ?? null;
+  } finally {
+    groups.forEach((g, i) => (now[i] == null ? g.removeAttribute("transform") : g.setAttribute("transform", now[i])));
+  }
+}
 
 /**
  * Works out, without moving anything, where each part of the gantry goes to move it from span D to span S: the rules

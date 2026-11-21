@@ -8,7 +8,15 @@
   import { tagBuiltBy } from "./builtBy.js";
   import { gantryProgress } from "./gantryProgress.js";
   import { placeGantry } from "../lib/placeGantry.js";
-  import { playToEnd, stopGantry, holdGantry, resumeGantry, lowerSupports, FOLLOW_GANTRY } from "./gantryAnimation.js";
+  import {
+    playToEnd,
+    stopGantry,
+    poseGantry,
+    holdGantry,
+    resumeGantry,
+    lowerSupports,
+    FOLLOW_GANTRY,
+  } from "./gantryAnimation.js";
   import { status } from "../lib/status.js";
   import {
     layers,
@@ -74,6 +82,11 @@
   // the supports are drawn below the spans, as they stand under the guideway, in every view
   $effect(() => {
     if (ui.ready) lowerSupports(els.svg);
+  });
+  // on a span part way through a walk (42 to 47), the gantry stands where the walk has it, once it is showing (a frame
+  // after the Gantry layer turns on)
+  $effect(() => {
+    if (ui.ready && layers.gantry && !ui.gantryPlaying) untrack(() => requestAnimationFrame(() => poseGantry(els.svg)));
   });
 
   /** While the gantry animates, how much of the stage's width or height the whole gantry fills. */
@@ -195,22 +208,42 @@
   }
 
   /**
-   * Keeps the gantry on the screen while it animates, leaving the map still while it can. The map pans only when the
-   * gantry's box (its trusses and all four supports) is within EDGE_MARGIN of an edge of the stage, or past it, and the
-   * gantry is moving towards that edge. The pan is just far enough to put it EDGE_COMFORT in from that edge, along that
-   * axis only. If the gantry is bigger than the stage on an axis, its centre is kept in the stage's middle on that axis
-   * instead. It stops when the animation does. Panning by hand is not undone, except during a pan of its own.
+   * Which way is forward (towards higher span numbers) on the screen: the way from the label of the span the gantry is on to
+   * the label of the next one. Span numbers run westward on the map, so on a desktop window it is to the left; a turned view
+   * (vertical) turns it. Left when the labels can't be found.
+   * @param {Element} gantry The gantry, #clayton-clipper.
+   * @returns {{ x: number, y: number }} A unit vector on the screen.
+   */
+  function forwardOnScreen(gantry) {
+    const span = +gantry.dataset.span,
+      label = (n) => [...els.svg.querySelectorAll("text.ccnumber")].find((t) => +t.textContent.trim() === n),
+      a = label(span)?.getBoundingClientRect(),
+      b = label(span + 1)?.getBoundingClientRect();
+    if (!a || !b) return { x: -1, y: 0 };
+    const v = { x: b.left + b.width / 2 - (a.left + a.width / 2), y: b.top + b.height / 2 - (a.top + a.height / 2) };
+    const l = Math.hypot(v.x, v.y);
+    return l ? { x: v.x / l, y: v.y / l } : { x: -1, y: 0 };
+  }
+
+  /**
+   * Keeps the front of the gantry on the screen while it animates, leaving the map still while it can. Only the forward edge
+   * counts: the map pans when the front end of the trusses is within EDGE_MARGIN of the stage's edge in the forward
+   * direction (the left edge on a desktop window, where forward is west) and the gantry is moving forward. The other edges,
+   * the rear one included, never move it. The pan is just far enough to put the front end EDGE_COMFORT in from that edge. It
+   * is the trusses that are measured, not the whole gantry, which also holds the supports that are moved far ahead. It stops
+   * when the animation does. Panning by hand is not undone, except during a pan of its own.
    * @returns {void}
    */
   function followGantry() {
     let panning = false,
       before = null;
-    // how far to pan along one axis: low and high are the gantry's box and the stage's edges on that axis, move is the
-    // way the gantry went since the last frame
-    const need = (lo, hi, from, to, move, size) => {
-      if (hi - lo > to - from - 2 * EDGE_MARGIN * size) return move ? (lo + hi) / 2 - (from + to) / 2 : 0;
-      if (move < 0 && lo < from + EDGE_MARGIN * size) return lo - (from + EDGE_COMFORT * size);
-      if (move > 0 && hi > to - EDGE_MARGIN * size) return hi - (to - EDGE_COMFORT * size);
+    // how far to pan along one axis: low and high are the trusses' box and the stage's edges on that axis, forward is the
+    // way forward goes on that axis (-1 towards the low edge, 1 towards the high one) and moved is how far the gantry went
+    // that way since the last frame
+    const need = (lo, hi, from, to, forward, moved, size) => {
+      if (moved <= 0) return 0;
+      if (forward < 0 && lo < from + EDGE_MARGIN * size) return lo - (from + EDGE_COMFORT * size);
+      if (forward > 0 && hi > to - EDGE_MARGIN * size) return hi - (to - EDGE_COMFORT * size);
       return 0;
     };
     const look = () => {
@@ -218,16 +251,30 @@
       // while it's paused, the map is left where it is, so it can be panned around
       if (ui.gantryPaused) return requestAnimationFrame(look);
       const gantry = els.svg?.querySelector("#clayton-clipper");
-      if (gantry?.getBoundingClientRect().width) {
+      const trusses = gantry
+        ? [...gantry.querySelectorAll(".clipper-truss")].map((t) => t.getBoundingClientRect())
+        : [];
+      if (trusses.length && trusses[0].width) {
         const c = gantryCentre(gantry);
-        // under half a pixel a frame is jitter, not a move (and a turn of the trusses can shift the middle a little)
         const move = before ? { x: c.x - before.x, y: c.y - before.y } : { x: 0, y: 0 };
         before = c;
         if (!panning) {
-          const box = gantry.getBoundingClientRect(),
+          const box = {
+              left: Math.min(...trusses.map((r) => r.left)),
+              right: Math.max(...trusses.map((r) => r.right)),
+              top: Math.min(...trusses.map((r) => r.top)),
+              bottom: Math.max(...trusses.map((r) => r.bottom)),
+            },
             f = stage.getBoundingClientRect(),
-            dx = need(box.left, box.right, f.left, f.right, Math.abs(move.x) < 0.5 ? 0 : move.x, f.width),
-            dy = need(box.top, box.bottom, f.top, f.bottom, Math.abs(move.y) < 0.5 ? 0 : move.y, f.height);
+            fwd = forwardOnScreen(gantry),
+            // forward goes along one axis of the screen or the other; the other axis never pans
+            alongX = Math.abs(fwd.x) >= Math.abs(fwd.y),
+            // how far it went forward since the last frame, under half a pixel being jitter (a turn of the trusses can
+            // shift the middle a little)
+            forwardMoved = move.x * fwd.x + move.y * fwd.y,
+            moved = forwardMoved < 0.5 ? 0 : forwardMoved,
+            dx = alongX ? need(box.left, box.right, f.left, f.right, Math.sign(fwd.x), moved, f.width) : 0,
+            dy = alongX ? 0 : need(box.top, box.bottom, f.top, f.bottom, Math.sign(fwd.y), moved, f.height);
           if (Math.abs(dx) >= 1 || Math.abs(dy) >= 1) {
             panning = true;
             panBy(dx, dy).then(() => {
