@@ -1,0 +1,25 @@
+<script>
+  /** A caption over the gantry animation (captions.js): centred near the bottom of the map, above the credits. */
+  let { text = null } = $props();
+</script>
+
+{#if text}
+  <div class="caption-row">
+    <p class="map-number caption" aria-live="polite">{text}</p>
+  </div>
+{/if}
+
+<style>
+  @reference "../app.css";
+
+  /* across the bottom of the map, above the credits; taps go through to the map */
+  .caption-row {
+    @apply pointer-events-none absolute inset-x-0 bottom-10 z-10 flex justify-center;
+  }
+
+  /* the caption itself: black bold text with a white halo, like the map's span numbers (.map-number in app.css), with
+     nothing behind it, so the map shows through */
+  .caption {
+    @apply mx-4 max-w-md text-center text-lg leading-snug font-bold text-black;
+  }
+</style>

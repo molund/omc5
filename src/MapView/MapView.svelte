@@ -36,6 +36,8 @@
   } from "../lib/appState/appState.svelte.js";
   import { applyAddress } from "../lib/appState/hash.svelte.js";
   import ProgressCard from "../ProgressCard.svelte";
+  import Caption from "./Caption.svelte";
+  import { captionNow, clearCaptions } from "./captions.js";
   import { track, trackOnce } from "../lib/track.js";
 
   let stage;
@@ -46,6 +48,8 @@
   // can be told from a run that has reached its last span; `runs` keeps a stopped run's end from clearing a newer one.
   let running = false,
     runs = 0;
+  // the caption showing over the animation (captions.js), every 250 ms while it plays
+  let caption = $state(null);
   $effect(() => {
     if (!ui.gantryPlaying) return;
     untrack(() => {
@@ -55,9 +59,12 @@
       const t0 = clock(),
         tick = setInterval(() => {
           // not once the Reset button has cleared it
-          if (ui.gantryPlaying) ui.animationTime = (clock() - t0) / 1000;
+          if (!ui.gantryPlaying) return;
+          ui.animationTime = (clock() - t0) / 1000;
+          caption = captionNow();
         }, 250);
       ui.animationTime = 0;
+      clearCaptions();
       // an address with ?span=N puts the gantry on span N first (startFrom), the next frame, once the Gantry layer
       // animateGantry() may have just turned on is showing (a hidden gantry has no size)
       const from = ui.animateFrom,
@@ -75,6 +82,8 @@
         .then(() => run === runs && ui.gantryPlaying && playToEnd(els.svg))
         .finally(() => {
           clearInterval(tick);
+          clearCaptions();
+          caption = null;
           if (run !== runs) return;
           // still playing: the run reached the last span by itself, rather than being stopped by the Reset button
           if (ui.gantryPlaying) track("animation", { action: "finish", view: ui.view });
@@ -640,5 +649,6 @@
       Powered by <a class="text-(--ink) underline" href="https://www.esri.com">Esri</a> | {credit}
     </div>
   {/if}
+  <Caption text={caption} />
   <ProgressCard />
 </div>

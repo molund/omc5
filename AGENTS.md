@@ -43,6 +43,9 @@ Svelte 5 + Vite site, deployed to GitHub Pages (https://clayton-clipper.olund.ca
   computers to `/?view=horizontal&animate=true`; `/play/?span=42` passes the span on, so the animation starts on span 42
   (`?span=N` alongside `?animate=true` does that in any address). Not in the sitemap (it only redirects), and nothing on the site links
   to it.
+- `captions.json` — captions over the gantry animation, each tied to a span and step (the address's hash while it plays,
+  `src/lib/animationMark.js`), so they show at the same moment from any start span; the format is at the top of
+  `src/MapView/captions.js`. Keep captions concise; start each about a second before the moment asked for.
 - `docs/gantry-cycle.md` — the Clayton Clipper's cycle, stage by stage: the input for its velocity (spans per week).
 - `gantry-cycles.yaml` — the Leash Log's own records (molund/omc5-admin): notes to self, and the steps of the cycle seen at each
   time stamp, which the desk turns into the velocity. The site doesn't read it. Keep a note's or follow-up's time stamp in
