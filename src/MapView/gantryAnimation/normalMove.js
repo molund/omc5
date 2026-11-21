@@ -4,7 +4,7 @@
 import { gantryMoves, placeGantry, placesOn, stackSupports } from "../../lib/placeGantry.js";
 import { DOUBLE_GIRDER, cAcross } from "../../lib/doubleGirder.js";
 import { gantryProgress, markReached } from "../gantryProgress.js";
-import { SPEED, pause } from "./clock.js";
+import { SPEED, pause, setFilling } from "./clock.js";
 import { between, screen, halfLength, centreIn, reachIn } from "./measure.js";
 import { clearHangers, fillIn, followFill, FILL_TROLLEY_TIME } from "./fill.js";
 import { holders } from "./holders.js"; // TEMP
@@ -38,6 +38,17 @@ function findGantry(svg) {
 /** Step 0: the span the gantry is on fills in. */
 export async function step0FillSpan(svg, trolley) {
   debugLog("[gantry] step 0: FillSpan"); // TEMP
+  // always at FILL_SPEED (clock.js), whatever the cycle's speed: the fill stands for most of the real cycle
+  setFilling(true);
+  try {
+    await fillSpan(svg, trolley);
+  } finally {
+    setFilling(false);
+  }
+}
+
+/** Step 0 itself (step0FillSpan() plays it at FILL_SPEED). */
+async function fillSpan(svg, trolley) {
   // 0. the span the gantry is on is drawn complete (all its segments hung) before the gantry moves: as MapView draws it
   // when status.yaml says `hung: true`, but only in the drawing (status.yaml isn't touched). Each piece that turns
   // finished fills in like a progress bar, over FILL_TIME, in steps (more for a longer span) (fillIn): the first half

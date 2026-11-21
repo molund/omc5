@@ -11,14 +11,18 @@
 export const SPEEDS = [2, 4, 8];
 /** How fast everything plays while a caption is up. */
 export const CAPTION_SPEED = 2;
+/** How fast the span fill (step 0) always plays, whatever the cycle's speed or a caption: it stands for about three
+ * quarters of the real cycle, so it keeps the same length on the screen. */
+export const FILL_SPEED = 2;
 export let SPEED = SPEEDS[0];
 
-/** Which of SPEEDS is playing now, and whether a caption has it at CAPTION_SPEED. */
+/** Which of SPEEDS is playing now, whether a caption has it at CAPTION_SPEED, and whether the fill has it at FILL_SPEED. */
 let speedIndex = 0,
-  captionSlow = false;
+  captionSlow = false,
+  filling = false;
 
-/** The speed it should play at now. */
-const wanted = () => (captionSlow ? CAPTION_SPEED : SPEEDS[speedIndex]);
+/** The speed it should play at now: the fill's, a caption's, or the cycle's. */
+const wanted = () => (filling ? FILL_SPEED : captionSlow ? CAPTION_SPEED : SPEEDS[speedIndex]);
 
 /**
  * The animation's time as written (milliseconds of the steps' own times, before SPEED divides them), the time held by the
@@ -66,6 +70,12 @@ function applySpeed() {
 /** Sets how fast the moves play: SPEEDS[i] (unless a caption is up). */
 export const setSpeed = (i) => {
   speedIndex = i;
+  applySpeed();
+};
+
+/** Plays at FILL_SPEED while the span fills (on), or at the speed it would otherwise have again (off). */
+export const setFilling = (on) => {
+  filling = on;
   applySpeed();
 };
 
