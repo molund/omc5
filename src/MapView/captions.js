@@ -4,9 +4,12 @@
 //   step: the step's number, as in the address's hash (animationMark.js: 0 the fill, 1 to 28 the normal move, 29 B flies
 //         across, 30 the short support carried back, 32 on the walk's steps)
 //   at:   seconds after the step starts, at the speed the steps are written at (divided by SPEED as it plays); default 0
-//   parts: the caption's text, as a list: one after another, each for long enough to read it (READ_BASE plus READ_PER_WORD
-//          a word), with the same arrow throughout
-//   seconds: how long each part shows instead
+//   parts: the caption's text, as a list: one after another, with the same arrow throughout
+//   seconds: how long each screen shows instead of its reading time
+// Captions follow the usual subtitle rules (as Netflix's and the BBC's guidelines have them): a part longer than a screen
+// (two lines of LINE characters) is split into screens, at sentence ends where it can be, otherwise at the word break
+// nearest the middle (a comma preferred), and each screen shows for its reading time at READ_CPS characters a second,
+// between READ_MIN and READ_MAX.
 //   point: a part of the gantry for an arrow to point at while it shows (captionArrow.js: support-a, support-b, support-c,
 //          short-support, trolley, front-jacks, rear-jacks), or a guideway support by the spans either side ("12/13")
 //   pause: true to hold the gantry for CAPTION_PAUSE as it shows, for news worth stopping for (every pause is that long)
@@ -19,9 +22,56 @@ import { SPEED, clock } from "./gantryAnimation/clock.js";
 /** How long a caption with `pause` holds the gantry, in seconds (the same for every caption). */
 export const CAPTION_PAUSE = 1.5;
 
-/** How long any caption shows at the least, and how much longer for each word, in milliseconds. */
-const READ_BASE = 2000,
-  READ_PER_WORD = 300;
+/** A caption line's most characters, a screen's lines, the reading speed in characters a second, and the shortest and
+ * longest a screen shows, in milliseconds. */
+const LINE = 42,
+  LINES = 2,
+  READ_CPS = 17,
+  READ_MIN = 1500,
+  READ_MAX = 7000;
+
+/** A part's text as screens of at most LINES lines of LINE characters: whole sentences where they fit, otherwise split. */
+function screens(text) {
+  const most = LINE * LINES,
+    out = [];
+  // sentence ends: a full stop, question or exclamation mark before a capital (so "Dec. 11" stays together)
+  for (const sentence of text.trim().split(/(?<=[.!?])\s+(?=[A-Z])/)) {
+    const last = out.length - 1;
+    if (last >= 0 && out[last].length + 1 + sentence.length <= most) out[last] += " " + sentence;
+    else out.push(...split(sentence, most));
+  }
+  return out;
+}
+
+/** A sentence too long for one screen, in as few even pieces as fit, each break at the space nearest its share of the
+ * way (a comma just before it counts as nearer). */
+function split(sentence, most) {
+  const n = Math.ceil(sentence.length / most);
+  if (n <= 1) return [sentence];
+  const pieces = [];
+  let rest = sentence;
+  for (let k = n; k > 1; k--) {
+    const target = rest.length / k;
+    let best = -1,
+      score = Infinity;
+    for (let i = rest.indexOf(" "); i !== -1; i = rest.indexOf(" ", i + 1)) {
+      if (i > most) break;
+      const s = Math.abs(i - target) - (rest[i - 1] === "," ? LINE / 3 : 0);
+      if (s < score) {
+        score = s;
+        best = i;
+      }
+    }
+    if (best < 0) break;
+    pieces.push(rest.slice(0, best));
+    rest = rest.slice(best + 1);
+  }
+  return [...pieces, rest];
+}
+
+/** How long a screen of text shows, in milliseconds: its reading time, or `seconds` when the caption gives it. */
+const readTime = (text, seconds) =>
+  seconds ? seconds * 1000 : Math.min(READ_MAX, Math.max(READ_MIN, (text.length / READ_CPS) * 1000));
 
 /** Captions waiting for their time, and the parts of the one showing, each with its own time (`from` to `until` on
  * clock()). */
@@ -47,8 +97,8 @@ export function captionNow() {
   for (const p of pending.filter((p) => p.from <= now)) {
     // a caption that comes up takes over from one still showing; its parts follow one another
     let from = p.from;
-    showing = p.c.parts.map((text) => {
-      const until = from + (p.c.seconds ? p.c.seconds * 1000 : READ_BASE + READ_PER_WORD * text.split(/\s+/).length),
+    showing = p.c.parts.flatMap(screens).map((text) => {
+      const until = from + readTime(text, p.c.seconds),
         part = { text, point: p.c.point ?? null, from, until };
       from = until;
       return part;
