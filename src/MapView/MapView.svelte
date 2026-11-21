@@ -38,6 +38,7 @@
   import ProgressCard from "../ProgressCard.svelte";
   import Caption from "./Caption.svelte";
   import { CAPTION_PAUSE, captionNow, clearCaptions } from "./captions.js";
+  import { hideArrow, showArrow } from "./captionArrow.js";
   import { track, trackOnce } from "../lib/track.js";
 
   let stage;
@@ -62,6 +63,8 @@
           if (!ui.gantryPlaying) return;
           ui.animationTime = (clock() - t0) / 1000;
           const now = captionNow();
+          // the arrow comes and goes with its caption
+          if (now.text !== caption) now.point ? showArrow(els.svg, now.point) : hideArrow();
           caption = now.text;
           // a caption worth stopping for holds the gantry for CAPTION_PAUSE, as the Pause button does (its time is left
           // out of the clock, so the caption stays up as long as ever); not if the Pause button holds it by then
@@ -91,6 +94,7 @@
           clearInterval(tick);
           clearCaptions();
           caption = null;
+          hideArrow();
           if (run !== runs) return;
           // stopped by the Reset button, on a run that started on a span: the gantry goes back to that span's start
           const back = !ui.gantryPlaying && ui.animateFrom;

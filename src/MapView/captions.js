@@ -6,6 +6,8 @@
 //   at:   seconds after the step starts, at the speed the steps are written at (divided by SPEED as it plays); default 0
 //   text: the caption
 //   seconds: how long it shows; left out, long enough to read (READ_BASE plus READ_PER_WORD a word)
+//   point: a part of the gantry for an arrow to point at while it shows (captionArrow.js: support-a, support-b, support-c,
+//          short-support, trolley, front-jacks, rear-jacks)
 //   pause: true to hold the gantry for CAPTION_PAUSE as it shows, for news worth stopping for (every pause is that long)
 // A caption's time goes by clock(), so it waits while the Pause button holds the gantry.
 
@@ -34,7 +36,7 @@ onStep((span, step) => {
 
 /**
  * The caption to show now (MapView asks every 250 ms while the gantry plays).
- * @returns {{ text: string|null, pause: boolean }} pause: a caption with `pause` has just come up, so MapView holds the
+ * @returns {{ text: string|null, point: string|null, pause: boolean }} point: the part the arrow points at; pause: a caption with `pause` has just come up, so MapView holds the
  * gantry for CAPTION_PAUSE (true once only).
  */
 export function captionNow() {
@@ -44,13 +46,14 @@ export function captionNow() {
     const words = p.c.text.split(/\s+/).length;
     showing = {
       text: p.c.text,
+      point: p.c.point ?? null,
       until: p.from + (p.c.seconds ? p.c.seconds * 1000 : READ_BASE + READ_PER_WORD * words),
     };
     pause ||= !!p.c.pause;
   }
   pending = pending.filter((p) => p.from > now);
   if (showing && now >= showing.until) showing = null;
-  return { text: showing?.text ?? null, pause };
+  return { text: showing?.text ?? null, point: showing?.point ?? null, pause };
 }
 
 /** Drops every caption, waiting or showing (the run is over or stopped). */
