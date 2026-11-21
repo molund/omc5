@@ -1,4 +1,4 @@
-import { DOUBLE_GIRDER } from "./doubleGirder.js";
+import { DOUBLE_GIRDER, cAcross } from "./doubleGirder.js";
 
 /**
  * Where each support of the gantry goes on its span, keyed by the anchor's name. `span`: S plus this; `end`: which end of
@@ -32,7 +32,7 @@ const SUPPORTS = {
  * - rear: fully on S-1, its rear edge a third of its width in from S-1's back end
  * - fourth: on S-1, at the same fraction of the way along it as drawn (the supports keep the across offsets they are drawn
  *   with, and the fourth its along offset too, turned with the span); on a double girder S-1 it is turned across the span and
- *   centred across the double girder
+ *   centred across the double girder, and on any S-1 before span 32 turned across too (cAcross in doubleGirder.js)
  * - body: centred on S's midpoint, between its outer edges, and parallel to them
  *
  * Every support ends exactly square to the bent cap it stands at (the front support at S's front end, the second at its
@@ -317,10 +317,11 @@ export function gantryMoves(root, D, S) {
     if (rule.along) {
       const t = dot(sub(from, was.back), was.u) / dot(sub(was.front, was.back), was.u);
       let across = dot(sub(from, was.c), was.v);
+      // across the span (cAcross: a double girder, or any span before the crews laid it lengthwise), a quarter turn
+      // anticlockwise (−90, not +90: the other way round faces it backwards); on a double girder, centred on it: midway
+      // between the outer edges of its two girders
+      if (cAcross(S + rule.span)) turn -= 90;
       if (DOUBLE_GIRDER.has(S + rule.span)) {
-        // across the span, centred on the double girder: midway between the outer edges of its two girders. A quarter
-        // turn anticlockwise (−90, not +90: the other way round faces it backwards)
-        turn -= 90;
         const alongPos = (p) => dot(sub(p, now.back), now.u),
           lo = Math.min(alongPos(now.back), alongPos(now.front)),
           hi = Math.max(alongPos(now.back), alongPos(now.front));

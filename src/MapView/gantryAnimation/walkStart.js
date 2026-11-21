@@ -4,7 +4,7 @@
 
 import { gantryMoves, placeGantry, stackSupports } from "../../lib/placeGantry.js";
 import { UNITS_PER_METRE } from "../../lib/layerSwitches.js";
-import { DOUBLE_GIRDER } from "../../lib/doubleGirder.js";
+import { cAcross } from "../../lib/doubleGirder.js";
 import { SPEED, pause, setInstant } from "./clock.js";
 import { girderEdges } from "./guideway.js";
 import { between, centreIn } from "./measure.js";
@@ -84,7 +84,7 @@ async function placeNowLayout(m, animate = false) {
   if (animate) await playFirstHalf(m);
   else moves.push(m.moveFourth({ ...sub(N.rear.to, middle), turn: turn4 }, 0));
   // A: the normal move's steps 6 to 10 end with it on N.second.to, turned by step 7's and step 9's turns about its middle
-  const carryAngle = fourthAngle + (DOUBLE_GIRDER.has(S - 1) ? 90 : 0),
+  const carryAngle = fourthAngle + (cAcross(S - 1) ? 90 : 0),
     sideways = nearest(carryAngle - secondAngle, 90),
     aTurn = sideways + nearest(N.second.turn - sideways, -90);
   if (!animate) moves.push(m.second.by(0, 0, sub(N.second.to, m.secondStart)));

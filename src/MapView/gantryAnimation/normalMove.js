@@ -2,7 +2,7 @@
 // by one, the trusses going back for the front support, and the trusses sliding forward onto the next span.
 
 import { gantryMoves, placeGantry, placesOn, stackSupports } from "../../lib/placeGantry.js";
-import { DOUBLE_GIRDER } from "../../lib/doubleGirder.js";
+import { DOUBLE_GIRDER, cAcross } from "../../lib/doubleGirder.js";
 import { gantryProgress, markReached } from "../gantryProgress.js";
 import { SPEED, pause } from "./clock.js";
 import { between, screen, halfLength, centreIn, reachIn } from "./measure.js";
@@ -354,13 +354,13 @@ async function step2CarryFourthSupportForward(m) {
   const fourthGap = { x: N.second.to.x - middle.x, y: N.second.to.y - middle.y },
     fourthTrip = alongOf(fourthGap);
 
-  // 2. the trolley and the fourth support move forward together: the first part of its trip. On a double girder span
-  // (DOUBLE_GIRDER, from placeGantry) the fourth support is drawn turned across the span, so when it is picked up there
+  // 2. the trolley and the fourth support move forward together: the first part of its trip. On a double girder span, or
+  // any span before 32 (cAcross, from placeGantry), the fourth support is drawn turned across the span, so when it is picked up there
   // it first turns a quarter turn clockwise (a positive turn on the map, where y points down).
   // (A support that lies lengthwise is drawn above those across the trusses, so it doesn't blend with them as it is
   // carried over them: stackSupports. The fourth support is lifted first, to turn lengthwise.)
   stackSupports(svg, ["fourth"]);
-  if (DOUBLE_GIRDER.has(S - 1)) {
+  if (cAcross(S - 1)) {
     await moveFourth({ ...m.fourth, turn: m.fourth.turn + 90 }, 2000);
     await pause(500);
   }
@@ -452,8 +452,9 @@ async function step7TurnSecondSupportLengthwise(m) {
   markStep(m.S, 7);
   const { second, S, nearest, fourthAngle, secondAngle } = m;
   // 7. the second support turns about its own middle to lie lengthwise, the way the fourth support lies when it is carried
-  // (a quarter turn across from the way it lies on a double girder span); of the ways round, the one nearest a quarter turn
-  const carryAngle = fourthAngle + (DOUBLE_GIRDER.has(S - 1) ? 90 : 0),
+  // (a quarter turn across from the way it lies when set down across, cAcross); of the ways round, the one nearest a quarter
+  // turn
+  const carryAngle = fourthAngle + (cAcross(S - 1) ? 90 : 0),
     secondSideways = nearest(carryAngle - secondAngle, 90);
   await second.swing(m.aMid, secondSideways, 2000);
   await pause(500);
@@ -686,8 +687,9 @@ async function step19TurnThirdSupportLengthwise(m) {
   // double girder span (DOUBLE_GIRDER). gantryMoves() turns it from how it lies now and adds the double girder's quarter
   // turn on top, so when it is already turned across now (span S − 1 is a double girder) that quarter turn is taken
   // back out once: fourthFinal is its true angle there, and fourthLengthwise the angle it would have lying lengthwise.
-  const acrossNow = DOUBLE_GIRDER.has(S - 1) ? -90 : 0,
-    acrossNext = DOUBLE_GIRDER.has(S) ? -90 : 0,
+  // (cAcross: a double girder span, or any span before 32)
+  const acrossNow = cAcross(S - 1) ? -90 : 0,
+    acrossNext = cAcross(S) ? -90 : 0,
     fourthFinal = fourthAngle + N.fourth.turn - acrossNow,
     fourthLengthwise = fourthFinal - acrossNext;
 
