@@ -15,6 +15,7 @@
 # card's chart. status.yaml has a copy of spans-per-week
 spans-per-week: 1.25
 calculated-chart-data:
+  - 2026-11-20T18:00-07:00: 1.25
   - 2026-11-20T13:00-07:00: 1.25
   - 2026-11-20T10:30-07:00: 1.32
   - 2026-11-18T17:15-07:00: 1.87
@@ -22,6 +23,9 @@ calculated-chart-data:
   - 2026-11-17T09:30-07:00: 2.16
   - 2026-11-16T20:30-07:00: 2.42
 entries:
+  - 2026-11-20T18:00-07:00:
+      span: 42
+      stage: hung
   - 2026-11-20T13:00-07:00:
       span: 42
       stage: hanging started
