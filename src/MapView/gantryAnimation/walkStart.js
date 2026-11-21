@@ -5,12 +5,12 @@
 import { gantryMoves, placeGantry, stackSupports } from "../../lib/placeGantry.js";
 import { UNITS_PER_METRE } from "../../lib/layerSwitches.js";
 import { DOUBLE_GIRDER } from "../../lib/doubleGirder.js";
-import { SPEED, setInstant } from "./clock.js";
+import { SPEED, pause, setInstant } from "./clock.js";
 import { girderEdges } from "./guideway.js";
 import { between, centreIn } from "./measure.js";
 import { holders } from "./holders.js";
 import { playWalk, walkPartWay } from "./walk.js";
-import { startMove } from "./normalMove.js";
+import { playFirstHalf, startMove } from "./normalMove.js";
 
 /**
  * Where Support B is craned to, and how far its wheels slide along it. Its beam is centred across the two double girders of
@@ -57,6 +57,9 @@ function slideAWheels(m, by, ms, anchor = "second") {
   );
 }
 
+/** How long B takes to fly across from the back to the double girders (a mobile crane lifts it; the crane isn't drawn). */
+const B_FLY_TIME = 5000;
+
 /** The gap between the short support's beam and A's on Nov. 19, the short support behind (Mike: 15 ft). */
 const SHORT_GAP_METRES = 15 * 0.3048;
 
@@ -66,20 +69,25 @@ const SHORT_GAP_METRES = 15 * 0.3048;
  * guideway 15 ft behind A (SHORT_GAP_METRES), and B (lifted there by a mobile crane, which isn't drawn) across the two double girders at the
  * front support's place on the next span (cAim), its deck facing west and its wheel assemblies on the unfinished span
  * (wheelShift). The trusses and the trolley stay where placeGantry() put them.
+ * With `animate` (a walk started from the span itself, not part way through it), it is played instead: the normal move's
+ * steps 1 to 10 for C and A, then B flies across from the back (B_FLY_TIME); the trolley carries the short support back
+ * afterwards, as the walk's first step (playWalk()'s carryShort). The legs coming off isn't drawn (seen from above).
  */
-async function placeNowLayout(m) {
+async function placeNowLayout(m, animate = false) {
   const { svg, gantry, N, nearest, small, fourthAngle, secondAngle, thirdAngle, frontAngle, middle, S } = m;
   const sub = (a, b) => ({ x: a.x - b.x, y: a.y - b.y });
   // C: the normal move's steps 3 and 4 (the same turns, so it lies the way it does there)
   const turn3 = nearest(secondAngle + N.second.turn - fourthAngle, -90),
     turn4 = turn3 + nearest(thirdAngle + N.rear.turn - (fourthAngle + turn3), 0);
-  const moves = [m.moveFourth({ ...sub(N.rear.to, middle), turn: turn4 }, 0)];
+  const moves = [];
+  if (animate) await playFirstHalf(m);
+  else moves.push(m.moveFourth({ ...sub(N.rear.to, middle), turn: turn4 }, 0));
   // A: the normal move's steps 6 to 10 end with it on N.second.to, turned by step 7's and step 9's turns about its middle
   const carryAngle = fourthAngle + (DOUBLE_GIRDER.has(S - 1) ? 90 : 0),
     sideways = nearest(carryAngle - secondAngle, 90),
     aTurn = sideways + nearest(N.second.turn - sideways, -90);
-  moves.push(m.second.by(0, 0, sub(N.second.to, m.secondStart)));
-  if (Math.abs(aTurn) > 0.01) moves.push(m.second.swing(N.second.to, aTurn, 0));
+  if (!animate) moves.push(m.second.by(0, 0, sub(N.second.to, m.secondStart)));
+  if (!animate && Math.abs(aTurn) > 0.01) moves.push(m.second.swing(N.second.to, aTurn, 0));
   // the short support: across the guideway as it stood at the front, slid back to SHORT_GAP_METRES behind A. It stood with
   // its rear edge against the joint and A's front edge is against it now, so the gap between the two beams is how far
   // past A's middle its middle is now, less the two halves (the same distance), plus the gap
@@ -87,7 +95,7 @@ async function placeNowLayout(m) {
     unit = { x: onward.x / Math.hypot(onward.x, onward.y), y: onward.y / Math.hypot(onward.x, onward.y) },
     ahead = sub(m.frontStart, N.second.to),
     back = (ahead.x * unit.x + ahead.y * unit.y) * 2 + SHORT_GAP_METRES * UNITS_PER_METRE;
-  moves.push(m.front.by(0, 0, { x: -unit.x * back, y: -unit.y * back }));
+  if (!animate) moves.push(m.front.by(0, 0, { x: -unit.x * back, y: -unit.y * back }));
   // B: across the girders at cAim, at the front support's angle there, its deck on the forward (west) side (which side
   // its deck is on, measured from its middle before it moves)
   const deck = gantry.querySelector(':scope > [data-anchor="rear"] > .gantry-support-walkway'),
@@ -99,10 +107,14 @@ async function placeNowLayout(m) {
       return (d0.x * Math.cos(r) - d0.y * Math.sin(r)) * fwd.x + (d0.x * Math.sin(r) + d0.y * Math.cos(r)) * fwd.y > 0;
     },
     bTurn = [base, base + 180, base - 180].filter(forward).sort((a, b) => Math.abs(a) - Math.abs(b))[0] ?? base;
-  moves.push(m.third.by(0, 0, sub(m.cAim, m.thirdStart)), m.third.swing(m.cAim, bTurn, 0));
+  // flying, B is drawn over the rest of the gantry
+  if (animate) stackSupports(svg, ["rear"]);
+  const fly = animate ? B_FLY_TIME : 0;
+  moves.push(m.third.by(0, fly, sub(m.cAim, m.thirdStart)), m.third.swing(m.cAim, bTurn, fly));
   // the moves take effect once they have started; the wheels are slid in B's frame as it lies then
   await Promise.all(moves);
-  await slideAWheels(m, m.wheelShift, 0, "rear");
+  await slideAWheels(m, m.wheelShift, animate ? 1000 : 0, "rear");
+  if (animate) await pause(500);
   stackSupports(svg);
 }
 
@@ -138,8 +150,9 @@ export async function startWalk(svg, { pose = false } = {}) {
     holders(m, "second", "front"); // TEMP
     // a walk starts where the crews had the supports on Nov. 19 at span 41 (placeNowLayout; the same at span 50); the
     // walk goes on from there
-    await placeNowLayout(m);
-    return await playWalk(m, partWay?.done, pose);
+    // from the span itself (not part way through), the way into it is played; part way through, it is set at once
+    await placeNowLayout(m, !partWay);
+    return await playWalk(m, partWay?.done, pose, !partWay);
   } finally {
     // a stop during the set-up leaves nothing see-through or played with no time
     gantry.style.opacity = "";

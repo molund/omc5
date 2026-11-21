@@ -176,10 +176,15 @@ export const hasWalk = (S) => S in WALKS || walkPartWay(S) != null;
  * @param {object} m What the steps share (startMove()).
  * @param {number} [done] How many of the steps the crews have already made: played with no time (see walkPartWay).
  * @param {boolean} [pose] Only those steps, to show the gantry where the crews have it (poseGantry()).
+ * @param {boolean} [carryShort] First the trolley carries the short support back to its place in the start layout (after
+ * placeNowLayout() has played the rest of the way into it).
  * @returns {Promise<boolean>} true when it played, so playToEnd() goes on with the normal move.
  */
-export async function playWalk(m, done = 0, pose = false) {
+export async function playWalk(m, done = 0, pose = false, carryShort = false) {
   const c = WALKS[m.S];
   if (!c) return false;
-  return playSteps(m, walkSteps(c), c.last, { halfway: true, done, pose });
+  // after the first half of a move into the start layout (placeNowLayout() in walkStart.js), the trolley carries the
+  // short support back from the front to its place in it, behind A
+  const lead = carryShort ? [{ op: "carry", who: "S", to: c.start.S, turnFirst: true, turnLast: true }] : [];
+  return playSteps(m, [...lead, ...walkSteps(c)], c.last, { halfway: true, done, pose });
 }
