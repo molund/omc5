@@ -39,9 +39,6 @@
   --button-bg: light-dark(#eff2f5, #212830);
   --button-line: light-dark(#818b98, #656c76);
   --button-ink: light-dark(#1f2328, #f0f6fc);
-  /* the animation's rewind button, red like a stop sign, and its icon */
-  --rewind-button: light-dark(#c9302c, #d9534f);
-  --rewind-ink: light-dark(#ffffff, #ffffff);
   --pager-knob: light-dark(#ffffff, #0d1117);
   --pager-flat-ink: light-dark(#59636e, #9198a1);
   /* which way the progress card's spans per week went: a muted green and red, to sit with the slate, gold and purple */

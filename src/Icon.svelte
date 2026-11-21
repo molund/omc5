@@ -1,6 +1,6 @@
 <script>
   // panel: a window with a sidebar (show or hide the layer panel); menu: three lines (open the menu on a phone); close: a
-  // cross (close it, or the progress card); info: an information icon (bring the progress card back); comment: a speech bubble (comment on the newest update); chevron: a "›" (fold the layer switches out or away); minus, plus: a − or + (zoom out or in); fit: four corner brackets (zoom to fit); centre: a crosshair (center without zooming); rewind: a bar with two triangles pointing back to it (rewind the gantry animation to where it started); back, forward: a circular arrow round −1 or +1 (a span back or on in the animation); pause, play: two bars or a triangle (pause the gantry animation or play it on); github: the GitHub mark (link to the repo)
+  // cross (close it, or the progress card); info: an information icon (bring the progress card back); comment: a speech bubble (comment on the newest update); chevron: a "›" (fold the layer switches out or away); minus, plus: a − or + (zoom out or in); fit: four corner brackets (zoom to fit); centre: a crosshair (center without zooming); back, forward: a circular arrow round −1 or +1 (a span back or on in the animation); pause, play: two bars or a triangle (pause the gantry animation or play it on); github: the GitHub mark (link to the repo)
   let { kind = "panel" } = $props();
 </script>
 
@@ -31,11 +31,6 @@
     <path d="M7 11 11 7" />
     <path d="M8.25 5.25 9 4.5a3.18 3.18 0 0 1 4.5 4.5l-.75.75" />
     <path d="m9.75 12.75-.75.75a3.18 3.18 0 0 1-4.5-4.5l.75-.75" />
-  {:else if kind === "rewind"}
-    <!-- a rewind-to-start icon: a filled bar at the left and two filled triangles pointing left to it -->
-    <rect x="2.75" y="4.5" width="2" height="9" rx="0.5" fill="currentColor" stroke="none" />
-    <path d="M10 4.5v9L5 9z" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linejoin="round" />
-    <path d="M15 4.5v9L10 9z" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linejoin="round" />
   {:else if kind === "back" || kind === "forward"}
     <!-- a span back or on: an arrow curving round a "−1" (anticlockwise, from the top to an arrowhead at the upper left) or
          a "+1" (clockwise, mirrored) -->

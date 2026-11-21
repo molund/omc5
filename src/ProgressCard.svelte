@@ -7,7 +7,7 @@
     ui,
     layers,
     animateGantry,
-    stopAnimation,
+    exitAnimation,
     stepAnimation,
     pauseAnimation,
     resumeAnimation,
@@ -94,10 +94,9 @@
   }
   let card = $state(),
     showButton = $state();
-  // while the gantry animates, in every view, the info button gives way to a Permalink to /play/, the
-  // animation's launcher: a real link (a cmd-, ctrl-, shift- or middle-click opens it), and a plain click opens the share
-  // box (SharePopover.svelte), after YouTube's, to choose the link and copy it. It goes back to the info button when the
-  // animation stops.
+  // while the gantry animates, in every view, a Share button left of the playback buttons (and the info button's corner
+  // has the ✕): a real link to /play/, the animation's launcher (a cmd-, ctrl-, shift- or middle-click opens it), and a
+  // plain click opens the share box (SharePopover.svelte), after YouTube's, to choose the link and copy it.
   const PLAY = `${import.meta.env.BASE_URL}play/`;
   let sharing = $state(false);
   function openShare(e) {
@@ -156,16 +155,20 @@
   >
 {/snippet}
 
-<!-- while the gantry animates, in every view, Rewind (red, with a gap after it), −1 (back a span), Pause and +1 (on a
-     span) buttons left of the top-right corner's button, with a gap before it; the progress card, drawn after them, opens over them. Pause holds the gantry where it is and turns into Play, which plays it on from
-     there; Rewind (the Reset button in the code) puts everything back to where the animation started (the Play pill starts
-     it again) -->
+<!-- while the gantry animates, in every view: Share, then −1 (back a span), Pause and +1 (on a span) together, then a ✕
+     in the top-right corner, with gaps between the three; the progress card, drawn after them, opens over them. Pause
+     holds the gantry where it is and turns into Play, which plays it on from there; ✕ leaves the animation and puts the map
+     back to today (status.yaml), with the layers as they were (the Play pill starts it again) -->
 {#if ui.gantry && ui.gantryPlaying}
-  <button
-    class="rewind-button absolute top-3 right-47 z-5 p-1.5"
-    title="Rewind to the start"
-    aria-label="Rewind to the start"
-    onclick={() => stopAnimation("button")}><Icon kind="rewind" /></button
+  <!-- a real link to /play/ (a cmd-, ctrl-, shift- or middle-click opens it); a plain click opens the share box -->
+  <a
+    class="share-button absolute top-3 right-47 z-5 block p-1.5"
+    href={PLAY}
+    title="Share"
+    aria-label="Share"
+    aria-expanded={sharing}
+    data-share-button
+    onclick={openShare}><Icon kind="link" /></a
   >
   <button
     class="absolute top-3 right-35 z-5 p-1.5 shadow-float"
@@ -200,7 +203,7 @@
      room beside it, so the pill would end up under the menu button); none in the two SFMSF views, which have no animation,
      or once status.yaml has the gantry on the last
      span, 105: there's nowhere left to move it. It ticks the Gantry box first if it's off and, on a phone, closes the menu
-     so the map shows. While the animation plays, the Reset button puts everything back to the gantry's current status -->
+     so the map shows. While the animation plays, the ✕ puts everything back to the gantry's current status -->
 {#if ui.gantry && !ui.gantryPlaying && canAnimate() && !(status.span >= 105) && !(ui.phone && !ui.cardHidden)}
   <button
     class={["play-pill absolute top-3 z-5", ui.cardHidden ? "right-13" : "right-65"]}
@@ -213,14 +216,11 @@
   >
 {/if}
 {#if ui.gantry && ui.cardHidden && ui.gantryPlaying}
-  <a
-    class="absolute top-3 right-3 z-5 block rounded-md border border-(--line) bg-(--panel) p-1.5 leading-none text-(--ink) shadow-float [touch-action:manipulation] hover:border-(--accent) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent)"
-    href={PLAY}
-    title="Share"
-    aria-label="Share"
-    aria-expanded={sharing}
-    data-share-button
-    onclick={openShare}><Icon kind="link" /></a
+  <button
+    class="absolute top-3 right-3 z-5 p-1.5 shadow-float"
+    title="Back to today"
+    aria-label="Back to today"
+    onclick={exitAnimation}><Icon kind="close" /></button
   >
   {#if sharing}<SharePopover onclose={() => (sharing = false)} />{/if}
 {:else if ui.gantry && ui.cardHidden}
@@ -348,9 +348,9 @@
 <style>
   @reference "./app.css";
 
-  /* the animation's rewind button: red like a stop sign, so it stands out from the playback buttons beside it */
-  .rewind-button {
-    @apply border-(--rewind-button) bg-(--rewind-button) text-(--rewind-ink) shadow-float;
+  /* the share button: a link that looks like the buttons beside it */
+  .share-button {
+    @apply rounded-md border border-(--line) bg-(--panel) leading-none text-(--ink) shadow-float [touch-action:manipulation] hover:border-(--accent) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent);
   }
 
   /* the note on the card: tapping it opens the comments, like the Comments button under it */

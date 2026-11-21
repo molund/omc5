@@ -266,6 +266,19 @@ export function stopAnimation(source, quiet = false) {
 }
 
 /**
+ * Leaves the gantry animation for today's map (the ✕): as the Reset button did for an animation started from today's
+ * span, whatever span it started on: the drawing goes back as status.yaml has it, the layers as they were, and ?span=
+ * and ?animate= leave the address.
+ * @returns {void}
+ */
+export function exitAnimation() {
+  if (!ui.gantryPlaying) return;
+  track("animation", { action: "exit", view: ui.view, source: "button", span: ui.animateFrom ?? 0 });
+  ui.animateFrom = null;
+  stopAnimation("exit", true);
+}
+
+/**
  * Moves the gantry animation a span on or back (the +1 and −1 buttons): it starts again, as an animation that starts on a
  * span (?span=N), from the start of the span after or before the one whose move is under way, and plays on from there.
  * @param {number} by 1 or −1.
