@@ -85,6 +85,9 @@
           clearCaptions();
           caption = null;
           if (run !== runs) return;
+          // stopped by the Reset button, on a run that started on a span: the gantry goes back to that span's start
+          const back = !ui.gantryPlaying && ui.animateFrom;
+          if (back) startFrom(els.svg, back).then(() => requestAnimationFrame(() => run === runs && frameGantry(true)));
           // still playing: the run reached the last span by itself, rather than being stopped by the Reset button
           if (ui.gantryPlaying) track("animation", { action: "finish", view: ui.view });
           running = false;
@@ -94,12 +97,13 @@
     });
   });
   // the Reset button clears ui.gantryPlaying while a run is under way: that stops the moves and puts the drawing back as
-  // status.yaml has it, and frames the gantry on its span (as Play does)
+  // status.yaml has it, and frames the gantry on its span (as Play does). A run that started on a span (ui.animateFrom)
+  // goes back to that span instead, once it has given up (the end of the run, below)
   $effect(() => {
     if (!ui.gantryPlaying && running)
       untrack(() => {
         stopGantry(els.svg);
-        requestAnimationFrame(() => frameGantry(true));
+        if (!ui.animateFrom) requestAnimationFrame(() => frameGantry(true));
       });
   });
   // the Pause button holds the moves where they are, and Play plays them on from there

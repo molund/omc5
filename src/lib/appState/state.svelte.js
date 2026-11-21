@@ -76,7 +76,7 @@ const view = saved?.view ?? (defaults.progress ? "progress" : defaults.sfmsfDraw
  *   animationMark.js); null until one plays,
  *   and after the Reset button.
  * - animateFrom: the span an animation address (?span=N with ?animate=true) has the animation start on, instead of
- *   status.yaml's span, until the Reset button is pressed or another view is picked; null for status.yaml's span.
+ *   status.yaml's span, until another view is picked (the Reset button goes back to it); null for status.yaml's span.
  * - gantryPaused: whether the Pause button has the animation held where it is (pauseAnimation()); Play
  *   (resumeAnimation()) plays it on from there. Cleared whenever the animation ends or is stopped.
  * - gantryStops: counts the times the Reset button has stopped an animation (stopAnimation()), so the address can drop
