@@ -978,6 +978,18 @@ export async function playNormalMove(svg) {
   if (!m) return false;
   if (halfway) return playSecondHalf(m, true);
   holders(m, "second", "front"); // TEMP
+  await playFirstHalf(m);
+  return playSecondHalf(m);
+}
+
+/**
+ * The normal move's steps 1 to 10: the fourth support carried to the rear support's place on the next span and the second
+ * support to its own place there, the trusses still where they were. A walk's start plays them too, before the rest of its
+ * start layout (placeNowLayout() in walkStart.js).
+ * @param {object} m What the steps share (startMove()).
+ * @returns {Promise<void>}
+ */
+export async function playFirstHalf(m) {
   await step1TrolleyToFourthSupport(m);
   await step2CarryFourthSupportForward(m);
   await step3TurnFourthSupport(m);
@@ -989,7 +1001,6 @@ export async function playNormalMove(svg) {
   await step8CarrySecondSupportForward(m);
   await step9TurnSecondSupportToItsAngle(m);
   await step10SetSecondSupportDown(m);
-  return playSecondHalf(m);
 }
 
 /**
