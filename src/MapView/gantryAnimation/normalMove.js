@@ -9,6 +9,7 @@ import { between, screen, halfLength, centreIn, reachIn } from "./measure.js";
 import { clearHangers, fillIn, followFill, FILL_TROLLEY_TIME } from "./fill.js";
 import { holders } from "./holders.js"; // TEMP
 import { GANTRY_DEBUG, debugLog } from "./debug.js";
+import { markStep } from "../../lib/animationMark.js";
 
 /** Smooth starts and stops, and stay put at the end. */
 const SMOOTH = { easing: "ease-in-out", fill: "forwards" };
@@ -332,6 +333,7 @@ function prepare(svg, els, unseen) {
 /** Step 1: the trolley slides to the fourth support, and the hangers the fill put on come down. */
 async function step1TrolleyToFourthSupport(m) {
   debugLog("[gantry] step 1: TrolleyToFourthSupport"); // TEMP
+  markStep(m.S, 1);
   const { trolleyAt, beamAt, moveTrolley } = m;
   // 1. the trolley slides from where it is (back at its start, after the fill) to stop over the middle of the fourth
   // support, hurrying like it did to and from the fill (FILL_TROLLEY_TIME); there, the hangers the fill put on the
@@ -345,6 +347,7 @@ async function step1TrolleyToFourthSupport(m) {
  */
 async function step2CarryFourthSupportForward(m) {
   debugLog("[gantry] step 2: CarryFourthSupportForward"); // TEMP
+  markStep(m.S, 2);
   const { svg, moveTrolley, moveFourth, S, N, alongOf, FOURTH_TURNS_AT, along, middle } = m;
   // THE FOURTH SUPPORT'S TRIP (steps 2 and 3): from where it starts (`middle`) towards the second support's place on the
   // next span (N.second.to), as far as the point where it turns
@@ -373,6 +376,7 @@ async function step2CarryFourthSupportForward(m) {
 /** Step 3: the fourth support turns to lie the way the second support will on the next span. */
 async function step3TurnFourthSupport(m) {
   debugLog("[gantry] step 3: TurnFourthSupport"); // TEMP
+  markStep(m.S, 3);
   const { svg, moveFourth, N, nearest, fourthAngle, secondAngle } = m;
   // 3. the fourth support turns to lie the way the second support will on the next span: the second support's angle now
   // plus its turn on the move (N.second.turn), from the fourth support's angle now (where it started plus any turn in
@@ -388,6 +392,7 @@ async function step3TurnFourthSupport(m) {
 /** Step 4: the trolley backs up with the fourth support and sets it down on the rear support's place. */
 async function step4SetFourthSupportDown(m) {
   debugLog("[gantry] step 4: SetFourthSupportDown"); // TEMP
+  markStep(m.S, 4);
   const { moveTrolley, moveFourth, N, nearest, alongOf, fourthAngle, thirdAngle, middle } = m;
   // 4. the trolley backs up with the fourth support and sets it down on the rear support's place on the next span
   // (N.rear.to), where it stays for the rest of the move. It turns to the angle the rear support has there (the third
@@ -411,6 +416,7 @@ async function step4SetFourthSupportDown(m) {
 /** Step 5: the trolley slides to stop over the second support. */
 async function step5TrolleyToSecondSupport(m) {
   debugLog("[gantry] step 5: TrolleyToSecondSupport"); // TEMP
+  markStep(m.S, 5);
   const { trolleyAt, secondAt, moveTrolley } = m;
   // 5. the trolley slides to stop over the middle of the second support (the trusses haven't moved yet, so this is
   // measured the same way as step 1)
@@ -421,6 +427,7 @@ async function step5TrolleyToSecondSupport(m) {
 /** Step 6: the trolley lifts the second support and backs up with it a little. */
 async function step6LiftSecondSupportAndBackUp(m) {
   debugLog("[gantry] step 6: LiftSecondSupportAndBackUp"); // TEMP
+  markStep(m.S, 6);
   const { svg, ahead, moveTrolley, second, secondStart, along } = m;
   // THE SECOND SUPPORT'S TRIP (steps 6 to 10): the trolley does with it what step 2 to 4 first had it do with the fourth:
   // it lifts it, backs up a little, turns it lengthwise, and carries it to the second support's place on the next span
@@ -442,6 +449,7 @@ async function step6LiftSecondSupportAndBackUp(m) {
 /** Step 7: the second support turns to lie lengthwise. */
 async function step7TurnSecondSupportLengthwise(m) {
   debugLog("[gantry] step 7: TurnSecondSupportLengthwise"); // TEMP
+  markStep(m.S, 7);
   const { second, S, nearest, fourthAngle, secondAngle } = m;
   // 7. the second support turns about its own middle to lie lengthwise, the way the fourth support lies when it is carried
   // (a quarter turn across from the way it lies on a double girder span); of the ways round, the one nearest a quarter turn
@@ -455,6 +463,7 @@ async function step7TurnSecondSupportLengthwise(m) {
 /** Step 8: the trolley carries the second support forward, the first part of its trip. */
 async function step8CarrySecondSupportForward(m) {
   debugLog("[gantry] step 8: CarrySecondSupportForward"); // TEMP
+  markStep(m.S, 8);
   const { moveTrolley, second, N, alongOf, FOURTH_TURNS_AT, along } = m;
   // 8. the trolley carries it forward, the first part of its trip: the same share of it as step 2 (FOURTH_TURNS_AT)
   const secondGap = { x: N.second.to.x - m.aMid.x, y: N.second.to.y - m.aMid.y },
@@ -470,6 +479,7 @@ async function step8CarrySecondSupportForward(m) {
 /** Step 9: the second support turns to the angle it has on the next span. */
 async function step9TurnSecondSupportToItsAngle(m) {
   debugLog("[gantry] step 9: TurnSecondSupportToItsAngle"); // TEMP
+  markStep(m.S, 9);
   const { svg, second, N, nearest, secondSideways } = m;
   // 9. the second support turns to the angle it has on the next span: its angle now plus its turn on the move
   // (N.second.turn), from its angle now (where it started plus the turn in step 7); of the ways round, the one nearest a
@@ -482,6 +492,7 @@ async function step9TurnSecondSupportToItsAngle(m) {
 /** Step 10: the rest of the second support's trip, and the trolley lowers it on its place. */
 async function step10SetSecondSupportDown(m) {
   debugLog("[gantry] step 10: SetSecondSupportDown"); // TEMP
+  markStep(m.S, 10);
   const { moveTrolley, second, along, secondGap, secondTrip, secondLeg1 } = m;
   // 10. the rest of its trip, with the small move sideways that only the support makes, and the trolley lowers it on the
   // second support's place on the next span
@@ -497,6 +508,7 @@ async function step10SetSecondSupportDown(m) {
 /** Step 11: the trolley slides to stop over the fourth support. */
 async function step11TrolleyBackToFourthSupport(m) {
   debugLog("[gantry] step 11: TrolleyBackToFourthSupport"); // TEMP
+  markStep(m.S, 11);
   const { trolleyAt, beamAt, moveTrolley, trusses, alongOf } = m;
   // 11. the trolley slides on its own to stop over the middle of the fourth support, where it stays through steps 12 to 16
   // (it leaves the second support, which is still the pivot of the swing in step 15). Its place on the trusses is where the
@@ -511,6 +523,7 @@ async function step11TrolleyBackToFourthSupport(m) {
 /** Step 12: the trusses slide back to pick up the front support. */
 async function step12TrussesBackForFrontSupport(m) {
   debugLog("[gantry] step 12: TrussesBackForFrontSupport"); // TEMP
+  markStep(m.S, 12);
   const { frontAt, moveTrolley, trusses, tipAt, PICKUP } = m;
   // 12. The trusses slide back so they can pick up the front supprt: until the front tip is over the middle of the front
   // support (nudged by PICKUP). The trolley rides on the trusses, so it is moved forward the same distance at the same
@@ -525,6 +538,7 @@ async function step12TrussesBackForFrontSupport(m) {
 /** Step 13: the trusses carry the front support forward, the first part of its trip. */
 async function step13CarryFrontSupportForward(m) {
   debugLog("[gantry] step 13: CarryFrontSupportForward"); // TEMP
+  markStep(m.S, 13);
   const {
     gantry,
     truss,
@@ -576,6 +590,7 @@ async function step13CarryFrontSupportForward(m) {
 /** Step 14: the rest of the front support's trip, with the third support riding along. */
 async function step14FinishFrontSupportTrip(m) {
   debugLog("[gantry] step 14: FinishFrontSupportTrip"); // TEMP
+  markStep(m.S, 14);
   const { moveTrolley, trusses, front, third, ride } = m;
   // 14. the rest of its trip, with the third support riding along too, and the trolley still stays still
   await Promise.all([
@@ -590,6 +605,7 @@ async function step14FinishFrontSupportTrip(m) {
 /** Step 15: the trusses swing, carrying the front support to its place. */
 async function step15SwingTrussesWithFrontSupport(m) {
   debugLog("[gantry] step 15: SwingTrussesWithFrontSupport"); // TEMP
+  markStep(m.S, 15);
   const { unseen, trusses, front, third, deg, small, pivot, frontStart, along, frontTo } = m;
   // 15. the trusses stay on the second support and their front end swings, carrying the front support, until the front
   // support is on its place on the next span: the turn from where it is now to N.front.to, seen from the pivot. The
@@ -618,6 +634,7 @@ async function step15SwingTrussesWithFrontSupport(m) {
 /** Step 16: the trusses swing back, and the front support turns to its angle. */
 async function step16SwingTrussesBack(m) {
   debugLog("[gantry] step 16: SwingTrussesBack"); // TEMP
+  markStep(m.S, 16);
   const { svg, frontBeam, unseen, trusses, front, third, N, pivot, frontTo, turn, swings } = m;
   // 16. the trusses swing back the same way to where they were, leaving the front support on its place; at the same time
   // it turns about its own middle to the angle it has there (its whole turn on the move is N.front.turn, and the swing
@@ -637,6 +654,7 @@ async function step16SwingTrussesBack(m) {
 /** Step 17: the trusses slide back to halfway between the fourth and second supports. */
 async function step17TrussesToHalfway(m) {
   debugLog("[gantry] step 17: TrussesToHalfway"); // TEMP
+  markStep(m.S, 17);
   const { beamAt, secondAt, moveTrolley, trusses, trussMiddleY, alongOf, backUp, secondGap, fourthAlong } = m;
   // 17. the trusses slide back until their middle is halfway between the fourth support and the second support. The
   // third and front supports stay where they are, and the trolley stays still over the fourth support, as in step 12.
@@ -650,6 +668,7 @@ async function step17TrussesToHalfway(m) {
 /** Step 18: the trolley slides back to stop over the third support. */
 async function step18TrolleyToThirdSupport(m) {
   debugLog("[gantry] step 18: TrolleyToThirdSupport"); // TEMP
+  markStep(m.S, 18);
   const { trolleyAt, thirdAt, moveTrolley, trusses, third } = m;
   // 18. the trolley slides back to stop over the third support, now the one at the rear. The third support is where it
   // started plus its slide (third.at); the trolley's own offset is measured inside the trusses, which have moved
@@ -661,6 +680,7 @@ async function step18TrolleyToThirdSupport(m) {
 /** Step 19: the third support turns to lie lengthwise. */
 async function step19TurnThirdSupportLengthwise(m) {
   debugLog("[gantry] step 19: TurnThirdSupportLengthwise"); // TEMP
+  markStep(m.S, 19);
   const { svg, third, S, N, nearest, thirdStart, fourthAngle, thirdAngle, along } = m;
   // WHICH WAY THE FOURTH SUPPORT LIES ON THE NEXT SPAN, on span S (just behind it): lengthwise, or turned across on a
   // double girder span (DOUBLE_GIRDER). gantryMoves() turns it from how it lies now and adds the double girder's quarter
@@ -685,6 +705,7 @@ async function step19TurnThirdSupportLengthwise(m) {
 /** Step 20: the trolley carries the third support to the fourth support's place. */
 async function step20CarryThirdSupportToFourthPlace(m) {
   debugLog("[gantry] step 20: CarryThirdSupportToFourthPlace"); // TEMP
+  markStep(m.S, 20);
   const {
     svg,
     moveTrolley,
@@ -723,6 +744,7 @@ async function step20CarryThirdSupportToFourthPlace(m) {
 /** Step 21: the trolley slides to stop over the fourth support. */
 async function step21TrolleyOverFourthSupport(m) {
   debugLog("[gantry] step 21: TrolleyOverFourthSupport"); // TEMP
+  markStep(m.S, 21);
   const { trolleyAt, beamAt, moveTrolley, trusses, fourthAlong } = m;
   // 21. the trolley slides on its own to stop over the fourth support, leaving the third support where step 20 put it.
   // The fourth support hasn't moved since step 17, so it is still where it started plus fourthAlong; take off the
@@ -734,6 +756,7 @@ async function step21TrolleyOverFourthSupport(m) {
 /** Step 22: the trusses slide forward until their front ends are just past the front support. */
 async function step22TrussesPastFrontSupport(m) {
   debugLog("[gantry] step 22: TrussesPastFrontSupport"); // TEMP
+  markStep(m.S, 22);
   const { gantry, truss, ahead, moveTrolley, trusses } = m;
   // 22. the trusses slide forward until their front ends (where the yellow truss lines stop) are just past the front
   // support, and the trolley stays still over the fourth support. Measured as things are now: the browser counts the
@@ -754,6 +777,7 @@ async function step22TrussesPastFrontSupport(m) {
 /** Step 23: the trusses turn and shift onto the line they have on the next span. */
 async function step23TurnTrussesOntoNextSpan(m) {
   debugLog("[gantry] step 23: TurnTrussesOntoNextSpan"); // TEMP
+  markStep(m.S, 23);
   const { svg, gantry, unseen, truss, trusses, N, deg, small, trussLine, startDir } = m;
   // 23. the trusses turn and shift onto the line they have on the next span: through N.body.to (where their middle goes)
   // at their angle at the start plus their turn on the move (N.body.turn). They swing about the fourth support's middle,
@@ -790,6 +814,7 @@ async function step23TurnTrussesOntoNextSpan(m) {
 /** Step 24: the trusses slide forward onto their place on the next span. */
 async function step24SlideTrussesToNextSpan(m) {
   debugLog("[gantry] step 24: SlideTrussesToNextSpan"); // TEMP
+  markStep(m.S, 24);
   const { svg, gantry, trolley, unseen, truss, ahead, moveTrolley, trusses, trussMiddleY, N, trussesMiddle } = m;
   // by() takes a slide as an x, y move on the map: a move of 1 along the trusses as they lie now is (c, d) of the truss
   // frame's matrix onto the map, as `along` was for their old direction
@@ -838,6 +863,7 @@ async function step24SlideTrussesToNextSpan(m) {
 /** Step 25: the trolley drives to the middle support while the trusses slide the rest of the way (steps 25 and 26). */
 async function step25TrolleyToMiddleSupportAndSlideRest(m) {
   debugLog("[gantry] step 25: TrolleyToMiddleSupportAndSlideRest"); // TEMP
+  markStep(m.S, 25);
   const { unseen, truss, trolleyAt, moveTrolley, trusses, slide20, forward20, firstSlide, rest } = m;
   // 25. the trolley drives on its own to stop over the middle support (secondBeam), the next support ahead of it that lies
   // across the guideway: the third support, between it and the trolley, lies lengthwise, so it doesn't count. It is measured on the trusses as they lie now, after the
@@ -847,6 +873,7 @@ async function step25TrolleyToMiddleSupportAndSlideRest(m) {
     await pause(500);
 
     debugLog("[gantry] step 26: SlideRestOfTheWay"); // TEMP
+    markStep(m.S, 26);
     // 26. the trusses slide the rest of the way, the trolley staying still over the middle support
     await Promise.all([
       trusses.by(0, 3000 * (rest / forward20), { x: slide20.x - firstSlide.x, y: slide20.y - firstSlide.y }),
@@ -859,6 +886,7 @@ async function step25TrolleyToMiddleSupportAndSlideRest(m) {
 /** Step 27: the trolley drives back to where it started on the trusses. */
 async function step27TrolleyBackToStart(m) {
   debugLog("[gantry] step 27: TrolleyBackToStart"); // TEMP
+  markStep(m.S, 27);
   const { moveTrolley } = m;
   // 27. the trolley drives back to where it started on the trusses. Its offset is measured inside the trusses from where
   // it is drawn, so its starting place there is an offset of 0, wherever the trusses have gone.
@@ -869,6 +897,7 @@ async function step27TrolleyBackToStart(m) {
 /** Step 28: the drawing snaps to the next span. */
 async function step28SnapToNextSpan(m) {
   debugLog("[gantry] step 28: SnapToNextSpan"); // TEMP
+  markStep(m.S, 28);
   const { svg, gantry, S } = m;
   // 28. the drawing is reset as if status.yaml said the next span with `hung: false`, as MapView draws it when the page
   // loads: every animation on the gantry is cancelled (each piece goes back to where placeGantry put it), the gantry is
@@ -958,6 +987,7 @@ export async function startMove(svg) {
   // whether a move of `d` on the map would be too short to see (UNSEEN), measured as the map is shown on the screen now
   const shown = screen(svg),
     unseen = (d) => d * Math.hypot(shown.a, shown.b) < UNSEEN;
+  markStep(+els.gantry.dataset.span, 0);
   await step0FillSpan(svg, els.trolley);
   return prepare(svg, els, unseen);
 }

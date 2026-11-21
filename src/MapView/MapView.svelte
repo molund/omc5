@@ -51,12 +51,12 @@
     untrack(() => {
       const run = ++runs;
       running = true;
-      // how long it has played, every 100 ms, on the animation's own clock (the Pause button's time left out)
+      // how long it has played, every 250 ms, on the animation's own clock (the Pause button's time left out)
       const t0 = clock(),
         tick = setInterval(() => {
           // not once the Reset button has cleared it
           if (ui.gantryPlaying) ui.animationTime = (clock() - t0) / 1000;
-        }, 100);
+        }, 250);
       ui.animationTime = 0;
       // an address with ?span=N puts the gantry on span N first (startFrom), the next frame, once the Gantry layer
       // animateGantry() may have just turned on is showing (a hidden gantry has no size)

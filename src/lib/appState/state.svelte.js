@@ -72,7 +72,8 @@ const view = saved?.view ?? (defaults.progress ? "progress" : defaults.sfmsfDraw
  * - gantryPlaying: set by animateGantry() (the Play pill, or ?animate=true in the address): MapView
  *   then plays the gantry's moves span by span to the last span, and clears it when they're done.
  * - animationTime: how long the animation under way (or the last one) has played, in seconds, the time held by the Pause
- *   button left out; updated every 100 ms (MapView), shown in the address as #t= (hash.svelte.js); null until one plays,
+ *   button left out; updated every 250 ms (MapView), shown in the address's hash with the step under way (hash.svelte.js,
+ *   animationMark.js); null until one plays,
  *   and after the Reset button.
  * - animateFrom: the span an animation address (?span=N with ?animate=true) has the animation start on, instead of
  *   status.yaml's span, until the Reset button is pressed or another view is picked; null for status.yaml's span.
