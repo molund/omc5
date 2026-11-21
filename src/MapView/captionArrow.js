@@ -3,8 +3,8 @@
 // it moves. It comes in across the trusses from the left of the screen.
 //
 // The parts it can point at (POINTS): the supports by their letters (support-a, support-b, support-c, short-support), the
-// trolley, and the lifting jacks at either end of the trusses (front-jacks, rear-jacks: the middle of that end's two blue
-// tips).
+// trolley, and the lifting jacks at either end of the trusses (front-jacks, rear-jacks: JACKS_PAST_TIPS past the middle of
+// that end's two blue tips, outwards, where the moves put them).
 
 const NS = "http://www.w3.org/2000/svg";
 
@@ -15,6 +15,11 @@ const LENGTH = 56,
   HEAD_WIDTH = 20,
   SHAFT = 6,
   GAP = 6;
+
+/** How far the lifting jacks are past the middle of their end's blue tips, outwards, in the trusses' own units: as the
+ * moves have it (PICKUP in normalMove.js, where the front tip stops over the front support to pick it up, and where the rear
+ * jacks reach Support B). */
+const JACKS_PAST_TIPS = 8;
 
 /** The middle of an element on the screen. */
 const middle = (el) => {
@@ -39,6 +44,20 @@ function ends(gantry) {
   return { front: mean(sorted.slice(0, 2)), rear: mean(sorted.slice(2)) };
 }
 
+/** Where an end's lifting jacks are on the screen: JACKS_PAST_TIPS past the middle of its tips, away from the other end. */
+function jacks(gantry, which) {
+  const e = ends(gantry),
+    // the trusses' frame: the trolley's parent, as the moves measure it
+    m = gantry.querySelector("#clipper-trolley")?.parentNode?.getScreenCTM();
+  if (!e || !m) return null;
+  const at = e[which],
+    other = e[which === "front" ? "rear" : "front"],
+    l = Math.hypot(at.x - other.x, at.y - other.y) || 1,
+    // the trusses' units on the screen: their frame's y axis
+    d = JACKS_PAST_TIPS * Math.hypot(m.c, m.d);
+  return { x: at.x + ((at.x - other.x) / l) * d, y: at.y + ((at.y - other.y) / l) * d, shown: at.shown };
+}
+
 /** Where each part is on the screen, by its name in captions.json. */
 const POINTS = {
   "support-a": (g) => middle(g.querySelector("#gantry-support-a")),
@@ -46,8 +65,8 @@ const POINTS = {
   "support-c": (g) => middle(g.querySelector("#gantry-support-c")),
   "short-support": (g) => middle(g.querySelector("#gantry-support-front")),
   trolley: (g) => middle(g.querySelector("#clipper-trolley")),
-  "front-jacks": (g) => ends(g)?.front,
-  "rear-jacks": (g) => ends(g)?.rear,
+  "front-jacks": (g) => jacks(g, "front"),
+  "rear-jacks": (g) => jacks(g, "rear"),
 };
 
 let arrow = null,
