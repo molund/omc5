@@ -12,6 +12,8 @@
 // second, READ_MIN at the least.
 //   point: a part of the gantry for an arrow to point at while it shows (captionArrow.js: support-a, support-b, support-c,
 //          short-support, trolley, front-jacks, rear-jacks), or a guideway support by the spans either side ("12/13")
+//   layer: a layer switch's key (layerSwitches.js, e.g. "ave72") to turn on while the caption shows; it goes back as it was
+//          after
 //   pause: true to hold the gantry for CAPTION_PAUSE as it shows, for news worth stopping for (every pause is that long)
 // A caption's time goes by clock(), so it waits while the Pause button holds the gantry.
 // An opening caption (one due at the run's first step at speed, `at` 1 or less) comes up over a still map instead: the
@@ -63,7 +65,7 @@ function open(c) {
     held = from;
   const parts = c.parts.map((text, i) => {
     const until = from + readTime(text, c.seconds),
-      part = { text, point: c.point ?? null, from, until };
+      part = { text, point: c.point ?? null, layer: c.layer ?? null, from, until };
     from = until;
     if (i === 0) held = until;
     return part;
@@ -98,7 +100,8 @@ onStep((span, step) => {
 
 /**
  * The caption to show now (MapView asks every 250 ms while the gantry plays).
- * @returns {{ text: string|null, point: string|null, pause: boolean }} point: the part the arrow points at; pause: a caption with `pause` has just come up, so MapView holds the
+ * @returns {{ text: string|null, point: string|null, layer: string|null, pause: boolean }} point: the part the arrow
+ * points at; layer: the layer switch to have on while it shows; pause: a caption with `pause` has just come up, so MapView holds the
  * gantry for CAPTION_PAUSE (true once only).
  */
 export function captionNow() {
@@ -112,7 +115,7 @@ export function captionNow() {
       const part = opening.parts.find((p) => p.from <= t && t < p.until);
       // the rest of it shows at CAPTION_SPEED, as any caption does
       setCaptionSlow(true);
-      return { text: part?.text ?? null, point: part?.point ?? null, pause: false };
+      return { text: part?.text ?? null, point: part?.point ?? null, layer: part?.layer ?? null, pause: false };
     }
     opening = null;
   }
@@ -124,7 +127,7 @@ export function captionNow() {
     let from = now;
     showing = p.c.parts.map((text) => {
       const until = from + readTime(text, p.c.seconds),
-        part = { text, point: p.c.point ?? null, from, until };
+        part = { text, point: p.c.point ?? null, layer: p.c.layer ?? null, from, until };
       from = until;
       return part;
     });
@@ -136,7 +139,7 @@ export function captionNow() {
   // CAPTION_SPEED while a caption is up or due; back to the cycle's speed once it has gone
   setCaptionSlow(!!part || pending.some((p) => p.due <= playClock()));
   watch();
-  return { text: part?.text ?? null, point: part?.point ?? null, pause };
+  return { text: part?.text ?? null, point: part?.point ?? null, layer: part?.layer ?? null, pause };
 }
 
 /** Drops every caption, waiting or showing (the run is over or stopped). */

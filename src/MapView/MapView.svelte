@@ -51,6 +51,19 @@
     runs = 0;
   // the caption showing over the animation (captions.js), every 250 ms while it plays
   let caption = $state(null);
+  // the layer switch a caption has turned on (its `layer`), and whether it was on before
+  let captionLayer = null,
+    layerWasOn = false;
+  /** Turns on layer switch `k` for a caption, putting back the one turned on for the last (null: none now). */
+  function showCaptionLayer(k) {
+    if (k === captionLayer) return;
+    if (captionLayer) layers[captionLayer] = layerWasOn;
+    captionLayer = k;
+    if (k) {
+      layerWasOn = layers[k];
+      layers[k] = true;
+    }
+  }
   $effect(() => {
     if (!ui.gantryPlaying) return;
     untrack(() => {
@@ -65,6 +78,7 @@
           const now = captionNow();
           // the arrow comes and goes with its caption
           if (now.text !== caption) now.point ? showArrow(els.svg, now.point) : hideArrow();
+          showCaptionLayer(now.layer);
           caption = now.text;
           // a caption worth stopping for holds the gantry for CAPTION_PAUSE, as the Pause button does (its time is left
           // out of the clock, so the caption stays up as long as ever); not if the Pause button holds it by then
@@ -97,6 +111,7 @@
           clearCaptions();
           caption = null;
           hideArrow();
+          showCaptionLayer(null);
           if (run !== runs) return;
           // stopped by the Reset button, on a run that started on a span: the gantry goes back to that span's start
           const back = !ui.gantryPlaying && ui.animateFrom;

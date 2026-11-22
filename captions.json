@@ -24,7 +24,8 @@
       "Span 29 crosses the future 72 Ave intersection.",
       "It has 16 segments, more than the 12 the gantry can hang, so crews built it on a temporary support tower.",
       "The animation simplifies this."
-    ]
+    ],
+    "layer": "ave72"
   },
   {
     "span": 29,
