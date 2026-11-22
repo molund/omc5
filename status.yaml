@@ -21,6 +21,12 @@ spans-per-week: 1.22
 #   No other markdown: anything else shows as typed.
 # Notes to self, and the steps of the gantry's cycle seen at each time stamp, are in gantry-cycles.yaml, not here.
 notes:
+  - 2026-11-22: "Langley Launcher closes in on Hwy 10"
+    summary: "I had to go to Langley today, so I stopped by to check on the Langley Launcher. It's making good progress through the Willowbrook Mall parking lot, with two more moves to reach the Langley Bypass (Highway 10) and three to get across."
+    post: true
+    photo:
+      file: 2026-11-22-the-langley-launchers-next-moves.jpg
+      caption: "The Langley Launcher in the Willowbrook Mall parking lot."
   - 2026-11-20T09:00-07:00: "Clayton Clipper construction update for Friday, Nov. 20, 2026"
     summary: "The Clayton Clipper is almost across the gap to span 42. This is the last span it has to build before crossing Hwy 15."
     block:
