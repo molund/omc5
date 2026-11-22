@@ -20,7 +20,8 @@ the real text, and then Svelte takes over in the browser for the comments and co
   description and Open Graph tags use the update's title (or date) and summary; when the update has a photo, the first
   one is the preview image.
 - An update is addressed by its slug: `/trackside/?post=clipper-completes-span-36` scrolls to it (the page's script
-  calls `scrollIntoView()`, there are no hash anchors), and its date heading does the same. Add `&comments` to open
+  calls `scrollIntoView()`, there are no hash anchors). Its heading links to its own page, so search engines follow the
+  permanent address, but a plain click does the same as `?post=` instead. Add `&comments` to open
   its comments too. The old `#slug` links still work.
 
 The progress card's Comments button goes to `/trackside/?post=clipper-completes-span-36&comments`: the first

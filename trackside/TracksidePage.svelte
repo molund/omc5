@@ -142,8 +142,10 @@
       console.error("Could not copy permalink", error);
     }
   }
-  // a date heading's click: the address becomes ?post=<slug> and the update scrolls into view, with no hash anchor
+  // a heading's plain click: the address becomes ?post=<slug> and the update scrolls into view, with no hash anchor
   function jumpTo(e, slug) {
+    // a cmd-, ctrl-, shift- or middle-click opens the update's own page, like any link
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
     e.preventDefault();
     track("select_post", { slug });
     const params = new URLSearchParams(location.search);
@@ -257,13 +259,14 @@
     <!-- an update a link jumps to lands below the bar, not under it; a wide gap separates one update from the next, so
          the comments link reads as the end of its own update rather than the start of the next -->
     <article id={n.slug} class="scroll-mt-[calc(var(--spacing)*19_+_env(safe-area-inset-top,0px))] [article+&]:mt-9">
-      <!-- the date links to the update's own anchor on the page, drawn as plain heading text; with a title, screen readers
-           hear the date and the title (the date first, so the visible text is in the name, for voice control) -->
+      <!-- the heading links to the update's own page, for search engines, and a plain click scrolls to it here instead;
+           drawn as plain heading text. With a title, screen readers hear the date and the title (the date first, so the
+           visible text is in the name, for voice control) -->
       <!-- an h1 on the update's own page, an h2 among the other updates -->
       <svelte:element this={single ? "h1" : "h2"} class="update-heading flex items-center justify-between gap-2">
         <a
           class="text-inherit no-underline"
-          href="?post={n.slug}"
+          href="{TRACKSIDE}{n.slug}/"
           onclick={(e) => jumpTo(e, n.slug)}
           aria-label={n.title && !n.post ? `${heading(n.time)}: ${n.title}` : undefined}
           >{#if n.post && n.title}{label(n)}{:else}<time datetime={published(n)}>{label(n)}</time>{/if}</a
