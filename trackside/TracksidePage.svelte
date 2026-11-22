@@ -189,6 +189,7 @@
   <link rel="canonical" href={url} />
   <!-- every update as a feed, for feed readers and AI tools -->
   <link rel="alternate" type="application/atom+xml" title="Trackside" href="{TRACKSIDE}feed.xml" />
+  <link rel="alternate" type="application/feed+json" title="Trackside" href="{TRACKSIDE}feed.json" />
   <meta property="og:site_name" content="Clayton Clipper Tracker" />
   <meta property="og:type" content={single ? "article" : "website"} />
   <meta property="og:title" content={single ? singleTitle : "Trackside"} />

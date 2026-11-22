@@ -99,3 +99,29 @@ function atomTime(t) {
   const full = t.length === 10 ? `${t}T00:00-07:00` : t;
   return full.replace(/(T\d\d:\d\d)(?=[-+])/, "$1:00");
 }
+
+/** The JSON Feed (version 1.1, https://www.jsonfeed.org/version/1.1/), /trackside/feed.json. */
+export function jsonFeed() {
+  return {
+    version: "https://jsonfeed.org/version/1.1",
+    title: NAME,
+    description: DESCRIPTION,
+    home_page_url: `${SITE}trackside/`,
+    feed_url: `${SITE}trackside/feed.json`,
+    language: "en",
+    authors: [{ name: "Mike", url: `${SITE}about/` }],
+    items: status.history.map((n) => {
+      const photo = n.photo ?? n.block.find((m) => m.photo)?.photo;
+      return {
+        id: permalink(n),
+        url: permalink(n),
+        title: titleOf(n),
+        summary: plainText(n.summary),
+        content_html: updateHtml(n),
+        ...(photo && { image: new URL(photo.src, SITE).href }),
+        date_published: atomTime(published(n)),
+        date_modified: atomTime(modified(n)),
+      };
+    }),
+  };
+}
