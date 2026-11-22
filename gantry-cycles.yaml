@@ -207,9 +207,11 @@ entries:
   - 2026-11-03T20:30-07:00:
       span: 37
       stage: hung
+      note: "All the segments for span 37 are now in place."
   - 2026-11-03T13:30-07:00:
       span: 37
       stage: arrived at span
+      note: "The Clayton Clipper has moved to span 37."
   - 2026-11-03T07:15-07:00:
       span: 36
       stage: supports started
@@ -240,6 +242,7 @@ entries:
       span: 36
       stage: hanging started
       progress: 50
+      note: "Six segments have been hung. There is a long line of semi trucks carrying the rest of the segments."
   - 2026-10-31T09:30-07:00:
       span: 36
       stage: hanging started
@@ -247,6 +250,7 @@ entries:
   - 2026-10-30T20:45-07:00:
       span: 36
       stage: arrived at span
+      note: "The Clayton Clipper has moved to span 36."
   - 2026-10-30T12:45-07:00:
       span: 35
       stage: supports started

@@ -161,11 +161,6 @@ notes:
     post: true
   - 2026-11-03T07:15-07:00: "Clayton Clipper construction update for Tuesday, Nov. 3, 2026"
     summary: "Both precast girders for span 34 were installed overnight by mobile cranes. The Clayton Clipper is beginning the move to the next span."
-    follow-up:
-      - 2026-11-03T13:30-07:00:
-          summary: "The Clayton Clipper has moved to span 37."
-      - 2026-11-03T20:30-07:00:
-          summary: "All the segments for span 37 are now in place."
   - 2026-11-02T09:15-07:00: "Clayton Clipper construction update for Monday, Nov. 2, 2026"
     summary: "The Night Shift must’ve worked Sunday night. Span 36 is fully glued. Crews have begun post-tensioning."
     follow-up:
@@ -210,14 +205,8 @@ notes:
     photo:
       file: 2026-10-31-piper-and-toby.jpg
       caption: "My two trusty assistants on our way to look at cranes. Piper on the left is a four-year-old Bernedoodle. Toby on the right is an 11-year-old mini Australian Shepherd."
-    follow-up:
-      - 2026-10-31T11:45-07:00:
-          summary: "Six segments have been hung. There is a long line of semi trucks carrying the rest of the segments."
   - 2026-10-30T12:45-07:00: "Clayton Clipper construction update for Friday, Oct. 30, 2026"
     summary: "The Clayton Clipper has started moving its supports, getting ready to move from span 35 to span 36."
-    follow-up:
-      - 2026-10-30T20:45-07:00:
-          summary: "The Clayton Clipper has moved to span 36."
   - 2026-10-29T06:45-07:00: "Clayton Clipper finishes hanging span 35; new girder arrives"
     summary: "All segments for span 35 are hung. A new precast girder arrived at the construction yard overnight. It will likely be installed in span 34, along with the girder that was already on site."
     follow-up:
