@@ -67,6 +67,8 @@ Svelte 5 + Vite site, deployed to GitHub Pages (https://clayton-clipper.olund.ca
 - `public/images/` — aerial photos.
 - `public/images/sorry-im-a-shitty-photographer/` — update photos (see the `photo:` format in `status.yaml`). Resize every
   uploaded photo to at most 1024 pixels wide, save it as JPEG at quality 85, and strip all metadata before committing it.
+  Name it for what it shows, after its date (`2026-11-22-the-langley-launchers-next-moves.jpg`, not
+  `2026-11-20-photo-2.jpg`): image search reads file names.
 
 ## Styling
 
