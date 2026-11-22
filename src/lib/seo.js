@@ -45,8 +45,17 @@ export function photos(n) {
   return out;
 }
 
-/** The person behind the site, the author of every update. */
-export const AUTHOR = { "@type": "Person", name: "Mike", url: `${SITE}about/` };
+/**
+ * The person behind the site, the author of every update; the same Person as in the About page's ProfilePage (the "@id"
+ * ties them together), where more of his links can be added to sameAs.
+ */
+export const AUTHOR = {
+  "@type": "Person",
+  "@id": `${SITE}about/#mike`,
+  name: "Mike",
+  url: `${SITE}about/`,
+  sameAs: ["https://github.com/molund"],
+};
 
 /**
  * An update as a schema.org BlogPosting, for its own page.
