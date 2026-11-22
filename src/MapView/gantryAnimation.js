@@ -113,6 +113,13 @@ function toSvg(el, svg) {
   return m;
 }
 
+/** Whether point q is inside the polygon pts (ray casting). */
+const inside = (q, pts) =>
+  pts.reduce((acc, a, i) => {
+    const b = pts[(i + 1) % pts.length];
+    return a.y > q.y !== b.y > q.y && q.x < ((b.x - a.x) * (q.y - a.y)) / (b.y - a.y) + a.x ? !acc : acc;
+  }, false);
+
 /**
  * map.svg draws the Clayton Clipper's gantry boxes as built (gi) up to the span it had reached when it was drawn; an animation
  * that starts on an earlier span (startFrom()) draws the ones from span `n` on unbuilt again (p, unfinished), with the
@@ -131,12 +138,6 @@ function unbuild(svg, n) {
       el.classList.add("p", "unfinished");
       return { el, pts: [...el.points].map((q) => new DOMPoint(q.x, q.y).matrixTransform(m)) };
     });
-  // whether point q is inside the polygon pts (ray casting)
-  const inside = (q, pts) =>
-    pts.reduce((acc, a, i) => {
-      const b = pts[(i + 1) % pts.length];
-      return a.y > q.y !== b.y > q.y && q.x < ((b.x - a.x) * (q.y - a.y)) / (b.y - a.y) + a.x ? !acc : acc;
-    }, false);
   svg.querySelectorAll("text.guideway.cc:not(.arrow-pending)").forEach((el) => {
     // the arrow's visual centre, half its font size above the baseline (map.svg's arrows: baseline - 6.25)
     const q = new DOMPoint(+el.getAttribute("x"), +el.getAttribute("y") - 6.25).matrixTransform(toSvg(el, svg)),
@@ -145,6 +146,37 @@ function unbuild(svg, n) {
     el.classList.add("arrow-pending");
     el.dataset.span = box.el.dataset.span;
   });
+}
+
+/**
+ * An animation that starts on a span (startFrom()) draws every precast concrete girder and ramp span as finished: there is no
+ * record of when each went in, and the animation may be showing the past. Their direction arrows show too: the ones waiting
+ * for them (arrow-pending) and the exit ramp arrows map.svg draws grey while the ramps are unfinished.
+ * @param {SVGSVGElement} svg The map's <svg>.
+ * @returns {[Element, string][]} The pieces and arrows whose style changed, with their style before, for stopGantry() to
+ * put back.
+ */
+function finishPrecast(svg) {
+  const styles = [];
+  const pieces = [...svg.querySelectorAll("polygon.guideway.unfinished:not(.p)")].map((el) => {
+    el.classList.remove("unfinished");
+    // map.svg draws an unfinished one white with a thin grey edge: it takes a finished one's colours (as map.svg has them)
+    styles.push([el, el.getAttribute("style") ?? ""]);
+    el.setAttribute("style", "fill: #888780; stroke: #5F5E5A; stroke-width: 1.5");
+    const m = toSvg(el, svg);
+    return [...el.points].map((q) => new DOMPoint(q.x, q.y).matrixTransform(m));
+  });
+  svg.querySelectorAll("text.guideway").forEach((el) => {
+    const q = new DOMPoint(+el.getAttribute("x"), +el.getAttribute("y") - 6.25).matrixTransform(toSvg(el, svg));
+    if (!pieces.some((pts) => inside(q, pts))) return;
+    el.classList.remove("arrow-pending");
+    const style = el.getAttribute("style") ?? "";
+    if (/fill:\s*#767676/i.test(style)) {
+      styles.push([el, style]);
+      el.setAttribute("style", style.replace(/fill:\s*#767676/i, "fill: #eeeeee"));
+    }
+  });
+  return styles;
 }
 
 /**
@@ -171,6 +203,9 @@ export async function startFrom(svg, n, { pose = true } = {}) {
   gantry.getAnimations({ subtree: true }).forEach((a) => a.cancel());
   drawn.forEach(([el, c]) => (c == null ? el.removeAttribute("class") : el.setAttribute("class", c)));
   unbuild(svg, n);
+  // on a replay the arrows are already restyled: the styles kept are the first time's, as map.svg has them
+  const styles = finishPrecast(svg);
+  before.styles ??= styles;
   gantry.dataset.span = n;
   delete gantry.dataset.halfway;
   gantryProgress(svg, false);
@@ -199,6 +234,7 @@ export function stopGantry(svg) {
   gantry.getAnimations({ subtree: true }).forEach((a) => a.cancel());
   if (before) {
     before.classes.forEach(([el, c]) => (c == null ? el.removeAttribute("class") : el.setAttribute("class", c)));
+    before.styles?.forEach(([el, c]) => el.setAttribute("style", c));
     gantry.dataset.span = before.span;
     before = null;
   }
