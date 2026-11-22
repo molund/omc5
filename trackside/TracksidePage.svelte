@@ -8,7 +8,7 @@
   import { inline, plainText } from "../src/lib/inline.js";
   import { term, fetchCounts, SITE } from "../src/lib/comments.js";
   import { track } from "../src/lib/track.js";
-  import { blogPosting, ldScript } from "../src/lib/seo.js";
+  import { blogPosting, blogPage, ldScript } from "../src/lib/seo.js";
   import Icon from "../src/Icon.svelte";
 
   let { view = { page: 1 } } = $props();
@@ -197,8 +197,11 @@
   {:else}
     <meta name="twitter:card" content="summary" />
   {/if}
-  <!-- an update's own page says what it is to search engines and AI tools: a blog post, with its dates and author -->
-  {#if single}{@html ldScript(blogPosting(single, singleTitle))}{/if}
+  <!-- what the page is, for search engines and AI tools: an update's own page is a blog post, with its dates and author; the
+       first page of updates is the blog, and an older page a collection of its posts -->
+  {#if single}{@html ldScript(blogPosting(single, singleTitle))}{:else}{@html ldScript(
+      blogPage(shown, page, url, (n) => n.title || heading(n.time)),
+    )}{/if}
 </svelte:head>
 
 <!-- update text with its links and bold, and its span numbers linked to the map, the first time each appears in an update

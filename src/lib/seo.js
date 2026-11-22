@@ -77,3 +77,48 @@ export function blogPosting(n, headline) {
  */
 export const ldScript = (data) =>
   `<script type="application/ld+json">${JSON.stringify(data).replaceAll("<", "\\u003c")}</` + "script>";
+
+/** Trackside itself, which every update is part of. */
+const BLOG_ID = `${SITE}trackside/#blog`;
+
+/**
+ * A page of updates: the first page as the schema.org Blog, with the updates on it; an older page as a CollectionPage of
+ * that blog.
+ * @param {import("./status.js").Note[]} shown The updates on the page.
+ * @param {number} page Which page of updates it is.
+ * @param {string} url The page's address, in full.
+ * @param {(n: import("./status.js").Note) => string} headline An update's title, or its date for a status update.
+ */
+export function blogPage(shown, page, url, headline) {
+  const posts = shown.map((n) => ({
+    "@type": "BlogPosting",
+    headline: headline(n),
+    url: permalink(n),
+    datePublished: published(n),
+    dateModified: modified(n),
+    author: AUTHOR,
+  }));
+  const description =
+    "Updates and photos from along the Surrey Langley SkyTrain guideway, following the Clayton Clipper gantry span by span.";
+  return page === 1
+    ? {
+        "@context": "https://schema.org",
+        "@type": "Blog",
+        "@id": BLOG_ID,
+        name: "Trackside",
+        description,
+        url,
+        author: AUTHOR,
+        publisher: AUTHOR,
+        inLanguage: "en",
+        blogPost: posts,
+      }
+    : {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        name: `Trackside, page ${page}`,
+        url,
+        isPartOf: { "@type": "Blog", "@id": BLOG_ID, name: "Trackside", url: `${SITE}trackside/` },
+        hasPart: posts,
+      };
+}
