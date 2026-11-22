@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { defineConfig } from "vite";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
 import tailwindcss from "@tailwindcss/vite";
+import { photoSizes } from "./src/lib/photoSizes.js";
 
 // The Google tag (.google/gtag.html) goes at the top of <head> on every page, indented 4 spaces like the rest of the head.
 // Trackside's update pages are rendered from the built Trackside page (trackside/prerender.js), so they get it too. Not in
@@ -19,8 +20,21 @@ const googleTag = {
   },
 };
 
+// "virtual:photo-sizes": the width and height of every update photo, read from the files in
+// public/images/sorry-im-a-shitty-photographer/ at build time (src/lib/photoSizes.js), for Trackside's <img> tags. The same
+// module goes into the browser build and the prerender, so the built pages and the browser agree.
+const PHOTO_SIZES = "\0virtual:photo-sizes";
+const photoSizesModule = {
+  name: "photo-sizes",
+  resolveId: (id) => (id === "virtual:photo-sizes" ? PHOTO_SIZES : null),
+  load: (id) =>
+    id === PHOTO_SIZES
+      ? `export default ${JSON.stringify(photoSizes(new URL("public/images/sorry-im-a-shitty-photographer/", import.meta.url)))};`
+      : null,
+};
+
 export default defineConfig(({ isSsrBuild }) => ({
-  plugins: [tailwindcss(), svelte(), googleTag],
+  plugins: [tailwindcss(), svelte(), googleTag, photoSizesModule],
   // GitHub Pages serves the site from https://clayton-clipper.olund.ca/ (the custom domain set in the repo's Pages settings)
   base: "/",
   // four pages: the map, Trackside at /trackside/, About at /about/ and the animation launcher at /play/ (linked from the

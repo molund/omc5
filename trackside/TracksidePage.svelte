@@ -10,6 +10,7 @@
   import { track } from "../src/lib/track.js";
   import { blogPosting, blogPage, ldScript, isoBC, published, modified } from "../src/lib/seo.js";
   import Icon from "../src/Icon.svelte";
+  import SIZES from "virtual:photo-sizes";
 
   let { view = { page: 1 } } = $props();
 
@@ -230,13 +231,19 @@
 
 <!-- a photo and its caption, under a note or among its further paragraphs -->
 {#snippet photo(p, plan)}
+  <!-- its width and height (read from the file when the site is built) only give its shape, so the page doesn't jump as
+       it loads; the CSS still fits it to the column. The main photo on an update's own page loads first, the rest lazily -->
+  {@const size = SIZES[p.src.split("/").pop()]}
   <figure class="mx-0 mt-2.5 mb-0">
     <a href={p.src} onclick={(e) => track("photo_open", { slug: slugOf(e) })}
       ><img
-        class="block h-auto w-full rounded-md"
+        class="update-photo block h-auto w-full"
         src={p.src}
         alt={plainText(p.caption) || "Photo for this update"}
-        loading="lazy"
+        width={size?.[0]}
+        height={size?.[1]}
+        loading={single && p === image ? "eager" : "lazy"}
+        fetchpriority={single && p === image ? "high" : undefined}
       /></a
     >
     {#if p.caption}<figcaption class="mt-1 mb-5 text-sm text-(--mute) italic">
@@ -399,5 +406,9 @@
   /* an update's heading: its title or date, with the permalink icon at the right, over a thin line */
   .update-heading {
     @apply mt-7 mb-2 border-b border-(--line) pb-1.25 text-xl leading-tight font-bold;
+  }
+  /* an update's photo, with rounded corners */
+  .update-photo {
+    @apply rounded-md;
   }
 </style>
