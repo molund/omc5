@@ -17,8 +17,8 @@
 //   pause: true to hold the gantry for CAPTION_PAUSE as it shows, for news worth stopping for (every pause is that long)
 // A caption's time goes by clock(), so it waits while the Pause button holds the gantry.
 // An opening caption (one due at the run's first step at speed, `at` 1 or less) comes up over a still map instead: the
-// gantry is held while the zoom and the buttons settle (SETTLE), then while the caption's first part shows, and plays on
-// under the rest.
+// gantry is held while the zoom and the buttons settle (SETTLE), then for CAPTION_PAUSE once it comes up, and plays on
+// under the rest of it.
 
 import CAPTIONS from "../../captions.json";
 import { onStep } from "../lib/animationMark.js";
@@ -70,8 +70,9 @@ function open(c) {
   const parts = c.parts.map((text, i) => {
     const until = from + readTime(text, c.seconds, i === 0),
       part = { text, point: c.point ?? null, layer: c.layer ?? null, from, until };
+    // the hold lasts CAPTION_PAUSE once the caption comes up, however long it shows
+    if (i === 0) held = from + CAPTION_PAUSE * 1000;
     from = until;
-    if (i === 0) held = until;
     return part;
   });
   opening = { parts, held, end: from, holding: true };
