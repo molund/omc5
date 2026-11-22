@@ -2,10 +2,10 @@
   /**
    * The permalink button's share box while the gantry animates, after YouTube's: the link, shown as its path and query
    * only, from ~ (the site's home, as in a shell: ~/play/?span=12), in a greyed, read-only field, a Copy button that copies the whole
-   * address, and three choices that make the link (all on at first):
+   * address, and three choices that make the link (only Play on at first):
    * - Play the animation, or open the map without it
    * - at the span whose move is under way, or where the gantry is now (status.yaml's span)
-   * - fit to the screen (/play/ picks vertical for a phone, horizontal for a computer), or Progress. A span link without
+   * - rotate to the viewport (/play/ picks vertical for a phone, horizontal for a computer), or Progress. A span link without
    *   the animation always opens in Progress, so this choice is greyed out then.
    */
   import { tick } from "svelte";
@@ -19,8 +19,8 @@
   // the span whose move is under way, as the box opens
   const span = currentSpan() || null;
   let play = $state(true),
-    atSpan = $state(!!span),
-    fit = $state(true),
+    atSpan = $state(false),
+    fit = $state(false),
     copied = $state(false),
     box = $state();
   let copyTimer;
@@ -79,7 +79,7 @@
     >
   {/if}
   <label class={["share-choice mt-2 flex items-center gap-2", !canFit && "share-choice-off"]}
-    ><input type="checkbox" bind:checked={fit} disabled={!canFit} /> Fit to the screen</label
+    ><input type="checkbox" bind:checked={fit} disabled={!canFit} /> Rotate to the viewport (e.g. phone)</label
   >
 </div>
 

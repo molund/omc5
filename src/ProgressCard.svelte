@@ -168,7 +168,7 @@
     aria-label="Share"
     aria-expanded={sharing}
     data-share-button
-    onclick={openShare}><Icon kind="link" /></a
+    onclick={openShare}><Icon kind="share" /></a
   >
   <button
     class="absolute top-3 right-35 z-5 p-1.5 shadow-float"
