@@ -55,7 +55,7 @@ for (let p = 1; p <= pages; p++)
 // each update's own page, /trackside/<slug>/: just that update, with its own title, description and photo
 for (const n of status.history) await write(`dist/trackside/${n.slug}`, { slug: n.slug });
 
-// dist/sitemap.xml, for search engines (submitted in Google Search Console, since a project site can't have a robots.txt):
+// dist/sitemap.xml, for search engines (submitted in Google Search Console, and listed in public/robots.txt):
 // the map, the pages of updates, each update's own page and the About page, each with when it last changed (a page of
 // updates, at its newest update or follow-up; the map, at status.yaml's `updated`). Not the animation launcher, /play/:
 // it only redirects to the map.

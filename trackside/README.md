@@ -105,7 +105,7 @@ Each page of updates gets its own `<title>`, description, canonical link, and Op
 
 - The pages of updates use a fixed description and the newest photo; an update's own page uses its title, summary and
   photo.
-- `sitemap.xml` is for search engines: submit https://clayton-clipper.olund.ca/sitemap.xml once
+- `sitemap.xml` is for search engines, and `robots.txt` points to it: submit https://clayton-clipper.olund.ca/sitemap.xml once
   in Google Search Console, and Google rereads it from then on.
 - On the pages, the date links carry an `aria-label` with the date and the title, for screen
   readers.
