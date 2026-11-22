@@ -8,7 +8,7 @@
   import { inline, plainText } from "../src/lib/inline.js";
   import { term, fetchCounts, SITE } from "../src/lib/comments.js";
   import { track } from "../src/lib/track.js";
-  import { blogPosting, blogPage, ldScript } from "../src/lib/seo.js";
+  import { blogPosting, blogPage, ldScript, isoBC, published } from "../src/lib/seo.js";
   import Icon from "../src/Icon.svelte";
 
   let { view = { page: 1 } } = $props();
@@ -265,7 +265,8 @@
           class="text-inherit no-underline"
           href="?post={n.slug}"
           onclick={(e) => jumpTo(e, n.slug)}
-          aria-label={n.title && !n.post ? `${heading(n.time)}: ${n.title}` : undefined}>{label(n)}</a
+          aria-label={n.title && !n.post ? `${heading(n.time)}: ${n.title}` : undefined}
+          >{#if n.post && n.title}{label(n)}{:else}<time datetime={published(n)}>{label(n)}</time>{/if}</a
         >
         <a
           class="shrink-0 p-1 text-(--mute) hover:text-(--accent)"
@@ -275,9 +276,10 @@
           onclick={(e) => copyPermalink(e, n)}><Icon kind="link" /></a
         >
       </svelte:element>
-      <!-- a post leads with its title, with just its date under it -->
+      <!-- a post leads with its title, with just its date under it; dates and times are <time> elements, so machines can read
+           them too -->
       {#if n.post && n.title}<p class="mx-0 -mt-1 mb-2 text-sm text-(--mute)">
-          {dateOnly(n.time)}
+          <time datetime={published(n)}>{dateOnly(n.time)}</time>
         </p>{/if}
       <p class="m-0">{@render linked(plan.get(n))}</p>
       {#if n.photo}{@render photo(n.photo, plan)}{/if}
@@ -293,7 +295,7 @@
           {#each [...n.followUps].reverse() as m}<li>
               <code
                 class="rounded-md bg-[rgba(129,139,152,0.18)] px-[0.4em] py-[0.15em] font-[family-name:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace] text-[85%]"
-                >{followUpTime(m.time, n.time)}</code
+                ><time datetime={isoBC(m.time)}>{followUpTime(m.time, n.time)}</time></code
               >
               {@render linked(plan.get(m))}
               {#if m.photo}{@render photo(m.photo, plan)}{/if}
