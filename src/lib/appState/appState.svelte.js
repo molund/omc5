@@ -195,7 +195,7 @@ export function setBasemap(basemap) {
 }
 
 /** The switches animateGantry() sets, besides the gantry itself. */
-const ANIMATION_SWITCHES = ["arrows", "spanNumbers", "guideway", "unfinished", "supports"];
+const ANIMATION_SWITCHES = ["arrows", "spanNumbers", "stationLabels", "guideway", "unfinished", "supports"];
 
 /**
  * The switches as they were before the first animation since the view was picked (ANIMATION_SWITCHES, the gantry and
@@ -230,7 +230,9 @@ export function animateGantry(source, quiet = false) {
   };
   if (!layers.gantry) setSwitch("gantry", true);
   setSwitch("arrows", false);
-  setSwitch("spanNumbers", false);
+  // span numbers show where in the route it is; station labels would crowd them
+  setSwitch("spanNumbers", true);
+  setSwitch("stationLabels", false);
   setSwitch("guideway", true);
   setSwitch("unfinished", false);
   setSwitch("supports", true);
