@@ -79,7 +79,7 @@
       // animateGantry() may have just turned on is showing (a hidden gantry has no size)
       const from = ui.animateFrom,
         start = from
-          ? new Promise((r) => requestAnimationFrame(r)).then(() => startFrom(els.svg, from))
+          ? new Promise((r) => requestAnimationFrame(r)).then(() => startFrom(els.svg, from, { pose: false }))
           : Promise.resolve();
       // the next frame, once the Gantry layer the link may have just turned on is showing (a hidden gantry has no size);
       // not at all with FOLLOW_GANTRY off

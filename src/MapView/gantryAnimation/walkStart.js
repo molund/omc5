@@ -137,7 +137,9 @@ export async function startWalk(svg, { pose = false } = {}) {
     span = gantry?.dataset.span,
     partWay = walkPartWay(+span);
   if (pose && !partWay) return false;
-  if (pose) setInstant(true);
+  // the set-up from the walk's start (the pause and the fill before the steps) takes no time either, so +1 and ?span=N
+  // go straight to the span; playSteps() plays at speed again from the first step not yet made
+  if (partWay) setInstant(true);
   if (partWay) {
     // anything an earlier pose left on the pieces goes first
     gantry.getAnimations({ subtree: true }).forEach((a) => a.cancel());

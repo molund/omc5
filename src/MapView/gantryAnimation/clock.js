@@ -1,6 +1,8 @@
 // The animation's time: how fast it plays (SPEED), its own clock, the waits between moves, and the Pause and Play buttons'
 // hold on them all.
 
+import { muteMarks } from "../../lib/animationMark.js";
+
 /**
  * How fast the whole animation plays: every move's duration and every pause is divided by it, so 2 is twice as fast as
  * the times written in the steps, and 1 plays them as written. After the Play pill, the moves play at SPEEDS in
@@ -90,6 +92,7 @@ export const setCaptionSlow = (on) => {
  * pieces start, such as the walk's steps the crews have already made (walk.js).
  */
 export const setInstant = (on) => {
+  muteMarks(on);
   settle();
   SPEED = on ? Infinity : wanted();
 };

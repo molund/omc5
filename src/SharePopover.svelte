@@ -10,14 +10,14 @@
    */
   import { tick } from "svelte";
   import { ui } from "./lib/appState/appState.svelte.js";
-  import { markedSpan } from "./lib/animationMark.js";
+  import { currentSpan } from "./lib/animationMark.js";
   import { SITE } from "./lib/comments.js";
   import { track } from "./lib/track.js";
 
   let { onclose } = $props();
 
   // the span whose move is under way, as the box opens
-  const span = markedSpan() || null;
+  const span = currentSpan() || null;
   let play = $state(true),
     atSpan = $state(!!span),
     fit = $state(true),

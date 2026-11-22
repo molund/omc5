@@ -167,6 +167,24 @@ export function walkPartWay(S) {
   return null;
 }
 
+/**
+ * The span a walk from span S has reached once `done` of its steps are made: the last span whose walkPartWay() has no
+ * more steps done than that (S itself before the first is built).
+ * @param {number} S The span the walk starts from (41 or 50).
+ * @param {number} done How many of the walk's own steps are made.
+ * @returns {number}
+ */
+export function walkSpanAt(S, done) {
+  const c = WALKS[S];
+  let on = S;
+  if (!c) return on;
+  for (let s = c.built; s <= c.last; s++) {
+    const p = walkPartWay(s);
+    if (p && p.from === S && p.done <= done) on = s;
+  }
+  return on;
+}
+
 /** Whether there is a walk from span S (41 or 50), or one under way on it (29 isn't worked out). */
 export const hasWalk = (S) => S in WALKS || walkPartWay(S) != null;
 

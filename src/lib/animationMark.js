@@ -33,20 +33,52 @@ export function onStep(fn) {
   listeners.add(fn);
 }
 
+/** The span the gantry is on as the step starts: the move's span, but part way through a walk the span the walk has
+ * reached (the −1 and +1 buttons step from it). */
+let current = 0;
+/** Steps played with no time (setInstant() in clock.js: a pose, or catching up to a start span) aren't noted. */
+let muted = false;
+
+/**
+ * Stops noting steps, or starts again (setInstant() in clock.js): steps played with no time are only setting the gantry
+ * up, so they leave the span, step and captions where they were.
+ * @param {boolean} on
+ * @returns {void}
+ */
+export function muteMarks(on) {
+  muted = on;
+}
+
+/**
+ * The span the gantry is on, before the move that starts there notes its first step (stepAnimation(), so a second −1 or
+ * +1 straight after steps from the span the first one went to).
+ * @param {number} n
+ * @returns {void}
+ */
+export function setCurrentSpan(n) {
+  current = n;
+}
+
 /**
  * Notes the step that is starting.
  * @param {number} s The span the move started on.
  * @param {number} n The step's number (see STEPS).
+ * @param {number} [on] The span the gantry is on now, when that isn't `s` (part way through a walk).
  * @returns {void}
  */
-export function markStep(s, n) {
+export function markStep(s, n, on = s) {
+  if (muted) return;
   span = Math.max(0, Math.min(127, Math.round(+s) || 0));
   step = Math.max(0, Math.min(127, n));
+  current = Math.round(+on) || span;
   listeners.forEach((fn) => fn(span, step));
 }
 
 /** The span the move under way started on (as markStep() last had it). */
 export const markedSpan = () => span;
+
+/** The span the gantry is on (as markStep() last had it): the move's, or the one a walk has reached. */
+export const currentSpan = () => current;
 
 /**
  * The address's hash value for now.

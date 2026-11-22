@@ -24,6 +24,7 @@ import { step0FillSpan } from "./normalMove.js";
 import { holders } from "./holders.js"; // TEMP
 import { debugLog } from "./debug.js";
 import { STEPS, markStep } from "../../lib/animationMark.js";
+import { walkSpanAt } from "./walk.js";
 
 /** The trolley's closest approach to either end's blue tips, as a share of a tip's length (as TIP_GAP_SHARE elsewhere). */
 const TIP_GAP_SHARE = 0.5;
@@ -474,7 +475,7 @@ export async function playSteps(m, steps, last, { halfway = false, done = 0, pos
     if (done && i === done) gantry.style.opacity = "";
     if (i) debugLog(`[gantry] walk layout: ${layout()}`); // TEMP
     debugLog(`[gantry] walk ${i + 1}: ${JSON.stringify(step)}`); // TEMP
-    markStep(S, i < lead ? STEPS.CARRY_SHORT_BACK : STEPS.WALK + i - lead);
+    markStep(S, i < lead ? STEPS.CARRY_SHORT_BACK : STEPS.WALK + i - lead, i < lead ? S : walkSpanAt(S, i - lead));
     // the arrows: the two outermost supports holding the trusses during this step (the short one too, when it stands
     // across under them), leaving out the one being carried or picked up
     const moving = [step.who, step.pick?.who].filter(Boolean),

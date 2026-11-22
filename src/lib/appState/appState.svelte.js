@@ -3,7 +3,7 @@ import { layers, ui } from "./state.svelte.js";
 import { setView, fillView, progressView, horizontalView, setZoom, centreOn } from "./viewport.svelte.js";
 import { SPAN_CENTRES } from "../spanCentres.js";
 import { track } from "../track.js";
-import { markedSpan } from "../animationMark.js";
+import { currentSpan, setCurrentSpan } from "../animationMark.js";
 import {
   defaults,
   basemapFor,
@@ -280,13 +280,14 @@ export function exitAnimation() {
 
 /**
  * Moves the gantry animation a span on or back (the +1 and −1 buttons): it starts again, as an animation that starts on a
- * span (?span=N), from the start of the span after or before the one whose move is under way, and plays on from there.
+ * span (?span=N), from the start of the span after or before the one the gantry is on (part way through a walk, the one
+ * the walk has reached), and plays on from there.
  * @param {number} by 1 or −1.
  * @returns {void}
  */
 export function stepAnimation(by) {
   if (!ui.gantryPlaying) return;
-  const from = markedSpan(),
+  const from = currentSpan(),
     to = Math.min(105, Math.max(1, from + by)),
     source = by > 0 ? "forward" : "back";
   // one event for the step (not a reset and a play)
@@ -294,6 +295,7 @@ export function stepAnimation(by) {
   stopAnimation(source, true);
   // after stopAnimation, which keeps an animation's start span: the drawing goes back to this span's start instead
   ui.animateFrom = to;
+  setCurrentSpan(to);
   // a frame later, once MapView has stopped the moves (as for an address's ?animate=true)
   requestAnimationFrame(() => animateGantry(source, true));
 }

@@ -37,6 +37,8 @@ export function playGantry(svg) {
 
 /** The pose under way (poseGantry()), for Play to wait for. */
 let posing = Promise.resolve();
+/** How many poses have been asked for: a pose still waiting its turn gives way to a newer one (poseGantry()). */
+let poses = 0;
 
 /**
  * On a span part way through a walk (42 to 47), sets the gantry where the walk has it at that point instead of where
@@ -48,7 +50,9 @@ let posing = Promise.resolve();
 export function poseGantry(svg) {
   const gantry = svg?.querySelector("#clayton-clipper");
   if (!gantry || !gantry.getBoundingClientRect().width || !walkPartWay(+gantry.dataset.span)) return posing;
-  posing = posing.then(() => startWalk(svg, { pose: true })).catch(() => {});
+  // the stop, the view and the new span (+1, −1) can each ask within a frame: only the last one waiting is played
+  const ask = ++poses;
+  posing = posing.then(() => ask === poses && startWalk(svg, { pose: true })).catch(() => {});
   return posing;
 }
 
@@ -151,9 +155,11 @@ function unbuild(svg, n) {
  * stopGantry() (the Reset button) puts that back. Nothing happens for a span outside 1 to 105.
  * @param {SVGSVGElement} svg The map's <svg>, with the gantry showing (a hidden gantry has no size to pose).
  * @param {number} n The span to start on.
+ * @param {{ pose?: boolean }} [options] pose: false when the animation plays from there at once (Play, +1, −1): the walk
+ * sets itself up from its start anyway, so posing first would only keep the gantry out of sight for longer.
  * @returns {Promise<void>}
  */
-export async function startFrom(svg, n) {
+export async function startFrom(svg, n, { pose = true } = {}) {
   const gantry = svg.querySelector("#clayton-clipper");
   if (!gantry || !drawn || !(n >= 1 && n <= 105)) return;
   // a pose still being set (poseGantry) finishes first, then goes, with anything else left on the gantry
@@ -169,7 +175,7 @@ export async function startFrom(svg, n) {
   delete gantry.dataset.halfway;
   gantryProgress(svg, false);
   placeGantry(svg);
-  await poseGantry(svg);
+  if (pose) await poseGantry(svg);
 }
 
 /** The drawing before the Play pill's first move, saved by playToEnd(); null when nothing has moved. */
