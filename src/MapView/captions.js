@@ -9,7 +9,7 @@
 //   parts: the caption's text, as a list: one after another, with the same arrow throughout
 //   seconds: how long each part shows instead of its reading time
 // Each part shows whole, as one block (the parts are where a caption breaks), for its reading time at READ_CPS characters a
-// second, READ_MIN at the least.
+// second, READ_MIN at the least (READ_FIRST_MIN for a caption's first part, as the eye finds it).
 //   point: a part of the gantry for an arrow to point at while it shows (captionArrow.js: support-a, support-b, support-c,
 //          short-support, trolley, front-jacks, rear-jacks), or a guideway support by the spans either side ("12/13")
 //   layer: a layer switch's key (layerSwitches.js, e.g. "ave72") to turn on while the caption shows; it goes back as it was
@@ -29,12 +29,16 @@ export const CAPTION_PAUSE = 1.5;
 /** How long the map stays still before an opening caption comes up, in milliseconds. */
 const SETTLE = 1500;
 
-/** The reading speed in characters a second, and the shortest a part shows, in milliseconds. */
+/** The reading speed in characters a second, and the shortest a part shows, in milliseconds: a caption's first part,
+ * and every other one. */
 const READ_CPS = 17,
-  READ_MIN = 1500;
+  READ_FIRST_MIN = 7000,
+  READ_MIN = 5000;
 
-/** How long a part shows, in milliseconds: its reading time, or `seconds` when the caption gives it. */
-const readTime = (text, seconds) => (seconds ? seconds * 1000 : Math.max(READ_MIN, (text.length / READ_CPS) * 1000));
+/** How long a part shows, in milliseconds: its reading time, or `seconds` when the caption gives it; `first` for a
+ * caption's first part. */
+const readTime = (text, seconds, first) =>
+  seconds ? seconds * 1000 : Math.max(first ? READ_FIRST_MIN : READ_MIN, (text.length / READ_CPS) * 1000);
 
 /** Captions waiting for their time (`due` on playClock(), the steps' own time), and the parts of the one showing, each
  * with its own time (`from` to `until` on clock(): read at the reader's pace). */
@@ -64,7 +68,7 @@ function open(c) {
   let from = performance.now() + SETTLE,
     held = from;
   const parts = c.parts.map((text, i) => {
-    const until = from + readTime(text, c.seconds),
+    const until = from + readTime(text, c.seconds, i === 0),
       part = { text, point: c.point ?? null, layer: c.layer ?? null, from, until };
     from = until;
     if (i === 0) held = until;
@@ -125,8 +129,8 @@ export function captionNow() {
   for (const p of pending.filter((p) => p.due <= played)) {
     // a caption that comes up takes over from one still showing; its parts follow one another, from now
     let from = now;
-    showing = p.c.parts.map((text) => {
-      const until = from + readTime(text, p.c.seconds),
+    showing = p.c.parts.map((text, i) => {
+      const until = from + readTime(text, p.c.seconds, i === 0),
         part = { text, point: p.c.point ?? null, layer: p.c.layer ?? null, from, until };
       from = until;
       return part;
