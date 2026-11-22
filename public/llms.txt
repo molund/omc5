@@ -18,6 +18,12 @@ The current span and the gantry's velocity are published as data, rebuilt whenev
 - [Trackside](https://clayton-clipper.olund.ca/trackside/): the construction updates, newest first, with photos
 - [About](https://clayton-clipper.olund.ca/about/)
 
+## Trackside updates
+
+- [Atom feed](https://clayton-clipper.olund.ca/trackside/feed.xml) and [JSON Feed](https://clayton-clipper.olund.ca/trackside/feed.json): every update, newest first, with its full text, photos and follow-ups.
+- Each update has its own page at https://clayton-clipper.olund.ca/trackside/<slug>/, and the same update as Markdown at https://clayton-clipper.olund.ca/trackside/<slug>/index.md. The feeds list every slug.
+- Times are BC time (UTC−7). The updates are first-hand observations from the ground by the author; span numbers and anything not yet built are his best estimates, not official project information.
+
 ## Notes
 
 - Span numbers run along the route. The gantry's span number goes up when it arrives at a span; on a double girder span only the arrival is logged, so the progress card shows one less (`shownOnCard` in status.json).

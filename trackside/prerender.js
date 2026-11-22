@@ -16,8 +16,8 @@ import { inline, plainText } from "../src/lib/inline.js";
 import { term, SITE } from "../src/lib/comments.js";
 import { velocityChart, velocityPoints } from "../src/lib/velocityChart.js";
 import { statusData, datasetJsonLd, summarySentence } from "../src/lib/statusData.js";
-import { atom, jsonFeed, escape } from "./feeds.js";
-import { photos } from "../src/lib/seo.js";
+import { atom, jsonFeed, escape, titleOf } from "./feeds.js";
+import { photos, published, permalink } from "../src/lib/seo.js";
 
 const PAGE_SIZE = 10;
 
@@ -53,7 +53,8 @@ for (let p = 1; p <= pages; p++)
   await write(p === 1 ? "dist/trackside" : `dist/trackside/page/${p}`, {
     page: p,
   });
-// each update's own page, /trackside/<slug>/: just that update, with its own title, description and photo
+// each update's own page, /trackside/<slug>/: just that update, with its own title, description and photo; and beside it
+// index.md, the same update as Markdown, for AI tools (written further down, with the feeds)
 for (const n of status.history) await write(`dist/trackside/${n.slug}`, { slug: n.slug });
 
 // dist/sitemap.xml, for search engines (submitted in Google Search Console, and listed in public/robots.txt):
@@ -93,9 +94,12 @@ ${urls
 // paragraphs and photos, its follow-ups (oldest first), a link to the update on its page of updates, and giscus's
 // strict-mode marker,
 // the sha1 of the title it asks for. No date line: the thread's title already has it.
-function threadBody(n) {
+// The update itself as Markdown, as parts to join with blank lines: the summary, its photo and caption, its further
+// paragraphs and photos, and its follow-ups (oldest first). Used by the comment thread and by the update's own Markdown
+// copy, index.md.
+function updateMarkdown(n) {
   // the text's links and bold written out again, each link with its full address (a link on this site is to a page of
-  // Trackside, where it was written), since the thread is on GitHub
+  // Trackside, where it was written), since it is read away from the site
   const md = (text) =>
     inline(text)
       .map((p) => {
@@ -126,6 +130,11 @@ function threadBody(n) {
         .join("\n"),
     );
   }
+  return parts;
+}
+
+function threadBody(n) {
+  const parts = updateMarkdown(n);
   // the update on the page of updates it is listed on (made again at every deploy, as updates move down the pages)
   const at = Math.floor(status.history.indexOf(n) / PAGE_SIZE) + 1;
   parts.push(
@@ -149,6 +158,15 @@ writeFileSync(
   ) + "\n",
 );
 console.log(`prerendered Trackside: ${pages} page(s), ${status.history.length} updates`);
+
+// dist/trackside/<slug>/index.md, each update as Markdown for AI tools and anyone who wants the plain text: its title, its
+// date and author, the update itself, and its address on the site
+for (const n of status.history)
+  writeFileSync(
+    `dist/trackside/${n.slug}/index.md`,
+    [`# ${titleOf(n)}`, `${published(n).slice(0, 10)} · Mike · ${permalink(n)}`, ...updateMarkdown(n)].join("\n\n") +
+      "\n",
+  );
 
 // dist/trackside/feed.xml and feed.json, every update as an Atom feed and a JSON Feed, for feed readers and AI tools
 // (trackside/feeds.js)
