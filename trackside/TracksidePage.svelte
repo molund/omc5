@@ -8,7 +8,7 @@
   import { inline, plainText } from "../src/lib/inline.js";
   import { term, fetchCounts, SITE } from "../src/lib/comments.js";
   import { track } from "../src/lib/track.js";
-  import { blogPosting, blogPage, ldScript, isoBC, published } from "../src/lib/seo.js";
+  import { blogPosting, blogPage, ldScript, isoBC, published, modified } from "../src/lib/seo.js";
   import Icon from "../src/Icon.svelte";
 
   let { view = { page: 1 } } = $props();
@@ -192,6 +192,12 @@
   <meta property="og:title" content={single ? singleTitle : "Trackside"} />
   <meta property="og:description" content={description} />
   <meta property="og:url" content={url} />
+  {#if single}
+    <!-- an update's own page is an article, with its dates and author -->
+    <meta property="article:published_time" content={published(single)} />
+    <meta property="article:modified_time" content={modified(single)} />
+    <meta property="article:author" content="{SITE}about/" />
+  {/if}
   {#if image}
     <meta property="og:image" content={full(image.src)} />
     {#if image.caption}<meta property="og:image:alt" content={plainText(image.caption)} />{/if}
