@@ -60,7 +60,6 @@ Shared with the map, in `src/`:
    using the built `dist/trackside/index.html` as the template. It writes:
    - `dist/trackside/…/index.html` — the pages
    - `dist/sitemap.xml` — every page on the site, with when it last changed
-   - `dist-ssr/threads.json` — each update's thread title and text, for the comment threads
 
 The pages are laid out by Prettier so they're easy to read, with its strict whitespace setting.
 That setting matters: Svelte has to match the built HTML exactly when it takes over, and normal
@@ -112,20 +111,13 @@ Each page of updates gets its own `<title>`, description, canonical link, and Op
 
 ## Comments
 
-Comments use [giscus](https://giscus.app): each update has its own GitHub Discussion in the
-"Trackside" category, titled by its BC time (UTC−7), e.g. "Update 2026-10-31 14:00".
+Comments use [Remark42](https://remark42.com), self-hosted at https://comments.olund.ca (site ID `trackside`): each
+update has its own thread, keyed by its page's address (`threadUrl()` in `src/lib/comments.js`).
 
-- **Thread titles must never change**, or giscus loses the thread. They come from `term()` in
-  `src/lib/comments.js`.
-- The deploy workflow creates and updates the threads with
-  `.github/scripts/sync_discussions.py`, from `dist-ssr/threads.json`. A thread's text shows the
-  update itself, and links to it on its page of updates (made again at every deploy, since updates move down the
-  pages). A thread that giscus started itself, before the
-  workflow made one, is left alone.
-- Threads older than the newest 30 are closed and locked, to keep spam out of old threads.
-- The comment and reaction counts come from one GitHub API call, which returns at most 100
-  threads. Once there are 100, the workflow's thread-count check fails (and GitHub emails) as a
-  reminder to deal with it. It doesn't stop the deploy.
+- **Thread addresses must never change**, or Remark42 loses the thread. They come from the update's `?post=` slug.
+- The comment counts on the list pages and the progress card come from one Remark42 counts request per page.
+- Updates that had comments on GitHub Discussions (giscus, before the move) link to them under "Earlier comments on
+  GitHub" (`EARLIER` in `src/lib/comments.js`). The discussions themselves stay on GitHub.
 
 ## Settings
 

@@ -3,17 +3,15 @@
 //   dist/trackside/index.html            the newest 10 updates
 //   dist/trackside/page/2/index.html …   the older ones, 10 a page
 //   dist/trackside/<slug>/index.html     each update on its own page (in the sitemap, not linked from the site)
-// dist/sitemap.xml, every page for search engines, and dist-ssr/threads.json, each update's comment thread title and
-// body, for .github/scripts/sync_discussions.py, so status.yaml is read in one place (lib/status.js). And
+// dist/sitemap.xml, every page for search engines, so status.yaml is read in one place (lib/status.js). And
 // dist/velocity.svg, the progress card's velocity chart, from gantry-cycles.yaml (lib/velocityChart.js).
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
-import { createHash } from "node:crypto";
 import { render } from "svelte/server";
 import { format } from "prettier";
 import TracksidePage from "./TracksidePage.svelte";
 import { status, followUpTime } from "../src/lib/status.js";
 import { inline, plainText } from "../src/lib/inline.js";
-import { term, SITE } from "../src/lib/comments.js";
+import { SITE } from "../src/lib/comments.js";
 import { velocityChart, velocityPoints } from "../src/lib/velocityChart.js";
 import { statusData, datasetJsonLd, summarySentence } from "../src/lib/statusData.js";
 import { atom, jsonFeed, escape, titleOf } from "./feeds.js";
@@ -90,13 +88,8 @@ ${urls
 `,
 );
 
-// A thread's body shows the update itself, as on the Trackside page: the summary, its photo and caption, its further
-// paragraphs and photos, its follow-ups (oldest first), a link to the update on its page of updates, and giscus's
-// strict-mode marker,
-// the sha1 of the title it asks for. No date line: the thread's title already has it.
 // The update itself as Markdown, as parts to join with blank lines: the summary, its photo and caption, its further
-// paragraphs and photos, and its follow-ups (oldest first). Used by the comment thread and by the update's own Markdown
-// copy, index.md.
+// paragraphs and photos, and its follow-ups (oldest first). Used by the update's own Markdown copy, index.md.
 function updateMarkdown(n) {
   // the text's links and bold written out again, each link with its full address (a link on this site is to a page of
   // Trackside, where it was written), since it is read away from the site
@@ -133,30 +126,6 @@ function updateMarkdown(n) {
   return parts;
 }
 
-function threadBody(n) {
-  const parts = updateMarkdown(n);
-  // the update on the page of updates it is listed on (made again at every deploy, as updates move down the pages)
-  const at = Math.floor(status.history.indexOf(n) / PAGE_SIZE) + 1;
-  parts.push(
-    `[See it on the Clayton Clipper Tracker](${SITE}trackside/${at === 1 ? "" : `page/${at}/`}?post=${n.slug})`,
-  );
-  parts.push(`<!-- sha1: ${createHash("sha1").update(term(n.time)).digest("hex")} -->`);
-  return parts.join("\n\n");
-}
-
-writeFileSync(
-  "dist-ssr/threads.json",
-  JSON.stringify(
-    status.history.map((n) => ({
-      title: term(n.time),
-      body: threadBody(n),
-      // posts stay open for comments however old they get (see close_old in sync_discussions.py)
-      post: n.post,
-    })),
-    null,
-    2,
-  ) + "\n",
-);
 console.log(`prerendered Trackside: ${pages} page(s), ${status.history.length} updates`);
 
 // dist/trackside/<slug>/index.md, each update as Markdown for AI tools and anyone who wants the plain text: its title, its

@@ -41,7 +41,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      discussions: write
     steps:
       - uses: actions/checkout@v4
       # a mistake in the schedule (shift-schedule.yaml: the irregular shutdowns and nights off) fails the run, so nothing is
@@ -73,16 +72,6 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
-      # give each status note its own comments thread (GitHub Discussion) showing the note, photo and caption, for giscus on
-      # the Trackside page, from the titles and bodies the build wrote (dist-ssr/threads.json); a failure here doesn't stop
-      # the deploy
-      - name: Create or update the comment threads
-        continue-on-error: true
-        env:
-          # Mike's fine-grained token (Discussions: read and write on this repo), since the built-in token can create
-          # threads in the Announcement category but not edit them; the built-in token until that secret exists
-          GITHUB_TOKEN: ${{ secrets.DISCUSSION_TOKEN || secrets.GITHUB_TOKEN }}
-        run: python3 .github/scripts/sync_discussions.py
       # export the GeoJSON and KML from the drawing as it is now and publish them with the site, at
       # https://clayton-clipper.olund.ca/data/
       - run: npm run export-geojson
@@ -107,21 +96,6 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
-
-  # fails (and GitHub emails) once there are 100 comment threads, the most the Trackside page reads; it doesn't hold up the
-  # deploy
-  thread-count:
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      discussions: read
-    steps:
-      - uses: actions/checkout@v4
-      - name: Check the number of comment threads
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: python3 .github/scripts/sync_discussions.py --check-count
 
   deploy:
     needs: build
