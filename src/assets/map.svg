@@ -142,7 +142,8 @@
       display: none;
     }
     /* Exit ramps (spans 35 and 39): two readings of where they fork from the eastbound track. This hides .ramp-current (forks
-       mid-span) and shows .ramp-alt (forks at the 36/37 and 37/38 hammers); change .ramp-current to .ramp-alt to switch */
+       mid-span) and shows .ramp-alt (parallel to the eastbound girders, switching on the caps at the 36/37 and 37/38 hammers;
+       2026-11-22: was angled into the track); change .ramp-current to .ramp-alt to switch */
     #map .ramp-current {
       display: none !important;
     }
@@ -959,12 +960,14 @@
           points="312.28,650.70 321.92,650.70 324.96,771.45 315.32,771.45"
         />
         <!-- Span 35 off-ramp, first span (the ramp's centre line was 320.14,771.45 to 323.21,893.45; 9.64 wide) -->
+        <!-- 2026-11-22: redrawn parallel to the eastbound girder beside it (that girder moved 12.59 across, so about 3 units, 1 m,
+             apart), as seen from the ground under span 35; was points="328.03,893.53 324.96,771.45 315.32,771.45 318.39,893.37" -->
         <polygon
           class="guideway"
           fill="#888780"
           stroke="#5F5E5A"
           stroke-width="1.5"
-          points="328.03,893.53 324.96,771.45 315.32,771.45 318.39,893.37"
+          points="315.32,771.45 324.97,771.45 326.43,893.45 316.78,893.45"
         />
         <!-- Span 35 off-ramp, second span, including the part that merges into the 36 eastbound track (a guess until it is built) -->
         <polygon
@@ -980,8 +983,11 @@
           fill="#888780"
           stroke="#5F5E5A"
           stroke-width="1.5"
-          points="318.39,893.37 328.03,893.53 324.88,1014.30 315.23,1014.30"
+          points="317.17,893.45 326.82,893.45 327.41,1014.30 317.76,1014.30"
         />
+        <!-- 2026-11-22: the girder above redrawn parallel to the eastbound girder beside it, 12.59 across, with the switch on the
+             cap where they meet (seen from the ground: the girders are parallel, not angled); was
+             points="318.39,893.37 328.03,893.53 324.88,1014.30 315.23,1014.30" -->
         <!-- The span 35 off-ramp ends on the centre of the 36 eastbound track at mid-span 36, like the span 39 on-ramp in span 38 --><!-- Span 39: yard on-ramp joining eastbound (mirror of the span 35 off-ramp) -->
         <!-- Span 39 on-ramp, including the part that merges into the 38 eastbound track (centre line was 308.92,1297.50 to 326.73,1480.20; 9.64 wide) -->
         <polygon
@@ -997,8 +1003,11 @@
           fill="#FFFFFF"
           stroke="#888780"
           stroke-width="0.825"
-          points="316.21,1358.80 325.85,1358.80 331.53,1479.73 321.93,1480.67"
+          points="319.16,1358.80 328.80,1358.80 329.49,1480.20 319.85,1480.20"
         />
+        <!-- 2026-11-22: the girder above redrawn parallel to the eastbound girder beside it, 12.59 across, like the built span 35
+             off-ramp (assumed the same pattern; not built yet), with the switch on the cap; was
+             points="316.21,1358.80 325.85,1358.80 331.53,1479.73 321.93,1480.67" -->
         <!-- Precast spans and steel girders: 10.40 wide (borders 12.05, ramp white cores 8.20) --><!-- Border for spans 43 and 44 (darker stroke under the fill, as on 31) -->
         <polygon
           class="guideway"
@@ -1573,24 +1582,26 @@
       >
         Pacific Hwy (15)
       </text>
+      <!-- 2026-11-22: both arrows moved and turned to follow the ramp girders, now parallel to the eastbound ones (were x="-942.49"
+           y="-240.96" rotate(35.5) and x="-1328.19" y="-501.41" rotate(31.3)) -->
       <!-- Span 35 and 39 exit ramp direction arrows (eastbound train direction), placed like the arrows on the span 33, 34 and 35 eastbound girders: 26.6 from the east end of the span, rotated to the span direction; grey while the ramps are unfinished -->
       <text
         class="n guideway"
-        x="-942.49"
-        y="-240.96"
+        x="-942.26"
+        y="-241.30"
         text-anchor="middle"
         style="font-size: 17.6px; fill: #eeeeee"
-        transform="rotate(35.5 -942.49 -247.96)"
+        transform="rotate(33.8 -942.26 -248.30)"
       >
         &#x2192;
       </text>
       <text
         class="n guideway"
-        x="-1328.19"
-        y="-501.41"
+        x="-1329.22"
+        y="-499.89"
         text-anchor="middle"
         style="font-size: 17.6px; fill: #767676"
-        transform="rotate(31.3 -1328.19 -508.41)"
+        transform="rotate(33.8 -1329.22 -506.89)"
       >
         &#x2192;
       </text>
