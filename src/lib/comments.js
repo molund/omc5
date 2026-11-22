@@ -78,3 +78,28 @@ export function fetchCounts() {
     })
     .catch(() => ({}));
 }
+
+/**
+ * Remark42, the self-hosted comments being tried out (comments.olund.ca, on a Google Cloud e2-micro): its address and
+ * site ID (the server's SITE).
+ */
+export const REMARK42 = { host: "https://comments.olund.ca", site: "trackside" };
+
+/**
+ * The updates whose comments use Remark42 instead of giscus while it's tried out, by slug. A thread is the update's own
+ * page (/trackside/<slug>/), so it's the same thread on every page that shows the update.
+ * @type {Set<string>}
+ */
+export const REMARK42_SLUGS = new Set(["construction-update-for-friday-oct-30-2026"]);
+
+/**
+ * How many comments a Remark42 thread has.
+ * @param {string} url The thread's address: the update's own page, in full.
+ * @returns {Promise<number|null>} The count; null if the server can't be reached.
+ */
+export function fetchRemarkCount(url) {
+  return fetch(`${REMARK42.host}/api/v1/count?site=${REMARK42.site}&url=${encodeURIComponent(url)}`)
+    .then((r) => (r.ok ? r.json() : null))
+    .then((d) => d?.count ?? null)
+    .catch(() => null);
+}

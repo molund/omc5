@@ -6,7 +6,7 @@
   import { onMount } from "svelte";
   import { status, asOf, followUpTime } from "../src/lib/status.js";
   import { inline, plainText } from "../src/lib/inline.js";
-  import { term, fetchCounts, SITE } from "../src/lib/comments.js";
+  import { term, fetchCounts, SITE, REMARK42, REMARK42_SLUGS, fetchRemarkCount } from "../src/lib/comments.js";
   import { track } from "../src/lib/track.js";
   import { blogPosting, blogPage, ldScript, isoBC, published, modified } from "../src/lib/seo.js";
   import Icon from "../src/Icon.svelte";
@@ -92,6 +92,10 @@
     return plan;
   }
   let counts = $state({});
+  // the comment counts of the updates on Remark42 (REMARK42_SLUGS), by slug
+  let remarkCounts = $state({});
+  // an update's comment count, from giscus or Remark42
+  const commentCount = (n) => (REMARK42_SLUGS.has(n.slug) ? remarkCounts[n.slug] : counts[term(n.time)]?.comments);
 
   // Pages of 10 updates, newest first
   const PAGE_SIZE = 10;
@@ -160,6 +164,9 @@
       // the old #slug links still work
       id = params.get("post") ?? location.hash.slice(1);
     fetchCounts().then((c) => (counts = c));
+    status.history
+      .filter((n) => REMARK42_SLUGS.has(n.slug))
+      .forEach((n) => fetchRemarkCount(full(`${TRACKSIDE}${n.slug}/`)).then((c) => (remarkCounts[n.slug] = c)));
     if (id) {
       if (params.has("comments")) open = id;
       document.getElementById(id)?.scrollIntoView();
@@ -181,6 +188,83 @@
     s.setAttribute("data-theme", new URL(`${import.meta.env.BASE_URL}giscus.css`, location.origin).href);
     s.setAttribute("data-term", term(t));
     el.appendChild(s);
+  }
+  // load Remark42 into the element for an update's thread (REMARK42_SLUGS): the thread is the update's own page. Remark42
+  // draws into the element with the id remark42 and reads window.remark_config, whichever way it starts: by itself
+  // when its script first loads, or through createInstance() once it has (each time the comments open again)
+  // a colour variable of the site's as written in app.css's :root rule: the page itself only reports the scheme it's in
+  function rawVar(name, rules = [...document.styleSheets].flatMap((sheet) => [...sheet.cssRules])) {
+    for (const rule of rules) {
+      if (rule.selectorText === ":root" && rule.style.getPropertyValue(name)) return rule.style.getPropertyValue(name);
+      const inner = rule.cssRules && rawVar(name, [...rule.cssRules]);
+      if (inner) return inner;
+    }
+  }
+  // a colour of the site's (a variable in app.css) as "r, g, b", in the light or dark scheme: its light-dark() pair, as
+  // the build writes it (var(--lightningcss-light,…)var(--lightningcss-dark,…)) or as app.css has it
+  function siteRGB(el, name, scheme) {
+    const raw = rawVar(name) ?? "",
+      pair =
+        raw.match(/--lightningcss-light,\s*([^)]+)\)\s*var\(--lightningcss-dark,\s*([^)]+)\)/) ??
+        raw.match(/light-dark\(\s*([^,]+),\s*([^)]+)\)/),
+      probe = document.createElement("span");
+    probe.style.color = pair ? pair[scheme === "dark" ? 2 : 1] : `var(${name})`;
+    el.append(probe);
+    const rgb = getComputedStyle(probe).color.match(/\d+/g).slice(0, 3).join(", ");
+    probe.remove();
+    return rgb;
+  }
+  // Remark42's teal, in the site's link blues instead: its colour variables (custom-properties.css in Remark42), set on
+  // the comment frame's root through custom_properties. Links and the Send button use the numbered ones; the named
+  // ones (--primary-color and the like) only take in the light theme, since the dark theme sets its own on the body
+  function remarkColours(el, theme) {
+    const link = siteRGB(el, "--link", theme),
+      button = siteRGB(el, "--link", "light"),
+      hover = siteRGB(el, "--accent", "light");
+    return {
+      "--color9": `rgb(${link})`,
+      "--color29": `rgb(${link})`,
+      "--color33": `rgb(${hover})`,
+      "--color15": `rgb(${button})`,
+      "--color47": `rgb(${link}, 0.4)`,
+      "--color48": `rgb(${link}, 0.6)`,
+      "--color40": `rgb(${hover}, 0.45)`,
+      "--color43": `rgb(${hover}, 0.35)`,
+      "--color42": `rgb(${hover}, 0.25)`,
+      "--color3": `rgb(${hover}, 0.15)`,
+      "--color4": `rgb(${hover}, 0.1)`,
+      "--primary-color": link,
+      "--primary-brighter-color": hover,
+      "--primary-darker-color": button,
+    };
+  }
+  function remark42(el, n) {
+    el.id = "remark42";
+    const theme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    window.remark_config = {
+      host: REMARK42.host,
+      site_id: REMARK42.site,
+      url: full(`${TRACKSIDE}${n.slug}/`),
+      page_title: label(n),
+      theme,
+      custom_properties: remarkColours(el, theme),
+      components: ["embed"],
+      // no "Subscribe by RSS" link under the comment box
+      show_rss_subscription: false,
+    };
+    if (window.REMARK42?.createInstance) window.REMARK42.createInstance(window.remark_config);
+    else if (!document.querySelector(`script[src="${REMARK42.host}/web/embed.mjs"]`)) {
+      const s = document.createElement("script");
+      s.type = "module";
+      s.src = `${REMARK42.host}/web/embed.mjs`;
+      document.head.appendChild(s);
+    }
+    // closing the comments takes the newest instance down with them
+    return { destroy: () => window.REMARK42?.destroy?.() };
+  }
+  // an update's comments: Remark42 for the updates being tried on it, giscus for the rest
+  function comments(el, n) {
+    return REMARK42_SLUGS.has(n.slug) ? remark42(el, n) : giscus(el, n.time);
   }
 </script>
 
@@ -334,11 +418,7 @@
           aria-expanded={open === n.slug}
           onclick={() => toggleComments(n.slug)}
           ><span aria-hidden="true">💬</span>
-          {open === n.slug
-            ? "Hide comments"
-            : counts[term(n.time)]?.comments
-              ? `Comments (${counts[term(n.time)].comments})`
-              : "Comments"}</button
+          {open === n.slug ? "Hide comments" : commentCount(n) ? `Comments (${commentCount(n)})` : "Comments"}</button
         >
         {#if counts[term(n.time)]?.reactions.length}
           <!-- the reactions as GitHub's pills -->
@@ -352,11 +432,9 @@
           </span>
         {/if}
       </div>
-      <!-- the giscus thread, set off from the update by a dashed line -->
-      {#if open === n.slug}<div
-          class="mt-2.5 border-t border-dashed border-(--line) pt-3"
-          use:giscus={n.time}
-        ></div>{/if}
+      <!-- the comment thread (giscus, or Remark42 for the updates being tried on it), set off from the update by a dashed
+           line -->
+      {#if open === n.slug}<div class="mt-2.5 border-t border-dashed border-(--line) pt-3" use:comments={n}></div>{/if}
     </article>
   {/each}
   <!-- the first page has one button to older updates; later pages go either way, with Older off on the last page; links to
