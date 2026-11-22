@@ -31,12 +31,15 @@ to stay under them, and the trolley sets the short support down straight under t
   and the trusses move on so their middle is over the third support from the back, the trolley parked over the support it
   carries next. The spacing is 15.64 m, so the last carry lands the short support on the 47/48 hammerhead (301.04 m).
 - **End (4 steps).** A to just behind the short support (299.05 m), C back to its place on span 48 (256.4 m), the trusses
-  back, and B back over C to one spacing behind it (240.76 m).
-- **Margins.** 3.97 at the least, and 11.7 in the normal move's steps 12 to 14.
+  back, and B back over C to 223.9 m, where the rear lifting jacks pick it up as ballast about 70% of the way through the
+  front support's trip.
+- **Margins.** 3.97 at the least, and 11.7 in the normal move's steps 12 to 14 (worked out with B at 240.76 m, before
+  it went further back; not checked again since).
 
 B and C go back at the end because the normal move's steps 12 to 14 slide the trusses about 36 m back to pick up the
-short support with the front jacks, which needs a long support behind the trusses' middle (about 249 m). B goes back
-only as far as that needs.
+short support with the front jacks, which needs a long support behind the trusses' middle (about 249 m). B, the rear
+support, goes further: far enough for the rear lifting jacks to carry it as ballast, as in a normal move. Span 47 is
+55.6 m long, so the places the normal move's rules give (made for 40 m spans) would leave it out of their reach.
 
 ## Spans 52 to 54 (from span 50): 32 steps
 
@@ -44,7 +47,8 @@ The same walk. B starts across the double girders at the 51/52 joint (79.2 m); s
 
 - **The loop (10 carries).** The spacing is 16.12 m, so the last carry lands the short support on the 54/55 hammerhead
   (240.42 m).
-- **End.** A to 238.41 m, C to its place on span 55 (191.02 m), the trusses back, and B one spacing behind C (174.9 m).
+- **End.** A to 238.41 m, C to its place on span 55 (191.02 m), the trusses back, and B back over C to 160.4 m, as
+  ballast for the rear lifting jacks.
 - **Margins.** 4.55 at the least, and 15.3 in the normal move's steps 12 to 14.
 
 ## The hand-off

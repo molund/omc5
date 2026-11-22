@@ -42,20 +42,21 @@ const LOOP_41 = { order: ["C", "S", "A", "B"], spacing: (301.04 - 82.1) / 14, ti
  * From the end of the loop (B, C and A a spacing apart behind the short support on the 47/48 hammerhead, the trusses slid
  * forward) to the normal move's half-way layout for the move from span 47 to 48: A carried to its place just behind the
  * short support (where the normal move's step 10 puts it), C back onto the place the snap gives it on span 48 (256.4 m,
- * so the snap doesn't move it), the trusses back until the trolley reaches behind C, and B carried back over C to one
- * spacing behind it (240.76 m: the room it needs to turn across there). The normal move goes on from its step 11.
+ * so the snap doesn't move it), the trusses back until the trolley reaches B's place, and B carried back over C to
+ * 223.9 m. The normal move goes on from its step 11.
  *
  * B and C have to go back: the normal move's steps 12 to 14 slide the trusses back about 36 m to pick up the short
  * support with the front jacks, which needs a long support behind their middle (about 249 m). Left at 269.8 m, the gantry
- * would tip back. C goes back first, or the trusses couldn't slide back far enough for the trolley to reach behind C. B
- * goes back only as far as that needs, not to where the normal move's rules put the rear support (the back of span 46,
- * about 200 m, rules made for 40 m spans: span 46 is 55.6 m long).
+ * would tip back. C goes back first, or the trusses couldn't slide back far enough for the trolley to reach behind C. B is
+ * the rear support, the ballast: it goes back far enough that the rear lifting jacks pick it up about 70% of the way
+ * through the front support's trip (steps 13 and 14), as in a normal move. Span 47 is 55.6 m long, so the places the
+ * normal move's rules give (made for 40 m spans) would leave it out of their reach.
  */
 const EXIT_41 = [
   { op: "carry", who: "A", to: 299.05, turnFirst: true, turnLast: true },
   { op: "carry", who: "C", to: 256.4, turnFirst: true, turnLast: true },
-  { op: "trusses", R: 232.0, anchor: "C", align: false },
-  { op: "carry", who: "B", to: 256.4 - LOOP_41.spacing, turnFirst: true, turnLast: true },
+  { op: "trusses", R: 215.1, anchor: "C", align: false },
+  { op: "carry", who: "B", to: 223.9, turnFirst: true, turnLast: true },
 ];
 
 /**
@@ -79,13 +80,14 @@ const ENTRY_50 = [
 const LOOP_50 = { order: ["C", "S", "A", "B"], spacing: (240.42 - 79.2) / 10, times: 10 };
 /**
  * As the 41 walk's: A to its place just behind the short support (238.41 m), C to the place the snap gives it on span
- * 55 (191.02 m), the trusses back until the trolley reaches behind C, and B back over C to one spacing behind it.
+ * 55 (191.02 m), the trusses back until the trolley reaches B's place, and B back over C to 160.4 m, where the rear
+ * lifting jacks pick it up about 70% of the way through the front support's trip.
  */
 const EXIT_50 = [
   { op: "carry", who: "A", to: 238.41, turnFirst: true, turnLast: true },
   { op: "carry", who: "C", to: 191.02, turnFirst: true, turnLast: true },
-  { op: "trusses", R: 166.5, anchor: "C", align: false },
-  { op: "carry", who: "B", to: 191.02 - LOOP_50.spacing, turnFirst: true, turnLast: true },
+  { op: "trusses", R: 152.0, anchor: "C", align: false },
+  { op: "carry", who: "B", to: 160.4, turnFirst: true, turnLast: true },
 ];
 
 /** Half the trusses' length (tip to tip), in metres: the trusses' middle stands over the third support from the back. */
