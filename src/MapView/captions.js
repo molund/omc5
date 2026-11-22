@@ -7,11 +7,9 @@
 //         Captions play at CAPTION_SPEED (clock.js, 2x): the animation slows to it as a caption comes up, so a caption
 //         that should show a second before a moment has `at` two seconds (as written) before it
 //   parts: the caption's text, as a list: one after another, with the same arrow throughout
-//   seconds: how long each screen shows instead of its reading time
-// Captions follow the usual subtitle rules (as Netflix's and the BBC's guidelines have them): a part longer than a screen
-// (two lines of LINE characters) is split into screens, at sentence ends where it can be, otherwise at the word break
-// nearest the middle (a comma preferred), and each screen shows for its reading time at READ_CPS characters a second,
-// between READ_MIN and READ_MAX.
+//   seconds: how long each part shows instead of its reading time
+// Each part shows whole, as one block (the parts are where a caption breaks), for its reading time at READ_CPS characters a
+// second, READ_MIN at the least.
 //   point: a part of the gantry for an arrow to point at while it shows (captionArrow.js: support-a, support-b, support-c,
 //          short-support, trolley, front-jacks, rear-jacks), or a guideway support by the spans either side ("12/13")
 //   pause: true to hold the gantry for CAPTION_PAUSE as it shows, for news worth stopping for (every pause is that long)
@@ -29,56 +27,12 @@ export const CAPTION_PAUSE = 1.5;
 /** How long the map stays still before an opening caption comes up, in milliseconds. */
 const SETTLE = 1500;
 
-/** A caption line's most characters, a screen's lines, the reading speed in characters a second, and the shortest and
- * longest a screen shows, in milliseconds. */
-const LINE = 42,
-  LINES = 2,
-  READ_CPS = 17,
-  READ_MIN = 1500,
-  READ_MAX = 7000;
+/** The reading speed in characters a second, and the shortest a part shows, in milliseconds. */
+const READ_CPS = 17,
+  READ_MIN = 1500;
 
-/** A part's text as screens of at most LINES lines of LINE characters: whole sentences where they fit, otherwise split. */
-function screens(text) {
-  const most = LINE * LINES,
-    out = [];
-  // sentence ends: a full stop, question or exclamation mark before a capital (so "Dec. 11" stays together)
-  for (const sentence of text.trim().split(/(?<=[.!?])\s+(?=[A-Z])/)) {
-    const last = out.length - 1;
-    if (last >= 0 && out[last].length + 1 + sentence.length <= most) out[last] += " " + sentence;
-    else out.push(...split(sentence, most));
-  }
-  return out;
-}
-
-/** A sentence too long for one screen, in as few even pieces as fit, each break at the space nearest its share of the
- * way (a comma just before it counts as nearer). */
-function split(sentence, most) {
-  const n = Math.ceil(sentence.length / most);
-  if (n <= 1) return [sentence];
-  const pieces = [];
-  let rest = sentence;
-  for (let k = n; k > 1; k--) {
-    const target = rest.length / k;
-    let best = -1,
-      score = Infinity;
-    for (let i = rest.indexOf(" "); i !== -1; i = rest.indexOf(" ", i + 1)) {
-      if (i > most) break;
-      const s = Math.abs(i - target) - (rest[i - 1] === "," ? LINE / 3 : 0);
-      if (s < score) {
-        score = s;
-        best = i;
-      }
-    }
-    if (best < 0) break;
-    pieces.push(rest.slice(0, best));
-    rest = rest.slice(best + 1);
-  }
-  return [...pieces, rest];
-}
-
-/** How long a screen of text shows, in milliseconds: its reading time, or `seconds` when the caption gives it. */
-const readTime = (text, seconds) =>
-  seconds ? seconds * 1000 : Math.min(READ_MAX, Math.max(READ_MIN, (text.length / READ_CPS) * 1000));
+/** How long a part shows, in milliseconds: its reading time, or `seconds` when the caption gives it. */
+const readTime = (text, seconds) => (seconds ? seconds * 1000 : Math.max(READ_MIN, (text.length / READ_CPS) * 1000));
 
 /** Captions waiting for their time (`due` on playClock(), the steps' own time), and the parts of the one showing, each
  * with its own time (`from` to `until` on clock(): read at the reader's pace). */
@@ -88,7 +42,7 @@ let pending = [],
   timer = null,
   // whether the next step at speed is the run's first (clearCaptions() starts a run)
   first = true,
-  // the opening caption, its screens timed on performance.now() (the gantry is held, so clock() stands still), the end of
+  // the opening caption, its parts timed on performance.now() (the gantry is held, so clock() stands still), the end of
   // the hold (once its first part has gone) and of the caption
   opening = null,
   // holds the gantry (true) or lets it play on (false): MapView's (onOpeningHold())
@@ -103,19 +57,17 @@ export function onOpeningHold(fn) {
   holder = fn;
 }
 
-/** Holds the gantry and times caption `c`'s screens from SETTLE on. */
+/** Holds the gantry and times caption `c`'s parts from SETTLE on. */
 function open(c) {
   let from = performance.now() + SETTLE,
     held = from;
-  const parts = c.parts.flatMap((p, i) =>
-    screens(p).map((text) => {
-      const until = from + readTime(text, c.seconds),
-        part = { text, point: c.point ?? null, from, until };
-      from = until;
-      if (i === 0) held = until;
-      return part;
-    }),
-  );
+  const parts = c.parts.map((text, i) => {
+    const until = from + readTime(text, c.seconds),
+      part = { text, point: c.point ?? null, from, until };
+    from = until;
+    if (i === 0) held = until;
+    return part;
+  });
   opening = { parts, held, end: from, holding: true };
   holder?.(true);
 }
@@ -170,7 +122,7 @@ export function captionNow() {
   for (const p of pending.filter((p) => p.due <= played)) {
     // a caption that comes up takes over from one still showing; its parts follow one another, from now
     let from = now;
-    showing = p.c.parts.flatMap(screens).map((text) => {
+    showing = p.c.parts.map((text) => {
       const until = from + readTime(text, p.c.seconds),
         part = { text, point: p.c.point ?? null, from, until };
       from = until;
