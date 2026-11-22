@@ -58,6 +58,21 @@ export const AUTHOR = {
 };
 
 /**
+ * What every update is about, so search engines and AI tools can tie Trackside to the project; its sameAs is the project's
+ * official site and its section of the Expo Line article on Wikipedia (it has no article of its own).
+ */
+export const ABOUT = {
+  "@type": "Thing",
+  name: "Surrey Langley SkyTrain",
+  // its official name since Sept. 15, 2026 (https://news.gov.bc.ca/releases/2026TT0034-001071), which nobody uses
+  alternateName: "Dave Barrett Extension",
+  sameAs: [
+    "https://surreylangleyskytrain.gov.bc.ca/",
+    "https://en.wikipedia.org/wiki/Expo_Line_(SkyTrain)#Surrey%E2%80%93Langley_extension",
+  ],
+};
+
+/**
  * An update as a schema.org BlogPosting, for its own page.
  * @param {import("./status.js").Note} n
  * @param {string} headline The update's title, or its date for a status update without one.
@@ -75,6 +90,7 @@ export function blogPosting(n, headline) {
     image: photos(n).map((p) => new URL(p.src, SITE).href),
     url: permalink(n),
     mainEntityOfPage: permalink(n),
+    about: ABOUT,
     inLanguage: "en",
   };
 }
@@ -119,6 +135,7 @@ export function blogPage(shown, page, url, headline) {
         url,
         author: AUTHOR,
         publisher: AUTHOR,
+        about: ABOUT,
         inLanguage: "en",
         blogPost: posts,
       }
