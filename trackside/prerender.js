@@ -16,7 +16,8 @@ import { inline, plainText } from "../src/lib/inline.js";
 import { term, SITE } from "../src/lib/comments.js";
 import { velocityChart, velocityPoints } from "../src/lib/velocityChart.js";
 import { statusData, datasetJsonLd, summarySentence } from "../src/lib/statusData.js";
-import { atom, jsonFeed } from "./feeds.js";
+import { atom, jsonFeed, escape } from "./feeds.js";
+import { photos } from "../src/lib/seo.js";
 
 const PAGE_SIZE = 10;
 
@@ -67,17 +68,22 @@ const urls = [
     i === 0 ? `${SITE}trackside/` : `${SITE}trackside/page/${i + 1}/`,
     newest(status.history.slice(i * PAGE_SIZE, (i + 1) * PAGE_SIZE)),
   ]),
-  // each update's own page, at its newest follow-up or its own time
-  ...status.history.map((n) => [`${SITE}trackside/${n.slug}/`, changed(n)]),
+  // each update's own page, at its newest follow-up or its own time, with its photos (for image search)
+  ...status.history.map((n) => [`${SITE}trackside/${n.slug}/`, changed(n), photos(n)]),
   // the About page, which has no date of its own
   [`${SITE}about/`, null],
 ];
 writeFileSync(
   "dist/sitemap.xml",
   `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 ${urls
-  .map(([loc, t]) => `  <url><loc>${loc}</loc>${t ? `<lastmod>${t.toISOString()}</lastmod>` : ""}</url>`)
+  .map(
+    ([loc, t, pics = []]) =>
+      `  <url><loc>${loc}</loc>${t ? `<lastmod>${t.toISOString()}</lastmod>` : ""}${pics
+        .map((p) => `<image:image><image:loc>${escape(new URL(p.src, SITE).href)}</image:loc></image:image>`)
+        .join("")}</url>`,
+  )
   .join("\n")}
 </urlset>
 `,
