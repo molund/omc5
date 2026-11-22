@@ -16,6 +16,7 @@ import { inline, plainText } from "../src/lib/inline.js";
 import { term, SITE } from "../src/lib/comments.js";
 import { velocityChart, velocityPoints } from "../src/lib/velocityChart.js";
 import { statusData, datasetJsonLd, summarySentence } from "../src/lib/statusData.js";
+import { atom } from "./feeds.js";
 
 const PAGE_SIZE = 10;
 
@@ -142,6 +143,10 @@ writeFileSync(
   ) + "\n",
 );
 console.log(`prerendered Trackside: ${pages} page(s), ${status.history.length} updates`);
+
+// dist/trackside/feed.xml, every update as an Atom feed, for feed readers and AI tools (trackside/feeds.js)
+writeFileSync("dist/trackside/feed.xml", atom());
+console.log("wrote the Atom feed");
 
 // dist/velocity.svg, the progress card's velocity chart, from the velocity the Leash Log keeps in gantry-cycles.yaml (the only part
 // of gantry-cycles.yaml the site reads); with too little to draw, there's no file, and the card shows no chart
