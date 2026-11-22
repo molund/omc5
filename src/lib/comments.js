@@ -86,20 +86,45 @@ export function fetchCounts() {
 export const REMARK42 = { host: "https://comments.olund.ca", site: "trackside" };
 
 /**
- * The updates whose comments use Remark42 instead of giscus while it's tried out, by slug. A thread is the update's own
- * page (/trackside/<slug>/), so it's the same thread on every page that shows the update.
- * @type {Set<string>}
+ * An update's comment thread on Remark42: its own page's address, in full, so it's the same thread wherever the update
+ * shows.
+ * @param {string} slug The update's slug.
+ * @returns {string}
  */
-export const REMARK42_SLUGS = new Set(["construction-update-for-friday-oct-30-2026"]);
+export const threadUrl = (slug) => new URL(`trackside/${slug}/`, SITE).href;
 
 /**
- * How many comments a Remark42 thread has.
- * @param {string} url The thread's address: the update's own page, in full.
- * @returns {Promise<number|null>} The count; null if the server can't be reached.
+ * The updates that had comments on GitHub Discussions (giscus) before the move to Remark42, by thread title (see
+ * {@link term}), and the number of their discussion on GitHub: Trackside links to them as earlier comments.
+ * @type {Record<string, number>}
  */
-export function fetchRemarkCount(url) {
-  return fetch(`${REMARK42.host}/api/v1/count?site=${REMARK42.site}&url=${encodeURIComponent(url)}`)
-    .then((r) => (r.ok ? r.json() : null))
-    .then((d) => d?.count ?? null)
-    .catch(() => null);
+const EARLIER = {
+  "Update 2026-10-31 09:30": 23,
+  "Update 2026-11-06 08:45": 71,
+  "Update 2026-11-16 09:00": 96,
+  "Update 2026-11-19 16:00": 99,
+};
+
+/**
+ * The address of an update's earlier comments on GitHub, if it had any before the move to Remark42.
+ * @param {Date} t The update's time stamp.
+ * @returns {string|undefined}
+ */
+export const earlierComments = (t) =>
+  EARLIER[term(t)] && `https://github.com/molund/omc5/discussions/${EARLIER[term(t)]}`;
+
+/**
+ * Comment counts for several Remark42 threads at once, in one request.
+ * @param {string[]} urls The threads' addresses (see {@link threadUrl}).
+ * @returns {Promise<Record<string, number>>} The counts by address; empty if the server can't be reached.
+ */
+export function fetchRemarkCounts(urls) {
+  return fetch(`${REMARK42.host}/api/v1/counts?site=${REMARK42.site}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(urls),
+  })
+    .then((r) => (r.ok ? r.json() : []))
+    .then((list) => Object.fromEntries(list.map((p) => [p.url, p.count])))
+    .catch(() => ({}));
 }

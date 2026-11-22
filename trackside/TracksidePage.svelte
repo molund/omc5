@@ -6,7 +6,7 @@
   import { onMount } from "svelte";
   import { status, asOf, followUpTime } from "../src/lib/status.js";
   import { inline, plainText } from "../src/lib/inline.js";
-  import { term, fetchCounts, SITE, REMARK42, REMARK42_SLUGS, fetchRemarkCount } from "../src/lib/comments.js";
+  import { SITE, REMARK42, threadUrl, earlierComments, fetchRemarkCounts } from "../src/lib/comments.js";
   import { track } from "../src/lib/track.js";
   import { blogPosting, blogPage, ldScript, isoBC, published, modified } from "../src/lib/seo.js";
   import Icon from "../src/Icon.svelte";
@@ -17,22 +17,6 @@
   const MAP = import.meta.env.BASE_URL;
   const TRACKSIDE = `${MAP}trackside/`;
 
-  // Comments: one GitHub Discussion per update, through giscus, in the "Trackside" category, titled by term() in
-  // src/lib/comments.js
-  const GISCUS = {
-    "data-repo": "molund/omc5",
-    "data-repo-id": "R_kgDOVbOMWA",
-    "data-category": "Trackside",
-    "data-category-id": "DIC_kwDOVbOMWM4DKF3d",
-    "data-mapping": "specific",
-    "data-strict": "1",
-    "data-reactions-enabled": "1",
-    "data-emit-metadata": "0",
-    "data-input-position": "top",
-    "data-lang": "en",
-    crossorigin: "anonymous",
-    async: "",
-  };
   // a heading's date first: "Oct 31, 2026 at 9:30 a.m."
   const heading = (t) => {
     const [time, date] = asOf(t).split(" on ");
@@ -91,11 +75,9 @@
     });
     return plan;
   }
+  // the comment counts of the updates on the page, by thread address (threadUrl() in src/lib/comments.js)
   let counts = $state({});
-  // the comment counts of the updates on Remark42 (REMARK42_SLUGS), by slug
-  let remarkCounts = $state({});
-  // an update's comment count, from giscus or Remark42
-  const commentCount = (n) => (REMARK42_SLUGS.has(n.slug) ? remarkCounts[n.slug] : counts[term(n.time)]?.comments);
+  const commentCount = (n) => counts[threadUrl(n.slug)];
 
   // Pages of 10 updates, newest first
   const PAGE_SIZE = 10;
@@ -163,10 +145,8 @@
     const params = new URLSearchParams(location.search),
       // the old #slug links still work
       id = params.get("post") ?? location.hash.slice(1);
-    fetchCounts().then((c) => (counts = c));
-    status.history
-      .filter((n) => REMARK42_SLUGS.has(n.slug))
-      .forEach((n) => fetchRemarkCount(full(`${TRACKSIDE}${n.slug}/`)).then((c) => (remarkCounts[n.slug] = c)));
+    // one request for the whole page's counts
+    fetchRemarkCounts(shown.map((n) => threadUrl(n.slug))).then((c) => (counts = c));
     if (id) {
       if (params.has("comments")) open = id;
       document.getElementById(id)?.scrollIntoView();
@@ -179,19 +159,6 @@
     open = open === slug ? null : slug;
     if (open) track("open_comments", { where: "trackside", slug });
   }
-  // load giscus into the element for this update's thread
-  function giscus(el, t) {
-    const s = document.createElement("script");
-    s.src = "https://giscus.app/client.js";
-    Object.entries(GISCUS).forEach(([k, v]) => s.setAttribute(k, v));
-    // GitHub light / dark as before, minus the upvote arrows (public/giscus.css)
-    s.setAttribute("data-theme", new URL(`${import.meta.env.BASE_URL}giscus.css`, location.origin).href);
-    s.setAttribute("data-term", term(t));
-    el.appendChild(s);
-  }
-  // load Remark42 into the element for an update's thread (REMARK42_SLUGS): the thread is the update's own page. Remark42
-  // draws into the element with the id remark42 and reads window.remark_config, whichever way it starts: by itself
-  // when its script first loads, or through createInstance() once it has (each time the comments open again)
   // a colour variable of the site's as written in app.css's :root rule: the page itself only reports the scheme it's in
   function rawVar(name, rules = [...document.styleSheets].flatMap((sheet) => [...sheet.cssRules])) {
     for (const rule of rules) {
@@ -238,13 +205,16 @@
       "--primary-darker-color": button,
     };
   }
+  // load Remark42 into the element for an update's thread: the thread is the update's own page (threadUrl()). Remark42
+  // draws into the element with the id remark42 and reads window.remark_config, whichever way it starts: by itself
+  // when its script first loads, or through createInstance() once it has (each time the comments open again)
   function remark42(el, n) {
     el.id = "remark42";
     const theme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
     window.remark_config = {
       host: REMARK42.host,
       site_id: REMARK42.site,
-      url: full(`${TRACKSIDE}${n.slug}/`),
+      url: threadUrl(n.slug),
       page_title: label(n),
       theme,
       custom_properties: remarkColours(el, theme),
@@ -261,10 +231,6 @@
     }
     // closing the comments takes the newest instance down with them
     return { destroy: () => window.REMARK42?.destroy?.() };
-  }
-  // an update's comments: Remark42 for the updates being tried on it, giscus for the rest
-  function comments(el, n) {
-    return REMARK42_SLUGS.has(n.slug) ? remark42(el, n) : giscus(el, n.time);
   }
 </script>
 
@@ -420,21 +386,13 @@
           ><span aria-hidden="true">💬</span>
           {open === n.slug ? "Hide comments" : commentCount(n) ? `Comments (${commentCount(n)})` : "Comments"}</button
         >
-        {#if counts[term(n.time)]?.reactions.length}
-          <!-- the reactions as GitHub's pills -->
-          <span
-            class="inline-flex gap-1.5"
-            aria-label="Reactions: {counts[term(n.time)].reactions.map(([e, c]) => `${e} ${c}`).join(', ')}"
-          >
-            {#each counts[term(n.time)].reactions as [e, c]}<span
-                class="rounded-full border border-(--line) bg-(--bg) px-2 text-xs">{e} {c}</span
-              >{/each}
-          </span>
-        {/if}
       </div>
-      <!-- the comment thread (giscus, or Remark42 for the updates being tried on it), set off from the update by a dashed
-           line -->
-      {#if open === n.slug}<div class="mt-2.5 border-t border-dashed border-(--line) pt-3" use:comments={n}></div>{/if}
+      <!-- the comment thread (Remark42), set off from the update by a dashed line; an update that had comments on GitHub
+           before the move links to them under it -->
+      {#if open === n.slug}<div class="mt-2.5 border-t border-dashed border-(--line) pt-3" use:remark42={n}></div>
+        {#if earlierComments(n.time)}<p class="mt-2">
+            <a class="earlier-comments" href={earlierComments(n.time)}>Earlier comments on GitHub</a>
+          </p>{/if}{/if}
     </article>
   {/each}
   <!-- the first page has one button to older updates; later pages go either way, with Older off on the last page; links to
@@ -480,6 +438,11 @@
 
 <style>
   @reference "../src/app.css";
+
+  /* the link to an update's comments from before the move to Remark42 */
+  .earlier-comments {
+    @apply text-sm text-(--link);
+  }
 
   /* an update's heading: its title or date, with the permalink icon at the right, over a thin line */
   .update-heading {

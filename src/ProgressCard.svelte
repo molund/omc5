@@ -15,7 +15,7 @@
   } from "./lib/appState/appState.svelte.js";
   import { status, asOf, dayOf } from "./lib/status.js";
   import { inline } from "./lib/inline.js";
-  import { term, fetchCounts } from "./lib/comments.js";
+  import { threadUrl, fetchRemarkCounts } from "./lib/comments.js";
   import { track } from "./lib/track.js";
   import Icon from "./Icon.svelte";
   import SharePopover from "./SharePopover.svelte";
@@ -33,10 +33,10 @@
   // a link in the note: an address on this site that's only `?…` was written for Trackside, so it goes there from the map
   const noteLink = (href) => (href.startsWith("?") ? `${import.meta.env.BASE_URL}trackside/${href}` : href);
   // the Comments button opens Trackside's first page, scrolled to the newest update (a post can sit above it) with its
-  // comments open, and shows its comment and reaction counts once GitHub has sent them
+  // comments open, and shows its comment count once the comment server (Remark42) has sent it
   const TRACKSIDE = `${import.meta.env.BASE_URL}trackside/`;
   const COMMENTS = newest ? `${TRACKSIDE}?post=${newest.slug}&comments` : TRACKSIDE;
-  let activity = $state(null);
+  let commentCount = $state(0);
   // a tap or click on the note goes where the Comments button goes (a cmd-, ctrl- or shift-click opens it in a new tab), but
   // not from a link in the note or after selecting some of its text; keyboard users have the Comments button itself
   function openComments(e) {
@@ -45,7 +45,8 @@
     if (e.metaKey || e.ctrlKey || e.shiftKey) window.open(COMMENTS, "_blank");
     else location.href = COMMENTS;
   }
-  if (newest && current) fetchCounts().then((c) => (activity = c[term(newest.time)] ?? null));
+  if (newest && current)
+    fetchRemarkCounts([threadUrl(newest.slug)]).then((c) => (commentCount = c[threadUrl(newest.slug)] ?? 0));
   // the velocity the Leash Log writes, how far the gantry got in the last week, and its chart, drawn when the site is
   // built (trackside/prerender.js); a new address for each update, so a browser doesn't show an old one, and none shown
   // when there isn't one (too few values yet, or `npm run dev`, which doesn't draw it)
@@ -336,10 +337,7 @@
         class="btn mt-2.5 flex min-h-8 gap-1.5 border-(--line) bg-(--panel) px-2.5 text-sm font-normal text-(--ink) hover:bg-(--bg)"
         href={COMMENTS}
         onclick={() => track("open_comments", { where: "card_button", slug: newest.slug })}
-        ><Icon kind="comment" /><span>Comments{activity?.comments ? ` (${activity.comments})` : ""}</span
-        >{#if activity?.reactions.length}<span class="ml-auto flex gap-2 text-(--mute)"
-            >{#each activity.reactions as [e, c]}<span>{e} {c}</span>{/each}</span
-          >{/if}</a
+        ><Icon kind="comment" /><span>Comments{commentCount ? ` (${commentCount})` : ""}</span></a
       >
     {/if}
   </div>
