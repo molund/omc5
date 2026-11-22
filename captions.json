@@ -31,6 +31,12 @@
   },
   {
     "span": 41,
+    "step": 29,
+    "point": "42/43",
+    "parts": ["A mobile crane moved the rear support across to the end of the double girders on span 43."]
+  },
+  {
+    "span": 41,
     "step": 34,
     "parts": [
       "Full disclosure: I made up this part.",
