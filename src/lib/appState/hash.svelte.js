@@ -2,6 +2,9 @@ import { ui, layers, setSwitch, showSpan, animateGantry } from "./appState.svelt
 import { track } from "../track.js";
 import { encodeMark } from "../animationMark.js";
 
+/** Whether the address's hash shows where the animation is (encodeMark()): off for now, on to find a caption's moment. */
+const MARK_IN_HASH = false;
+
 /**
  * Bookmarkable views: each view but Progress has its own address (?view=aerial), so a link or bookmark opens on that view;
  * Progress (the opening view) leaves the address clean. The address the page opened with keeps its other parameters
@@ -108,7 +111,7 @@ $effect.root(() => {
     const search = params.size ? `?${params}` : "",
       // while ?animate=true is in it, how long the animation has played (ui.animationTime, every 250 ms) and the step under
       // way, packed into five base64url characters with no key (animationMark.js)
-      hash = animateInAddress && ui.animationTime != null ? `#${encodeMark(ui.animationTime)}` : "";
+      hash = MARK_IN_HASH && animateInAddress && ui.animationTime != null ? `#${encodeMark(ui.animationTime)}` : "";
     if (location.search !== search || location.hash !== hash)
       history.replaceState(null, "", location.pathname + search + hash);
   });
