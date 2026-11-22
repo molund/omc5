@@ -30,6 +30,17 @@
     "parts": ["Span 31 is two big concrete beams. The short support sat right on them, without its blue legs."]
   },
   {
+    "span": 41,
+    "step": 34,
+    "parts": [
+      "Full disclosure: I made up this part.",
+      "Not out of thin air, though. It had to work within these limits:",
+      "The front support’s beam is too short for the angles, so it has to be the third or fourth support onto the girders.",
+      "The gantry can’t tip over. Kind of important.",
+      "And the supports have to end up set for a four-support leapfrog that repeats all the way across."
+    ]
+  },
+  {
     "span": 50,
     "step": 0,
     "parts": [
