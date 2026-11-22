@@ -16,6 +16,9 @@
 //          short-support, trolley, front-jacks, rear-jacks), or a guideway support by the spans either side ("12/13")
 //   pause: true to hold the gantry for CAPTION_PAUSE as it shows, for news worth stopping for (every pause is that long)
 // A caption's time goes by clock(), so it waits while the Pause button holds the gantry.
+// An opening caption (one due at the run's first step at speed, `at` 1 or less) comes up over a still map instead: the
+// gantry is held while the zoom and the buttons settle (SETTLE), then while the caption's first part shows, and plays on
+// under the rest.
 
 import CAPTIONS from "../../captions.json";
 import { onStep } from "../lib/animationMark.js";
@@ -23,6 +26,8 @@ import { SPEED, clock, playClock, setCaptionSlow } from "./gantryAnimation/clock
 
 /** How long a caption with `pause` holds the gantry, in seconds (the same for every caption). */
 export const CAPTION_PAUSE = 1.5;
+/** How long the map stays still before an opening caption comes up, in milliseconds. */
+const SETTLE = 1500;
 
 /** A caption line's most characters, a screen's lines, the reading speed in characters a second, and the shortest and
  * longest a screen shows, in milliseconds. */
@@ -80,7 +85,40 @@ const readTime = (text, seconds) =>
 let pending = [],
   showing = [],
   // the timer that slows the animation to CAPTION_SPEED the moment the next caption is due
-  timer = null;
+  timer = null,
+  // whether the next step at speed is the run's first (clearCaptions() starts a run)
+  first = true,
+  // the opening caption, its screens timed on performance.now() (the gantry is held, so clock() stands still), the end of
+  // the hold (once its first part has gone) and of the caption
+  opening = null,
+  // holds the gantry (true) or lets it play on (false): MapView's (onOpeningHold())
+  holder = null;
+
+/**
+ * Has `fn` hold the gantry for an opening caption, and let it go once the caption has gone (MapView).
+ * @param {(on: boolean) => void} fn
+ * @returns {void}
+ */
+export function onOpeningHold(fn) {
+  holder = fn;
+}
+
+/** Holds the gantry and times caption `c`'s screens from SETTLE on. */
+function open(c) {
+  let from = performance.now() + SETTLE,
+    held = from;
+  const parts = c.parts.flatMap((p, i) =>
+    screens(p).map((text) => {
+      const until = from + readTime(text, c.seconds),
+        part = { text, point: c.point ?? null, from, until };
+      from = until;
+      if (i === 0) held = until;
+      return part;
+    }),
+  );
+  opening = { parts, held, end: from, holding: true };
+  holder?.(true);
+}
 
 /** Slows the animation to CAPTION_SPEED as soon as a caption is due, so it doesn't play on past its moment before the next
  * look (captionNow(), every 250 ms); then has the next one watched. */
@@ -96,9 +134,13 @@ function watch() {
 // a step that starts at speed (not one played with no time, setInstant) lines up its captions
 onStep((span, step) => {
   if (!Number.isFinite(SPEED)) return;
+  const opens = first;
+  first = false;
   for (const c of CAPTIONS)
-    if (c.step === step && (c.span == null || c.span === span))
-      pending.push({ c, due: playClock() + (c.at ?? 0) * 1000 });
+    if (c.step === step && (c.span == null || c.span === span)) {
+      if (opens && !opening && (c.at ?? 0) <= 1) open(c);
+      else pending.push({ c, due: playClock() + (c.at ?? 0) * 1000 });
+    }
   watch();
 });
 
@@ -108,6 +150,20 @@ onStep((span, step) => {
  * gantry for CAPTION_PAUSE (true once only).
  */
 export function captionNow() {
+  if (opening) {
+    const t = performance.now();
+    if (opening.holding && t >= opening.held) {
+      opening.holding = false;
+      holder?.(false);
+    }
+    if (t < opening.end) {
+      const part = opening.parts.find((p) => p.from <= t && t < p.until);
+      // the rest of it shows at CAPTION_SPEED, as any caption does
+      setCaptionSlow(true);
+      return { text: part?.text ?? null, point: part?.point ?? null, pause: false };
+    }
+    opening = null;
+  }
   const now = clock(),
     played = playClock();
   let pause = false;
@@ -135,6 +191,9 @@ export function captionNow() {
 export function clearCaptions() {
   pending = [];
   showing = [];
+  first = true;
+  if (opening?.holding) holder?.(false);
+  opening = null;
   clearTimeout(timer);
   setCaptionSlow(false);
 }

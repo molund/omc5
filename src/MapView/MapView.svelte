@@ -37,7 +37,7 @@
   import { applyAddress } from "../lib/appState/hash.svelte.js";
   import ProgressCard from "../ProgressCard.svelte";
   import Caption from "./Caption.svelte";
-  import { CAPTION_PAUSE, captionNow, clearCaptions } from "./captions.js";
+  import { CAPTION_PAUSE, captionNow, clearCaptions, onOpeningHold } from "./captions.js";
   import { hideArrow, showArrow } from "./captionArrow.js";
   import { track, trackOnce } from "../lib/track.js";
 
@@ -75,6 +75,8 @@
         }, 250);
       ui.animationTime = 0;
       clearCaptions();
+      // an opening caption holds the gantry still until it has gone (not if the Pause button holds it by then)
+      onOpeningHold((on) => (on ? holdGantry(els.svg) : !ui.gantryPaused && resumeGantry()));
       // an address with ?span=N puts the gantry on span N first (startFrom), the next frame, once the Gantry layer
       // animateGantry() may have just turned on is showing (a hidden gantry has no size)
       const from = ui.animateFrom,
