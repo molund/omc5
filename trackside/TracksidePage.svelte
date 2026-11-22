@@ -244,7 +244,10 @@
     <a class="block leading-[0]" href={MAP}
       ><img class="h-10 w-auto logo" src="{MAP}images/logo.png" alt="Clayton Clipper" width="625" height="351" /></a
     >
-    <h1 class="page-header-title"><a class="text-inherit no-underline" href={TRACKSIDE}>Trackside</a></h1>
+    <!-- the page's main heading, except on an update's own page, where the update's title is the main heading -->
+    <svelte:element this={single ? "p" : "h1"} class="page-header-title"
+      ><a class="text-inherit no-underline" href={TRACKSIDE}>Trackside</a></svelte:element
+    >
     <nav class="page-header-nav">
       <a class="btn btn-grey" href={MAP}>← Map</a>
     </nav>
@@ -256,9 +259,8 @@
     <article id={n.slug} class="scroll-mt-[calc(var(--spacing)*19_+_env(safe-area-inset-top,0px))] [article+&]:mt-9">
       <!-- the date links to the update's own anchor on the page, drawn as plain heading text; with a title, screen readers
            hear the date and the title (the date first, so the visible text is in the name, for voice control) -->
-      <h2
-        class="mt-7 mb-2 flex items-center justify-between gap-2 border-b border-(--line) pb-1.25 text-xl leading-tight font-bold"
-      >
+      <!-- an h1 on the update's own page, an h2 among the other updates -->
+      <svelte:element this={single ? "h1" : "h2"} class="update-heading flex items-center justify-between gap-2">
         <a
           class="text-inherit no-underline"
           href="?post={n.slug}"
@@ -272,7 +274,7 @@
           aria-label="Copy permalink"
           onclick={(e) => copyPermalink(e, n)}><Icon kind="link" /></a
         >
-      </h2>
+      </svelte:element>
       <!-- a post leads with its title, with just its date under it -->
       {#if n.post && n.title}<p class="mx-0 -mt-1 mb-2 text-sm text-(--mute)">
           {dateOnly(n.time)}
@@ -375,3 +377,12 @@
       Permalink copied
     </div>{/if}
 </main>
+
+<style>
+  @reference "../src/app.css";
+
+  /* an update's heading: its title or date, with the permalink icon at the right, over a thin line */
+  .update-heading {
+    @apply mt-7 mb-2 border-b border-(--line) pb-1.25 text-xl leading-tight font-bold;
+  }
+</style>
