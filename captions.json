@@ -1,20 +1,13 @@
 [
   {
     "span": 2,
-    "step": 5,
-    "at": 1.5,
-    "parts": [
-      "I wasn’t watching as closely back then, but I think the rear lifting jacks weren’t used again until span 32. Until then, a modified move with a ballast segment took their place. It isn’t shown in this animation."
-    ]
-  },
-  {
-    "span": 2,
     "step": 12,
     "at": 2,
     "pause": true,
     "point": "rear-jacks",
     "parts": [
-      "Dec. 11, 2025: the Clayton Clipper’s lifting jacks failed on its move to span 3. The rear support fell onto the guideway, and the gantry was out of service for two months. No cause was ever given, but TI Corp. said the wait was for replacement parts."
+      "Dec. 11, 2025: the Clayton Clipper’s lifting jacks failed on its move to span 3. The rear support fell onto the guideway, and the gantry was out of service for two months. No cause was ever given, but TI Corp. said the wait was for replacement parts.",
+      "I wasn’t watching as closely back then, but I think the rear lifting jacks weren’t used again until span 32. Until then, a modified move with a ballast segment took their place. It isn’t shown in this animation."
     ]
   },
   {
