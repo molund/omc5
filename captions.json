@@ -89,5 +89,15 @@
       "Span 50 will have 15 or 16 segments, more than the 12 the gantry can hang, so it will rest on a temporary support tower while they’re hung.",
       "The animation doesn’t show this."
     ]
+  },
+  {
+    "span": 50,
+    "step": 41,
+    "parts": [
+      "The building under span 52 is the Pacific Highway power substation, named for Highway 15’s other name.",
+      "It turns BC Hydro’s AC power into the DC the trains run on.",
+      "Most of the line’s substations are at stations. This is one of only three that aren’t.",
+      "Bakerview-166 Street Station and Hillcrest-184 Street Station are about 4.4 km apart, too far for their substations alone."
+    ]
   }
 ]
