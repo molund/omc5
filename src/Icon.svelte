@@ -1,6 +1,6 @@
 <script>
   // panel: a window with a sidebar (show or hide the layer panel); menu: three lines (open the menu on a phone); close: a
-  // cross (close it, or the progress card); info: an information icon (bring the progress card back); comment: a speech bubble (comment on the newest update); chevron: a "›" (fold the layer switches out or away); minus, plus: a − or + (zoom out or in); fit: four corner brackets (zoom to fit); centre: a crosshair (center without zooming); share: three joined dots (share the animation); back, forward: a circular arrow round −1 or +1 (a span back or on in the animation); pause, play: two bars or a triangle (pause the gantry animation or play it on); github: the GitHub mark (link to the repo)
+  // cross (close it, or the progress card); info: an information icon (bring the progress card back); comment: a speech bubble (comment on the newest update); comment-off: the same, struck through (comments are off); chevron: a "›" (fold the layer switches out or away); minus, plus: a − or + (zoom out or in); fit: four corner brackets (zoom to fit); centre: a crosshair (center without zooming); share: three joined dots (share the animation); back, forward: a circular arrow round −1 or +1 (a span back or on in the animation); pause, play: two bars or a triangle (pause the gantry animation or play it on); github: the GitHub mark (link to the repo)
   let { kind = "panel" } = $props();
 </script>
 
@@ -27,6 +27,13 @@
       d="M3.75 3h10.5a1.75 1.75 0 0 1 1.75 1.75v6.5A1.75 1.75 0 0 1 14.25 13H8.5l-3.5 3v-3H3.75A1.75 1.75 0 0 1 2 11.25v-6.5A1.75 1.75 0 0 1 3.75 3z"
       stroke-linejoin="round"
     />
+  {:else if kind === "comment-off"}
+    <!-- the speech bubble struck through from corner to corner -->
+    <path
+      d="M3.75 3h10.5a1.75 1.75 0 0 1 1.75 1.75v6.5A1.75 1.75 0 0 1 14.25 13H8.5l-3.5 3v-3H3.75A1.75 1.75 0 0 1 2 11.25v-6.5A1.75 1.75 0 0 1 3.75 3z"
+      stroke-linejoin="round"
+    />
+    <line x1="2" y1="2" x2="16" y2="16" />
   {:else if kind === "share"}
     <!-- a share icon: three dots joined by two lines, one dot on the left and two on the right -->
     <circle cx="4.75" cy="9" r="2.25" />

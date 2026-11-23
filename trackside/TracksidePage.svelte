@@ -403,16 +403,20 @@
             </li>{/each}
         </ul>
       {/if}
-      <!-- the comments button, drawn like the ← Map button, with a speech bubble; none when the update's comments are off -->
-      {#if n.comments !== "off"}<div class="mt-3.5 flex flex-wrap items-center gap-2.5">
-          <button
+      <!-- the comments button, drawn like the ← Map button, with a speech bubble; when the update's comments are off, the
+           same button greyed out and struck through, which can't be pressed -->
+      <div class="mt-3.5 flex flex-wrap items-center gap-2.5">
+        {#if n.comments === "off"}<button class="btn comments-off gap-1.5" disabled
+            ><Icon kind="comment-off" />
+            Comments off</button
+          >{:else}<button
             class="btn btn-grey comments-button gap-1.5"
             aria-expanded={open === n.slug}
             onclick={() => toggleComments(n.slug)}
             ><Icon kind="comment" />
             {commentsLabel(n)}</button
-          >
-        </div>{/if}
+          >{/if}
+      </div>
       <!-- the comment thread (Remark42), set off from the update by a dashed line, or for a read-only one, its comments as
            they were when the site was built; an update that had comments on GitHub before the move links to them under it -->
       {#if open === n.slug && n.comments === "readonly"}<div class="frozen-thread mt-2.5">
@@ -526,6 +530,10 @@
   /* "Comments are closed." and "No comments." */
   .frozen-note {
     @apply m-0 text-sm text-(--mute) italic;
+  }
+  /* the comments button of an update whose comments are off: greyed out, and it can't be pressed */
+  .comments-off {
+    @apply cursor-not-allowed border-(--line) bg-(--bg) text-(--mute);
   }
   /* an update's photo, with rounded corners */
   .update-photo {
