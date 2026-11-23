@@ -388,7 +388,13 @@
           aria-expanded={open === n.slug}
           onclick={() => toggleComments(n.slug)}
           ><Icon kind="comment" />
-          {open === n.slug ? "Hide comments" : commentCount(n) ? `Comments (${commentCount(n)})` : "Comments"}</button
+          {open === n.slug
+            ? "Hide comments"
+            : commentCount(n)
+              ? `Comments (${commentCount(n)})`
+              : commentCount(n) === 0
+                ? "Leave a comment"
+                : "Comments"}</button
         >
       </div>
       <!-- the comment thread (Remark42), set off from the update by a dashed line; an update that had comments on GitHub
