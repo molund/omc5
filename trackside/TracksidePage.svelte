@@ -330,7 +330,11 @@
            drawn as plain heading text. With a title, screen readers hear the date and the title (the date first, so the
            visible text is in the name, for voice control) -->
       <!-- an h1 on the update's own page, an h2 among the other updates -->
-      <svelte:element this={single ? "h1" : "h2"} class="update-heading flex items-center justify-between gap-2">
+      <svelte:element
+        this={single ? "h1" : "h2"}
+        class="update-heading flex items-center justify-between gap-2"
+        class:post-heading={n.post && n.title}
+      >
         <a
           class="text-inherit no-underline"
           href="{TRACKSIDE}{n.slug}/"
@@ -348,7 +352,7 @@
       </svelte:element>
       <!-- a post leads with its title, with just its date under it; dates and times are <time> elements, so machines can read
            them too -->
-      {#if n.post && n.title}<p class="mx-0 -mt-1 mb-2 text-sm text-(--mute)">
+      {#if n.post && n.title}<p class="post-date">
           <time datetime={published(n)}>{dateOnly(n.time)}</time>
         </p>{/if}
       <p class="m-0">{@render linked(plan.get(n))}</p>
@@ -447,6 +451,14 @@
   /* an update's heading: its title or date, with the permalink icon at the right, over a thin line */
   .update-heading {
     @apply mt-7 mb-2 border-b border-(--line) pb-1.25 text-2xl leading-tight font-bold;
+  }
+  /* a post's title: its line moves down under the date (.post-date) */
+  .post-heading {
+    @apply mb-1 border-b-0 pb-0;
+  }
+  /* a post's date, under its title, over the thin line */
+  .post-date {
+    @apply mx-0 mt-0 mb-2 border-b border-(--line) pb-1.25 text-sm text-(--mute);
   }
   /* an update's photo, with rounded corners */
   .update-photo {
