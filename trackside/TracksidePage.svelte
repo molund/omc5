@@ -446,7 +446,7 @@
 
   /* an update's heading: its title or date, with the permalink icon at the right, over a thin line */
   .update-heading {
-    @apply mt-7 mb-2 border-b border-(--line) pb-1.25 text-xl leading-tight font-bold;
+    @apply mt-7 mb-2 border-b border-(--line) pb-1.25 text-2xl leading-tight font-bold;
   }
   /* an update's photo, with rounded corners */
   .update-photo {
