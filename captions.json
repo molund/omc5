@@ -64,6 +64,16 @@
   },
   {
     "span": 41,
+    "step": 54,
+    "parts": [
+      "The gantry is over Highway 15 (176 St) now, and two rules make this part tricky.",
+      "No traffic can be under the gantry while it moves, and Highway 15 can’t be closed during the day.",
+      "So the moves over the highway have to happen at night, with the road closed underneath.",
+      "When the steel girders went in, Highway 15 was closed in both directions for four nights, from midnight to 4 a.m."
+    ]
+  },
+  {
+    "span": 41,
     "step": 66,
     "at": 9,
     "parts": [
