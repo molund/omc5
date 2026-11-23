@@ -6,7 +6,7 @@
   import { onMount } from "svelte";
   import { status, asOf, followUpTime } from "../src/lib/status.js";
   import { inline, plainText } from "../src/lib/inline.js";
-  import { SITE, REMARK42, threadUrl, earlierComments, fetchRemarkCounts } from "../src/lib/comments.js";
+  import { SITE, REMARK42, threadUrl, earlierComments, fetchRemarkCounts, fetchFrozen } from "../src/lib/comments.js";
   import { track } from "../src/lib/track.js";
   import { blogPosting, blogPage, ldScript, isoBC, published, modified } from "../src/lib/seo.js";
   import Icon from "../src/Icon.svelte";
@@ -77,7 +77,18 @@
   }
   // the comment counts of the updates on the page, by thread address (threadUrl() in src/lib/comments.js)
   let counts = $state({});
-  const commentCount = (n) => counts[threadUrl(n.slug)];
+  // the read-only threads (`comments: readonly`), by slug, as they were when the site was built (trackside/prerender.js)
+  let frozen = $state({});
+  const commentCount = (n) => (n.comments === "readonly" ? frozen[n.slug]?.count : counts[threadUrl(n.slug)]);
+  // the comments button's words: "Leave a comment" only where one can be left
+  const commentsLabel = (n) =>
+    open === n.slug
+      ? "Hide comments"
+      : commentCount(n)
+        ? `Comments (${commentCount(n)})`
+        : commentCount(n) === 0 && n.comments === "on"
+          ? "Leave a comment"
+          : "Comments";
 
   // Pages of 10 updates, newest first
   const PAGE_SIZE = 10;
@@ -145,8 +156,11 @@
     const params = new URLSearchParams(location.search),
       // the old #slug links still work
       id = params.get("post") ?? location.hash.slice(1);
-    // one request for the whole page's counts
-    fetchRemarkCounts(shown.map((n) => threadUrl(n.slug))).then((c) => (counts = c));
+    // one request to the comment server for the whole page's counts, for the updates whose comments are on; the read-only
+    // threads come from the site itself, and only when the page has one
+    const live = shown.filter((n) => n.comments === "on");
+    if (live.length) fetchRemarkCounts(live.map((n) => threadUrl(n.slug))).then((c) => (counts = c));
+    if (shown.some((n) => n.comments === "readonly")) fetchFrozen().then((f) => (frozen = f));
     if (id) {
       if (params.has("comments")) open = id;
       document.getElementById(id)?.scrollIntoView();
@@ -280,6 +294,14 @@
       )}{/if}{/each}{/snippet}
 
 <!-- a photo and its caption, under a note or among its further paragraphs -->
+<!-- a read-only thread's comments, each with its author and date, its replies indented under it -->
+{#snippet frozenComments(list)}<ul class="frozen-list">
+    {#each list as c}<li class="frozen-comment">
+        <p class="frozen-meta"><strong>{c.name}</strong> · {heading(new Date(c.time))}</p>
+        <div class="frozen-text">{@html c.html}</div>
+        {#if c.replies.length}{@render frozenComments(c.replies)}{/if}
+      </li>{/each}
+  </ul>{/snippet}
 {#snippet photo(p, plan)}
   <!-- its width and height (read from the file when the site is built) only give its shape, so the page doesn't jump as
        it loads; the CSS still fits it to the column. The main photo on an update's own page loads first, the rest lazily -->
@@ -381,25 +403,31 @@
             </li>{/each}
         </ul>
       {/if}
-      <div class="mt-3.5 flex flex-wrap items-center gap-2.5">
-        <!-- the comments button, drawn like the ← Map button, with a speech bubble -->
-        <button
-          class="btn btn-grey comments-button gap-1.5"
-          aria-expanded={open === n.slug}
-          onclick={() => toggleComments(n.slug)}
-          ><Icon kind="comment" />
-          {open === n.slug
-            ? "Hide comments"
-            : commentCount(n)
-              ? `Comments (${commentCount(n)})`
-              : commentCount(n) === 0
-                ? "Leave a comment"
-                : "Comments"}</button
-        >
-      </div>
-      <!-- the comment thread (Remark42), set off from the update by a dashed line; an update that had comments on GitHub
-           before the move links to them under it -->
-      {#if open === n.slug}<div class="mt-2.5 border-t border-dashed border-(--line) pt-3" use:remark42={n}></div>
+      <!-- the comments button, drawn like the ← Map button, with a speech bubble; none when the update's comments are off -->
+      {#if n.comments !== "off"}<div class="mt-3.5 flex flex-wrap items-center gap-2.5">
+          <button
+            class="btn btn-grey comments-button gap-1.5"
+            aria-expanded={open === n.slug}
+            onclick={() => toggleComments(n.slug)}
+            ><Icon kind="comment" />
+            {commentsLabel(n)}</button
+          >
+        </div>{/if}
+      <!-- the comment thread (Remark42), set off from the update by a dashed line, or for a read-only one, its comments as
+           they were when the site was built; an update that had comments on GitHub before the move links to them under it -->
+      {#if open === n.slug && n.comments === "readonly"}<div class="frozen-thread mt-2.5">
+          {#if frozen[n.slug]?.comments.length}{@render frozenComments(frozen[n.slug].comments)}{:else}<p
+              class="frozen-note"
+            >
+              No comments.
+            </p>{/if}
+          <p class="frozen-note mt-2">Comments are closed.</p>
+        </div>
+      {:else if open === n.slug && n.comments === "on"}<div
+          class="mt-2.5 border-t border-dashed border-(--line) pt-3"
+          use:remark42={n}
+        ></div>{/if}
+      {#if open === n.slug}
         {#if earlierComments(n.time)}<p class="mt-2">
             <a class="earlier-comments" href={earlierComments(n.time)}>Earlier comments on GitHub</a>
           </p>{/if}{/if}
@@ -469,6 +497,35 @@
   /* the comments button: .btn .btn-grey, plus the pointer and the accent outline on hover that other buttons have */
   .comments-button {
     @apply cursor-pointer hover:border-(--accent);
+  }
+  /* a read-only thread: the comments as they were when the site was built, set off by a dashed line like Remark42's */
+  .frozen-thread {
+    @apply border-t border-dashed border-(--line) pt-3;
+  }
+  /* its list of comments; a reply's list is indented under its comment, with a line down its left */
+  .frozen-list {
+    @apply m-0 list-none p-0;
+  }
+  .frozen-list .frozen-list {
+    @apply mt-2 ml-1 border-l-2 border-(--line) pl-3;
+  }
+  .frozen-comment {
+    @apply mb-3;
+  }
+  /* a comment's author and date */
+  .frozen-meta {
+    @apply m-0 text-sm text-(--mute);
+  }
+  /* a comment's text: Remark42's HTML, its paragraphs spaced like an update's */
+  .frozen-text :global(p) {
+    @apply mt-1 mb-0;
+  }
+  .frozen-text :global(a) {
+    @apply text-(--link);
+  }
+  /* "Comments are closed." and "No comments." */
+  .frozen-note {
+    @apply m-0 text-sm text-(--mute) italic;
   }
   /* an update's photo, with rounded corners */
   .update-photo {

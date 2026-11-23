@@ -84,3 +84,46 @@ export function fetchRemarkCounts(urls) {
     .then((list) => Object.fromEntries(list.map((p) => [p.url, p.count])))
     .catch(() => ({}));
 }
+
+/**
+ * @typedef {object} FrozenComment A comment as it was when the site was built.
+ * @property {string} name Its author's name.
+ * @property {string} time When it was posted, as an ISO time stamp.
+ * @property {string} html Its text, as the HTML Remark42 made from it (Remark42 cleans it of scripts and the like).
+ * @property {FrozenComment[]} replies The replies to it, oldest first.
+ */
+
+/**
+ * The comments of a thread, read from Remark42 when the site is built (trackside/prerender.js), for an update whose comments
+ * are read-only (`comments: readonly` in status.yaml); deleted ones are left out, but their replies stay.
+ * @param {string} url The thread's address (see {@link threadUrl}).
+ * @returns {Promise<{ count: number, comments: FrozenComment[] }>}
+ */
+export async function freezeThread(url) {
+  const q = new URLSearchParams({ site: REMARK42.site, url, format: "tree", sort: "+time" });
+  const r = await fetch(`${REMARK42.host}/api/v1/find?${q}`);
+  if (!r.ok) throw new Error(`Remark42 answered ${r.status} for ${url}`);
+  let count = 0;
+  const shape = (nodes = []) =>
+    nodes.flatMap(({ comment: c, replies }) => {
+      const below = shape(replies);
+      if (c.delete) return below;
+      count++;
+      return [{ name: c.user?.name ?? "", time: c.time, html: c.text, replies: below }];
+    });
+  const comments = shape((await r.json()).comments);
+  return { count, comments };
+}
+
+/** Where trackside/prerender.js writes the read-only threads, by update slug, beside Trackside's pages. */
+export const FROZEN = "trackside/comments.json";
+
+/**
+ * The read-only threads, by update slug, from the site itself (GitHub Pages), not from the comment server.
+ * @returns {Promise<Record<string, { count: number, comments: FrozenComment[] }>>} Empty if it can't be read.
+ */
+export function fetchFrozen() {
+  return fetch(`${import.meta.env.BASE_URL}${FROZEN}`)
+    .then((r) => (r.ok ? r.json() : {}))
+    .catch(() => ({}));
+}

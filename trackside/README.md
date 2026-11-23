@@ -116,6 +116,10 @@ update has its own thread, keyed by its page's address (`threadUrl()` in `src/li
 
 - **Thread addresses must never change**, or Remark42 loses the thread. They come from the update's `?post=` slug.
 - The comment counts on the list pages and the progress card come from one Remark42 counts request per page.
+- `comments:` under a note in `status.yaml` sets its comments: `on` (left out), `off` (no Comments button), or
+  `readonly` (the button stays, but opens the comments as they were at the last deploy, read from Remark42 by
+  `prerender.js` into `dist/trackside/comments.json`, so readers load them from GitHub Pages, not the comment server).
+  Remark42 itself isn't told; a thread that can't be read at the deploy is left out, with a warning on the run.
 - Updates that had comments on GitHub Discussions (giscus, before the move) link to them under "Earlier comments on
   GitHub" (`EARLIER` in `src/lib/comments.js`). The discussions themselves stay on GitHub.
 

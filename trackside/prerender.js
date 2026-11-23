@@ -4,14 +4,15 @@
 //   dist/trackside/page/2/index.html …   the older ones, 10 a page
 //   dist/trackside/<slug>/index.html     each update on its own page (in the sitemap, not linked from the site)
 // dist/sitemap.xml, every page for search engines, so status.yaml is read in one place (lib/status.js). And
-// dist/velocity.svg, the progress card's velocity chart, from gantry-cycles.yaml (lib/velocityChart.js).
+// dist/velocity.svg, the progress card's velocity chart, from gantry-cycles.yaml (lib/velocityChart.js). And
+// dist/trackside/comments.json, the comments of every update with `comments: readonly`, read from Remark42 now.
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { render } from "svelte/server";
 import { format } from "prettier";
 import TracksidePage from "./TracksidePage.svelte";
 import { status, followUpTime } from "../src/lib/status.js";
 import { inline, plainText } from "../src/lib/inline.js";
-import { SITE } from "../src/lib/comments.js";
+import { SITE, FROZEN, threadUrl, freezeThread } from "../src/lib/comments.js";
 import { velocityChart, velocityPoints } from "../src/lib/velocityChart.js";
 import { statusData, datasetJsonLd, summarySentence } from "../src/lib/statusData.js";
 import { atom, jsonFeed, escape, titleOf } from "./feeds.js";
@@ -45,6 +46,19 @@ async function write(dir, view) {
     ),
   );
 }
+
+// the read-only threads, read from the comment server once here, so readers load them from the site instead; a thread
+// that can't be read is left out (its button then has no count and opens nothing), with a warning on the deploy's run
+const frozen = {};
+for (const n of status.history.filter((n) => n.comments === "readonly"))
+  try {
+    frozen[n.slug] = await freezeThread(threadUrl(n.slug));
+  } catch (e) {
+    console.warn(`::warning::couldn't read the comments of ${n.slug}: ${e.message}`);
+  }
+mkdirSync("dist/trackside", { recursive: true });
+writeFileSync(`dist/${FROZEN}`, JSON.stringify(frozen));
+console.log(`froze the comments of ${Object.keys(frozen).length} read-only update(s)`);
 
 const pages = Math.max(1, Math.ceil(status.history.length / PAGE_SIZE));
 for (let p = 1; p <= pages; p++)

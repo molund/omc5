@@ -15,7 +15,7 @@
   } from "./lib/appState/appState.svelte.js";
   import { status, asOf, dayOf } from "./lib/status.js";
   import { inline } from "./lib/inline.js";
-  import { threadUrl, fetchRemarkCounts } from "./lib/comments.js";
+  import { threadUrl, fetchRemarkCounts, fetchFrozen } from "./lib/comments.js";
   import { track } from "./lib/track.js";
   import Icon from "./Icon.svelte";
   import SharePopover from "./SharePopover.svelte";
@@ -33,9 +33,12 @@
   // a link in the note: an address on this site that's only `?…` was written for Trackside, so it goes there from the map
   const noteLink = (href) => (href.startsWith("?") ? `${import.meta.env.BASE_URL}trackside/${href}` : href);
   // the Comments button opens Trackside's first page, scrolled to the newest update (a post can sit above it) with its
-  // comments open, and shows its comment count once the comment server (Remark42) has sent it
+  // comments open, and shows its comment count once the comment server (Remark42) has sent it, or for read-only comments,
+  // once the site's copy of them has (`comments:` in status.yaml); with its comments off, the card has the Trackside button
+  // instead, and the note goes to the update without opening anything
   const TRACKSIDE = `${import.meta.env.BASE_URL}trackside/`;
-  const COMMENTS = newest ? `${TRACKSIDE}?post=${newest.slug}&comments` : TRACKSIDE;
+  const commentsOff = newest?.comments === "off";
+  const COMMENTS = newest ? `${TRACKSIDE}?post=${newest.slug}${commentsOff ? "" : "&comments"}` : TRACKSIDE;
   let commentCount = $state(0);
   // a tap or click on the note goes where the Comments button goes (a cmd-, ctrl- or shift-click opens it in a new tab), but
   // not from a link in the note or after selecting some of its text; keyboard users have the Comments button itself
@@ -45,7 +48,9 @@
     if (e.metaKey || e.ctrlKey || e.shiftKey) window.open(COMMENTS, "_blank");
     else location.href = COMMENTS;
   }
-  if (newest && current)
+  if (newest && current && newest.comments === "readonly")
+    fetchFrozen().then((f) => (commentCount = f[newest.slug]?.count ?? 0));
+  else if (newest && current && newest.comments === "on")
     fetchRemarkCounts([threadUrl(newest.slug)]).then((c) => (commentCount = c[threadUrl(newest.slug)] ?? 0));
   // the velocity the Leash Log writes, how far the gantry got in the last week, and its chart, drawn when the site is
   // built (trackside/prerender.js); a new address for each update, so a browser doesn't show an old one, and none shown
@@ -325,7 +330,7 @@
               >{#if p.bold}<strong>{p.text}</strong>{:else}{p.text}{/if}</a
             >{:else if p.bold}<strong>{p.text}</strong>{:else}{p.text}{/if}{/each}
       </div>{/if}
-    {#if newest && !current}
+    {#if newest && (!current || commentsOff)}
       <a
         class="btn mt-2.5 flex min-h-8 justify-center gap-1.5 border-(--button-line) bg-(--button-bg) px-2.5 text-sm font-semibold text-(--button-ink) hover:bg-(--bg)"
         href={TRACKSIDE}

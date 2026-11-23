@@ -11,6 +11,9 @@
 //     photo:
 //       file: span-36.jpg
 //       caption: "Its own caption, separate from the note"
+// its comments, `on` when left out: `off` has no Comments button; `readonly` keeps the button, but shows the comments as they
+// were when the site was built (trackside/prerender.js), with no way to add one:
+//     comments: readonly
 // a note to self is in gantry-cycles.yaml now, not here; this reader skips a `note-to-self:` line all the same, so one is never shown
 // optionally more blocks, paragraphs and photos, indented under it (shown after the summary and its photo on the Trackside page
 // and in its thread; the card shows only the summary):
@@ -60,6 +63,7 @@ import { anchor } from "./comments.js";
  * @property {string} title The title for the note's own Trackside page, or "".
  * @property {string} slug The note's `?post=` slug on Trackside, unique among the notes.
  * @property {boolean} post Whether it is a post rather than a status update.
+ * @property {"on"|"off"|"readonly"} comments Its comments: open, none, or shown as they were when the site was built.
  * @property {FollowUp[]} followUps Its follow-ups, newest first.
  */
 
@@ -154,6 +158,7 @@ function parse(src) {
         photo: null,
         block: [],
         post: false,
+        comments: "on",
         followUps: [],
       });
       list = null;
@@ -213,6 +218,14 @@ function parse(src) {
       list = null;
       photo = null;
       if (last) last.post = po[1] === "true";
+      return;
+    }
+    // "    comments: off" or "readonly"; anything else leaves them on
+    const co = line.match(/^ {4}comments:\s*(.*?)\s*$/);
+    if (co) {
+      list = null;
+      photo = null;
+      if (last) last.comments = ["off", "readonly"].includes(unquote(co[1])) ? unquote(co[1]) : "on";
       return;
     }
     // "    slug: words-for-the-address": a note's own address, instead of its title's

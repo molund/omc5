@@ -13,6 +13,8 @@ spans-per-week: 1.22
 # time-stamped entries with their own summary, photo and block, and no title). See the notes below for the shapes.
 # - The title leads a post and is the update's `?post=` slug on Trackside ("Clayton Clipper" becomes "Clipper"; a later
 #   note with the same title gets -2). To keep the anchor when a title is edited, add `slug: words-here` under the note.
+# - `comments: off` takes away a note's Comments button; `comments: readonly` keeps it, but shows the comments as they were
+#   when the site was last built, with no way to add one. Left out, they're on.
 # - `post: true` makes a note a post instead of a status update: it never shows on the progress card, and its key can be a
 #   date alone ("2026-11-01").
 # - The progress card shows the newest note's summary, or its newest follow-up's, until midnight BC time at the end of the
