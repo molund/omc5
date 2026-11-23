@@ -1,6 +1,6 @@
 // Captions over the gantry animation, from captions.json at the top of the repo. Each one is tied to a step of the
 // animation, not to a time, so it shows at the same moment whatever span the animation started on:
-//   span: the span the move starts on (a walk's from span 41 or 50); left out, every span
+//   span: the span the move starts on (a walk's from span 41 or 51); left out, every span
 //   step: the step's number, as in the address's hash (animationMark.js: 0 the fill, 1 to 28 the normal move, 29 B flies
 //         across, 30 the short support carried back, 32 on the walk's steps)
 //   at:   seconds after the step starts, in the steps' own time (as written, before SPEED divides it); default 0.

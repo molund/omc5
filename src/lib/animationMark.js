@@ -4,7 +4,7 @@
 //
 // The value is five base64url characters: 30 bits, from the highest, of
 //   time: 16 bits, in quarter seconds (up to about 4.5 hours)
-//   span: 7 bits, the span the move started on (a walk's from span 41 or 50)
+//   span: 7 bits, the span the move started on (a walk's from span 41 or 51)
 //   step: 7 bits, the step's number (STEPS below)
 // decodeMark() turns one back.
 

@@ -13,6 +13,7 @@
 // goes back to its drawn place first, as the fill's run starts there); park: the trolley to `to` for the normal move.
 
 import { gantryMoves, stackSupports } from "../../lib/placeGantry.js";
+import { DOUBLE_GIRDER } from "../../lib/doubleGirder.js";
 import { UNITS_PER_METRE } from "../../lib/layerSwitches.js";
 import { gantryProgress, markReached } from "../gantryProgress.js";
 import { SPEED, pause, setInstant } from "./clock.js";
@@ -54,7 +55,8 @@ function middleLine(svg, gantry, S, last) {
   for (let n = S - 3; n <= last + 1; n++) {
     const sp = gantryMoves(svg, n, n)?.spans[n];
     if (!sp) continue;
-    const e = n > S + 1 ? girderEdges(svg, gantry, sp) : null,
+    // from two spans on (the walk from 41 builds 42 first), or a double girder span straight after (the walk from 51)
+    const e = n > S + 1 || DOUBLE_GIRDER.has(n) ? girderEdges(svg, gantry, sp) : null,
       shift = e ? (e.edge0 + e.edge1) / 2 : 0,
       a = add(sp.ends.back, mul(sp.v, shift)),
       b = add(sp.ends.front, mul(sp.v, shift)),
@@ -404,7 +406,8 @@ export async function playSteps(m, steps, last, { halfway = false, done = 0, pos
   // a double girder span turns to the progress colour (reached, as gantryProgress() marks spans behind the gantry) once two
   // supports stand on the ground at or past its joint with the next span
   const joints = {};
-  for (let n = S + 2; n <= last; n++) {
+  for (let n = S + 1; n <= last; n++) {
+    if (n === S + 1 && !DOUBLE_GIRDER.has(n)) continue;
     const sp = gantryMoves(svg, n, n)?.spans[n];
     if (sp) joints[n] = line.arc(sp.ends.front);
   }

@@ -23,7 +23,7 @@ export const FOLLOW_GANTRY = true;
 
 /**
  * A whole gantry move, from the span the gantry is on to the next one: a walk over the double girder spans (see startWalk
- * and walk.js) from span 41 or 50, or from a span part way through one; the normal move (see playNormalMove) everywhere
+ * and walk.js) from span 41 or 51, or from a span part way through one; the normal move (see playNormalMove) everywhere
  * else.
  * @param {SVGSVGElement} svg The map's <svg>, after placeGantry() has put the gantry on its span.
  * @returns {Promise<boolean>} Whether it moved the gantry on.

@@ -1,6 +1,6 @@
 # The walk
 
-How the gantry crosses spans 43 to 47 (from span 41) and 52 to 54 (from span 50), from the start layout in
+How the gantry crosses spans 43 to 47 (from span 41) and 52 to 54 (from span 51), from the start layout in
 [`README.md`](README.md) to the normal move's half-way layout on the last double girder span.
 
 ## How it is built
@@ -41,15 +41,25 @@ short support with the front jacks, which needs a long support behind the trusse
 support, goes further: far enough for the rear lifting jacks to carry it as ballast, as in a normal move. Span 47 is
 55.6 m long, so the places the normal move's rules give (made for 40 m spans) would leave it out of their reach.
 
-## Spans 52 to 54 (from span 50): 32 steps
+## Spans 52 to 54 (from span 51): 26 steps
 
-The same walk. B starts across the double girders at the 51/52 joint (79.2 m); span 51 is only 30 m long.
+No crane: the normal move from span 50 has set the short support, legs off, across the span 52 girders at the 51/52
+joint (30.96 m, from the 50/51 joint), and span 51 is built (step 0) before the walk starts. Span 51 is only 30 m long.
 
-- **The loop (10 carries).** The spacing is 16.12 m, so the last carry lands the short support on the 54/55 hammerhead
-  (240.42 m).
-- **End.** A to 238.41 m, C to its place on span 55 (191.02 m), the trusses back, and B back over C to 160.4 m, as
-  ballast for the rear lifting jacks.
-- **Margins.** 4.55 at the least, and 15.3 in the normal move's steps 12 to 14.
+- **Start (6 steps).** The trusses slide back in two goes (rear end to −46.24 m, then −54.24 m), so they roll onto B
+  before their middle passes A. Then A goes forward to 10.81 m, C (lengthwise on span 50) back to −29.5 m, turned across,
+  and B over C to −9.34 m, a spacing apart behind the short support, which stays where the jacks set it. The trusses go
+  to where the loop starts.
+- **The loop (8 carries).** The short support starts at the front, so it comes round every fourth carry. The spacing is
+  20.15 m, so the eighth carry lands it on the 54/55 hammerhead (192.18 m). The spacing can't go much past 21.5 m: the
+  trolley can only reach about 43 m behind the trusses' middle, two spacings.
+- **End (4 steps).** A to 190.17 m, the trusses back (rear end to 102.76 m), B back over C to 112.16 m as ballast for
+  the rear lifting jacks, and C to its place on span 55 (142.78 m). B goes before C, or the two would stand only 9 m
+  apart. That's the same half-way layout the walk from span 50 used to hand over in, with the trusses 1 m further back
+  so the trolley reaches B; the normal move's step 11 sends the trolley to C.
+- **Margins.** 4.84 at the least, in the loop's carries (any spacing gives the same: 21.81 ÷ 4.5). The model was checked
+  against the walk from span 41, whose 3.97 it gives at the same step. The normal move's steps 12 to 14 weren't checked
+  again: they start from the same layout as before (15.3).
 
 ## The hand-off
 
@@ -60,15 +70,16 @@ snap swaps B and C, two identical supports, with nothing jumping.
 
 ## Starting part way
 
-With status.yaml on span 42 (hung), 51 (hung) or a double girder span, the gantry is shown where the walk has it at that
-point (`poseGantry`), and Play goes on from there. The steps up to it play with no time (`walkPartWay` in `walk.js`).
-The gantry stands where status.yaml's span turns to the progress colour: once it is built for 42 and 51, once two
-supports stand at or past its far joint for the double girder spans, and at the hand-off for the last one.
+With status.yaml on span 42 (hung) or a double girder span, the gantry is shown where the walk has it at that point
+(`poseGantry`), and Play goes on from there. The steps up to it play with no time (`walkPartWay` in `walk.js`). The
+gantry stands where status.yaml's span turns to the progress colour: once it is built for 42, once two supports stand at
+or past its far joint for the double girder spans, and at the hand-off for the last one. On span 51 the walk hasn't
+started yet: the gantry stands where `placeGantry()` draws it, and Play starts the walk from there.
 
 | Span  | 42 (hung) | 43  | 44  | 45  | 46  | 47       |
 | ----- | --------- | --- | --- | --- | --- | -------- |
 | After | step 2    | 13  | 19  | 25  | 31  | hand-off |
 
-| Span  | 51 (hung) | 52  | 53  | 54       |
-| ----- | --------- | --- | --- | -------- |
-| After | step 2    | 15  | 23  | hand-off |
+| Span  | 52  | 53  | 54       |
+| ----- | --- | --- | -------- |
+| After | 13  | 19  | hand-off |

@@ -1,5 +1,6 @@
-// The start of a walk over the double girder spans (from span 41 or 50, about to build 42 or 51): the supports are set
-// where the crews had them on Nov. 19 at span 41 (placeNowLayout()), and the walk (walk.js) plays from there. See
+// The start of a walk over the double girder spans (from span 41, about to build 42, or from span 51): from span 41 the
+// supports are set where the crews had them on Nov. 19 (placeNowLayout(), B lifted across by a mobile crane); from span 51
+// they stand where the normal move from span 50 left them. The walk (walk.js) plays from there. See
 // docs/double-girder/README.md.
 
 import { gantryMoves, placeGantry, stackSupports } from "../../lib/placeGantry.js";
@@ -9,7 +10,7 @@ import { SPEED, pause, setInstant } from "./clock.js";
 import { girderEdges } from "./guideway.js";
 import { between, centreIn } from "./measure.js";
 import { holders } from "./holders.js";
-import { playWalk, walkPartWay } from "./walk.js";
+import { craneStart, playWalk, walkPartWay } from "./walk.js";
 import { playFirstHalf, startMove } from "./normalMove.js";
 import { STEPS, markStep } from "../../lib/animationMark.js";
 
@@ -121,8 +122,8 @@ async function placeNowLayout(m, animate = false) {
 }
 
 /**
- * The start of a walk, from span 41 or 50, or from a span part way through one (walkPartWay() in walk.js): the
- * supports set in the Nov. 19 layout, then the walk.
+ * The start of a walk, from span 41 or 51, or from a span part way through one (walkPartWay() in walk.js): from span 41
+ * the supports set in the Nov. 19 layout, then the walk; from span 51 the walk, from where the gantry stands.
  * @param {SVGSVGElement} svg The map's <svg>, after placeGantry() has put the gantry on its span.
  * @param {{ pose?: boolean }} [options] pose: only set the gantry where the walk has it on a span part way through one
  * (poseGantry()), with no time, and stop there.
@@ -150,13 +151,14 @@ export async function startWalk(svg, { pose = false } = {}) {
   try {
     const m = await startMove(svg);
     if (!m) return false;
-    Object.assign(m, aimC(m));
+    const crane = craneStart(m.S);
+    if (crane) Object.assign(m, aimC(m));
     holders(m, "second", "front"); // TEMP
-    // a walk starts where the crews had the supports on Nov. 19 at span 41 (placeNowLayout; the same at span 50); the
-    // walk goes on from there
-    // from the span itself (not part way through), the way into it is played; part way through, it is set at once
-    await placeNowLayout(m, !partWay);
-    return await playWalk(m, partWay?.done, pose, !partWay);
+    // the walk from span 41 starts where the crews had the supports on Nov. 19 (placeNowLayout, B lifted across by a
+    // mobile crane): from the span itself (not part way through), the way into it is played; part way through, it is set
+    // at once. The walk from span 51 starts from the normal move's layout, where placeGantry() has the gantry already
+    if (crane) await placeNowLayout(m, !partWay);
+    return await playWalk(m, partWay?.done, pose, crane && !partWay);
   } finally {
     // a stop during the set-up leaves nothing see-through or played with no time
     gantry.style.opacity = "";
