@@ -478,7 +478,7 @@ export async function playSteps(m, steps, last, { halfway = false, done = 0, pos
     setInstant(i < done);
     // only setting the gantry where the crews have it (pose): it stops there, with nothing snapped
     if (pose && i === done) return false;
-    if (done && i === done) gantry.style.opacity = "";
+    if (i === done) gantry.style.opacity = "";
     if (i) debugLog(`[gantry] walk layout: ${layout()}`); // TEMP
     debugLog(`[gantry] walk ${i + 1}: ${JSON.stringify(step)}`); // TEMP
     markStep(S, i < lead ? STEPS.CARRY_SHORT_BACK : STEPS.WALK + i - lead, i < lead ? S : walkSpanAt(S, i - lead));

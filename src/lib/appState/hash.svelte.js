@@ -3,7 +3,7 @@ import { track } from "../track.js";
 import { encodeMark } from "../animationMark.js";
 
 /** Whether the address's hash shows where the animation is (encodeMark()): off for now, on to find a caption's moment. */
-const MARK_IN_HASH = false;
+const MARK_IN_HASH = true;
 
 /**
  * Bookmarkable views: each view but Progress has its own address (?view=aerial), so a link or bookmark opens on that view;

@@ -184,8 +184,26 @@ export function walkPartWay(S) {
 }
 
 /**
- * The span a walk from span S has reached once `done` of its steps are made: the last span whose walkPartWay() has no
- * more steps done than that (S itself before the first is built).
+ * Where an animation that starts on span S (?span=N with ?animate=true, +1, −1) starts in a walk: when the gantry reaches
+ * the span, before it turns to the progress colour, as a normal move starts before its span fills, so +1 and −1 go one span
+ * at a time. For the span built first (42) just before its fill; for a double girder span where walkPartWay() has the
+ * span before it (from span 51, 52 as the walk starts, after span 51's fill).
+ * @param {number} S The span to start on.
+ * @returns {{ from: number, done: number }|null} null where the animation starts on the span itself (41, 51, or not on a
+ * walk).
+ */
+export function walkStartAt(S) {
+  for (const [from, c] of Object.entries(WALKS)) {
+    if (S <= +from || S < c.built || S > c.last) continue;
+    if (S === c.built) return { from: +from, done: walkSteps(c).findIndex((st) => st.op === "fill") };
+    return { from: +from, done: walkPartWay(S - 1)?.done ?? 0 };
+  }
+  return null;
+}
+
+/**
+ * The span a walk from span S has reached once `done` of its steps are made: the last span whose walkStartAt() has no
+ * more steps done than that (S itself before the gantry reaches the next).
  * @param {number} S The span the walk starts from (41 or 51).
  * @param {number} done How many of the walk's own steps are made.
  * @returns {number}
@@ -194,8 +212,8 @@ export function walkSpanAt(S, done) {
   const c = WALKS[S];
   let on = S;
   if (!c) return on;
-  for (let s = c.built; s <= c.last; s++) {
-    const p = walkPartWay(s);
+  for (let s = S + 1; s <= c.last; s++) {
+    const p = walkStartAt(s);
     if (p && p.from === S && p.done <= done) on = s;
   }
   return on;

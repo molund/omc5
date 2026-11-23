@@ -10,7 +10,7 @@ import { SPEEDS, setSpeed, stops, stop, waits, holdGantry, resumeGantry } from "
 import { fills, clearHangers } from "./gantryAnimation/fill.js";
 import { startWalk } from "./gantryAnimation/walkStart.js";
 import { playNormalMove } from "./gantryAnimation/normalMove.js";
-import { hasWalk, walkPartWay } from "./gantryAnimation/walk.js";
+import { hasWalk, walkPartWay, walkStartAt } from "./gantryAnimation/walk.js";
 
 export { holdGantry, resumeGantry };
 
@@ -49,7 +49,9 @@ let poses = 0;
  */
 export function poseGantry(svg) {
   const gantry = svg?.querySelector("#clayton-clipper");
-  if (!gantry || !gantry.getBoundingClientRect().width || !walkPartWay(+gantry.dataset.span)) return posing;
+  // an animation that starts on the span (startFrom()) is shown where the gantry reaches it (walkStartAt)
+  const at = gantry?.dataset.start ? walkStartAt : walkPartWay;
+  if (!gantry || !gantry.getBoundingClientRect().width || !at(+gantry.dataset.span)) return posing;
   // the stop, the view and the new span (+1, −1) can each ask within a frame: only the last one waiting is played
   const ask = ++poses;
   posing = posing.then(() => ask === poses && startWalk(svg, { pose: true })).catch(() => {});
@@ -183,7 +185,7 @@ function finishPrecast(svg) {
  * Puts the gantry on span `n` for an animation that starts there (?span=N with ?animate=true) instead of on status.yaml's
  * span: the drawing goes back to how map.svg draws it, the gantry is put on span n with its segments not yet hung
  * (gantryProgress() with complete = false, so the spans behind it are drawn hung and the first move fills n in), and, on a
- * span part way through a walk, posed where the walk has it. The drawing as status.yaml has it is saved first, so
+ * span part way through a walk, posed where the walk reaches it (walkStartAt(), marked by gantry.dataset.start). The drawing as status.yaml has it is saved first, so
  * stopGantry() (the Reset button) puts that back. Nothing happens for a span outside 1 to 105.
  * @param {SVGSVGElement} svg The map's <svg>, with the gantry showing (a hidden gantry has no size to pose).
  * @param {number} n The span to start on.
@@ -207,6 +209,7 @@ export async function startFrom(svg, n, { pose = true } = {}) {
   const styles = finishPrecast(svg);
   before.styles ??= styles;
   gantry.dataset.span = n;
+  gantry.dataset.start = "true";
   delete gantry.dataset.halfway;
   gantryProgress(svg, false);
   placeGantry(svg);
@@ -239,6 +242,7 @@ export function stopGantry(svg) {
     before = null;
   }
   delete gantry.dataset.halfway;
+  delete gantry.dataset.start;
   placeGantry(svg);
   // on a span part way through a walk, back where the walk has it (a frame later, once a view or layer change shows)
   requestAnimationFrame(() => poseGantry(svg));

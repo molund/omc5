@@ -10,7 +10,7 @@ import { SPEED, pause, setInstant } from "./clock.js";
 import { girderEdges } from "./guideway.js";
 import { between, centreIn } from "./measure.js";
 import { holders } from "./holders.js";
-import { craneStart, playWalk, walkPartWay } from "./walk.js";
+import { craneStart, playWalk, walkPartWay, walkStartAt } from "./walk.js";
 import { playFirstHalf, startMove } from "./normalMove.js";
 import { STEPS, markStep } from "../../lib/animationMark.js";
 
@@ -134,9 +134,12 @@ export async function startWalk(svg, { pose = false } = {}) {
   // part way through a walk (spans 42 to 47): the gantry is set up from the span the walk started on, see-through, and
   // its steps the crews have already made play with no time (walkPartWay in walk.js). With `pose`, only that, all of it
   // with no time, to show the gantry where the crews have it (poseGantry()); the gantry keeps status.yaml's span
+  // an animation that starts on the span (startFrom(), gantry.dataset.start) starts where the gantry reaches it
+  // (walkStartAt), not where status.yaml's span has it; only its first move
   const gantry = svg.querySelector("#clayton-clipper"),
     span = gantry?.dataset.span,
-    partWay = walkPartWay(+span);
+    partWay = (gantry?.dataset.start ? walkStartAt : walkPartWay)(+span);
+  if (!pose) delete gantry?.dataset.start;
   if (pose && !partWay) return false;
   // the set-up from the walk's start (the pause and the fill before the steps) takes no time either, so +1 and ?span=N
   // go straight to the span; playSteps() plays at speed again from the first step not yet made
