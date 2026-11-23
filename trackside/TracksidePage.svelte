@@ -325,7 +325,7 @@
     {@const plan = linkPlan(n)}
     <!-- an update a link jumps to lands below the bar, not under it; a wide gap separates one update from the next, so
          the comments link reads as the end of its own update rather than the start of the next -->
-    <article id={n.slug} class="scroll-mt-[calc(var(--spacing)*19_+_env(safe-area-inset-top,0px))] [article+&]:mt-9">
+    <article id={n.slug} class="scroll-mt-[calc(var(--spacing)*19_+_env(safe-area-inset-top,0px))] [article+&]:mt-12">
       <!-- the heading links to the update's own page, for search engines, and a plain click scrolls to it here instead;
            drawn as plain heading text. With a title, screen readers hear the date and the title (the date first, so the
            visible text is in the name, for voice control) -->
