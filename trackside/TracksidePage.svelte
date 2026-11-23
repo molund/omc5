@@ -381,13 +381,13 @@
             </li>{/each}
         </ul>
       {/if}
-      <div class="mt-2 flex flex-wrap items-center gap-2.5">
-        <!-- the comments link, in the link colour -->
+      <div class="mt-3.5 flex flex-wrap items-center gap-2.5">
+        <!-- the comments button, drawn like the ← Map button, with a speech bubble -->
         <button
-          class="cursor-pointer border-0 bg-transparent p-0 text-sm text-(--link)"
+          class="btn btn-grey comments-button gap-1.5"
           aria-expanded={open === n.slug}
           onclick={() => toggleComments(n.slug)}
-          ><span aria-hidden="true">💬</span>
+          ><Icon kind="comment" />
           {open === n.slug ? "Hide comments" : commentCount(n) ? `Comments (${commentCount(n)})` : "Comments"}</button
         >
       </div>
@@ -459,6 +459,10 @@
   /* a post's date, under its title, over the thin line */
   .post-date {
     @apply mx-0 mt-0 mb-2 border-b border-(--line) pb-1.25 text-sm text-(--mute);
+  }
+  /* the comments button: .btn .btn-grey, plus the pointer and the accent outline on hover that other buttons have */
+  .comments-button {
+    @apply cursor-pointer hover:border-(--accent);
   }
   /* an update's photo, with rounded corners */
   .update-photo {
