@@ -470,6 +470,9 @@ export async function playSteps(m, steps, last, { halfway = false, done = 0, pos
     }
     return null;
   };
+  // the hangers the move's fill (step 0) put on the span come down as the walk starts, as in the normal move's step 1 (the
+  // walk from span 51 starts straight after the fill; from span 41, the normal move's first half has taken them down)
+  clearHangers();
   for (const [i, step] of steps.entries()) {
     // the steps already made are over: the rest plays at speed, with the gantry showing again
     setInstant(i < done);
