@@ -154,7 +154,7 @@ notes:
             - "I fully expect that my new velocity tracking feature will choke on the Sunday shut down. 🤞"
   - 2026-11-06T08:45-07:00: "Clayton Clipper construction update for Friday, Nov. 6, 2026"
     summary: "Another precast concrete girder was installed at the span 35 eastbound mainline overnight."
-    comments: off
+    comments: readonly
     follow-up:
       - 2026-11-06T18:00-07:00:
           summary: "The rain finally stopped, and I got to do the full loop with Piper."
