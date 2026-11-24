@@ -23,6 +23,11 @@ spans-per-week: 1.11
 #   No other markdown: anything else shows as typed.
 # Notes to self, and the steps of the gantry's cycle seen at each time stamp, are in gantry-cycles.yaml, not here.
 notes:
+  - 2026-11-23T19:15-07:00: "Overnight work at Hwy 15 starts Thursday"
+    summary: "A new traffic notice looks like the window for Clayton Clipper to cross Hwy 15."
+    block:
+      - "[The notice](https://surreylangleyskytrain.gov.bc.ca/app/uploads/sites/938/2026/11/SLS-20261123-Traffic-Update-at-Fraser-Highway-and-Highway-15.pdf) lists overnight guideway work at Fraser Highway and Highway 15 from Nov 26 to Dec 3, with turn restrictions from 9 p.m. to 6 a.m. each night. It doesn’t name the gantry, but the closures start on the east side of the intersection and finish on the west."
+      - "My guess is the crawl over the highway itself happens around Dec 1 to 3. That’s slower than I expected, but crossing the highway takes several support moves, and none of them can happen over live traffic."
   - 2026-11-22: "Langley Launcher closes in on Hwy 10"
     summary: "I had to go to Langley today, so I stopped by to check on the Langley Launcher. It's making good progress through the Willowbrook Mall parking lot, with two more moves to reach the Langley Bypass (Highway 10) and three to get across."
     post: true
