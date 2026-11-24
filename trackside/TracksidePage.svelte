@@ -323,6 +323,14 @@
 
 <!-- a photo and its caption, under a note or among its further paragraphs -->
 <!-- a read-only thread's comments, each with its author and date, its replies indented under it -->
+<!-- an update's permalink: the share icon, a real link to the update's own page that copies its address when tapped -->
+{#snippet permalink(n)}<a
+    class="ml-auto shrink-0 p-1 text-(--mute) hover:text-(--accent)"
+    href="{TRACKSIDE}{n.slug}/"
+    title="Copy permalink"
+    aria-label="Copy permalink"
+    onclick={(e) => copyPermalink(e, n)}><Icon kind="share" /></a
+  >{/snippet}
 {#snippet frozenComments(list)}<ul class="frozen-list">
     {#each list as c}<li class="frozen-comment">
         <p class="frozen-meta"><strong>{c.name}</strong> · {heading(new Date(c.time))}</p>
@@ -386,15 +394,18 @@
            title as its heading; one without is headed by its date and time alone, drawn the same small gold. Dates and
            times are <time> elements, so machines can read them too. An h1 on the update's own page, an h2 among the
            other updates -->
-      {#if n.title}<p class="update-date">
-          <time datetime={published(n)}>{n.post ? dateOnly(n.time) : heading(n.time)}</time>
+      {#if n.title}<p class="update-date flex items-center justify-between gap-2">
+          <time datetime={published(n)}>{n.post ? dateOnly(n.time) : heading(n.time)}</time
+          >{#if single}{@render permalink(n)}{/if}
         </p>
         <svelte:element this={single ? "h1" : "h2"} class="update-heading"
           >{#if single}{n.title}{:else}<a class="title-link" href="{TRACKSIDE}{n.slug}/">{n.title}</a
             >{/if}</svelte:element
         >
-      {:else}<svelte:element this={single ? "h1" : "h2"} class="update-heading update-date"
-          ><time datetime={published(n)}>{heading(n.time)}</time></svelte:element
+      {:else}<svelte:element
+          this={single ? "h1" : "h2"}
+          class="update-heading update-date flex items-center justify-between gap-2"
+          ><time datetime={published(n)}>{heading(n.time)}</time>{#if single}{@render permalink(n)}{/if}</svelte:element
         >{/if}
       <!-- on a page of updates, a long one is cut off with a fade, and Read more goes to its own page -->
       <div class="update-body" class:clamped={clamped(n)} data-body={n.slug}>
@@ -429,26 +440,21 @@
       <!-- on a page of updates, the comments button, drawn like the ← Map button, with a speech bubble: a link to the
            thread on the update's own page; when the update's comments are off, the same button greyed out and struck
            through, which can't be pressed. An update's own page has its thread right below instead -->
-      <div class="update-footer mt-3.5 flex flex-wrap items-center gap-2.5">
-        {#if single}{:else if n.comments === "off"}<button class="btn comments-off gap-1.5" disabled
-            ><Icon kind="comment-off" />
-            Comments off</button
-          >{:else}<a
-            class="btn btn-grey comments-button gap-1.5"
-            href="{TRACKSIDE}{n.slug}/#comments"
-            onclick={() => track("open_comments", { where: "trackside", slug: n.slug })}
-            ><Icon kind="comment" />
-            {commentsLabel(n)}</a
-          >{/if}
-        <!-- the permalink, at the right end of the row, so the heading above has the card's full width -->
-        <a
-          class="ml-auto shrink-0 p-1 text-(--mute) hover:text-(--accent)"
-          href="{TRACKSIDE}{n.slug}/"
-          title="Copy permalink"
-          aria-label="Copy permalink"
-          onclick={(e) => copyPermalink(e, n)}><Icon kind="share" /></a
-        >
-      </div>
+      <!-- (an update's own page has no footer: its permalink sits at the end of the date line instead) -->
+      {#if !single}<div class="update-footer mt-3.5 flex flex-wrap items-center gap-2.5">
+          {#if n.comments === "off"}<button class="btn comments-off gap-1.5" disabled
+              ><Icon kind="comment-off" />
+              Comments off</button
+            >{:else}<a
+              class="btn btn-grey comments-button gap-1.5"
+              href="{TRACKSIDE}{n.slug}/#comments"
+              onclick={() => track("open_comments", { where: "trackside", slug: n.slug })}
+              ><Icon kind="comment" />
+              {commentsLabel(n)}</a
+            >{/if}
+          <!-- the permalink, at the right end of the row, so the heading above has the card's full width -->
+          {@render permalink(n)}
+        </div>{/if}
       <!-- on an update's own page, its comments, always shown, at #comments (clear of the bar at the top), set off from the
            update by a dashed line: the thread (Remark42), or for a read-only one, its comments as they were when the site
            was built -->
