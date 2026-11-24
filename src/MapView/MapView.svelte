@@ -171,6 +171,10 @@
     const gantry = els.svg?.querySelector("#clayton-clipper"),
       box = gantry?.getBoundingClientRect();
     if (!box?.width) return Promise.resolve();
+    // part way through a walk, the gantry is set up see-through from the walk's start (startWalk()): it is framed once it
+    // shows, where the walk has it, not on the span the walk started from
+    if (gantry.style.opacity === "0")
+      return new Promise((r) => requestAnimationFrame(r)).then(() => frameGantry(always));
     // the padding on each side, on the screen: GANTRY_PAD of the gantry's length in canvas units, times the screen pixels
     // to a canvas unit now
     const m = els.svg.getScreenCTM(),

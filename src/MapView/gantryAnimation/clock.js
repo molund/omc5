@@ -95,7 +95,18 @@ export const setInstant = (on) => {
   muteMarks(on);
   settle();
   SPEED = on ? Infinity : wanted();
+  // a move made meanwhile is finished as it is made, so awaiting it costs no frame (a move of no time still waits for the
+  // next one): the steps set up part way through a walk (+1, −1) show at once rather than after a second or so
+  Element.prototype.animate = on ? finishedAnimate : ANIMATE;
 };
+
+/** The browser's own Element.animate(), and one that finishes the move straight away (setInstant()). */
+const ANIMATE = Element.prototype.animate;
+function finishedAnimate(...args) {
+  const a = ANIMATE.apply(this, args);
+  a.finish();
+  return a;
+}
 
 /**
  * Counts the stops: stopGantry() adds one. A move notes it as it starts waiting, and gives up if it has changed by the
@@ -145,7 +156,9 @@ export const pause = (ms) =>
       else fail(new Error("gantry stopped"));
     };
     waits.add(w);
-    if (heldAt == null) count(w);
+    // with no time (setInstant()), straight away rather than after a timer's few milliseconds
+    if (SPEED === Infinity && heldAt == null) w.up();
+    else if (heldAt == null) count(w);
   });
 
 /**

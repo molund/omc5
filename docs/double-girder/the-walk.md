@@ -85,6 +85,7 @@ started yet: the gantry stands where `placeGantry()` draws it, and Play starts t
 | After | 13  | 19  | hand-off |
 
 An animation that starts on one of these spans (`?span=N` with `?animate=true`, +1 and −1) starts where the gantry
-reaches it instead (`walkStartAt` in `walk.js`): before the fill for span 42, and where the table has the span before it
-for the double girder spans (52: as the walk from span 51 starts). So +1 and −1 go one span at a time, and the span
+reaches it instead (`walkStartAt` in `walk.js`): before the fill for span 42, after the start steps for the first
+double girder span (43, 52), and where the table has the span before it for the others. The map frames the gantry once
+the steps up to there have played (they play see-through, from the span the walk starts on). So +1 and −1 go one span at a time, and the span
 the address and the buttons go by (`walkSpanAt`) changes there too.

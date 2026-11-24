@@ -11,6 +11,7 @@ import { fills, clearHangers } from "./gantryAnimation/fill.js";
 import { startWalk } from "./gantryAnimation/walkStart.js";
 import { playNormalMove } from "./gantryAnimation/normalMove.js";
 import { hasWalk, walkPartWay, walkStartAt } from "./gantryAnimation/walk.js";
+import { setCurrentSpan } from "../lib/animationMark.js";
 
 export { holdGantry, resumeGantry };
 
@@ -69,6 +70,8 @@ export async function playToEnd(svg, last = 106) {
   if (!gantry) return;
   // a pose still being set (poseGantry) finishes first
   await posing;
+  // the span +1 and −1 step from, before the first move notes its first step
+  setCurrentSpan(+gantry.dataset.span);
   // the drawing as it is before the first move, for stopGantry() to put back: the span the gantry is on, and the classes
   // gantryProgress() changes as the gantry moves on (on the guideway pieces, arrows and span numbers)
   before ??= {

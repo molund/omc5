@@ -186,8 +186,8 @@ export function walkPartWay(S) {
 /**
  * Where an animation that starts on span S (?span=N with ?animate=true, +1, −1) starts in a walk: when the gantry reaches
  * the span, before it turns to the progress colour, as a normal move starts before its span fills, so +1 and −1 go one span
- * at a time. For the span built first (42) just before its fill; for a double girder span where walkPartWay() has the
- * span before it (from span 51, 52 as the walk starts, after span 51's fill).
+ * at a time. For the span built first (42) just before its fill; for the first double girder span (43, 52) once the
+ * entry has set the supports in the loop's places; for the others where walkPartWay() has the span before it.
  * @param {number} S The span to start on.
  * @returns {{ from: number, done: number }|null} null where the animation starts on the span itself (41, 51, or not on a
  * walk).
@@ -196,6 +196,7 @@ export function walkStartAt(S) {
   for (const [from, c] of Object.entries(WALKS)) {
     if (S <= +from || S < c.built || S > c.last) continue;
     if (S === c.built) return { from: +from, done: walkSteps(c).findIndex((st) => st.op === "fill") };
+    if (S === c.built + 1) return { from: +from, done: c.entry.length };
     return { from: +from, done: walkPartWay(S - 1)?.done ?? 0 };
   }
   return null;
