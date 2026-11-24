@@ -85,6 +85,8 @@ const urls = [
   ...status.history.map((n) => [`${SITE}trackside/${n.slug}/`, changed(n), photos(n)]),
   // the About page, which has no date of its own
   [`${SITE}about/`, null],
+  // the Privacy page, the same
+  [`${SITE}privacy/`, null],
 ];
 writeFileSync(
   "dist/sitemap.xml",

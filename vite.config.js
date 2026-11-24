@@ -37,7 +37,7 @@ export default defineConfig(({ isSsrBuild }) => ({
   plugins: [tailwindcss(), svelte(), googleTag, photoSizesModule],
   // GitHub Pages serves the site from https://clayton-clipper.olund.ca/ (the custom domain set in the repo's Pages settings)
   base: "/",
-  // four pages: the map, Trackside at /trackside/, About at /about/ and the animation launcher at /play/ (linked from the
+  // five pages: the map, Trackside at /trackside/, About at /about/, Privacy at /privacy/ and the animation launcher at /play/ (linked from the
   // blog, not from the site), plus 404.html, which GitHub Pages serves for missing addresses (the SSR build, for trackside/prerender.js, takes its entry from --ssr)
   build: isSsrBuild
     ? {}
@@ -47,6 +47,7 @@ export default defineConfig(({ isSsrBuild }) => ({
             main: "index.html",
             trackside: "trackside/index.html",
             about: "about/index.html",
+            privacy: "privacy/index.html",
             play: "play/index.html",
             notFound: "404.html",
           },
