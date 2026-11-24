@@ -339,8 +339,8 @@
     <!-- an update a link jumps to lands below the bar, not under it; each update is a card, with a gap above it, so
          the comments link reads as the end of its own update rather than the start of the next -->
     <article id={n.slug} class="update-card scroll-mt-[calc(var(--spacing)*19_+_env(safe-area-inset-top,0px))] mt-5">
-      <!-- the heading is plain text, not a link: the permalink button at the foot of the card is the link to the update's
-           own page (search engines follow it too) -->
+      <!-- a title links to the update's own page (as the permalink button at the foot of the card does), except on that
+           page itself -->
       <!-- an update with a title leads with its date in gold (a post's date, a status update's date and time), then the
            title as its heading; one without is headed by its date and time alone, drawn the same small gold. Dates and
            times are <time> elements, so machines can read them too. An h1 on the update's own page, an h2 among the
@@ -348,7 +348,10 @@
       {#if n.title}<p class="update-date">
           <time datetime={published(n)}>{n.post ? dateOnly(n.time) : heading(n.time)}</time>
         </p>
-        <svelte:element this={single ? "h1" : "h2"} class="update-heading">{n.title}</svelte:element>
+        <svelte:element this={single ? "h1" : "h2"} class="update-heading"
+          >{#if single}{n.title}{:else}<a class="title-link" href="{TRACKSIDE}{n.slug}/">{n.title}</a
+            >{/if}</svelte:element
+        >
       {:else}<svelte:element this={single ? "h1" : "h2"} class="update-heading update-date"
           ><time datetime={published(n)}>{heading(n.time)}</time></svelte:element
         >{/if}
@@ -465,6 +468,10 @@
   /* an update's heading: a post's title, with the permalink icon at the right */
   .update-heading {
     @apply m-0 mb-2 text-2xl leading-tight font-bold;
+  }
+  /* a title's link to its update's own page: drawn like the heading, underlined on hover */
+  .title-link {
+    @apply text-inherit no-underline hover:underline;
   }
   /* a date in gold: a post's, over its title, and a status update's heading, which is its date and time */
   .update-date {
