@@ -1,6 +1,5 @@
 // Comments on updates: one Remark42 thread per update, on the comment server at comments.olund.ca. Shared by the
-// progress card and the Trackside page: each update's page anchor, its thread's address and its comment count, and the
-// links to the earlier comments on GitHub Discussions (giscus, before the move).
+// progress card and the Trackside page: each update's page anchor, its thread's address and its comment count.
 
 /**
  * The site's public address, for links that leave it: the comment threads' addresses and the Open Graph tags.
@@ -16,26 +15,6 @@ export const SITE = "https://clayton-clipper.olund.ca/";
 export const anchor = (t) => t.toISOString().slice(0, 16).replace(/:/g, "-");
 
 /**
- * An update's GitHub Discussion title from before the move to Remark42, its BC time (UTC−7), e.g. "Update 2026-10-31
- * 09:30": what {@link earlierComments} looks the earlier threads up by.
- * @param {Date} t The update's time stamp.
- * @returns {string}
- */
-export const term = (t) =>
-  "Update " +
-  new Intl.DateTimeFormat("en-CA", {
-    timeZone: "America/Dawson_Creek",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    hourCycle: "h23",
-  })
-    .format(t)
-    .replace(",", "");
-
-/**
  * Remark42, the self-hosted comments (comments.olund.ca, on a Google Cloud e2-micro): its address and site ID (the
  * server's SITE).
  */
@@ -48,34 +27,6 @@ export const REMARK42 = { host: "https://comments.olund.ca", site: "trackside" }
  * @returns {string}
  */
 export const threadUrl = (slug) => new URL(`trackside/${slug}/`, SITE).href;
-
-/**
- * The updates that had comments on GitHub Discussions (giscus) before the move to Remark42, by thread title (see
- * {@link term}), and the number of their discussion on GitHub: Trackside links to them as earlier comments.
- * @type {Record<string, number>}
- */
-// each one's discussion number and how many comments it has: history, so they're written here rather than looked up
-const EARLIER = {
-  "Update 2026-10-31 09:30": { discussion: 23, count: 1 },
-  "Update 2026-11-06 08:45": { discussion: 71, count: 2 },
-  "Update 2026-11-16 09:00": { discussion: 96, count: 1 },
-  "Update 2026-11-19 16:00": { discussion: 99, count: 3 },
-};
-
-/**
- * The address of an update's earlier comments on GitHub, if it had any before the move to Remark42.
- * @param {Date} t The update's time stamp.
- * @returns {string|undefined}
- */
-export const earlierComments = (t) =>
-  EARLIER[term(t)] && `https://github.com/molund/omc5/discussions/${EARLIER[term(t)].discussion}`;
-
-/**
- * How many earlier comments an update has on GitHub (see {@link earlierComments}).
- * @param {Date} t The update's time stamp.
- * @returns {number} 0 when it has none.
- */
-export const earlierCount = (t) => EARLIER[term(t)]?.count ?? 0;
 
 /**
  * Comment counts for several Remark42 threads at once, in one request.

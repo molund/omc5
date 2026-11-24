@@ -120,8 +120,6 @@ update has its own thread, keyed by its page's address (`threadUrl()` in `src/li
   `readonly` (the button stays, but opens the comments as they were at the last deploy, read from Remark42 by
   `prerender.js` into `dist/trackside/comments.json`, so readers load them from GitHub Pages, not the comment server).
   Remark42 itself isn't told; a thread that can't be read at the deploy is left out, with a warning on the run.
-- Updates that had comments on GitHub Discussions (giscus, before the move) link to them under "Earlier comments on
-  GitHub" (`EARLIER` in `src/lib/comments.js`). The discussions themselves stay on GitHub.
 
 ## Settings
 
