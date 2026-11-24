@@ -32,13 +32,13 @@
   const note = current ? status.followUps[0]?.summary || status.note : "";
   // a link in the note: an address on this site that's only `?…` was written for Trackside, so it goes there from the map
   const noteLink = (href) => (href.startsWith("?") ? `${import.meta.env.BASE_URL}trackside/${href}` : href);
-  // the Comments button opens Trackside's first page, scrolled to the newest update (a post can sit above it) with its
-  // comments open, and shows its comment count once the comment server (Remark42) has sent it, or for read-only comments,
-  // once the site's copy of them has (`comments:` in status.yaml); with its comments off, the card has the Trackside button
-  // instead, and the note goes to the update without opening anything
+  // the Comments button opens the newest update's own page on Trackside at its comments (#comments), and shows its
+  // comment count once the comment server (Remark42) has sent it, or for read-only comments, once the site's copy of them
+  // has (`comments:` in status.yaml); with its comments off, the card has the Trackside button instead, and the note goes
+  // to the update's own page
   const TRACKSIDE = `${import.meta.env.BASE_URL}trackside/`;
   const commentsOff = newest?.comments === "off";
-  const COMMENTS = newest ? `${TRACKSIDE}?post=${newest.slug}${commentsOff ? "" : "&comments"}` : TRACKSIDE;
+  const COMMENTS = newest ? `${TRACKSIDE}${newest.slug}/${commentsOff ? "" : "#comments"}` : TRACKSIDE;
   let commentCount = $state(0);
   // a tap or click on the note goes where the Comments button goes (a cmd-, ctrl- or shift-click opens it in a new tab), but
   // not from a link in the note or after selecting some of its text; keyboard users have the Comments button itself

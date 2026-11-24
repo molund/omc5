@@ -82,13 +82,11 @@
   const commentCount = (n) => (n.comments === "readonly" ? frozen[n.slug]?.count : counts[threadUrl(n.slug)]);
   // the comments button's words: "Leave a comment" only where one can be left
   const commentsLabel = (n) =>
-    open === n.slug
-      ? "Hide comments"
-      : commentCount(n)
-        ? `Comments (${commentCount(n)})`
-        : commentCount(n) === 0 && n.comments === "on"
-          ? "Leave a comment"
-          : "Comments";
+    commentCount(n)
+      ? `Comments (${commentCount(n)})`
+      : commentCount(n) === 0 && n.comments === "on"
+        ? "Leave a comment"
+        : "Comments";
 
   // Pages of 10 updates, newest first
   const PAGE_SIZE = 10;
@@ -119,10 +117,13 @@
   );
   const url = $derived(full(single ? `${TRACKSIDE}${single.slug}/` : pageUrl(page)));
 
-  // the slug of the update whose comments are open (one at a time, so the page stays light); a string, since $state would
-  // wrap an update object in a proxy that never equals the original. ?post=<slug>&comments (the progress card's Comments
-  // button) scrolls to that update and opens its comments; ?post=<slug> alone just scrolls to it.
-  let open = $state(null);
+  // on the pages of updates, a long update is cut off at CLAMP rem with a fade and a Read more link to its own page; one
+  // that would hide less than CLAMP_SLACK rem more shows whole (measured once the page is in the browser, so the built
+  // page starts with every update cut off). The slugs of the ones shown whole; a list, since $state doesn't watch a Set
+  const CLAMP = 32,
+    CLAMP_SLACK = 6;
+  let unclamped = $state([]);
+  const clamped = (n) => !single && !unclamped.includes(n.slug);
   let copied = $state(false);
   let copyTimer;
   // the permalink icon is a real link to the update's own page, for search engines and for anyone without JavaScript;
@@ -149,17 +150,53 @@
     const live = shown.filter((n) => n.comments === "on");
     if (live.length) fetchRemarkCounts(live.map((n) => threadUrl(n.slug))).then((c) => (counts = c));
     if (shown.some((n) => n.comments === "readonly")) fetchFrozen().then((f) => (frozen = f));
-    if (id) {
-      if (params.has("comments")) open = id;
-      document.getElementById(id)?.scrollIntoView();
+    // comments are on the updates' own pages now: an old ?post=<slug>&comments link goes to its thread there
+    if (id && params.has("comments") && status.history.some((n) => n.slug === id))
+      return location.replace(`${TRACKSIDE}${id}/#comments`);
+    if (!single) {
+      const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
+      unclamped = [...document.querySelectorAll("[data-body]")]
+        .filter((el) => el.scrollHeight <= (CLAMP + CLAMP_SLACK) * rem)
+        .map((el) => el.dataset.body);
     }
+    if (id) document.getElementById(id)?.scrollIntoView();
   });
   // a span link or a photo in an update, for Google Analytics; the update is the article the link is in
   const slugOf = (e) => e.currentTarget.closest("article")?.id;
-  // the comments button: only opening them goes to Google Analytics
-  function toggleComments(slug) {
-    open = open === slug ? null : slug;
-    if (open) track("open_comments", { where: "trackside", slug });
+  // an update's own page's ← Trackside button: back to the page of updates the reader came from, where they were on it,
+  // when they came from one (a plain click); otherwise, and for a cmd-, ctrl-, shift- or middle-click, the first page
+  function backToList(e) {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0 || history.length < 2) return;
+    let from;
+    try {
+      from = new URL(document.referrer);
+    } catch {
+      return;
+    }
+    if (from.origin !== location.origin) return;
+    if (from.pathname !== TRACKSIDE && !from.pathname.startsWith(`${TRACKSIDE}page/`)) return;
+    e.preventDefault();
+    history.back();
+  }
+  // an update's own page loads its thread as the reader nears it (a screen away), or straight away when they arrive at
+  // #comments (a Comments button on a page of updates, or the progress card's)
+  function lazyRemark42(el, n) {
+    let done = null;
+    const load = () => {
+      observer.disconnect();
+      done ??= remark42(el, n);
+    };
+    const observer = new IntersectionObserver((seen) => seen.some((s) => s.isIntersecting) && load(), {
+      rootMargin: "100% 0px",
+    });
+    if (location.hash === "#comments") load();
+    else observer.observe(el);
+    return {
+      destroy: () => {
+        observer.disconnect();
+        done?.destroy();
+      },
+    };
   }
   // a colour variable of the site's as written in app.css's :root rule: the page itself only reports the scheme it's in
   function rawVar(name, rules = [...document.styleSheets].flatMap((sheet) => [...sheet.cssRules])) {
@@ -330,8 +367,12 @@
     <svelte:element this={single ? "p" : "h1"} class="page-header-title"
       ><a class="text-inherit no-underline" href={TRACKSIDE}>Trackside</a></svelte:element
     >
+    <!-- back to the map; on an update's own page, back to the updates instead (the logo still goes to the map) -->
     <nav class="page-header-nav">
-      <a class="btn btn-grey" href={MAP}>← Map</a>
+      {#if single}<a class="btn btn-grey" href={TRACKSIDE} onclick={backToList}>← Trackside</a>{:else}<a
+          class="btn btn-grey"
+          href={MAP}>← Map</a
+        >{/if}
     </nav>
   </header>
   {#each shown as n (n.slug)}
@@ -355,44 +396,49 @@
       {:else}<svelte:element this={single ? "h1" : "h2"} class="update-heading update-date"
           ><time datetime={published(n)}>{heading(n.time)}</time></svelte:element
         >{/if}
-      <p class="m-0">{@render linked(plan.get(n))}</p>
-      {#if n.photo}{@render photo(n.photo, plan)}{/if}
-      {#each n.block as m}
-        {#if m.photo}{@render photo(m.photo, plan)}{:else}<p class="m-0 mt-2.5">
-            {@render linked(plan.get(m))}
-          </p>{/if}
-      {/each}
-      {#if n.followUps.length}
-        <h3 class="mt-3.5 mb-1 text-base font-bold">Follow-ups</h3>
-        <ul class="mx-0 mt-0 mb-2 list-disc pl-5.5 [&>li+li]:mt-2.5">
-          <!-- oldest first, in the order they happened (the card shows the newest first) -->
-          {#each [...n.followUps].reverse() as m}<li>
-              <code
-                class="rounded-md bg-[rgba(129,139,152,0.18)] px-[0.4em] py-[0.15em] font-[family-name:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace] text-[85%]"
-                ><time datetime={isoBC(m.time)}>{followUpTime(m.time, n.time)}</time></code
-              >
+      <!-- on a page of updates, a long one is cut off with a fade, and Read more goes to its own page -->
+      <div class="update-body" class:clamped={clamped(n)} data-body={n.slug}>
+        <p class="m-0">{@render linked(plan.get(n))}</p>
+        {#if n.photo}{@render photo(n.photo, plan)}{/if}
+        {#each n.block as m}
+          {#if m.photo}{@render photo(m.photo, plan)}{:else}<p class="m-0 mt-2.5">
               {@render linked(plan.get(m))}
-              {#if m.photo}{@render photo(m.photo, plan)}{/if}
-              {#each m.block as b}
-                {#if b.photo}{@render photo(b.photo, plan)}{:else}<p class="m-0 mt-2.5">
-                    {@render linked(plan.get(b))}
-                  </p>{/if}
-              {/each}
-            </li>{/each}
-        </ul>
-      {/if}
-      <!-- the comments button, drawn like the ← Map button, with a speech bubble; when the update's comments are off, the
-           same button greyed out and struck through, which can't be pressed -->
+            </p>{/if}
+        {/each}
+        {#if n.followUps.length}
+          <h3 class="mt-3.5 mb-1 text-base font-bold">Follow-ups</h3>
+          <ul class="mx-0 mt-0 mb-2 list-disc pl-5.5 [&>li+li]:mt-2.5">
+            <!-- oldest first, in the order they happened (the card shows the newest first) -->
+            {#each [...n.followUps].reverse() as m}<li>
+                <code
+                  class="rounded-md bg-[rgba(129,139,152,0.18)] px-[0.4em] py-[0.15em] font-[family-name:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace] text-[85%]"
+                  ><time datetime={isoBC(m.time)}>{followUpTime(m.time, n.time)}</time></code
+                >
+                {@render linked(plan.get(m))}
+                {#if m.photo}{@render photo(m.photo, plan)}{/if}
+                {#each m.block as b}
+                  {#if b.photo}{@render photo(b.photo, plan)}{:else}<p class="m-0 mt-2.5">
+                      {@render linked(plan.get(b))}
+                    </p>{/if}
+                {/each}
+              </li>{/each}
+          </ul>
+        {/if}
+      </div>
+      {#if clamped(n)}<a class="read-more" href="{TRACKSIDE}{n.slug}/">Read more →</a>{/if}
+      <!-- on a page of updates, the comments button, drawn like the ← Map button, with a speech bubble: a link to the
+           thread on the update's own page; when the update's comments are off, the same button greyed out and struck
+           through, which can't be pressed. An update's own page has its thread right below instead -->
       <div class="update-footer mt-3.5 flex flex-wrap items-center gap-2.5">
-        {#if n.comments === "off"}<button class="btn comments-off gap-1.5" disabled
+        {#if single}{:else if n.comments === "off"}<button class="btn comments-off gap-1.5" disabled
             ><Icon kind="comment-off" />
             Comments off</button
-          >{:else}<button
+          >{:else}<a
             class="btn btn-grey comments-button gap-1.5"
-            aria-expanded={open === n.slug}
-            onclick={() => toggleComments(n.slug)}
+            href="{TRACKSIDE}{n.slug}/#comments"
+            onclick={() => track("open_comments", { where: "trackside", slug: n.slug })}
             ><Icon kind="comment" />
-            {commentsLabel(n)}</button
+            {commentsLabel(n)}</a
           >{/if}
         <!-- the permalink, at the right end of the row, so the heading above has the card's full width -->
         <a
@@ -403,18 +449,21 @@
           onclick={(e) => copyPermalink(e, n)}><Icon kind="link" /></a
         >
       </div>
-      <!-- the comment thread (Remark42), set off from the update by a dashed line, or for a read-only one, its comments as
-           they were when the site was built -->
-      {#if open === n.slug && n.comments === "readonly"}<div class="frozen-thread mt-2.5">
-          {#if frozen[n.slug]?.comments.length}{@render frozenComments(frozen[n.slug].comments)}
-            <p class="frozen-note mt-2">Comments are closed.</p>
-          {:else}<p class="frozen-note">No comments.</p>
-            <p class="frozen-note mt-2">Comments are closed.</p>{/if}
-        </div>
-      {:else if open === n.slug && n.comments === "on"}<div
-          class="mt-2.5 border-t border-dashed border-(--line) pt-3"
-          use:remark42={n}
-        ></div>{/if}
+      <!-- on an update's own page, its comments, always shown, at #comments (clear of the bar at the top), set off from the
+           update by a dashed line: the thread (Remark42), or for a read-only one, its comments as they were when the site
+           was built -->
+      {#if single}<section
+          id="comments"
+          class="comments-section scroll-mt-[calc(var(--spacing)*19_+_env(safe-area-inset-top,0px))] mt-2.5"
+        >
+          {#if n.comments === "readonly"}
+            {#if frozen[n.slug]?.comments.length}{@render frozenComments(frozen[n.slug].comments)}
+              <p class="frozen-note mt-2">Comments are closed.</p>
+            {:else}<p class="frozen-note">No comments.</p>
+              <p class="frozen-note mt-2">Comments are closed.</p>{/if}
+          {:else if n.comments === "off"}<p class="frozen-note">Comments are off for this update.</p>
+          {:else}<div use:lazyRemark42={n}></div>{/if}
+        </section>{/if}
     </article>
   {/each}
   <!-- the first page has one button to older updates; later pages go either way, with Older off on the last page; links to
@@ -485,8 +534,24 @@
   .comments-button {
     @apply cursor-pointer hover:border-(--accent);
   }
-  /* a read-only thread: the comments as they were when the site was built, set off by a dashed line like Remark42's */
-  .frozen-thread {
+  /* an update's body on a page of updates: cut off when it's long, fading into the card */
+  .update-body {
+    @apply relative;
+  }
+  .clamped {
+    @apply max-h-128 overflow-hidden;
+  }
+  .clamped::after {
+    content: "";
+    @apply pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-linear-to-b from-transparent to-(--panel);
+  }
+  /* the link to a cut-off update's own page */
+  .read-more {
+    @apply mt-2 inline-block text-sm font-bold text-(--link);
+  }
+  /* an update's own page's comments: the thread, or a read-only one's comments as they were when the site was built, set
+     off by a dashed line like Remark42's */
+  .comments-section {
     @apply border-t border-dashed border-(--line) pt-3;
   }
   /* its list of comments; a reply's list is indented under its comment, with a line down its left */

@@ -1,7 +1,7 @@
 # Trackside
 
 Trackside is the site's updates page: every note in [`status.yaml`](../status.yaml), newest
-first, with its photos, follow-ups and a comment thread. The map's progress card shows only the
+first, with its photos and follow-ups, and on each update's own page, its comment thread. The map's progress card shows only the
 latest text and a Comments button; the full notes live here.
 
 **Live:** https://clayton-clipper.olund.ca/trackside/
@@ -12,20 +12,23 @@ the real text, and then Svelte takes over in the browser for the comments and co
 ## Pages
 
 - `/trackside/` — the newest 10 updates, then `/trackside/page/2/`, `/trackside/page/3/` and so on.
-  Every update is on one of these pages.
-- `/trackside/<slug>/` — an update's own page, at a permanent address: just that update, with its comments. It's
-  listed in `sitemap.xml` for search engines. The only link to it is the Copy permalink icon by each update's heading, a
-  real link for search engines and anyone without JavaScript; a plain click copies the address instead (a cmd-, ctrl-,
-  shift- or middle-click opens it). It links only to `/trackside/`, never to the page of updates the update is on. Its title,
-  description and Open Graph tags use the update's title (or date) and summary; when the update has a photo, the first
-  one is the preview image.
+  Every update is on one of these pages. A long update is cut off at 32rem with a fade and a Read more link to its own
+  page; one that would hide less than 6rem more shows whole (measured in the browser, so the built pages start with
+  every update cut off). Each update's Comments button goes to its thread on its own page (`/trackside/<slug>/#comments`).
+- `/trackside/<slug>/` — an update's own page, at a permanent address: just that update, whole, with its comments
+  under it. It's listed in `sitemap.xml` for search engines. The title, Read more and the Comments button link to it,
+  and so does the Copy permalink icon at the foot of each update, a real link for search engines and anyone without
+  JavaScript; a plain click on the icon copies the address instead (a cmd-, ctrl-, shift- or middle-click opens it).
+  Its header's ← Trackside button goes back to the page of updates the reader came from, where they were on it (the
+  browser's Back), or to `/trackside/` when they came from anywhere else; See all updates at the foot always goes to
+  `/trackside/`. Its title, description and Open Graph tags use the update's title (or date) and summary; when the
+  update has a photo, the first one is the preview image.
 - An update is addressed by its slug: `/trackside/?post=clipper-completes-span-36` scrolls to it (the page's script
-  calls `scrollIntoView()`, there are no hash anchors). Its heading links to its own page, so search engines follow the
-  permanent address, but a plain click does the same as `?post=` instead. Add `&comments` to open
-  its comments too. The old `#slug` links still work.
+  calls `scrollIntoView()`, there are no hash anchors). The old `#slug` links still work, and an old
+  `?post=<slug>&comments` link goes on to the update's own page at `#comments`.
 
-The progress card's Comments button goes to `/trackside/?post=clipper-completes-span-36&comments`: the first
-page, scrolled to the newest update, with its comments open. The card shows that text and button only while the newest
+The progress card's Comments button (and a tap on its note) goes to the newest update's own page at its comments,
+`/trackside/clipper-completes-span-36/#comments`. The card shows that text and button only while the newest
 update's (or its newest follow-up's) time stamp is the file's `updated`. After a change to the span or Hung with no
 text, `updated` is later than every note, and the card shows no text and a Trackside button to `/trackside/` instead.
 
@@ -115,9 +118,11 @@ Comments use [Remark42](https://remark42.com), self-hosted at https://comments.o
 update has its own thread, keyed by its page's address (`threadUrl()` in `src/lib/comments.js`).
 
 - **Thread addresses must never change**, or Remark42 loses the thread. They come from the update's `?post=` slug.
+- The threads are only on the updates' own pages, at `#comments`, always shown (no button to open them). Remark42
+  loads when the reader scrolls within a screen of the thread, or straight away when they arrive at `#comments`.
 - The comment counts on the list pages and the progress card come from one Remark42 counts request per page.
 - `comments:` under a note in `status.yaml` sets its comments: `on` (left out), `off` (no Comments button), or
-  `readonly` (the button stays, but opens the comments as they were at the last deploy, read from Remark42 by
+  `readonly` (the button stays, and the update's own page shows the comments as they were at the last deploy, read from Remark42 by
   `prerender.js` into `dist/trackside/comments.json`, so readers load them from GitHub Pages, not the comment server).
   Remark42 itself isn't told; a thread that can't be read at the deploy is left out, with a warning on the run.
 
