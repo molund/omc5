@@ -348,18 +348,20 @@
   </header>
   {#each shown as n (n.slug)}
     {@const plan = linkPlan(n)}
-    <!-- an update a link jumps to lands below the bar, not under it; a wide gap separates one update from the next, so
+    <!-- an update a link jumps to lands below the bar, not under it; each update is a card, with a gap above it, so
          the comments link reads as the end of its own update rather than the start of the next -->
-    <article id={n.slug} class="scroll-mt-[calc(var(--spacing)*19_+_env(safe-area-inset-top,0px))] [article+&]:mt-12">
+    <article id={n.slug} class="update-card scroll-mt-[calc(var(--spacing)*19_+_env(safe-area-inset-top,0px))] mt-5">
       <!-- the heading links to the update's own page, for search engines, and a plain click scrolls to it here instead;
            drawn as plain heading text. With a title, screen readers hear the date and the title (the date first, so the
            visible text is in the name, for voice control) -->
-      <!-- an h1 on the update's own page, an h2 among the other updates -->
-      <svelte:element
-        this={single ? "h1" : "h2"}
-        class="update-heading flex items-center justify-between gap-2"
-        class:post-heading={n.post && n.title}
-      >
+      <!-- a post leads with its date, in the same gold as a status update's date heading; dates and times are <time>
+           elements, so machines can read them too -->
+      {#if n.post && n.title}<p class="update-date">
+          <time datetime={published(n)}>{dateOnly(n.time)}</time>
+        </p>{/if}
+      <!-- an h1 on the update's own page, an h2 among the other updates; a status update's heading is its date, drawn
+           small and gold like a post's date -->
+      <svelte:element this={single ? "h1" : "h2"} class="update-heading" class:update-date={!(n.post && n.title)}>
         <a
           class="text-inherit no-underline"
           href="{TRACKSIDE}{n.slug}/"
@@ -367,19 +369,7 @@
           aria-label={n.title && !n.post ? `${heading(n.time)}: ${n.title}` : undefined}
           >{#if n.post && n.title}{label(n)}{:else}<time datetime={published(n)}>{label(n)}</time>{/if}</a
         >
-        <a
-          class="shrink-0 p-1 text-(--mute) hover:text-(--accent)"
-          href="{TRACKSIDE}{n.slug}/"
-          title="Copy permalink"
-          aria-label="Copy permalink"
-          onclick={(e) => copyPermalink(e, n)}><Icon kind="link" /></a
-        >
       </svelte:element>
-      <!-- a post leads with its title, with just its date under it; dates and times are <time> elements, so machines can read
-           them too -->
-      {#if n.post && n.title}<p class="post-date">
-          <time datetime={published(n)}>{dateOnly(n.time)}</time>
-        </p>{/if}
       <p class="m-0">{@render linked(plan.get(n))}</p>
       {#if n.photo}{@render photo(n.photo, plan)}{/if}
       {#each n.block as m}
@@ -408,7 +398,7 @@
       {/if}
       <!-- the comments button, drawn like the ← Map button, with a speech bubble; when the update's comments are off, the
            same button greyed out and struck through, which can't be pressed -->
-      <div class="mt-3.5 flex flex-wrap items-center gap-2.5">
+      <div class="update-footer mt-3.5 flex flex-wrap items-center gap-2.5">
         {#if n.comments === "off"}<button class="btn comments-off gap-1.5" disabled
             ><Icon kind="comment-off" />
             Comments off</button
@@ -419,6 +409,14 @@
             ><Icon kind="comment" />
             {commentsLabel(n)}</button
           >{/if}
+        <!-- the permalink, at the right end of the row, so the heading above has the card's full width -->
+        <a
+          class="ml-auto shrink-0 p-1 text-(--mute) hover:text-(--accent)"
+          href="{TRACKSIDE}{n.slug}/"
+          title="Copy permalink"
+          aria-label="Copy permalink"
+          onclick={(e) => copyPermalink(e, n)}><Icon kind="link" /></a
+        >
       </div>
       <!-- the comment thread (Remark42), set off from the update by a dashed line, or for a read-only one, its comments as
            they were when the site was built -->
@@ -478,17 +476,21 @@
 <style>
   @reference "../src/app.css";
 
-  /* an update's heading: its title or date, with the permalink icon at the right, over a thin line */
+  /* an update, raised on its own card so one update doesn't run into the next */
+  .update-card {
+    @apply rounded-xl border border-(--line) bg-(--panel) p-4.5 shadow-card phone:px-3.5;
+  }
+  /* an update's heading: a post's title, with the permalink icon at the right */
   .update-heading {
-    @apply mt-7 mb-2 border-b border-(--line) pb-1.25 text-2xl leading-tight font-bold;
+    @apply m-0 mb-2 text-2xl leading-tight font-bold;
   }
-  /* a post's title: its line moves down under the date (.post-date) */
-  .post-heading {
-    @apply mb-1 border-b-0 pb-0;
+  /* a date in gold: a post's, over its title, and a status update's heading, which is its date and time */
+  .update-date {
+    @apply m-0 mb-1 text-sm font-bold tracking-wide text-(--date) uppercase;
   }
-  /* a post's date, under its title, over the thin line */
-  .post-date {
-    @apply mx-0 mt-0 mb-2 border-b border-(--line) pb-1.25 text-sm text-(--mute);
+  /* the comments button's row, under a thin line at the foot of the card */
+  .update-footer {
+    @apply border-t border-(--line) pt-3;
   }
   /* the comments button: .btn .btn-grey, plus the pointer and the accent outline on hover that other buttons have */
   .comments-button {

@@ -34,6 +34,8 @@
   --line: light-dark(#cbd2d9, #39424b);
   --accent: light-dark(#6280a0, #84a1c5);
   --link: light-dark(#486d95, #a8c4ea);
+  /* the gold of Trackside's dates, darker in light mode so it reads on white */
+  --date: light-dark(#86682b, #c9a456);
   --accent-ink: light-dark(#ffffff, #0c1117);
   /* the grey buttons (GitHub's segmented control, as in the giscus comments): the Map buttons, the pager and the progress
      card's secondary button; the pager's raised buttons and greyed-out Next have colours of their own */
