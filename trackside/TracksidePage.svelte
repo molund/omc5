@@ -466,7 +466,8 @@
         </section>{/if}
     </article>
   {/each}
-  <!-- the first page has one button to older updates; later pages go either way, with Older off on the last page; links to
+  <!-- the first page has one button to older updates; later pages go either way, with Older off on the last page, and from
+       page 3 on, Newest goes straight back to the first page; links to
        the prerendered pages, so search engines follow them too. Drawn like the Oldest / Newest switch in the giscus
        comments (GitHub's segmented control): a grey track, the buttons you can press raised on it with an outline and
        bold text, a button you can't press flat and faded, in GitHub's own colours, light and dark. On a phone: the
@@ -485,6 +486,7 @@
       {#if page === 1}
         <a class="pager-link" href={pageUrl(2)} rel="next">Show older</a>
       {:else}
+        {#if page > 2}<a class="pager-link" href={pageUrl(1)}>Newest</a>{/if}
         <a class="pager-link" href={pageUrl(page - 1)} rel="prev">Newer</a>
         {#if page < pages}<a class="pager-link" href={pageUrl(page + 1)} rel="next">Older</a>{:else}<span
             class="pager-link pager-link-off">Older</span
