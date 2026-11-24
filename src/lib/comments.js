@@ -54,11 +54,12 @@ export const threadUrl = (slug) => new URL(`trackside/${slug}/`, SITE).href;
  * {@link term}), and the number of their discussion on GitHub: Trackside links to them as earlier comments.
  * @type {Record<string, number>}
  */
+// each one's discussion number and how many comments it has: history, so they're written here rather than looked up
 const EARLIER = {
-  "Update 2026-10-31 09:30": 23,
-  "Update 2026-11-06 08:45": 71,
-  "Update 2026-11-16 09:00": 96,
-  "Update 2026-11-19 16:00": 99,
+  "Update 2026-10-31 09:30": { discussion: 23, count: 1 },
+  "Update 2026-11-06 08:45": { discussion: 71, count: 2 },
+  "Update 2026-11-16 09:00": { discussion: 96, count: 1 },
+  "Update 2026-11-19 16:00": { discussion: 99, count: 3 },
 };
 
 /**
@@ -67,7 +68,14 @@ const EARLIER = {
  * @returns {string|undefined}
  */
 export const earlierComments = (t) =>
-  EARLIER[term(t)] && `https://github.com/molund/omc5/discussions/${EARLIER[term(t)]}`;
+  EARLIER[term(t)] && `https://github.com/molund/omc5/discussions/${EARLIER[term(t)].discussion}`;
+
+/**
+ * How many earlier comments an update has on GitHub (see {@link earlierComments}).
+ * @param {Date} t The update's time stamp.
+ * @returns {number} 0 when it has none.
+ */
+export const earlierCount = (t) => EARLIER[term(t)]?.count ?? 0;
 
 /**
  * Comment counts for several Remark42 threads at once, in one request.

@@ -6,7 +6,15 @@
   import { onMount } from "svelte";
   import { status, asOf, followUpTime } from "../src/lib/status.js";
   import { inline, plainText } from "../src/lib/inline.js";
-  import { SITE, REMARK42, threadUrl, earlierComments, fetchRemarkCounts, fetchFrozen } from "../src/lib/comments.js";
+  import {
+    SITE,
+    REMARK42,
+    threadUrl,
+    earlierComments,
+    earlierCount,
+    fetchRemarkCounts,
+    fetchFrozen,
+  } from "../src/lib/comments.js";
   import { track } from "../src/lib/track.js";
   import { blogPosting, blogPage, ldScript, isoBC, published, modified } from "../src/lib/seo.js";
   import Icon from "../src/Icon.svelte";
@@ -418,20 +426,26 @@
           >{/if}
       </div>
       <!-- the comment thread (Remark42), set off from the update by a dashed line, or for a read-only one, its comments as
-           they were when the site was built; an update that had comments on GitHub before the move links to them under it -->
+           they were when the site was built; an update that had comments on GitHub before the move links to them under it.
+           A read-only one with none here but some on GitHub says so in one line, so it doesn't say "No comments" above a
+           link to them -->
       {#if open === n.slug && n.comments === "readonly"}<div class="frozen-thread mt-2.5">
-          {#if frozen[n.slug]?.comments.length}{@render frozenComments(frozen[n.slug].comments)}{:else}<p
-              class="frozen-note"
-            >
-              No comments.
-            </p>{/if}
-          <p class="frozen-note mt-2">Comments are closed.</p>
+          {#if frozen[n.slug]?.comments.length}{@render frozenComments(frozen[n.slug].comments)}
+            <p class="frozen-note mt-2">Comments are closed.</p>
+          {:else if earlierComments(n.time)}<p class="frozen-note">
+              Comments are closed. <a class="earlier-comments" href={earlierComments(n.time)}
+                >Read the {earlierCount(n.time) === 1 ? "earlier comment" : `${earlierCount(n.time)} earlier comments`} on
+                GitHub</a
+              >
+            </p>
+          {:else}<p class="frozen-note">No comments.</p>
+            <p class="frozen-note mt-2">Comments are closed.</p>{/if}
         </div>
       {:else if open === n.slug && n.comments === "on"}<div
           class="mt-2.5 border-t border-dashed border-(--line) pt-3"
           use:remark42={n}
         ></div>{/if}
-      {#if open === n.slug}
+      {#if open === n.slug && !(n.comments === "readonly" && !frozen[n.slug]?.comments.length)}
         {#if earlierComments(n.time)}<p class="mt-2">
             <a class="earlier-comments" href={earlierComments(n.time)}>Earlier comments on GitHub</a>
           </p>{/if}{/if}
@@ -526,6 +540,10 @@
   }
   .frozen-text :global(a) {
     @apply text-(--link);
+  }
+  /* the link to an update's earlier comments on GitHub, upright inside the italic note */
+  .frozen-note .earlier-comments {
+    @apply not-italic;
   }
   /* "Comments are closed." and "No comments." */
   .frozen-note {
