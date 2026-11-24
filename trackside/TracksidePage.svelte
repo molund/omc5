@@ -235,6 +235,9 @@
       components: ["embed"],
       // no "Subscribe by RSS" link under the comment box
       show_rss_subscription: false,
+      // oldest first, as giscus showed them, instead of Remark42's most recent activity first; a reader's own pick in the
+      // sort menu still wins
+      default_sort: "+time",
     };
     if (window.REMARK42?.createInstance) window.REMARK42.createInstance(window.remark_config);
     else if (!document.querySelector(`script[src="${REMARK42.host}/web/embed.mjs"]`)) {
