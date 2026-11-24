@@ -140,18 +140,6 @@
       console.error("Could not copy permalink", error);
     }
   }
-  // a heading's plain click: the address becomes ?post=<slug> and the update scrolls into view, with no hash anchor
-  function jumpTo(e, slug) {
-    // a cmd-, ctrl-, shift- or middle-click opens the update's own page, like any link
-    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
-    e.preventDefault();
-    track("select_post", { slug });
-    const params = new URLSearchParams(location.search);
-    params.set("post", slug);
-    params.delete("comments");
-    history.replaceState(null, "", `${location.pathname}?${params}`);
-    document.getElementById(slug)?.scrollIntoView();
-  }
   onMount(() => {
     const params = new URLSearchParams(location.search),
       // the old #slug links still work
@@ -351,9 +339,9 @@
     <!-- an update a link jumps to lands below the bar, not under it; each update is a card, with a gap above it, so
          the comments link reads as the end of its own update rather than the start of the next -->
     <article id={n.slug} class="update-card scroll-mt-[calc(var(--spacing)*19_+_env(safe-area-inset-top,0px))] mt-5">
-      <!-- the heading links to the update's own page, for search engines, and a plain click scrolls to it here instead;
-           drawn as plain heading text. With a title, screen readers hear the date and the title (the date first, so the
-           visible text is in the name, for voice control) -->
+      <!-- the heading is plain text, not a link: the permalink button at the foot of the card is the link to the update's
+           own page (search engines follow it too). A status update with a title has it read out to screen readers after
+           its date -->
       <!-- a post leads with its date, in the same gold as a status update's date heading; dates and times are <time>
            elements, so machines can read them too -->
       {#if n.post && n.title}<p class="update-date">
@@ -362,13 +350,9 @@
       <!-- an h1 on the update's own page, an h2 among the other updates; a status update's heading is its date, drawn
            small and gold like a post's date -->
       <svelte:element this={single ? "h1" : "h2"} class="update-heading" class:update-date={!(n.post && n.title)}>
-        <a
-          class="text-inherit no-underline"
-          href="{TRACKSIDE}{n.slug}/"
-          onclick={(e) => jumpTo(e, n.slug)}
-          aria-label={n.title && !n.post ? `${heading(n.time)}: ${n.title}` : undefined}
-          >{#if n.post && n.title}{label(n)}{:else}<time datetime={published(n)}>{label(n)}</time>{/if}</a
-        >
+        {#if n.post && n.title}{label(n)}{:else}<time datetime={published(n)}>{label(n)}</time>{#if n.title}<span
+              class="sr-only">: {n.title}</span
+            >{/if}{/if}
       </svelte:element>
       <p class="m-0">{@render linked(plan.get(n))}</p>
       {#if n.photo}{@render photo(n.photo, plan)}{/if}
