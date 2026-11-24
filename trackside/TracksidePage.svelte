@@ -340,20 +340,18 @@
          the comments link reads as the end of its own update rather than the start of the next -->
     <article id={n.slug} class="update-card scroll-mt-[calc(var(--spacing)*19_+_env(safe-area-inset-top,0px))] mt-5">
       <!-- the heading is plain text, not a link: the permalink button at the foot of the card is the link to the update's
-           own page (search engines follow it too). A status update with a title has it read out to screen readers after
-           its date -->
-      <!-- a post leads with its date, in the same gold as a status update's date heading; dates and times are <time>
-           elements, so machines can read them too -->
-      {#if n.post && n.title}<p class="update-date">
-          <time datetime={published(n)}>{dateOnly(n.time)}</time>
-        </p>{/if}
-      <!-- an h1 on the update's own page, an h2 among the other updates; a status update's heading is its date, drawn
-           small and gold like a post's date -->
-      <svelte:element this={single ? "h1" : "h2"} class="update-heading" class:update-date={!(n.post && n.title)}>
-        {#if n.post && n.title}{label(n)}{:else}<time datetime={published(n)}>{label(n)}</time>{#if n.title}<span
-              class="sr-only">: {n.title}</span
-            >{/if}{/if}
-      </svelte:element>
+           own page (search engines follow it too) -->
+      <!-- an update with a title leads with its date in gold (a post's date, a status update's date and time), then the
+           title as its heading; one without is headed by its date and time alone, drawn the same small gold. Dates and
+           times are <time> elements, so machines can read them too. An h1 on the update's own page, an h2 among the
+           other updates -->
+      {#if n.title}<p class="update-date">
+          <time datetime={published(n)}>{n.post ? dateOnly(n.time) : heading(n.time)}</time>
+        </p>
+        <svelte:element this={single ? "h1" : "h2"} class="update-heading">{n.title}</svelte:element>
+      {:else}<svelte:element this={single ? "h1" : "h2"} class="update-heading update-date"
+          ><time datetime={published(n)}>{heading(n.time)}</time></svelte:element
+        >{/if}
       <p class="m-0">{@render linked(plan.get(n))}</p>
       {#if n.photo}{@render photo(n.photo, plan)}{/if}
       {#each n.block as m}
