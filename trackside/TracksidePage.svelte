@@ -24,6 +24,9 @@
   };
   // just the date, "Nov 1, 2026", shown under a post's title
   const dateOnly = (t) => asOf(t).split(" on ")[1];
+  // just the time, " at 9:30 a.m.", which a status update's gold date line drops when it won't fit on one line; the
+  // leading space isn't drawn (the line's gap spaces it), but keeps the date and time apart for screen readers and copying
+  const timeOnly = (t) => ` at ${asOf(t).split(" on ")[0]}`;
   // what an update's heading says: a post's title, or a status update's date and time
   const label = (n) => (n.post && n.title ? n.title : heading(n.time));
   // the addresses of a page of updates, and in full, for the Open Graph tags
@@ -331,6 +334,13 @@
     aria-label="Copy permalink"
     onclick={(e) => copyPermalink(e, n)}><Icon kind="share" /></a
   >{/snippet}
+<!-- an update's gold date, with its time for a status update: the date never breaks, and when the time won't fit beside
+     it, the time wraps onto a second line that .stamp clips away, so the date line never wraps -->
+{#snippet stamp(n, withTime)}<time class="stamp" datetime={published(n)}
+    ><span class="whitespace-nowrap">{dateOnly(n.time)}</span>{#if withTime}<span class="whitespace-nowrap"
+        >{timeOnly(n.time)}</span
+      >{/if}</time
+  >{/snippet}
 {#snippet frozenComments(list)}<ul class="frozen-list">
     {#each list as c}<li class="frozen-comment">
         <p class="frozen-meta"><strong>{c.name}</strong> · {heading(new Date(c.time))}</p>
@@ -395,8 +405,7 @@
            times are <time> elements, so machines can read them too. An h1 on the update's own page, an h2 among the
            other updates -->
       {#if n.title}<p class="update-date flex items-center justify-between gap-2">
-          <time datetime={published(n)}>{n.post ? dateOnly(n.time) : heading(n.time)}</time
-          >{#if single}{@render permalink(n)}{/if}
+          {@render stamp(n, !n.post)}{#if single}{@render permalink(n)}{/if}
         </p>
         <svelte:element this={single ? "h1" : "h2"} class="update-heading"
           >{#if single}{n.title}{:else}<a class="title-link" href="{TRACKSIDE}{n.slug}/">{n.title}</a
@@ -405,7 +414,7 @@
       {:else}<svelte:element
           this={single ? "h1" : "h2"}
           class="update-heading update-date flex items-center justify-between gap-2"
-          ><time datetime={published(n)}>{heading(n.time)}</time>{#if single}{@render permalink(n)}{/if}</svelte:element
+          >{@render stamp(n, true)}{#if single}{@render permalink(n)}{/if}</svelte:element
         >{/if}
       <!-- on a page of updates, a long one is cut off with a fade, and Read more goes to its own page -->
       <div class="update-body" class:clamped={clamped(n)} data-body={n.slug}>
@@ -533,6 +542,12 @@
   /* a date in gold: a post's, over its title, and a status update's heading, which is its date and time */
   .update-date {
     @apply m-0 mb-1 text-sm font-bold tracking-wide text-(--date) uppercase;
+  }
+  /* a gold date line: one line high, so a time that wraps to a second line is cut off rather than shown (see stamp) */
+  .stamp {
+    @apply flex min-w-0 flex-1 flex-wrap overflow-hidden;
+    column-gap: 0.3em; /* about a space */
+    height: 1lh;
   }
   /* the comments button's row, under a thin line at the foot of the card */
   .update-footer {
