@@ -1,6 +1,6 @@
 <script>
   // panel: a window with a sidebar (show or hide the layer panel); menu: three lines (open the menu on a phone); close: a
-  // cross (close it, or the progress card); info: an information icon (bring the progress card back); comment: a speech bubble (comment on the newest update); comment-off: the same, struck through (comments are off); chevron: a "›" (fold the layer switches out or away); minus, plus: a − or + (zoom out or in); fit: four corner brackets (zoom to fit); centre: a crosshair (center without zooming); share: three joined dots (share the animation); back, forward: a circular arrow round −1 or +1 (a span back or on in the animation); pause, play: two bars or a triangle (pause the gantry animation or play it on); github: the GitHub mark (link to the repo)
+  // cross (close it, or the progress card); info: an information icon (bring the progress card back); comment: a speech bubble (comment on the newest update); comment-off: the same, struck through (comments are off); chevron: a "›" (fold the layer switches out or away); minus, plus: a − or + (zoom out or in); fit: four corner brackets (zoom to fit); centre: a crosshair (center without zooming); share: three joined dots (share the animation, or copy an update's permalink); back, forward: a circular arrow round −1 or +1 (a span back or on in the animation); pause, play: two bars or a triangle (pause the gantry animation or play it on); github: the GitHub mark (link to the repo)
   let { kind = "panel" } = $props();
 </script>
 
@@ -40,10 +40,6 @@
     <circle cx="13.25" cy="4.25" r="2.25" />
     <circle cx="13.25" cy="13.75" r="2.25" />
     <path d="M6.75 7.9 11.25 5.35M6.75 10.1l4.5 2.55" />
-  {:else if kind === "link"}
-    <path d="M7 11 11 7" />
-    <path d="M8.25 5.25 9 4.5a3.18 3.18 0 0 1 4.5 4.5l-.75.75" />
-    <path d="m9.75 12.75-.75.75a3.18 3.18 0 0 1-4.5-4.5l.75-.75" />
   {:else if kind === "back" || kind === "forward"}
     <!-- a span back or on: an arrow curving round a "−1" (anticlockwise, from the top to an arrowhead at the upper left) or
          a "+1" (clockwise, mirrored) -->

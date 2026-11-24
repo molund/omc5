@@ -446,7 +446,7 @@
           href="{TRACKSIDE}{n.slug}/"
           title="Copy permalink"
           aria-label="Copy permalink"
-          onclick={(e) => copyPermalink(e, n)}><Icon kind="link" /></a
+          onclick={(e) => copyPermalink(e, n)}><Icon kind="share" /></a
         >
       </div>
       <!-- on an update's own page, its comments, always shown, at #comments (clear of the bar at the top), set off from the
@@ -516,7 +516,7 @@
   .update-card {
     @apply rounded-xl border border-(--line) bg-(--panel) p-4.5 shadow-card phone:px-3.5;
   }
-  /* an update's heading: a post's title, with the permalink icon at the right */
+  /* an update's heading: its title */
   .update-heading {
     @apply m-0 mb-2 text-2xl leading-tight font-bold;
   }
