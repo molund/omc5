@@ -33,9 +33,9 @@
   // a link in the note: an address on this site that's only `?…` was written for Trackside, so it goes there from the map
   const noteLink = (href) => (href.startsWith("?") ? `${import.meta.env.BASE_URL}trackside/${href}` : href);
   // the Comments button opens the newest update's own page on Trackside at its comments (#comments), and shows its
-  // comment count once the comment server (Remark42) has sent it, or for read-only comments, once the site's copy of them
-  // has (`comments:` in status.yaml); with its comments off, the card has the Trackside button instead, and the note goes
-  // to the update's own page
+  // comment count; it's there only once the update has comments, as counted by the comment server (Remark42) or, for
+  // read-only comments, the site's copy of them (`comments:` in status.yaml). Until then, or with its comments off, the
+  // card has the Trackside button instead, to /trackside/, and the note goes to the update's own page
   const TRACKSIDE = `${import.meta.env.BASE_URL}trackside/`;
   const commentsOff = newest?.comments === "off";
   const COMMENTS = newest ? `${TRACKSIDE}${newest.slug}/${commentsOff ? "" : "#comments"}` : TRACKSIDE;
@@ -330,7 +330,7 @@
               >{#if p.bold}<strong>{p.text}</strong>{:else}{p.text}{/if}</a
             >{:else if p.bold}<strong>{p.text}</strong>{:else}{p.text}{/if}{/each}
       </div>{/if}
-    {#if newest && (!current || commentsOff)}
+    {#if newest && (!current || commentsOff || !commentCount)}
       <a
         class="btn mt-2.5 flex min-h-8 justify-center gap-1.5 border-(--button-line) bg-(--button-bg) px-2.5 text-sm font-semibold text-(--button-ink) hover:bg-(--bg)"
         href={TRACKSIDE}
