@@ -145,6 +145,7 @@
     }
   }
   onMount(() => {
+    if (single) cameFrom = whereFrom();
     const params = new URLSearchParams(location.search),
       // the old #slug links still work
       id = params.get("post") ?? location.hash.slice(1);
@@ -166,18 +167,26 @@
   });
   // a span link or a photo in an update, for Google Analytics; the update is the article the link is in
   const slugOf = (e) => e.currentTarget.closest("article")?.id;
-  // an update's own page's ← Trackside button: back to the page of updates the reader came from, where they were on it,
-  // when they came from one (a plain click); otherwise, and for a cmd-, ctrl-, shift- or middle-click, the first page
-  function backToList(e) {
-    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0 || history.length < 2) return;
+  // an update's own page's back line goes back to where the reader came from on this site: "map" (the map, as they left
+  // it) or "list" (the page of updates, where they were on it); null for a reader from anywhere else, who gets the first
+  // page of updates
+  let cameFrom = $state(null);
+  function whereFrom() {
+    if (history.length < 2) return null;
     let from;
     try {
       from = new URL(document.referrer);
     } catch {
-      return;
+      return null;
     }
-    if (from.origin !== location.origin) return;
-    if (from.pathname !== TRACKSIDE && !from.pathname.startsWith(`${TRACKSIDE}page/`)) return;
+    if (from.origin !== location.origin) return null;
+    if (from.pathname === MAP) return "map";
+    if (from.pathname === TRACKSIDE || from.pathname.startsWith(`${TRACKSIDE}page/`)) return "list";
+    return null;
+  }
+  // a plain click goes back in history; a cmd-, ctrl-, shift- or middle-click follows the link
+  function goBack(e) {
+    if (!cameFrom || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
     e.preventDefault();
     history.back();
   }
@@ -373,26 +382,31 @@
 <!-- laid out like a README on GitHub: a heading per update, the note, its photo, its follow-ups as a list with code-style
      times, then its comments -->
 <main class="page-column">
-  <!-- a slim bar: the Clayton Clipper logo (to the map) and the page's name (to the top of Trackside) on the left, a button
-       back to the map on the right. It stays at the top of the screen while the updates scroll under it, clear of the
-       iPhone's notch; its own top padding takes the place of the page's space above it, so it sits where it did before
-       scrolling -->
+  <!-- a slim bar: the Clayton Clipper logo (to the map) and the page's name on the left, the site's two sections on the right,
+       Trackside marked.
+       It stays at the top of the screen while the updates scroll under it, clear of the iPhone's notch; its own top
+       padding takes the place of the page's space above it, so it sits where it did before scrolling -->
   <header class="page-header">
     <a class="block leading-[0]" href={MAP}
       ><img class="h-10 w-auto logo" src="{MAP}images/logo.png" alt="Clayton Clipper" width="625" height="351" /></a
     >
-    <!-- the page's main heading, except on an update's own page, where the update's title is the main heading -->
+    <!-- the page's name (to the top of Trackside): its main heading, except on an update's own page, where the update's
+         title is the main heading -->
     <svelte:element this={single ? "p" : "h1"} class="page-header-title"
       ><a class="text-inherit no-underline" href={TRACKSIDE}>Trackside</a></svelte:element
     >
-    <!-- back to the map; on an update's own page, back to the updates instead (the logo still goes to the map) -->
-    <nav class="page-header-nav">
-      {#if single}<a class="btn btn-grey" href={TRACKSIDE} onclick={backToList}>← Trackside</a>{:else}<a
-          class="btn btn-grey"
-          href={MAP}>← Map</a
-        >{/if}
+    <nav class="page-header-nav" aria-label="Sections">
+      <a class="site-nav-link" href={MAP}>Map</a>
+      <a class="site-nav-link" href={TRACKSIDE} aria-current={single ? "true" : "page"}>Trackside</a>
     </nav>
   </header>
+  <!-- on an update's own page, a way back to where the reader came from: the map, or the updates (also for a reader from
+       elsewhere) -->
+  {#if single}<p class="mt-4 mb-0">
+      <a class="back-link" href={cameFrom === "map" ? MAP : TRACKSIDE} onclick={goBack}
+        >‹ {cameFrom === "map" ? "Map" : "All updates"}</a
+      >
+    </p>{/if}
   {#each shown as n (n.slug)}
     {@const plan = linkPlan(n)}
     <!-- an update a link jumps to lands below the bar, not under it; each update is a card, with a gap above it, so
@@ -530,6 +544,10 @@
   /* an update, raised on its own card so one update doesn't run into the next */
   .update-card {
     @apply rounded-xl border border-(--line) bg-(--panel) p-4.5 shadow-card phone:px-3.5;
+  }
+  /* an update's own page's way back, over its card: a small text link */
+  .back-link {
+    @apply text-sm font-semibold text-(--link) no-underline hover:underline;
   }
   /* an update's heading: its title */
   .update-heading {

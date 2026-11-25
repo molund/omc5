@@ -91,6 +91,16 @@
         }}><Icon kind={ui.phone ? "close" : "panel"} /></button
       >
     </div>
+    <!-- the site's two sections, as in the bar at the top of Trackside: Map marked, and not a link here, so the map keeps
+         its place -->
+    <nav class="flex gap-4" aria-label="Sections">
+      <span class="site-nav-link" aria-current="page">Map</span>
+      <a
+        class="site-nav-link"
+        href="{import.meta.env.BASE_URL}trackside/"
+        onclick={() => track("open_trackside", { where: "panel" })}>Trackside</a
+      >
+    </nav>
     <div class="mt-3.5 mb-1 text-base font-bold text-(--mute)">View presets</div>
     <!-- the views are presets, picked like the zoom buttons; picking the one already on does nothing to the view, as a radio button did -->
     <div class="mt-1.5 flex flex-col gap-1">
@@ -189,17 +199,8 @@
         </div>
       </div>
     {/if}
-    <!-- the links, set apart from the map controls above: Trackside (named for what it holds, since its own name isn't known
-         yet) and the source code, each with its mark -->
+    <!-- the links, set apart from the map controls above: About and the source code, each with its mark -->
     <p class="fine-print mt-8">
-      <a
-        class={LINK}
-        href="{import.meta.env.BASE_URL}trackside/"
-        onclick={() => track("open_trackside", { where: "panel" })}
-        ><Icon kind="comment" />Trackside: updates and comments</a
-      >
-    </p>
-    <p class="fine-print">
       <a class={LINK} href="{import.meta.env.BASE_URL}about/"><Icon kind="info" />About this site</a>
     </p>
     <p class="fine-print">

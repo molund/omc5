@@ -184,7 +184,15 @@ body::before {
     @apply mx-0 mt-2 mb-0 text-sm text-(--mute);
   }
   .page-header-nav {
-    @apply ml-auto flex gap-2;
+    @apply ml-auto flex gap-4;
+  }
+  /* the site's two sections, Map and Trackside: plain links in a page's slim bar and at the top of the layer panel; the
+     one you're in has a gold bar under it (the text stays in ink, as the gold word beside the logo already names it) */
+  .site-nav-link {
+    @apply border-b-2 border-transparent py-1.5 text-sm font-semibold text-(--ink) no-underline hover:border-(--line);
+  }
+  .site-nav-link[aria-current] {
+    @apply border-(--date);
   }
   /* the pager's links and its greyed-out Next, drawn alike */
   .pager-link {

@@ -35,17 +35,17 @@
   </head>
   <body>
     <main class="page-column [&_p]:mt-3.5 [&_p_a]:text-(--link) [&_code]:font-[family-name:monospace]">
-      <!-- the same slim bar as Trackside's: the logo and the page's name on the left, a button back to the map on the right.
-           It stays at the top while the page scrolls under it, clear of the iPhone's notch; its own top padding takes the
+      <!-- the same slim bar as Trackside's: the logo and the page's name on the left, the site's two sections on the
+           right (neither marked: About isn't one). It stays at the top while the page scrolls under it, clear of the iPhone's notch; its own top padding takes the
            place of the page's space above it -->
       <header class="page-header">
         <a class="block leading-[0] logo" href="/"
           ><img class="h-10 w-auto logo" src="/images/logo.png" alt="Clayton Clipper" width="625" height="351"
         /></a>
         <h1 class="page-header-title">About</h1>
-        <nav class="page-header-nav">
-          <!-- in the pager's colours on Trackside (GitHub's segmented control) -->
-          <a class="btn btn-grey" href="/">← Map</a>
+        <nav class="page-header-nav" aria-label="Sections">
+          <a class="site-nav-link" href="/">Map</a>
+          <a class="site-nav-link" href="/trackside/">Trackside</a>
         </nav>
       </header>
 
