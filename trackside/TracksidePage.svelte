@@ -523,11 +523,13 @@
       {/if}
     </nav>
   {/if}
-  <!-- the footer, at the very bottom of every Trackside page: who's behind this, and a link to the About page; small and
-       muted, centred under a thin line, with the link on its own line -->
+  <!-- the footer, at the very bottom of every Trackside page: who's behind this, and links to the About and Privacy pages;
+       small and muted, centred under a thin line, with the links on their own line -->
   <footer class="mt-10 border-t border-(--line) pt-3.5 pb-1 text-center text-xs text-(--mute)">
     <p class="mx-0 mt-0 mb-1">A hobby project by Mike, not affiliated with TransLink.</p>
     <a class="text-(--link)" href="{MAP}about/">About this site</a>
+    ·
+    <a class="text-(--link)" href="{MAP}privacy/">Privacy</a>
   </footer>
   {#if copied}<div
       class="fixed inset-x-0 bottom-5 z-20 mx-auto w-fit rounded-md bg-(--ink) px-3 py-2 text-sm text-(--panel) shadow-card"
