@@ -196,8 +196,8 @@ body::before {
   .page-header-nav {
     @apply ml-auto flex gap-4;
   }
-  /* the site's two sections, Map and Trackside: plain links in a page's slim bar and at the top of the layer panel; the
-     one you're in has a gold bar under it (the text stays in ink, as the gold word beside the logo already names it) */
+  /* the site's two sections, Map and Trackside: plain links in a page's slim bar (the layer panel has its own,
+     .panel-nav-link); the one you're in has a gold bar under it (the text stays in ink, as the gold word beside the logo already names it) */
   .site-nav-link {
     @apply border-b-2 border-transparent py-1.5 text-sm font-semibold text-(--ink) no-underline hover:border-(--line);
   }

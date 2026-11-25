@@ -67,150 +67,153 @@
 >
   <!-- everything but the zoom footer scrolls -->
   <div
-    class="min-h-0 flex-1 overflow-y-auto px-4 pt-4 pb-6 phone:pt-[calc(env(safe-area-inset-top,0px)_+_var(--spacing)*4)] phone:pb-[calc(env(safe-area-inset-bottom,0px)_+_var(--spacing)*6)]"
+    class="flex min-h-0 flex-1 flex-col overflow-y-auto px-4 pt-4 pb-6 phone:pt-[calc(env(safe-area-inset-top,0px)_+_var(--spacing)*4)] phone:pb-[calc(env(safe-area-inset-bottom,0px)_+_var(--spacing)*6)]"
   >
-    <div class="mb-2 flex items-center justify-between gap-2">
-      <!-- the title: the Clayton Clipper logo with "Map" beside it, small and spaced out, as on the progress card and Trackside; not a
-           heading, since the page's one h1 is the hidden text in index.html -->
-      <p class="eyebrow flex items-center gap-2.5 text-xs">
-        <img
-          class="h-9 w-auto logo"
-          src="{import.meta.env.BASE_URL}images/logo.png"
-          alt="Clayton Clipper"
-          width="625"
-          height="351"
-        /><span>Map</span>
-      </p>
-      <button
-        title={ui.phone ? "Close the menu" : "Hide the layer panel"}
-        aria-label={ui.phone ? "Close the menu" : "Hide the layer panel"}
-        class="p-1.5"
-        onclick={() => {
-          ui.collapsed = true;
-          track("panel", { action: "close", phone: ui.phone });
-        }}><Icon kind={ui.phone ? "close" : "panel"} /></button
-      >
-    </div>
-    <!-- the site's two sections, as in the bar at the top of Trackside: Map marked, and not a link here, so the map keeps
-         its place -->
-    <nav class="flex gap-4" aria-label="Sections">
-      <span class="site-nav-link" aria-current="page">Map</span>
-      <a
-        class="site-nav-link"
-        href="{import.meta.env.BASE_URL}trackside/"
-        onclick={() => track("open_trackside", { where: "panel" })}>Trackside</a
-      >
-    </nav>
-    <div class="mt-3.5 mb-1 text-base font-bold text-(--mute)">View presets</div>
-    <!-- the views are presets, picked like the zoom buttons; picking the one already on does nothing to the view, as a radio button did -->
-    <div class="mt-1.5 flex flex-col gap-1">
-      {#each LAYERS[0][1] as [k, label]}
+    <!-- the panel's contents, with the footer links below them pushed to the bottom when the panel is taller -->
+    <div>
+      <div class="mb-2 flex items-center justify-between gap-2">
+        <!-- the title: the Clayton Clipper logo, which the Map row below says where you are under; not a heading, since the
+           page's one h1 is the hidden text in index.html -->
+        <p class="eyebrow flex items-center gap-2.5 text-xs">
+          <img
+            class="h-9 w-auto logo"
+            src="{import.meta.env.BASE_URL}images/logo.png"
+            alt="Clayton Clipper"
+            width="625"
+            height="351"
+          />
+        </p>
         <button
-          class="{GROUP_BUTTON} text-left"
-          class:on={layers[k]}
-          aria-pressed={layers[k]}
+          title={ui.phone ? "Close the menu" : "Hide the layer panel"}
+          aria-label={ui.phone ? "Close the menu" : "Hide the layer panel"}
+          class="p-1.5"
           onclick={() => {
-            if (!layers[k]) {
-              setSwitch(k, true);
-              track("select_view", { view: k, source: "panel" });
-            }
-            // on a phone, picking a view closes the menu to show it
-            if (ui.phone) ui.collapsed = true;
-          }}>{label}</button
+            ui.collapsed = true;
+            track("panel", { action: "close", phone: ui.phone });
+          }}><Icon kind={ui.phone ? "close" : "panel"} /></button
         >
-      {/each}
-    </div>
-    <!-- the layer switches fold away under Layers, so the panel is short until they are wanted -->
-    <button
-      class={[
-        "mt-5.5 mb-2 flex min-h-11 w-full items-center justify-between text-base font-bold [&_svg]:[transition:transform_150ms]",
-        ui.layersOpen && "[&_svg]:[transform:rotate(90deg)]",
-      ]}
-      aria-expanded={ui.layersOpen}
-      aria-controls="layer-list"
-      onclick={() => (ui.layersOpen = !ui.layersOpen)}>Layers<Icon kind="chevron" /></button
-    >
-    {#if ui.layersOpen}
-      <div id="layer-list" transition:slide={{ duration: 150 }}>
-        {#each LAYERS.slice(1) as [group, rows]}
-          <div class="group-label">
-            {group}
-          </div>
-          {#each rows as [k, label]}
-            <!-- the basemap switch has a dropdown beside it, for which basemap, that can't be changed while it is off -->
-            <!-- Progress purple is a child of Finished spans: indented under it -->
-            <div
-              class={["flex items-center gap-2", k === "purpleSpans" && "ml-6"]}
-              style:display={hidden(k) ? "none" : ""}
-            >
-              <label
-                class={[
-                  "flex flex-1 items-center gap-2.5 rounded-md px-1 py-1.5",
-                  disabled(k) ? "cursor-default" : "cursor-pointer hover:bg-(--bg)",
-                ]}
-                style:opacity={opacity(k)}
+      </div>
+      <!-- the site's two sections, one above the other, ahead of the map's controls: Map marked, and not a link here, so the
+         map keeps its place -->
+      <nav class="flex flex-col gap-1" aria-label="Sections">
+        <span class="panel-nav-link" aria-current="page"><Icon kind="map" />Map</span>
+        <a
+          class="panel-nav-link"
+          href="{import.meta.env.BASE_URL}trackside/"
+          onclick={() => track("open_trackside", { where: "panel" })}
+          ><Icon kind="news" />Trackside<span class="ml-auto"><Icon kind="chevron" /></span></a
+        >
+      </nav>
+      <div class="panel-divider"></div>
+      <div class="mt-3.5 mb-1 text-base font-bold text-(--mute)">View presets</div>
+      <!-- the views are presets, picked like the zoom buttons; picking the one already on does nothing to the view, as a radio button did -->
+      <div class="mt-1.5 flex flex-col gap-1">
+        {#each LAYERS[0][1] as [k, label]}
+          <button
+            class="{GROUP_BUTTON} text-left"
+            class:on={layers[k]}
+            aria-pressed={layers[k]}
+            onclick={() => {
+              if (!layers[k]) {
+                setSwitch(k, true);
+                track("select_view", { view: k, source: "panel" });
+              }
+              // on a phone, picking a view closes the menu to show it
+              if (ui.phone) ui.collapsed = true;
+            }}>{label}</button
+          >
+        {/each}
+      </div>
+      <!-- the layer switches fold away under Layers, so the panel is short until they are wanted -->
+      <button
+        class={[
+          "mt-5.5 mb-2 flex min-h-11 w-full items-center justify-between text-base font-bold [&_svg]:[transition:transform_150ms]",
+          ui.layersOpen && "[&_svg]:[transform:rotate(90deg)]",
+        ]}
+        aria-expanded={ui.layersOpen}
+        aria-controls="layer-list"
+        onclick={() => (ui.layersOpen = !ui.layersOpen)}>Layers<Icon kind="chevron" /></button
+      >
+      {#if ui.layersOpen}
+        <div id="layer-list" transition:slide={{ duration: 150 }}>
+          {#each LAYERS.slice(1) as [group, rows]}
+            <div class="group-label">
+              {group}
+            </div>
+            {#each rows as [k, label]}
+              <!-- the basemap switch has a dropdown beside it, for which basemap, that can't be changed while it is off -->
+              <!-- Progress purple is a child of Finished spans: indented under it -->
+              <div
+                class={["flex items-center gap-2", k === "purpleSpans" && "ml-6"]}
+                style:display={hidden(k) ? "none" : ""}
               >
-                <input
-                  class="m-0 h-4.5 w-4.5 accent-(--accent) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent)"
-                  type="checkbox"
-                  checked={layers[k]}
-                  disabled={disabled(k)}
-                  onchange={(e) => change(e, k)}
-                />{label}
-              </label>
-              <!-- no "animate" link in the two SFMSF views, which have no animation, or once status.yaml has the gantry on
+                <label
+                  class={[
+                    "flex flex-1 items-center gap-2.5 rounded-md px-1 py-1.5",
+                    disabled(k) ? "cursor-default" : "cursor-pointer hover:bg-(--bg)",
+                  ]}
+                  style:opacity={opacity(k)}
+                >
+                  <input
+                    class="m-0 h-4.5 w-4.5 accent-(--accent) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent)"
+                    type="checkbox"
+                    checked={layers[k]}
+                    disabled={disabled(k)}
+                    onchange={(e) => change(e, k)}
+                  />{label}
+                </label>
+                <!-- no "animate" link in the two SFMSF views, which have no animation, or once status.yaml has the gantry on
                    the last span, 105: there's nowhere left to move it -->
-              {#if k === "gantry" && canAnimate() && !(status.span >= 105)}
-                <!-- a small link that plays the gantry's moves span by span to the last span, as the Play pill does
+                {#if k === "gantry" && canAnimate() && !(status.span >= 105)}
+                  <!-- a small link that plays the gantry's moves span by span to the last span, as the Play pill does
                      (MapView does the moving): it ticks the Gantry box first if it's off, and on a phone closes the menu
                      so the map shows. While the moves play it reads "reset" and puts everything back to the gantry's
                      current status, as the Reset button does -->
-                <button
-                  class="animate-link"
-                  onclick={() => {
-                    if (ui.gantryPlaying) return stopAnimation("link");
-                    animateGantry("link");
-                    if (ui.phone) ui.collapsed = true;
-                  }}>{ui.gantryPlaying ? "reset" : "animate"}</button
-                >
-              {/if}
-              {#if k === "aerial"}
-                <select
-                  class="min-w-0 rounded-md border border-(--line) bg-(--panel) px-1 py-0.5 text-base text-(--ink) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent) disabled:cursor-default disabled:opacity-40"
-                  aria-label="Which basemap"
-                  disabled={!layers.aerial}
-                  value={ui.basemap}
-                  onchange={(e) => setBasemap(e.currentTarget.value)}
-                >
-                  {#each BASEMAPS as [key, name]}
-                    <option value={key}>{name}</option>
-                  {/each}
-                </select>
-              {/if}
-            </div>
+                  <button
+                    class="animate-link"
+                    onclick={() => {
+                      if (ui.gantryPlaying) return stopAnimation("link");
+                      animateGantry("link");
+                      if (ui.phone) ui.collapsed = true;
+                    }}>{ui.gantryPlaying ? "reset" : "animate"}</button
+                  >
+                {/if}
+                {#if k === "aerial"}
+                  <select
+                    class="min-w-0 rounded-md border border-(--line) bg-(--panel) px-1 py-0.5 text-base text-(--ink) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent) disabled:cursor-default disabled:opacity-40"
+                    aria-label="Which basemap"
+                    disabled={!layers.aerial}
+                    value={ui.basemap}
+                    onchange={(e) => setBasemap(e.currentTarget.value)}
+                  >
+                    {#each BASEMAPS as [key, name]}
+                      <option value={key}>{name}</option>
+                    {/each}
+                  </select>
+                {/if}
+              </div>
+            {/each}
           {/each}
-        {/each}
-        <div class="mt-2.5 flex flex-wrap gap-1">
-          <button class="{GROUP_BUTTON} {DISABLED}" onclick={showAll}>Show all</button><button
-            class="{GROUP_BUTTON} {DISABLED}"
-            disabled={!ui.changed}
-            onclick={reset}>Reset</button
-          >
+          <div class="mt-2.5 flex flex-wrap gap-1">
+            <button class="{GROUP_BUTTON} {DISABLED}" onclick={showAll}>Show all</button><button
+              class="{GROUP_BUTTON} {DISABLED}"
+              disabled={!ui.changed}
+              onclick={reset}>Reset</button
+            >
+          </div>
         </div>
-      </div>
-    {/if}
-    <!-- the links, set apart from the map controls above: About and the source code, each with its mark -->
-    <p class="fine-print mt-8">
-      <a class={LINK} href="{import.meta.env.BASE_URL}about/"><Icon kind="info" />About this site</a>
-    </p>
-    <p class="fine-print">
+      {/if}
+    </div>
+    <!-- the footer links, side by side and kept small: About and the source code, each with its mark -->
+    <p class="fine-print mt-auto flex gap-4 pt-8">
+      <a class={LINK} href="{import.meta.env.BASE_URL}about/"><Icon kind="info" />About</a>
       <a class={LINK} href="https://github.com/molund/omc5"
         ><svg viewBox="0 0 16 16" aria-hidden="true"
           ><path
             fill="currentColor"
             d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"
           /></svg
-        >Source code on GitHub</a
+        >Source code</a
       >
     </p>
   </div>
@@ -277,6 +280,17 @@
 <style>
   @reference "./app.css";
 
+  /* Map and Trackside at the top of the panel: full-width rows with an icon, the current one filled like a picked view */
+  .panel-nav-link {
+    @apply flex items-center gap-2.5 rounded-md px-2 py-2.5 text-base font-semibold text-(--ink) no-underline hover:bg-(--bg);
+  }
+  .panel-nav-link[aria-current] {
+    @apply bg-(--accent) text-(--accent-ink);
+  }
+  /* the hairline between the site's sections and the map's controls */
+  .panel-divider {
+    @apply mt-3 border-t border-(--line);
+  }
   /* the Gantry switch's "animate" link: a small underlined text link, not a button */
   .animate-link {
     @apply border-0 bg-transparent p-0 text-xs text-(--link) underline;
