@@ -3,7 +3,7 @@
   // ?post=clipper-completes-span-36). It is prerendered at build time (trackside/prerender.js) as pages of 10
   // (/trackside/, /trackside/page/2/, …), each with its own title, description and Open Graph photo; view says which one
   // this is
-  import { onMount } from "svelte";
+  import { onMount, tick } from "svelte";
   import { status, asOf, followUpTime } from "../src/lib/status.js";
   import { inline, plainText } from "../src/lib/inline.js";
   import { SITE, REMARK42, threadUrl, fetchRemarkCounts, fetchFrozen } from "../src/lib/comments.js";
@@ -95,10 +95,30 @@
   const PAGE_SIZE = 10;
   const pages = Math.max(1, Math.ceil(status.history.length / PAGE_SIZE));
   const page = $derived(Math.min(Math.max(1, view.page || 1), pages));
+  // the page numbers to show: the first, the last and the ones either side of the current page; a gap of one page shows
+  // that page, a longer one an ellipsis ("gap")
+  const pageItems = $derived.by(() => {
+    const keep = [1, page - 1, page, page + 1, pages].filter((p, i, a) => p >= 1 && p <= pages && a.indexOf(p) === i);
+    const out = [];
+    let last = 0;
+    for (const p of keep.sort((a, b) => a - b)) {
+      if (p - last === 2) out.push(p - 1);
+      else if (p - last > 2) out.push("gap");
+      out.push(p);
+      last = p;
+    }
+    return out;
+  });
   // an update's own page, /trackside/<slug>/ ({ slug } as the view): just that update, listed in the sitemap but not linked
   // from the site, and linking only to the first page of Trackside
   const single = $derived(view.slug ? status.history.find((n) => n.slug === view.slug) : null);
-  const shown = $derived(single ? [single] : status.history.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE));
+  // the page's own 10 updates, as built; in the browser, older pages are added under them as the reader scrolls
+  // (`more` pages so far), until the oldest update
+  const pageShown = $derived(single ? [single] : status.history.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE));
+  let more = $state(0);
+  const shown = $derived(single ? [single] : status.history.slice((page - 1) * PAGE_SIZE, (page + more) * PAGE_SIZE));
+  // set once the page is running in the browser: the page numbers give way to scrolling
+  let scrolling = $state(false);
 
   // what search engines and link previews show: on a page of updates, the page's title, a fixed description, and the
   // newest photo; on an update's own page, its title (or date), its summary, and its own photo
@@ -151,20 +171,61 @@
       id = params.get("post") ?? location.hash.slice(1);
     // one request to the comment server for the whole page's counts, for the updates whose comments are on; the read-only
     // threads come from the site itself, and only when the page has one
-    const live = shown.filter((n) => n.comments === "on");
-    if (live.length) fetchRemarkCounts(live.map((n) => threadUrl(n.slug))).then((c) => (counts = c));
-    if (shown.some((n) => n.comments === "readonly")) fetchFrozen().then((f) => (frozen = f));
+    fetchExtras(shown);
     // comments are on the updates' own pages now: an old ?post=<slug>&comments link goes to its thread there
     if (id && params.has("comments") && status.history.some((n) => n.slug === id))
       return location.replace(`${TRACKSIDE}${id}/#comments`);
     if (!single) {
-      const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
-      unclamped = [...document.querySelectorAll("[data-body]")]
-        .filter((el) => el.scrollHeight <= (CLAMP + CLAMP_SLACK) * rem)
-        .map((el) => el.dataset.body);
+      measureClamps();
+      scrolling = true;
+      addEventListener("scroll", followPage, { passive: true });
     }
     if (id) document.getElementById(id)?.scrollIntoView();
+    return () => removeEventListener("scroll", followPage);
   });
+  // the comment counts for updates whose comments are on (one request to the comment server for them all), and the
+  // read-only threads, which come from the site itself, only when one of the updates has one
+  function fetchExtras(list) {
+    const live = list.filter((n) => n.comments === "on");
+    if (live.length) fetchRemarkCounts(live.map((n) => threadUrl(n.slug))).then((c) => (counts = { ...counts, ...c }));
+    if (!Object.keys(frozen).length && list.some((n) => n.comments === "readonly"))
+      fetchFrozen().then((f) => (frozen = f));
+  }
+  // the updates short enough to show whole
+  function measureClamps() {
+    const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
+    unclamped = [...document.querySelectorAll("[data-body]")]
+      .filter((el) => el.scrollHeight <= (CLAMP + CLAMP_SLACK) * rem)
+      .map((el) => el.dataset.body);
+  }
+  // the next page's updates, added under the last one when the reader nears the bottom (a screen away)
+  async function loadOlder() {
+    more += 1;
+    track("load_older", { page: page + more });
+    fetchExtras(status.history.slice((page + more - 1) * PAGE_SIZE, (page + more) * PAGE_SIZE));
+    await tick();
+    measureClamps();
+  }
+  function nearBottom(el) {
+    const observer = new IntersectionObserver((seen) => seen.some((s) => s.isIntersecting) && loadOlder(), {
+      rootMargin: "100% 0px",
+    });
+    observer.observe(el);
+    return { destroy: () => observer.disconnect() };
+  }
+  // the address follows the page of updates the reader is in (the last update whose top is above the middle of the
+  // screen), so a reload, a shared link or Back comes back near the same place
+  let addressPage = 0;
+  function followPage() {
+    let at = page;
+    for (const el of document.querySelectorAll("article[data-page]")) {
+      if (el.getBoundingClientRect().top > innerHeight / 2) break;
+      at = +el.dataset.page;
+    }
+    if (at === (addressPage || page)) return;
+    addressPage = at;
+    history.replaceState(history.state, "", pageUrl(at));
+  }
   // a span link or a photo in an update, for Google Analytics; the update is the article the link is in
   const slugOf = (e) => e.currentTarget.closest("article")?.id;
   // an update's own page's back line goes back to where the reader came from on this site: "map" (the map, as they left
@@ -317,7 +378,7 @@
   <!-- what the page is, for search engines and AI tools: an update's own page is a blog post, with its dates and author; the
        first page of updates is the blog, and an older page a collection of its posts -->
   {#if single}{@html ldScript(blogPosting(single, singleTitle))}{:else}{@html ldScript(
-      blogPage(shown, page, url, (n) => n.title || heading(n.time)),
+      blogPage(pageShown, page, url, (n) => n.title || heading(n.time)),
     )}{/if}
 </svelte:head>
 
@@ -407,11 +468,15 @@
         >‹ {cameFrom === "map" ? "Map" : "All updates"}</a
       >
     </p>{/if}
-  {#each shown as n (n.slug)}
+  {#each shown as n, i (n.slug)}
     {@const plan = linkPlan(n)}
     <!-- an update a link jumps to lands below the bar, not under it; each update is a card, with a gap above it, so
          the comments link reads as the end of its own update rather than the start of the next -->
-    <article id={n.slug} class="update-card scroll-mt-[calc(var(--spacing)*19_+_env(safe-area-inset-top,0px))] mt-5">
+    <article
+      id={n.slug}
+      data-page={single ? null : page + Math.floor(i / PAGE_SIZE)}
+      class="update-card scroll-mt-[calc(var(--spacing)*19_+_env(safe-area-inset-top,0px))] mt-5"
+    >
       <!-- a title links to the update's own page (as the permalink button at the foot of the card does), except on that
            page itself -->
       <!-- an update with a title leads with its date in gold (a post's date, a status update's date and time), then the
@@ -495,27 +560,29 @@
         {:else}<div use:lazyRemark42={n}></div>{/if}
       </section>{/if}
   {/each}
-  <!-- the first page has one button to older updates; later pages go either way, with Older off on the last page, and from
-       page 3 on, Newest goes straight back to the first page; links to
-       the prerendered pages, so search engines follow them too. Drawn like the Oldest / Newest switch in the giscus
-       comments (GitHub's segmented control): a grey track, the buttons you can press raised on it with an outline and
-       bold text, a button you can't press flat and faded, in GitHub's own colours, light and dark. On a phone: the
-       buttons share the full width with a gap and are tall enough to tap, with no track behind them (a button you can't
-       press keeps the track colour). -->
-  {#if !single && pages > 1}
-    <nav
-      class="mx-auto mt-6 flex w-fit rounded-md bg-(--button-bg) phone:w-auto phone:gap-2 phone:bg-transparent"
-      aria-label="Pages of updates"
-    >
-      {#if page === 1}
-        <a class="pager-link" href={pageUrl(2)} rel="next">Show older</a>
-      {:else}
-        {#if page > 2}<a class="pager-link" href={pageUrl(1)}>Newest</a>{/if}
-        <a class="pager-link" href={pageUrl(page - 1)} rel="prev">Newer</a>
-        {#if page < pages}<a class="pager-link" href={pageUrl(page + 1)} rel="next">Older</a>{:else}<span
-            class="pager-link pager-link-off">Older</span
-          >{/if}
-      {/if}
+  <!-- numbered pages, newest first: Previous (newer) and Next (older) around the page numbers, with the current page
+       highlighted. The first and last pages and the ones either side of the current page are always shown, and a longer
+       run is collapsed to an ellipsis. Links to the prerendered pages, so search engines follow them too. On a phone,
+       Previous and Next shrink to their arrows. -->
+  <!-- in the browser, the next page loads as the reader nears the bottom, and the page numbers aren't shown; the built
+       pages keep them, for search engines and anyone without JavaScript -->
+  {#if scrolling}
+    {#key more}{#if page + more < pages}<div use:nearBottom></div>{/if}{/key}
+  {:else if !single && pages > 1}
+    <nav class="mx-auto mt-6 flex w-fit items-center gap-1" aria-label="Pages of updates">
+      {#if page > 1}<a class="page-step" href={pageUrl(page - 1)} rel="prev" aria-label="Previous page"
+          >‹ <span class="phone:hidden">Previous</span></a
+        >{:else}<span class="page-step page-off" aria-disabled="true">‹ <span class="phone:hidden">Previous</span></span
+        >{/if}
+      {#each pageItems as p, i (i)}
+        {#if p === "gap"}<span class="page-gap">…</span>
+        {:else if p === page}<span class="page-num page-current" aria-current="page">{p}</span>
+        {:else}<a class="page-num" href={pageUrl(p)} aria-label="Page {p}">{p}</a>{/if}
+      {/each}
+      {#if page < pages}<a class="page-step" href={pageUrl(page + 1)} rel="next" aria-label="Next page"
+          ><span class="phone:hidden">Next</span> ›</a
+        >{:else}<span class="page-step page-off" aria-disabled="true"><span class="phone:hidden">Next</span> ›</span
+        >{/if}
     </nav>
   {/if}
   <!-- the footer, at the very bottom of every Trackside page: who's behind this, and links to the About and Privacy pages;
@@ -620,6 +687,29 @@
   /* the comments button of an update whose comments are off: greyed out, and it can't be pressed */
   .comments-off {
     @apply cursor-not-allowed border-(--line) bg-(--bg) text-(--mute);
+  }
+  /* Previous and Next at the ends of the page numbers: outlined buttons, in GitHub's colours */
+  .page-step {
+    @apply inline-flex min-h-9 items-center gap-1 rounded-md border border-(--button-line) bg-(--pager-knob) px-3 text-sm font-semibold text-(--button-ink) no-underline phone:min-h-11 phone:px-4;
+  }
+  /* Previous on the first page, Next on the last: flat and faded */
+  .page-off {
+    @apply cursor-default border-transparent bg-transparent font-normal text-(--pager-flat-ink);
+  }
+  /* a page number: square, outlined on hover */
+  .page-num {
+    @apply inline-flex min-h-9 min-w-9 items-center justify-center rounded-md border border-transparent text-sm text-(--button-ink) no-underline phone:min-h-11 phone:min-w-11;
+  }
+  a.page-num:hover {
+    @apply border-(--button-line);
+  }
+  /* the page you're on */
+  .page-current {
+    @apply border-(--button-line) bg-(--button-bg) font-semibold;
+  }
+  /* the ellipsis for a run of pages left out */
+  .page-gap {
+    @apply px-1 text-sm text-(--pager-flat-ink);
   }
   /* an update's photo, with rounded corners */
   .update-photo {
