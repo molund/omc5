@@ -72,6 +72,7 @@ notes:
           caption: "8:30 p.m."
   - 2026-11-19T08:15-07:00: "Clayton Clipper construction update for Thursday, Nov. 19, 2026"
     summary: "The Clayton Clipper’s velocity is holding at 1.87—for now."
+    scroll: off
     block:
       - "The code won’t change it until the crew begins the next gantry-cycle stage. Moving the gantry to the next position counts as a single stage. I’m expecting a significant drop before work starts on span 42."
   - 2026-11-18T07:30-07:00: "The Surrey Langley SkyTrain thread is back"
@@ -84,6 +85,7 @@ notes:
       - "I’ve been playing Towers of Hanoi with the gantry animation, and there are too many variables to even bother fixing it at this point."
   - 2026-11-16T09:00-07:00: "Clayton Clipper construction update for Monday, Nov. 16, 2026"
     summary: "Last night’s lightning storm cost the Clayton Clipper a night shift."
+    scroll: off
     block:
       - "That put a major dent in the velocity, on top of my weekend bug fix that had already knocked it down from 2.82 to 2.53."
     follow-up:
@@ -148,6 +150,7 @@ notes:
   - 2026-11-07T14:45-07:00: "Clayton Clipper construction update for Saturday, Nov. 7, 2026"
     summary: "Made it to span 39!"
     comments: off
+    scroll: off
     photo:
       file: 2026-11-07-photo.jpg
       caption: "Clayton Clipper launching gantry at span 39/105 on its journey to Bakerview 166 St Station."
@@ -219,6 +222,7 @@ notes:
   - 2026-10-31T14:00-07:00: "Clayton Clipper completes span 36; tulip at 70/71 built"
     summary: "Check-in from the bike: all the segments are hung and span 36 is marked as complete. Now pedalling west of 176 St to see what the rest of the line is up to."
     comments: off
+    scroll: off
     block:
       - "The long-missing tulip where spans 70 and 71 meet, by the golf course, has finally been built. It was the last of the driven foundations. From 71/72 on, they switched to bored foundations."
       - photo:
@@ -227,6 +231,7 @@ notes:
       - "If you know the story behind this pillar, let me know in the comments."
   - 2026-10-31T09:30-07:00: "Clayton Clipper: only three segments hung for span 36"
     summary: "Only three segments have been hung for span 36. I'm guessing the night crew took Friday night off."
+    scroll: off
     photo:
       file: 2026-10-31-piper-and-toby.jpg
       caption: "My two trusty assistants on our way to look at cranes. Piper on the left is a four-year-old Bernedoodle. Toby on the right is an 11-year-old mini Australian Shepherd."
@@ -261,6 +266,7 @@ notes:
   - 2026-10-23T16:30-07:00: "Clayton Clipper construction update for Friday, Oct. 23, 2026"
     summary: "Span 33 is hung and glued, and marked as complete."
     comments: off
+    scroll: off
     photo:
       file: 2026-10-23-clipper-span-33.jpg
       caption: "The Clayton Clipper with span 33 hung and glued below it."
