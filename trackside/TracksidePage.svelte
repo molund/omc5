@@ -464,22 +464,22 @@
           <!-- the permalink, at the right end of the row, so the heading above has the card's full width -->
           {@render permalink(n)}
         </div>{/if}
-      <!-- on an update's own page, its comments, always shown, at #comments (clear of the bar at the top), set off from the
-           update by a dashed line: the thread (Remark42), or for a read-only one, its comments as they were when the site
-           was built -->
-      {#if single}<section
-          id="comments"
-          class="comments-section scroll-mt-[calc(var(--spacing)*19_+_env(safe-area-inset-top,0px))] mt-2.5"
-        >
-          {#if n.comments === "readonly"}
-            {#if frozen[n.slug]?.comments.length}{@render frozenComments(frozen[n.slug].comments)}
-              <p class="frozen-note mt-2">Comments are closed.</p>
-            {:else}<p class="frozen-note">No comments.</p>
-              <p class="frozen-note mt-2">Comments are closed.</p>{/if}
-          {:else if n.comments === "off"}<p class="frozen-note">Comments are off for this update.</p>
-          {:else}<div use:lazyRemark42={n}></div>{/if}
-        </section>{/if}
     </article>
+    <!-- on an update's own page, its comments, always shown, at #comments (clear of the bar at the top), below the card
+         rather than inside it, so the thread has the page's full width: the thread (Remark42), or for a read-only one, its
+         comments as they were when the site was built -->
+    {#if single}<section
+        id="comments"
+        class="comments-section scroll-mt-[calc(var(--spacing)*19_+_env(safe-area-inset-top,0px))]"
+      >
+        {#if n.comments === "readonly"}
+          {#if frozen[n.slug]?.comments.length}{@render frozenComments(frozen[n.slug].comments)}
+            <p class="frozen-note mt-2">Comments are closed.</p>
+          {:else}<p class="frozen-note">No comments.</p>
+            <p class="frozen-note mt-2">Comments are closed.</p>{/if}
+        {:else if n.comments === "off"}<p class="frozen-note">Comments are off for this update.</p>
+        {:else}<div use:lazyRemark42={n}></div>{/if}
+      </section>{/if}
   {/each}
   <!-- the first page has one button to older updates; later pages go either way, with Older off on the last page, and from
        page 3 on, Newest goes straight back to the first page; links to
@@ -572,10 +572,10 @@
   .read-more {
     @apply mt-2 inline-block text-sm font-bold text-(--link);
   }
-  /* an update's own page's comments: the thread, or a read-only one's comments as they were when the site was built, set
-     off by a dashed line like Remark42's */
+  /* an update's own page's comments, below its card: the thread, or a read-only one's comments as they were when the site
+     was built */
   .comments-section {
-    @apply border-t border-dashed border-(--line) pt-3;
+    @apply mt-5;
   }
   /* its list of comments; a reply's list is indented under its comment, with a line down its left */
   .frozen-list {
