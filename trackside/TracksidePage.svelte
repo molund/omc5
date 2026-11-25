@@ -621,7 +621,7 @@
   }
   /* an update's heading: its title */
   .update-heading {
-    @apply m-0 mb-2 text-2xl leading-tight font-bold;
+    @apply m-0 mb-2 text-xl leading-tight font-bold;
   }
   /* a title's link to its update's own page: drawn like the heading, underlined on hover */
   .title-link {
