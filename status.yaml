@@ -108,6 +108,7 @@ notes:
   - 2026-11-11T08:45-07:00: "Clayton Clipper construction update for Wednesday, Nov. 11, 2026"
     summary: "The night shift finished hanging span 40 last night."
     comments: off
+    scroll: off
     block:
       - "All is quiet on the job site this morning, with no visible construction activity underway at the time of the visit. With today being Remembrance Day, the crews are likely taking the day off in observance of the holiday. I'll check in later to see whether any night shift activity is underway or if the entire site remains shut down for the full 24 hours."
       - "Future velocity calculations will account for statutory holidays by extending the 168-hour week window by the hours without gantry work, up to 24, ensuring that scheduled holidays do not unfairly penalize crew velocity."
@@ -170,6 +171,7 @@ notes:
   - 2026-11-05T10:00-07:00: "Clayton Clipper construction update for Thursday, Nov. 5, 2026"
     summary: "The Clayton Clipper has moved to span 38. It's getting faster: the crews are working 24/6, and the last span took just two days."
     comments: off
+    scroll: off
   - 2026-11-04: "I found someone who posts Clayton Clipper videos on TikTok"
     summary: "Check out this [drive-by footage](https://vt.tiktok.com/ZSpA9msMw/) by @Tracylynn on November 4th"
     post: true
@@ -177,9 +179,11 @@ notes:
   - 2026-11-03T07:15-07:00: "Clayton Clipper construction update for Tuesday, Nov. 3, 2026"
     summary: "Both precast girders for span 34 were installed overnight by mobile cranes. The Clayton Clipper is beginning the move to the next span."
     comments: off
+    scroll: off
   - 2026-11-02T09:15-07:00: "Clayton Clipper construction update for Monday, Nov. 2, 2026"
     summary: "The Night Shift must’ve worked Sunday night. Span 36 is fully glued. Crews have begun post-tensioning."
     comments: off
+    scroll: off
     follow-up:
       - 2026-11-02T17:45-07:00:
           summary: "Post-tensioning is done on span 36, and the cables are down. The Clayton Clipper isn't going anywhere yet: all 12 hangers are still up."
@@ -238,9 +242,11 @@ notes:
   - 2026-10-30T12:45-07:00: "Clayton Clipper construction update for Friday, Oct. 30, 2026"
     summary: "The Clayton Clipper has started moving its supports, getting ready to move from span 35 to span 36."
     comments: off
+    scroll: off
   - 2026-10-29T06:45-07:00: "Clayton Clipper finishes hanging span 35; new girder arrives"
     summary: "All segments for span 35 are hung. A new precast girder arrived at the construction yard overnight. It will likely be installed in span 34, along with the girder that was already on site."
     comments: off
+    scroll: off
     follow-up:
       - 2026-10-29T18:30-07:00:
           summary: "Span 35's segments are glued, and Dywidag is post-tensioning now. The night shift should finish it. That puts the Clayton Clipper a third of the way along its route: span 35 of 105."
