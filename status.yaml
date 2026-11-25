@@ -25,6 +25,13 @@ spans-per-week: 1.11
 #   No other markdown: anything else shows as typed.
 # Notes to self, and the steps of the gantry's cycle seen at each time stamp, are in gantry-cycles.yaml, not here.
 notes:
+  - 2026-11-25: "Steel girders staged near King George Station"
+    summary: "Fraser Valley & Southern posted a walking video of the stretch of Fraser Highway near King George Station, between 140 St and Whalley Boulevard, where the Surrey Sprinter is headed."
+    post: true
+    block:
+      - "In his own words on SkyscraperPage: “Steel spans have begun to be staged along the Quibble Creek section. Fraser Highway is closed here until 12 December.”"
+      - "There are about 6 or 7 hammerhead pillars between the tulip pillars and the Expo Line. I wouldn’t be surprised if most of them end up with concrete girders, like at 203 St, the SFMSF and the Green Timbers pocket track, and steel is only used where the two lines join."
+      - "[Watch the video on YouTube](https://youtu.be/qqgXeYz9dWw). Filmed Nov. 23. Credit to [@FraserValleySouthern](https://www.youtube.com/@FraserValleySouthern) on YouTube."
   - 2026-11-23T19:15-07:00: "Overnight work at Hwy 15 starts Thursday"
     summary: "A new traffic notice looks like the window for Clayton Clipper to cross Hwy 15."
     block:
