@@ -162,6 +162,7 @@ notes:
   - 2026-11-06T08:45-07:00: "Clayton Clipper construction update for Friday, Nov. 6, 2026"
     summary: "Another precast concrete girder was installed at the span 35 eastbound mainline overnight."
     comments: readonly
+    scroll: off
     follow-up:
       - 2026-11-06T18:00-07:00:
           summary: "The rain finally stopped, and I got to do the full loop with Piper."
@@ -176,6 +177,7 @@ notes:
     summary: "Check out this [drive-by footage](https://vt.tiktok.com/ZSpA9msMw/) by @Tracylynn on November 4th"
     post: true
     comments: off
+    scroll: off
   - 2026-11-03T07:15-07:00: "Clayton Clipper construction update for Tuesday, Nov. 3, 2026"
     summary: "Both precast girders for span 34 were installed overnight by mobile cranes. The Clayton Clipper is beginning the move to the next span."
     comments: off
