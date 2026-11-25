@@ -17,7 +17,8 @@ the real text, and then Svelte takes over in the browser for the comments and co
   every update cut off). Each update's Comments button goes to its thread on its own page (`/trackside/<slug>/#comments`).
   The built pages end with numbered page links (for search engines and anyone without JavaScript); in the browser
   those give way to scrolling: the next page's updates load under the last one as the reader nears the bottom, until
-  the oldest, and the address follows the page the reader is in (`history.replaceState`).
+  the oldest, and the address follows the page the reader is in (`history.replaceState`). A note with `scroll: off` in
+  `status.yaml` stays on its own page of updates, but the scroll skips it.
 - `/trackside/<slug>/` — an update's own page, at a permanent address: just that update, whole, with its comments
   under it. It's listed in `sitemap.xml` for search engines. The title, Read more and the Comments button link to it,
   and so does the Copy permalink icon at the foot of each update, a real link for search engines and anyone without

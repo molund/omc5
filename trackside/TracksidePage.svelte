@@ -113,10 +113,16 @@
   // from the site, and linking only to the first page of Trackside
   const single = $derived(view.slug ? status.history.find((n) => n.slug === view.slug) : null);
   // the page's own 10 updates, as built; in the browser, older pages are added under them as the reader scrolls
-  // (`more` pages so far), until the oldest update
+  // (`more` pages so far), until the oldest update, leaving out the ones with `scroll: off`, which stay on their own pages
   const pageShown = $derived(single ? [single] : status.history.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE));
   let more = $state(0);
-  const shown = $derived(single ? [single] : status.history.slice((page - 1) * PAGE_SIZE, (page + more) * PAGE_SIZE));
+  const shown = $derived(
+    single
+      ? [single]
+      : [...pageShown, ...status.history.slice(page * PAGE_SIZE, (page + more) * PAGE_SIZE).filter((n) => n.scroll)],
+  );
+  // the page of updates a note is on
+  const pageOf = (n) => Math.floor(status.history.indexOf(n) / PAGE_SIZE) + 1;
   // set once the page is running in the browser: the page numbers give way to scrolling
   let scrolling = $state(false);
 
@@ -202,7 +208,7 @@
   async function loadOlder() {
     more += 1;
     track("load_older", { page: page + more });
-    fetchExtras(status.history.slice((page + more - 1) * PAGE_SIZE, (page + more) * PAGE_SIZE));
+    fetchExtras(status.history.slice((page + more - 1) * PAGE_SIZE, (page + more) * PAGE_SIZE).filter((n) => n.scroll));
     await tick();
     measureClamps();
   }
@@ -468,13 +474,13 @@
         >‹ {cameFrom === "map" ? "Map" : "All updates"}</a
       >
     </p>{/if}
-  {#each shown as n, i (n.slug)}
+  {#each shown as n (n.slug)}
     {@const plan = linkPlan(n)}
     <!-- an update a link jumps to lands below the bar, not under it; each update is a card, with a gap above it, so
          the comments link reads as the end of its own update rather than the start of the next -->
     <article
       id={n.slug}
-      data-page={single ? null : page + Math.floor(i / PAGE_SIZE)}
+      data-page={single ? null : pageOf(n)}
       class="update-card scroll-mt-[calc(var(--spacing)*19_+_env(safe-area-inset-top,0px))] mt-5"
     >
       <!-- a title links to the update's own page (as the permalink button at the foot of the card does), except on that
