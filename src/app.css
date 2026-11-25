@@ -94,7 +94,7 @@ body::before {
   z-index: 10;
 }
 .logo {
-  width: 70px !important;
+  width: calc(35px + 2.1875rem) !important;
   height: auto !important;
   margin: -5px 0 5px -3px;
 }
@@ -169,11 +169,21 @@ body::before {
     @apply m-0 font-bold tracking-[0.3em] text-(--mute) uppercase;
   }
   .page-header-title {
-    @apply m-0 text-sm font-bold tracking-[0.3em] text-(--mute) uppercase;
+    @apply m-0 font-bold tracking-[0.3em] text-(--mute) uppercase;
   }
   .eyebrow span,
   .page-header-title {
     color: #b8944a !important;
+  }
+  /* the gold word beside the logo goes with the logo (.logo): both grow with the iPhone's Text Size at half the rate of
+     the rest of the site, half px and half rem (14px at 16px to the rem); the size is in proportion to its logo, bigger
+     in a page's bar than on the map's panel and the progress card */
+  .page-header-title {
+    font-size: calc(7px + 0.4375rem);
+    line-height: calc(10px + 0.625rem);
+  }
+  .eyebrow span {
+    font-size: calc(6px + 0.375rem);
   }
   /* a heading over a group of switches or buttons in the layer panel */
   .group-label {

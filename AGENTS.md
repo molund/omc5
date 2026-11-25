@@ -92,7 +92,9 @@ Svelte 5 + Vite site, deployed to GitHub Pages (https://clayton-clipper.olund.ca
   before writing a new class.
 - Sizes are Tailwind's standard ones (`text-sm`, `p-4`, `rounded-md`), all in rem, so they follow the iPhone's Text Size
   setting (the `html` rule in `src/app.css` hands 1rem to the iPhone's body text size). Use the named font sizes and radii,
-  and the spacing numbers (`mt-3.5` is 14px at 16px to the rem). Don't write px or rem values (`mt-[14px]`).
+  and the spacing numbers (`mt-3.5` is 14px at 16px to the rem). Don't write px or rem values (`mt-[14px]`). The one
+  exception is the logo and the gold word beside it (`.logo`, `.page-header-title`, `.eyebrow span` in `src/app.css`): half
+  px and half rem (`calc(7px + 0.4375rem)` for 14px), so they grow with Text Size at half the rate.
 - Colours come from the variables in `app.css` (`bg-(--panel)`, `text-(--mute)`, `border-(--line)`, `bg-(--primary-button)`,
   `bg-(--button-bg)` and so on), which already switch in dark mode. Don't hard-code hex colours; add a variable to `:root`
   as `light-dark(light, dark)`.
