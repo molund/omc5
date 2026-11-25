@@ -62,7 +62,7 @@ Svelte 5 + Vite site, deployed to GitHub Pages (https://clayton-clipper.olund.ca
     note's address gets `-2`. An earlier note's title stays as it is.
   - When a note has news worth a title of its own, write a short headline of what it says, under 60 characters, in plain words (span numbers, places,
     gantry names), nothing the note doesn't say. Never a bare span number: name the gantry the span belongs to (e.g.
-    "Clayton Clipper moves to span 38"), even when the note doesn't, so the title, and the anchor made from it, make
+    "The Clayton Clipper moves to span 38"), even when the note doesn't, so the title, and the anchor made from it, make
     sense on their own.
 - `public/images/` — aerial photos.
 - `public/images/sorry-im-a-shitty-photographer/` — update photos (see the `photo:` format in `status.yaml`). Resize every
@@ -122,7 +122,7 @@ Svelte 5 + Vite site, deployed to GitHub Pages (https://clayton-clipper.olund.ca
   are down". `status.yaml`'s `hung:` and the map's drawing are only about the segments; the progress card counts the
   span the gantry is on.
 - Titles: sentence case for everything, posts included ("The curious case of Clayton Clipper span 50").
-- Gantries: the full name first ("Clayton Clipper", "Surrey Sprinter"); "the Sprinter" or "the gantry" after. Never "the Clipper": to shorten "Clayton Clipper", say "the gantry".
+- Gantries: the full name first, with "the" whenever the name is the gantry itself, in titles too ("the Clayton Clipper is post-tensioning", "The Surrey Sprinter hangs its first span"); no "the" when the name describes another noun ("Clayton Clipper span 50", "Clayton Clipper construction update"). Then "the Sprinter" or "the gantry". Never "the Clipper": to shorten "Clayton Clipper", say "the gantry".
 - Segments: always "segments", never "rocks".
 - Pillar, support, tulip, hammerhead: use the word as written in the note.
 - Supports by name: "where spans 70 and 71 meet" in the text; "70/71" is fine in titles and short form.
