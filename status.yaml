@@ -260,6 +260,7 @@ notes:
   - 2026-10-26T20:00-07:00: "Clayton Clipper construction update for Monday, Oct. 26, 2026"
     summary: "The Clayton Clipper is about to lift the last segment for span 34."
     comments: off
+    scroll: off
     photo:
       file: 2026-10-26-clipper-span-34-night.jpg
       caption: "The Clayton Clipper all lit up for the night shift, about to lift span 34's last segment. Proof that even I get lucky with a camera now and then."
@@ -273,6 +274,7 @@ notes:
   - 2026-10-15T17:15-07:00: "Clayton Clipper crosses span 31's double precast girders"
     summary: "After being stuck in the same place for over a month, the Clayton Clipper finally made it across the double precast girders at span 31."
     comments: off
+    scroll: off
     photo:
       file: 2026-10-15-clipper-crosses-span-31.jpg
       caption: "The Clayton Clipper, finally on the move again: across span 31 and ready to start lifting segments for span 32."
