@@ -502,12 +502,7 @@
        bold text, a button you can't press flat and faded, in GitHub's own colours, light and dark. On a phone: the
        buttons share the full width with a gap and are tall enough to tap, with no track behind them (a button you can't
        press keeps the track colour). -->
-  {#if single}
-    <!-- an update's own page links to the first page of Trackside, not to the page of updates it is on -->
-    <nav class="mx-auto mt-6 flex w-fit rounded-md bg-(--button-bg) phone:w-auto phone:bg-transparent">
-      <a class="pager-link" href={TRACKSIDE}>See all updates</a>
-    </nav>
-  {:else if pages > 1}
+  {#if !single && pages > 1}
     <nav
       class="mx-auto mt-6 flex w-fit rounded-md bg-(--button-bg) phone:w-auto phone:gap-2 phone:bg-transparent"
       aria-label="Pages of updates"

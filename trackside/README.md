@@ -20,9 +20,8 @@ the real text, and then Svelte takes over in the browser for the comments and co
   and so does the Copy permalink icon at the foot of each update, a real link for search engines and anyone without
   JavaScript; a plain click on the icon copies the address instead (a cmd-, ctrl-, shift- or middle-click opens it).
   Its header's ← Trackside button goes back to the page of updates the reader came from, where they were on it (the
-  browser's Back), or to `/trackside/` when they came from anywhere else; See all updates at the foot always goes to
-  `/trackside/`. Its title, description and Open Graph tags use the update's title (or date) and summary; when the
-  update has a photo, the first one is the preview image.
+  browser's Back), or to `/trackside/` when they came from anywhere else. Its title, description and Open Graph tags
+  use the update's title (or date) and summary; when the update has a photo, the first one is the preview image.
 - An update is addressed by its slug: `/trackside/?post=clipper-completes-span-36` scrolls to it (the page's script
   calls `scrollIntoView()`, there are no hash anchors). The old `#slug` links still work, and an old
   `?post=<slug>&comments` link goes on to the update's own page at `#comments`.
