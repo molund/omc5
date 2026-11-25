@@ -50,6 +50,43 @@ export function fillView() {
   ui.filled = true;
 }
 
+/** Vertical is turned half a turn past east at the top, so the route runs down the stage, the way the gantry goes
+ * (Horizontal isn't: west stays on the left, as on any map). The measuring is done unflipped, and setTurnedView() flips
+ * the result. */
+const FLIP = 180;
+
+/**
+ * Turns every label in the drawing back half a turn about its own middle (on), so it reads the right way up in a view
+ * turned by FLIP, or puts it back as map.svg draws it (off). The direction arrows (text.guideway) keep the turn: they point
+ * the way the trains go. Each label's own transform is kept in data-base; its middle is its x (or half its length past
+ * it, for one not anchored in the middle), a little above its baseline.
+ * @param {boolean} on Whether the drawing is flipped.
+ * @returns {void}
+ */
+function uprightLabels(on) {
+  if (!els.svg) return;
+  for (const t of els.svg.querySelectorAll("text:not(.guideway)")) {
+    if (t.closest("#clayton-clipper")) continue;
+    if (!("base" in t.dataset)) t.dataset.base = t.getAttribute("transform") ?? "";
+    const base = t.dataset.base;
+    if (!on) {
+      if (base) t.setAttribute("transform", base);
+      else t.removeAttribute("transform");
+      continue;
+    }
+    const style = getComputedStyle(t),
+      size = parseFloat(style.fontSize) || 14,
+      anchor = t.getAttribute("text-anchor") ?? style.textAnchor;
+    let cx = +t.getAttribute("x") || 0;
+    if (anchor !== "middle") {
+      const w = t.getComputedTextLength?.() || 0;
+      cx += anchor === "end" ? -w / 2 : w / 2;
+    }
+    const cy = (+t.getAttribute("y") || 0) - 0.35 * size;
+    t.setAttribute("transform", `${base} rotate(180 ${cx} ${cy})`.trim());
+  }
+}
+
 // The whole drawing turns about the middle of the full canvas: the full canvas's top left and size, and the middle
 const [fx0, fy0, fw, fh] = FULL_VB.split(" ").map(Number),
   TURN_X = fx0 + fw / 2,
@@ -60,9 +97,11 @@ const [fx0, fy0, fw, fh] = FULL_VB.split(" ").map(Number),
  * @param {string} vb The area to show, as an SVG viewBox string.
  * @param {number} [turn=0] Degrees to turn the drawing by (0, upright, for every view but Horizontal).
  * @param {string|null} [fitVb=null] A separate Fit area, or the whole canvas when omitted.
+ * @param {boolean} [flipped=false] Whether the turn includes FLIP's half turn, so the labels turn back (uprightLabels).
  * @returns {void}
  */
-export function setView(vb, turn = 0, fitVb = null) {
+export function setView(vb, turn = 0, fitVb = null, flipped = false) {
+  uprightLabels(flipped);
   const wasFit = isFit();
   if (fitVb) {
     const [x, y, width, height] = fitVb.split(" ").map(Number);
@@ -176,7 +215,7 @@ export function horizontalView(vertical = false) {
     across = vertical ? (stage.clientWidth / stage.clientHeight) * UNITS_PER_METRE : UNITS_PER_METRE;
   setZoom(Math.max((100 * vb.width) / (2 * HORIZONTAL_VIEW_METRES * across), fillZoom()));
   // the span's middle, turned with the drawing, then onto the middle of the stage
-  const r = ((els.routeAngle - (vertical ? 90 : 0)) * Math.PI) / 180,
+  const r = ((els.routeAngle + (vertical ? FLIP - 90 : 0)) * Math.PI) / 180,
     x = TURN_X + (c.x - TURN_X) * Math.cos(r) - (c.y - TURN_Y) * Math.sin(r),
     y = TURN_Y + (c.x - TURN_X) * Math.sin(r) + (c.y - TURN_Y) * Math.cos(r);
   const box = els.svg.getBoundingClientRect();
@@ -223,8 +262,12 @@ function canvasHorizontal(vertical = false) {
  * @returns {void}
  */
 function setTurnedView(x, y, w, h, vertical) {
-  if (vertical) setView(`${TURN_X + y - TURN_Y} ${TURN_Y + TURN_X - x - w} ${h} ${w}`, els.routeAngle - 90);
-  else setView(`${x} ${y} ${w} ${h}`, els.routeAngle);
+  // Vertical's area, turned the further 90 degrees
+  const [ax, ay, aw, ah] = vertical ? [TURN_X + y - TURN_Y, TURN_Y + TURN_X - x - w, h, w] : [x, y, w, h];
+  // then Vertical half a turn more (FLIP): the area turns about the turning point, (x, y) to (2 TURN_X - x, 2 TURN_Y - y)
+  if (vertical)
+    setView(`${2 * TURN_X - ax - aw} ${2 * TURN_Y - ay - ah} ${aw} ${ah}`, els.routeAngle - 90 + FLIP, null, true);
+  else setView(`${ax} ${ay} ${aw} ${ah}`, els.routeAngle);
   setZoom(fitZoom());
 }
 /**
