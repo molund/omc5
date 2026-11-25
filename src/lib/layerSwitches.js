@@ -155,7 +155,7 @@ const PROGRESS_SHOWS = {
   ave72: [".ave72"],
   railway: [".railway"],
   spanNumbers: [".ccnumber"],
-  arrows: ["text.n.guideway"],
+  arrows: ["text.n.guideway", "g.switch-arrow"],
   stationLabels: [".stationlabel"],
   // the gantry, and the hangers the animation draws on a span as it fills in (gantryAnimation.js)
   gantry: [".gantry", ".clipper-hangers"],
@@ -239,7 +239,7 @@ export function layerCss(state) {
       // roads: Fraser Highway and Highway 15, with their labels (every piece is tagged "roads")
       if (k === "roads") r += ".roads{display:" + (on ? "inline" : "none") + " !important}";
       else if (k === "spanNumbers") r += ".ccnumber{display:" + (on ? "inline" : "none") + " !important}";
-      else if (k === "arrows") r += on ? "" : "text.n.guideway{display:none !important}";
+      else if (k === "arrows") r += on ? "" : "text.n.guideway,g.switch-arrow{display:none !important}";
       else if (k === "gantry") r += "";
       else if (k === "supports") r += on ? "" : 'rect.g,circle[fill="#D7D7D7"]{display:none !important}';
       else if (k === "unfinished") r += ".guideway.unfinished{display:" + (on ? "inline" : "none") + " !important}";

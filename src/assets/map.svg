@@ -1585,26 +1585,36 @@
       <!-- 2026-11-22: both arrows moved and turned to follow the ramp girders, now parallel to the eastbound ones (were x="-942.49"
            y="-240.96" rotate(35.5) and x="-1328.19" y="-501.41" rotate(31.3)) -->
       <!-- Span 35 and 39 exit ramp direction arrows (eastbound train direction), placed like the arrows on the span 33, 34 and 35 eastbound girders: 26.6 from the east end of the span, rotated to the span direction; grey while the ramps are unfinished -->
-      <text
-        class="n guideway"
-        x="-942.26"
-        y="-241.30"
-        text-anchor="middle"
-        style="font-size: 17.6px; fill: #eeeeee"
-        transform="rotate(33.8 -942.26 -248.30)"
-      >
-        &#x2192;
-      </text>
-      <text
-        class="n guideway"
-        x="-1329.22"
-        y="-499.89"
-        text-anchor="middle"
-        style="font-size: 17.6px; fill: #767676"
-        transform="rotate(33.8 -1329.22 -506.89)"
-      >
-        &#x2192;
-      </text>
+      <!-- 2026-11-25: the span 35 and 39 arrows drawn as switches (were the two arrows above, a → on each ramp girder, and at
+           35 the eastbound girder's own →): one arrow on the eastbound girder with a dashed branch to or from the ramp,
+           12.6 across. Drawn in units of 0.188, from the tip of the eastbound arrow, where a → at 26.6 from the east end of
+           the span ends (7.5 past its centre); the shafts are 1.13 wide, as thick as the → text. Hidden with the other
+           arrows by the Direction arrows switch (g.switch-arrow, layerSwitches.js) -->
+      <!-- Span 35: the ramp leaves the eastbound track -->
+      <g class="guideway switch-arrow" aria-hidden="true" transform="translate(-929.04 -254.59) rotate(33.8) scale(0.188)">
+        <path d="M-186 0 H-26" fill="none" stroke="#eeeeee" stroke-width="6" />
+        <polygon points="0,0 -26,15 -26,-15" fill="#eeeeee" />
+        <path
+          d="M-156 0 H-146 C-101 0 -91 67 -46 67 H-26"
+          fill="none"
+          stroke="#eeeeee"
+          stroke-width="6"
+          stroke-dasharray="11 8"
+        />
+        <polygon points="0,67 -26,82 -26,52" fill="#eeeeee" />
+      </g>
+      <!-- Span 39: the ramp joins the eastbound track; white like the finished arrows, even while the ramp or the eastbound girder is unfinished (there will be a time when the eastbound girder is finished and the ramp is not) -->
+      <g class="guideway switch-arrow" aria-hidden="true" transform="translate(-1315.99 -513.17) rotate(33.8) scale(0.188)">
+        <path d="M-156 0 H-26" fill="none" stroke="#eeeeee" stroke-width="6" />
+        <polygon points="0,0 -26,15 -26,-15" fill="#eeeeee" />
+        <path
+          d="M-156 67 H-146 C-101 67 -91 0 -46 0"
+          fill="none"
+          stroke="#eeeeee"
+          stroke-width="6"
+          stroke-dasharray="11 8"
+        />
+      </g>
       <!-- LL ramp -->
       <text
         class="road roads"
@@ -1936,17 +1946,8 @@
         &#x2192;
       </text>
       <!-- eastbound -->
-      <!-- Span 35 direction arrow (eastbound precast), the same distance from the westbound arrow as at 32, 33 and 34 -->
-      <text
-        class="n guideway"
-        x="-935.27"
-        y="-251.76"
-        text-anchor="middle"
-        style="font-size: 17.6px; fill: #eeeeee"
-        transform="rotate(33.8 -935.27 -258.76)"
-      >
-        &#x2192;
-      </text>
+      <!-- Span 35 direction arrow (eastbound precast): drawn with the span 35 ramp's switch arrow (g.switch-arrow); was a →
+           at x="-935.27" y="-251.76" rotate(33.8 -935.27 -258.76) -->
       <!-- eastbound -->
       <!-- Span 36 direction arrow (eastbound precast), placed on its span as the span 35 arrow is on 35 -->
       <text
