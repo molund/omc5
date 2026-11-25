@@ -24,15 +24,6 @@ entries:
   - 2026-11-25T11:45-07:00:
       span: 42
       stage: post-tensioning started
-  - 2026-11-25T08:30-07:00:
-      span: 42
-      stage: post-tensioning started
-  - 2026-11-24T19:45-07:00:
-      span: 42
-      stage: post-tensioning started
-  - 2026-11-24T08:45-07:00:
-      span: 42
-      stage: post-tensioning started
   - 2026-11-23T19:15-07:00:
       span: 42
       stage: post-tensioning started
@@ -85,12 +76,6 @@ entries:
   - 2026-11-18T07:30-07:00:
       span: 41
       stage: cables down
-  - 2026-11-17T21:30-07:00:
-      span: 41
-      stage: post-tensioning started
-  - 2026-11-17T17:45-07:00:
-      span: 41
-      stage: post-tensioning started
   - 2026-11-17T12:30-07:00:
       span: 41
       stage: post-tensioning started
@@ -119,10 +104,6 @@ entries:
   - 2026-11-14T09:15-07:00:
       span: 41
       stage: hanging started
-      progress: 0
-  - 2026-11-13T20:30-07:00:
-      span: 40
-      stage: supports started
   - 2026-11-13T13:45-07:00:
       span: 40
       stage: supports started
@@ -143,9 +124,6 @@ entries:
   - 2026-11-12T10:15-07:00:
       span: 40
       stage: gluing started
-  - 2026-11-12T07:30-07:00:
-      span: 40
-      stage: hung
   - 2026-11-11T21:15-07:00:
       span: 40
       stage: hung
@@ -161,9 +139,6 @@ entries:
   - 2026-11-10T09:00-07:00:
       span: 39
       stage: hangers down
-  - 2026-11-09T20:45-07:00:
-      span: 39
-      stage: post-tensioning started
   - 2026-11-09T13:15-07:00:
       span: 39
       stage: post-tensioning started
@@ -242,7 +217,6 @@ entries:
   - 2026-11-02T17:45-07:00:
       span: 36
       stage: cables down
-      progress: 0
   - 2026-11-02T09:15-07:00:
       span: 36
       stage: post-tensioning started
