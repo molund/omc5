@@ -464,7 +464,7 @@
     >
     <nav class="page-header-nav" aria-label="Sections">
       <a class="site-nav-link" href={MAP}>Map</a>
-      <a class="site-nav-link" href={TRACKSIDE} aria-current={single ? "true" : "page"}>Trackside</a>
+      <a class="site-nav-link" href={TRACKSIDE} aria-current={single ? "true" : "page"}>Updates</a>
     </nav>
   </header>
   <!-- on an update's own page, a way back to where the reader came from: the map, or the updates (also for a reader from

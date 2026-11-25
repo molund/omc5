@@ -101,7 +101,7 @@
           class="panel-nav-link"
           href="{import.meta.env.BASE_URL}trackside/"
           onclick={() => track("open_trackside", { where: "panel" })}
-          ><Icon kind="news" />Trackside<span class="ml-auto"><Icon kind="chevron" /></span></a
+          ><Icon kind="news" />Updates<span class="ml-auto"><Icon kind="chevron" /></span></a
         >
       </nav>
       <div class="panel-divider"></div>
