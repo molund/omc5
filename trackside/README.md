@@ -11,14 +11,14 @@ the real text, and then Svelte takes over in the browser for the comments and co
 
 ## Pages
 
-- `/trackside/` — the newest 10 updates, then `/trackside/page/2/`, `/trackside/page/3/` and so on.
-  Every update is on one of these pages. A long update is cut off at 32rem with a fade and a Read more link to its own
-  page; one that would hide less than 6rem more shows whole (measured in the browser, so the built pages start with
-  every update cut off). Each update's Comments button goes to its thread on its own page (`/trackside/<slug>/#comments`).
-  The built pages end with numbered page links (for search engines and anyone without JavaScript); in the browser
-  those give way to scrolling: the next page's updates load under the last one as the reader nears the bottom, until
-  the oldest, and the address follows the page the reader is in (`history.replaceState`). A note with `scroll: off` in
-  `status.yaml` stays on its own page of updates, but the scroll skips it.
+- `/trackside/` — the featured updates: the newest 10, always, then, as the reader scrolls, the older ones with
+  `featured: true` in `status.yaml`, 10 at a time, until the oldest; then the footer. The address stays `/trackside/`.
+  The built page ends with numbered page links instead (for search engines and anyone without JavaScript).
+- `/trackside/page/1/`, `/trackside/page/2/` and so on — every update, featured or not, 10 a page, newest first, with
+  numbered page links and no scrolling.
+- On both, a long update is cut off at 32rem with a fade and a Read more link to its own page; one that would hide less
+  than 6rem more shows whole (measured in the browser, so the built pages start with every update cut off). Each
+  update's Comments button goes to its thread on its own page (`/trackside/<slug>/#comments`).
 - `/trackside/<slug>/` — an update's own page, at a permanent address: just that update, whole, with its comments
   under it. It's listed in `sitemap.xml` for search engines. The title, Read more and the Comments button link to it,
   and so does the Copy permalink icon at the foot of each update, a real link for search engines and anyone without

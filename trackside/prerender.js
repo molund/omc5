@@ -1,7 +1,8 @@
 // Run after the client build (npm run build): writes Trackside as finished pages, with the text, title, description and
 // Open Graph tags in the HTML, for search engines and link previews:
-//   dist/trackside/index.html            the newest 10 updates
-//   dist/trackside/page/2/index.html …   the older ones, 10 a page
+//   dist/trackside/index.html            the featured updates: the newest 10 (the older featured ones load as the reader
+//                                        scrolls)
+//   dist/trackside/page/1/index.html …   every update, 10 a page
 //   dist/trackside/<slug>/index.html     each update on its own page (in the sitemap, not linked from the site)
 // dist/sitemap.xml, every page for search engines, so status.yaml is read in one place (lib/status.js). And
 // dist/velocity.svg, the progress card's velocity chart, from gantry-cycles.yaml (lib/velocityChart.js). And
@@ -61,24 +62,24 @@ writeFileSync(`dist/${FROZEN}`, JSON.stringify(frozen));
 console.log(`froze the comments of ${Object.keys(frozen).length} read-only update(s)`);
 
 const pages = Math.max(1, Math.ceil(status.history.length / PAGE_SIZE));
-for (let p = 1; p <= pages; p++)
-  await write(p === 1 ? "dist/trackside" : `dist/trackside/page/${p}`, {
-    page: p,
-  });
+await write("dist/trackside", { featured: true });
+for (let p = 1; p <= pages; p++) await write(`dist/trackside/page/${p}`, { page: p });
 // each update's own page, /trackside/<slug>/: just that update, with its own title, description and photo; and beside it
 // index.md, the same update as Markdown, for AI tools (written further down, with the feeds)
 for (const n of status.history) await write(`dist/trackside/${n.slug}`, { slug: n.slug });
 
 // dist/sitemap.xml, for search engines (submitted in Google Search Console, and listed in public/robots.txt):
-// the map, the pages of updates, each update's own page and the About page, each with when it last changed (a page of
+// the map, /trackside/, the pages of updates, each update's own page and the About page, each with when it last changed (a page of
 // updates, at its newest update or follow-up; the map, at status.yaml's `updated`). Not the animation launcher, /play/:
 // it only redirects to the map.
 const changed = (n) => n.followUps[0]?.time ?? n.time;
 const newest = (list) => new Date(Math.max(...list.map(changed)));
 const urls = [
   [SITE, status.updated ?? newest(status.history)],
+  // /trackside/, at its newest 10, which the newest change is always among
+  [`${SITE}trackside/`, newest(status.history.slice(0, PAGE_SIZE))],
   ...Array.from({ length: pages }, (_, i) => [
-    i === 0 ? `${SITE}trackside/` : `${SITE}trackside/page/${i + 1}/`,
+    `${SITE}trackside/page/${i + 1}/`,
     newest(status.history.slice(i * PAGE_SIZE, (i + 1) * PAGE_SIZE)),
   ]),
   // each update's own page, at its newest follow-up or its own time, with its photos (for image search)

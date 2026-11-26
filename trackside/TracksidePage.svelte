@@ -1,8 +1,8 @@
 <script>
-  // The Trackside page: every status note, newest first, each with its slug as its id (e.g.
-  // ?post=clipper-completes-span-36). It is prerendered at build time (trackside/prerender.js) as pages of 10
-  // (/trackside/, /trackside/page/2/, …), each with its own title, description and Open Graph photo; view says which one
-  // this is
+  // The Trackside page: status notes, newest first, each with its slug as its id (e.g.
+  // ?post=clipper-completes-span-36). It is prerendered at build time (trackside/prerender.js) as /trackside/, the
+  // featured updates ({ featured: true }), and as pages of 10 (/trackside/page/1/, /trackside/page/2/, …), each with its
+  // own title, description and Open Graph photo; view says which one this is
   import { onMount, tick } from "svelte";
   import { status, asOf, followUpTime } from "../src/lib/status.js";
   import { inline, plainText } from "../src/lib/inline.js";
@@ -12,7 +12,7 @@
   import Icon from "../src/Icon.svelte";
   import SIZES from "virtual:photo-sizes";
 
-  let { view = { page: 1 } } = $props();
+  let { view = { featured: true } } = $props();
 
   const MAP = import.meta.env.BASE_URL;
   const TRACKSIDE = `${MAP}trackside/`;
@@ -29,8 +29,8 @@
   const timeOnly = (t) => ` at ${asOf(t).split(" on ")[0]}`;
   // what an update's heading says: a post's title, or a status update's date and time
   const label = (n) => (n.post && n.title ? n.title : heading(n.time));
-  // the addresses of a page of updates, and in full, for the Open Graph tags
-  const pageUrl = (p) => (p === 1 ? TRACKSIDE : `${TRACKSIDE}page/${p}/`);
+  // the addresses of a page of updates (/trackside/ itself is the featured updates), and in full, for the Open Graph tags
+  const pageUrl = (p) => `${TRACKSIDE}page/${p}/`;
   const full = (path) => new URL(path, SITE).href;
   // update text cut into pieces: its links and bold (src/lib/inline.js), and outside the links, span numbers ('span 36',
   // 'spans 70 and 71') that link to the map's ?span=N view; a span already in `seen` (linked earlier in the same update)
@@ -95,6 +95,9 @@
   const PAGE_SIZE = 10;
   const pages = Math.max(1, Math.ceil(status.history.length / PAGE_SIZE));
   const page = $derived(Math.min(Math.max(1, view.page || 1), pages));
+  // /trackside/: the newest 10 updates, then, as the reader scrolls, the older ones with `featured: true`, 10 at a time;
+  // the pages of updates (/trackside/page/N/) have every update, with page numbers and no scrolling
+  const featured = $derived(!!view.featured);
   // the page numbers to show: the first, the last and the ones either side of the current page; a gap of one page shows
   // that page, a longer one an ellipsis ("gap")
   const pageItems = $derived.by(() => {
@@ -112,18 +115,14 @@
   // an update's own page, /trackside/<slug>/ ({ slug } as the view): just that update, listed in the sitemap but not linked
   // from the site, and linking only to the first page of Trackside
   const single = $derived(view.slug ? status.history.find((n) => n.slug === view.slug) : null);
-  // the page's own 10 updates, as built; in the browser, older pages are added under them as the reader scrolls
-  // (`more` pages so far), until the oldest update, leaving out the ones with `scroll: off`, which stay on their own pages
+  // the page's own 10 updates, as built (on /trackside/, the newest 10, featured or not)
   const pageShown = $derived(single ? [single] : status.history.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE));
+  // on /trackside/, in the browser, the older featured updates are added under them as the reader scrolls (`more`
+  // batches of 10 so far), until the oldest
+  const olderFeatured = status.history.slice(PAGE_SIZE).filter((n) => n.featured);
   let more = $state(0);
-  const shown = $derived(
-    single
-      ? [single]
-      : [...pageShown, ...status.history.slice(page * PAGE_SIZE, (page + more) * PAGE_SIZE).filter((n) => n.scroll)],
-  );
-  // the page of updates a note is on
-  const pageOf = (n) => Math.floor(status.history.indexOf(n) / PAGE_SIZE) + 1;
-  // set once the page is running in the browser: the page numbers give way to scrolling
+  const shown = $derived(featured ? [...pageShown, ...olderFeatured.slice(0, more * PAGE_SIZE)] : pageShown);
+  // set once /trackside/ is running in the browser: the page numbers give way to scrolling
   let scrolling = $state(false);
 
   // what search engines and link previews show: on a page of updates, the page's title, a fixed description, and the
@@ -132,9 +131,9 @@
   const title = $derived(
     single
       ? `${singleTitle} · Clayton Clipper Tracker`
-      : page > 1
-        ? `Trackside, page ${page} · Clayton Clipper Tracker`
-        : "Trackside · Clayton Clipper Tracker",
+      : featured
+        ? "Trackside · Clayton Clipper Tracker"
+        : `Trackside, page ${page} · Clayton Clipper Tracker`,
   );
   const description = $derived(
     single
@@ -144,7 +143,7 @@
   const image = $derived(
     single ? single.photo || single.block.find((m) => m.photo)?.photo : status.history.find((n) => n.photo)?.photo,
   );
-  const url = $derived(full(single ? `${TRACKSIDE}${single.slug}/` : pageUrl(page)));
+  const url = $derived(full(single ? `${TRACKSIDE}${single.slug}/` : featured ? TRACKSIDE : pageUrl(page)));
 
   // on the pages of updates, a long update is cut off at CLAMP rem with a fade and a Read more link to its own page; one
   // that would hide less than CLAMP_SLACK rem more shows whole (measured once the page is in the browser, so the built
@@ -181,13 +180,9 @@
     // comments are on the updates' own pages now: an old ?post=<slug>&comments link goes to its thread there
     if (id && params.has("comments") && status.history.some((n) => n.slug === id))
       return location.replace(`${TRACKSIDE}${id}/#comments`);
-    if (!single) {
-      measureClamps();
-      scrolling = true;
-      addEventListener("scroll", followPage, { passive: true });
-    }
+    if (!single) measureClamps();
+    if (featured) scrolling = true;
     if (id) document.getElementById(id)?.scrollIntoView();
-    return () => removeEventListener("scroll", followPage);
   });
   // the comment counts for updates whose comments are on (one request to the comment server for them all), and the
   // read-only threads, which come from the site itself, only when one of the updates has one
@@ -204,11 +199,11 @@
       .filter((el) => el.scrollHeight <= (CLAMP + CLAMP_SLACK) * rem)
       .map((el) => el.dataset.body);
   }
-  // the next page's updates, added under the last one when the reader nears the bottom (a screen away)
+  // the next 10 older featured updates, added under the last one when the reader nears the bottom (a screen away)
   async function loadOlder() {
     more += 1;
-    track("load_older", { page: page + more });
-    fetchExtras(status.history.slice((page + more - 1) * PAGE_SIZE, (page + more) * PAGE_SIZE).filter((n) => n.scroll));
+    track("load_older", { batch: more });
+    fetchExtras(olderFeatured.slice((more - 1) * PAGE_SIZE, more * PAGE_SIZE));
     await tick();
     measureClamps();
   }
@@ -218,19 +213,6 @@
     });
     observer.observe(el);
     return { destroy: () => observer.disconnect() };
-  }
-  // the address follows the page of updates the reader is in (the last update whose top is above the middle of the
-  // screen), so a reload, a shared link or Back comes back near the same place
-  let addressPage = 0;
-  function followPage() {
-    let at = page;
-    for (const el of document.querySelectorAll("article[data-page]")) {
-      if (el.getBoundingClientRect().top > innerHeight / 2) break;
-      at = +el.dataset.page;
-    }
-    if (at === (addressPage || page)) return;
-    addressPage = at;
-    history.replaceState(history.state, "", pageUrl(at));
   }
   // a span link or a photo in an update, for Google Analytics; the update is the article the link is in
   const slugOf = (e) => e.currentTarget.closest("article")?.id;
@@ -384,7 +366,7 @@
   <!-- what the page is, for search engines and AI tools: an update's own page is a blog post, with its dates and author; the
        first page of updates is the blog, and an older page a collection of its posts -->
   {#if single}{@html ldScript(blogPosting(single, singleTitle))}{:else}{@html ldScript(
-      blogPage(pageShown, page, url, (n) => n.title || heading(n.time)),
+      blogPage(pageShown, featured ? null : page, url, (n) => n.title || heading(n.time)),
     )}{/if}
 </svelte:head>
 
@@ -478,11 +460,7 @@
     {@const plan = linkPlan(n)}
     <!-- an update a link jumps to lands below the bar, not under it; each update is a card, with a gap above it, so
          the comments link reads as the end of its own update rather than the start of the next -->
-    <article
-      id={n.slug}
-      data-page={single ? null : pageOf(n)}
-      class="update-card scroll-mt-[calc(var(--spacing)*19_+_env(safe-area-inset-top,0px))] mt-5"
-    >
+    <article id={n.slug} class="update-card scroll-mt-[calc(var(--spacing)*19_+_env(safe-area-inset-top,0px))] mt-5">
       <!-- a title links to the update's own page (as the permalink button at the foot of the card does), except on that
            page itself -->
       <!-- an update with a title leads with its date in gold (a post's date, a status update's date and time), then the
@@ -570,10 +548,10 @@
        highlighted. The first and last pages and the ones either side of the current page are always shown, and a longer
        run is collapsed to an ellipsis. Links to the prerendered pages, so search engines follow them too. On a phone,
        Previous and Next shrink to their arrows. -->
-  <!-- in the browser, the next page loads as the reader nears the bottom, and the page numbers aren't shown; the built
-       pages keep them, for search engines and anyone without JavaScript -->
+  <!-- on /trackside/ in the browser, the next older featured updates load as the reader nears the bottom, and the page
+       numbers aren't shown; the built page keeps them, for search engines and anyone without JavaScript -->
   {#if scrolling}
-    {#key more}{#if page + more < pages}<div use:nearBottom></div>{/if}{/key}
+    {#key more}{#if more * PAGE_SIZE < olderFeatured.length}<div use:nearBottom></div>{/if}{/key}
   {:else if !single && pages > 1}
     <nav class="mx-auto mt-6 flex w-fit items-center gap-1" aria-label="Pages of updates">
       {#if page > 1}<a class="page-step" href={pageUrl(page - 1)} rel="prev" aria-label="Previous page"

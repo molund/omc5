@@ -107,10 +107,10 @@ export const ldScript = (data) =>
 const BLOG_ID = `${SITE}trackside/#blog`;
 
 /**
- * A page of updates: the first page as the schema.org Blog, with the updates on it; an older page as a CollectionPage of
+ * A page of updates: /trackside/ as the schema.org Blog, with its newest updates; a numbered page as a CollectionPage of
  * that blog.
  * @param {import("./status.js").Note[]} shown The updates on the page.
- * @param {number} page Which page of updates it is.
+ * @param {number|null} page Which numbered page of updates it is (/trackside/page/N/); null for /trackside/.
  * @param {string} url The page's address, in full.
  * @param {(n: import("./status.js").Note) => string} headline An update's title, or its date for a status update.
  */
@@ -125,7 +125,7 @@ export function blogPage(shown, page, url, headline) {
   }));
   const description =
     "Updates and photos from along the Surrey Langley SkyTrain guideway, following the Clayton Clipper gantry span by span.";
-  return page === 1
+  return page === null
     ? {
         "@context": "https://schema.org",
         "@type": "Blog",

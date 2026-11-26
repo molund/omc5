@@ -15,8 +15,9 @@ spans-per-week: 1.11
 #   note with the same title gets -2). To keep the anchor when a title is edited, add `slug: words-here` under the note.
 # - `comments: off` takes away a note's Comments button; `comments: readonly` keeps it, but shows the comments as they were
 #   when the site was last built, with no way to add one. Left out, they're on.
-# - `scroll: off` keeps a note on its own page of updates on Trackside, but out of the scroll that adds older updates under
-#   the page the reader opened. Left out, it's in.
+# - `featured: true` puts a status update in the scroll on /trackside/ once it's older than the newest 10 (which are always
+#   in it); left out, it isn't. A blog post is the other way round: featured unless it has `featured: false`. Every note is
+#   on its page of updates, /trackside/page/N/, either way.
 # - `post: true` makes a note a post instead of a status update: it never shows on the progress card, and its key can be a
 #   date alone ("2026-11-01").
 # - The progress card shows the newest note's summary, or its newest follow-up's, until midnight BC time at the end of the
@@ -28,6 +29,7 @@ notes:
   - 2026-11-26T06:30-07:00: "8-night Pacific Highway crossing begins today"
     slug: construction-update-for-thursday-nov-26-2026
     summary: "Tonight's [overnight turn restrictions](https://surreylangleyskytrain.gov.bc.ca/app/uploads/sites/938/2026/11/SLS-20261123-Traffic-Update-at-Fraser-Highway-and-Highway-15.pdf) should signal the start of the crawl over Highway 15."
+    featured: true
     block:
       - "The Clayton Clipper must carry itself across spans 43–47, including the steel girders crossing Highway 15 (it will always be 176 Street to me), before reaching span 48 on the west side of the intersection. The notice is for eight nights, from Nov. 26 to Dec. 3."
       - "Push the [play](https://clayton-clipper.olund.ca/play/?span=42) button on the map to see an animation of what it might look like. Five spans in eight days will definitely put a spike in my velocity chart."
@@ -41,6 +43,7 @@ notes:
   - 2026-11-25: "Steel girders staged near King George Station"
     summary: "Fraser Valley & Southern posted a walking video of the stretch of Fraser Highway near King George Station, between 140 St and Whalley Boulevard, where the Surrey Sprinter is headed."
     post: true
+    featured: false
     block:
       - "In his own words on SkyscraperPage: “Steel spans have begun to be staged along the Quibble Creek section. Fraser Highway is closed here until 12 December.”"
       - "There are about 6 or 7 hammerhead pillars between the tulip pillars and the Expo Line. I wouldn’t be surprised if most of them end up with concrete girders, like at 203 St, the SFMSF and the Green Timbers pocket track, and steel is only used where the two lines join."
@@ -81,6 +84,7 @@ notes:
   - 2026-11-19T16:00-07:00: "Mobile crane lifts a Clayton Clipper support into place"
     slug: construction-update-for-thursday-nov-19-2026-2
     summary: "A mobile crane is doing a job the Clayton Clipper can’t do by itself: lifting one of its supports from the ground up to the other side of span 42."
+    featured: true
     block:
       - "The front support is off its long blue legs, and one of the longer supports has taken its place at the front. The support that hangs off the back as counter ballast during moves was sitting on the ground beside the crane. By my 6:30 p.m. check-in, it was already up."
       - "I’d already given up on animating this move. Now that I’ve seen it, I’m glad I did. I never would’ve guessed this sequence."
@@ -92,11 +96,11 @@ notes:
           caption: "8:30 p.m."
   - 2026-11-19T08:15-07:00: "Clayton Clipper construction update for Thursday, Nov. 19, 2026"
     summary: "The Clayton Clipper’s velocity is holding at 1.87—for now."
-    scroll: off
     block:
       - "The code won’t change it until the crew begins the next gantry-cycle stage. Moving the gantry to the next position counts as a single stage. I’m expecting a significant drop before work starts on span 42."
   - 2026-11-18T07:30-07:00: "The Surrey Langley SkyTrain thread is back"
     summary: "The famous [Surrey Langley SkyTrain thread](https://skyscraperpage.com/forum/threads/surrey-langley-skytrain-expo-line-extension-u-c.265544/), dating back to 2008, is finally back online on SkyscraperPage."
+    featured: true
     block:
       - "The site had been down since about October 21, after a PHP shell exploit forced an upgrade from the version of vBulletin 3 it had been running, un-upgraded, for the last 15 years."
       - "It’s now running xenForo, which I find a much nicer, more modern experience."
@@ -105,7 +109,6 @@ notes:
       - "I’ve been playing Towers of Hanoi with the gantry animation, and there are too many variables to even bother fixing it at this point."
   - 2026-11-16T09:00-07:00: "Clayton Clipper construction update for Monday, Nov. 16, 2026"
     summary: "Last night’s lightning storm cost the Clayton Clipper a night shift."
-    scroll: off
     block:
       - "That put a major dent in the velocity, on top of my weekend bug fix that had already knocked it down from 2.82 to 2.53."
     follow-up:
@@ -113,6 +116,7 @@ notes:
           summary: "There’s no night work again tonight. And this time there’s no thunderstorm I can blame."
   - 2026-11-14T09:15-07:00: "Clayton Clipper construction update for Saturday, Nov. 14, 2026"
     summary: "The Clayton Clipper is closing in on Hwy 15, which could change my lunch plans next week."
+    featured: true
     block:
       - "The Clayton Clipper is at span 41, just two spans from the Highway 15 section. Piper and I might be eating a lot of Budapest Langos from the food truck at the Honeybee Centre next week so I can watch the gantry cross the five-span double-girder section."
       - photo:
@@ -130,7 +134,7 @@ notes:
   - 2026-11-11T08:45-07:00: "Clayton Clipper construction update for Wednesday, Nov. 11, 2026"
     summary: "The night shift finished hanging span 40 last night."
     comments: off
-    scroll: off
+    featured: true
     block:
       - "All is quiet on the job site this morning, with no visible construction activity underway at the time of the visit. With today being Remembrance Day, the crews are likely taking the day off in observance of the holiday. I'll check in later to see whether any night shift activity is underway or if the entire site remains shut down for the full 24 hours."
       - "Future velocity calculations will account for statutory holidays by extending the 168-hour week window by the hours without gantry work, up to 24, ensuring that scheduled holidays do not unfairly penalize crew velocity."
@@ -170,7 +174,6 @@ notes:
   - 2026-11-07T14:45-07:00: "Clayton Clipper construction update for Saturday, Nov. 7, 2026"
     summary: "Made it to span 39!"
     comments: off
-    scroll: off
     photo:
       file: 2026-11-07-photo.jpg
       caption: "Clayton Clipper launching gantry at span 39/105 on its journey to Bakerview 166 St Station."
@@ -185,7 +188,6 @@ notes:
   - 2026-11-06T08:45-07:00: "Clayton Clipper construction update for Friday, Nov. 6, 2026"
     summary: "Another precast concrete girder was installed at the span 35 eastbound mainline overnight."
     comments: readonly
-    scroll: off
     follow-up:
       - 2026-11-06T18:00-07:00:
           summary: "The rain finally stopped, and I got to do the full loop with Piper."
@@ -195,20 +197,17 @@ notes:
   - 2026-11-05T10:00-07:00: "Clayton Clipper construction update for Thursday, Nov. 5, 2026"
     summary: "The Clayton Clipper has moved to span 38. It's getting faster: the crews are working 24/6, and the last span took just two days."
     comments: off
-    scroll: off
   - 2026-11-04: "I found someone who posts Clayton Clipper videos on TikTok"
     summary: "Check out this [drive-by footage](https://vt.tiktok.com/ZSpA9msMw/) by @Tracylynn on November 4th"
     post: true
     comments: off
-    scroll: off
+    featured: false
   - 2026-11-03T07:15-07:00: "Clayton Clipper construction update for Tuesday, Nov. 3, 2026"
     summary: "Both precast girders for span 34 were installed overnight by mobile cranes. The Clayton Clipper is beginning the move to the next span."
     comments: off
-    scroll: off
   - 2026-11-02T09:15-07:00: "Clayton Clipper construction update for Monday, Nov. 2, 2026"
     summary: "The Night Shift must’ve worked Sunday night. Span 36 is fully glued. Crews have begun post-tensioning."
     comments: off
-    scroll: off
     follow-up:
       - 2026-11-02T17:45-07:00:
           summary: "Post-tensioning is done on span 36, and the cables are down. The Clayton Clipper isn't going anywhere yet: all 12 hangers are still up."
@@ -229,6 +228,7 @@ notes:
   - 2026-10-31T15:15-07:00: "Surrey Sprinter hangs its first span past Green Timbers"
     summary: "Reporting from the bike at the other end of the line: the Surrey Sprinter has hung all the segments for its first span after leaving Green Timbers Station."
     comments: off
+    featured: true
     photo:
       file: 2026-10-31-sprinter-green-timbers.jpg
       caption: "The Surrey Sprinter over 140 St and Fraser Highway, with its first span past Green Timbers Station hung below it."
@@ -242,7 +242,7 @@ notes:
   - 2026-10-31T14:00-07:00: "Clayton Clipper completes span 36; tulip at 70/71 built"
     summary: "Check-in from the bike: all the segments are hung and span 36 is marked as complete. Now pedalling west of 176 St to see what the rest of the line is up to."
     comments: off
-    scroll: off
+    featured: true
     block:
       - "The long-missing tulip where spans 70 and 71 meet, by the golf course, has finally been built. It was the last of the driven foundations. From 71/72 on, they switched to bored foundations."
       - photo:
@@ -251,7 +251,6 @@ notes:
       - "If you know the story behind this pillar, let me know in the comments."
   - 2026-10-31T09:30-07:00: "Clayton Clipper: only three segments hung for span 36"
     summary: "Only three segments have been hung for span 36. I'm guessing the night crew took Friday night off."
-    scroll: off
     photo:
       file: 2026-10-31-piper-and-toby.jpg
       caption: "My two trusty assistants on our way to look at cranes. Piper on the left is a four-year-old Bernedoodle. Toby on the right is an 11-year-old mini Australian Shepherd."
@@ -269,32 +268,28 @@ notes:
   - 2026-10-30T12:45-07:00: "Clayton Clipper construction update for Friday, Oct. 30, 2026"
     summary: "The Clayton Clipper has started moving its supports, getting ready to move from span 35 to span 36."
     comments: off
-    scroll: off
   - 2026-10-29T06:45-07:00: "Clayton Clipper finishes hanging span 35; new girder arrives"
     summary: "All segments for span 35 are hung. A new precast girder arrived at the construction yard overnight. It will likely be installed in span 34, along with the girder that was already on site."
     comments: off
-    scroll: off
     follow-up:
       - 2026-10-29T18:30-07:00:
           summary: "Span 35's segments are glued, and Dywidag is post-tensioning now. The night shift should finish it. That puts the Clayton Clipper a third of the way along its route: span 35 of 105."
   - 2026-10-26T20:00-07:00: "Clayton Clipper construction update for Monday, Oct. 26, 2026"
     summary: "The Clayton Clipper is about to lift the last segment for span 34."
     comments: off
-    scroll: off
     photo:
       file: 2026-10-26-clipper-span-34-night.jpg
       caption: "The Clayton Clipper all lit up for the night shift, about to lift span 34's last segment. Proof that even I get lucky with a camera now and then."
   - 2026-10-23T16:30-07:00: "Clayton Clipper construction update for Friday, Oct. 23, 2026"
     summary: "Span 33 is hung and glued, and marked as complete."
     comments: off
-    scroll: off
     photo:
       file: 2026-10-23-clipper-span-33.jpg
       caption: "The Clayton Clipper with span 33 hung and glued below it."
   - 2026-10-15T17:15-07:00: "Clayton Clipper crosses span 31's double precast girders"
     summary: "After being stuck in the same place for over a month, the Clayton Clipper finally made it across the double precast girders at span 31."
     comments: off
-    scroll: off
+    featured: true
     photo:
       file: 2026-10-15-clipper-crosses-span-31.jpg
       caption: "The Clayton Clipper, finally on the move again: across span 31 and ready to start lifting segments for span 32."
