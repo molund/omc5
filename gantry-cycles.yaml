@@ -21,16 +21,7 @@ calculated-chart-data:
   - 2026-11-20T13:00-07:00: 1.25
   - 2026-11-20T10:30-07:00: 1.32
 entries:
-  - 2026-11-26T06:30-07:00:
-      span: 42
-      stage: post-tensioning started
-  - 2026-11-25T16:00-07:00:
-      span: 42
-      stage: post-tensioning started
-  - 2026-11-25T11:45-07:00:
-      span: 42
-      stage: post-tensioning started
-  - 2026-11-23T19:15-07:00:
+  - 2026-11-26T09:00-07:00:
       span: 42
       stage: post-tensioning started
   - 2026-11-23T13:00-07:00:
@@ -70,21 +61,12 @@ entries:
       span: 41
       stage: supports started
       progress: 95
-  - 2026-11-19T16:00-07:00:
-      span: 41
-      stage: supports started
-  - 2026-11-19T08:15-07:00:
-      span: 41
-      stage: supports started
   - 2026-11-18T17:15-07:00:
       span: 41
       stage: supports started
   - 2026-11-18T07:30-07:00:
       span: 41
       stage: cables down
-  - 2026-11-17T12:30-07:00:
-      span: 41
-      stage: post-tensioning started
   - 2026-11-17T09:30-07:00:
       span: 41
       stage: post-tensioning started
@@ -130,9 +112,6 @@ entries:
   - 2026-11-12T10:15-07:00:
       span: 40
       stage: gluing started
-  - 2026-11-11T21:15-07:00:
-      span: 40
-      stage: hung
   - 2026-11-11T08:45-07:00:
       span: 40
       stage: hung
@@ -158,9 +137,6 @@ entries:
       stage: hanging started
       progress: 50
       note: "6/12 spans hung"
-  - 2026-11-07T18:00-07:00:
-      span: 39
-      stage: arrived at span
   - 2026-11-07T14:45-07:00:
       span: 39
       stage: arrived at span
@@ -177,15 +153,9 @@ entries:
   - 2026-11-06T22:00-07:00:
       span: 38
       stage: hangers down
-  - 2026-11-06T18:00-07:00:
-      span: 38
-      stage: cables down
   - 2026-11-06T17:30-07:00:
       span: 38
       stage: cables down
-  - 2026-11-06T08:45-07:00:
-      span: 38
-      stage: post-tensioning started
   - 2026-11-06T08:00-07:00:
       span: 38
       stage: post-tensioning started
@@ -226,15 +196,6 @@ entries:
   - 2026-11-02T09:15-07:00:
       span: 36
       stage: post-tensioning started
-  - 2026-10-31T16:15-07:00:
-      span: 36
-      stage: hung
-  - 2026-10-31T15:45-07:00:
-      span: 36
-      stage: hung
-  - 2026-10-31T15:15-07:00:
-      span: 36
-      stage: hung
   - 2026-10-31T14:00-07:00:
       span: 36
       stage: hung
