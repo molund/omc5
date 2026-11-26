@@ -12,8 +12,9 @@ the real text, and then Svelte takes over in the browser for the comments and co
 ## Pages
 
 - `/trackside/` — the featured updates: the newest 10, always, then, as the reader scrolls, the older ones with
-  `featured: true` in `status.yaml`, 10 at a time, until the oldest; then the footer. The address stays `/trackside/`.
-  The built page ends with numbered page links instead (for search engines and anyone without JavaScript).
+  `featured: true` in `status.yaml`, 10 at a time, until the oldest; then an "Every update, page by page" button to
+  `/trackside/page/2/`. The address stays `/trackside/`. The built page ends with numbered page links instead (for
+  search engines and anyone without JavaScript).
 - `/trackside/page/1/`, `/trackside/page/2/` and so on — every update, featured or not, 10 a page, newest first, with
   numbered page links and no scrolling.
 - On both, a long update is cut off at 32rem with a fade and a Read more link to its own page; one that would hide less

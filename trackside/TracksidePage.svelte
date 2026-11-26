@@ -549,9 +549,14 @@
        run is collapsed to an ellipsis. Links to the prerendered pages, so search engines follow them too. On a phone,
        Previous and Next shrink to their arrows. -->
   <!-- on /trackside/ in the browser, the next older featured updates load as the reader nears the bottom, and the page
-       numbers aren't shown; the built page keeps them, for search engines and anyone without JavaScript -->
+       numbers aren't shown; the built page keeps them, for search engines and anyone without JavaScript. Once the last
+       featured update is in, a button goes on to page 2 of every update (page 1 is the newest 10 the reader has just
+       seen, one Previous away) -->
   {#if scrolling}
-    {#key more}{#if more * PAGE_SIZE < olderFeatured.length}<div use:nearBottom></div>{/if}{/key}
+    {#key more}{#if more * PAGE_SIZE < olderFeatured.length}<div use:nearBottom></div>
+      {:else if pages > 1}<p class="mt-6 mb-0 flex justify-center">
+          <a class="pager-link" href={pageUrl(2)}>Every update, page by page ›</a>
+        </p>{/if}{/key}
   {:else if !single && pages > 1}
     <nav class="mx-auto mt-6 flex w-fit items-center gap-1" aria-label="Pages of updates">
       {#if page > 1}<a class="page-step" href={pageUrl(page - 1)} rel="prev" aria-label="Previous page"
