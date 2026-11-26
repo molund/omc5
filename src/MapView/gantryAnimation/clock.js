@@ -23,7 +23,7 @@ let speedIndex = 0,
   captionSlow = false,
   filling = false;
 
-/** The speed panel's choice (SpeedPanel.svelte): 0.5, 1, 1.5, 2, 3, 4 or 5 times every speed above, for the rest of the visit. */
+/** The speed panel's choice (SpeedPanel.svelte): 0.5, 1, 1.5, 2, 3, 4 or 5 times every speed above, while the animation plays (1, Normal, again once it stops). */
 let multiplier = 1;
 
 /**

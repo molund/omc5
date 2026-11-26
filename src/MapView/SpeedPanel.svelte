@@ -3,9 +3,13 @@
    * The speed panel, while the gantry animates: a narrow, see-through rounded panel that slides in from the right edge,
    * halfway down, clear of the buttons at the top and the Esri credits at the bottom, with seven speeds (×5, ×4, ×3, ×2, ×1.5, Normal, ×0.5) that multiply the animation's own (clock.js). A swipe in from the edge
    * pulls it out under the finger, as does dragging the grip; a tap on the grip opens or closes it, and a swipe back, a
-   * tap on the map or picking a speed closes it. The choice holds for the rest of the visit.
+   * tap on the map or picking a speed closes it. The choice holds while the animation plays; the panel goes when it stops,
+   * and the speed goes back to Normal with it.
    */
+  import { onDestroy } from "svelte";
   import { setMultiplier, speedMultiplier } from "./gantryAnimation/clock.js";
+
+  onDestroy(() => setMultiplier(1));
 
   const SPEEDS = [
     { m: 5, label: "×5" },
