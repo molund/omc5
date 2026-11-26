@@ -1,6 +1,6 @@
 <script>
   // panel: a window with a sidebar (show or hide the layer panel); menu: three lines (open the menu on a phone); close: a
-  // cross (close it, or the progress card); info: an information icon (bring the progress card back); comment: a speech bubble (comment on the newest update); comment-off: the same, struck through (comments are off); chevron: a "›" (fold the layer switches out or away); minus, plus: a − or + (zoom out or in); fit: four corner brackets (zoom to fit); centre: a crosshair (center without zooming); share: three joined dots (share the animation, or copy an update's permalink); back, forward: a circular arrow round −1 or +1 (a span back or on in the animation); pause, play: two bars or a triangle (pause the gantry animation or play it on); github: the GitHub mark (link to the repo); map: a folded map (the Map section); news: a page of text (the Trackside section)
+  // cross (close it, or the progress card); info: an information icon (bring the progress card back); question: a question mark in a circle (the About page); comment: a speech bubble (comment on the newest update); comment-off: the same, struck through (comments are off); chevron: a "›" (fold the layer switches out or away); minus, plus: a − or + (zoom out or in); fit: four corner brackets (zoom to fit); centre: a crosshair (center without zooming); share: three joined dots (share the animation, or copy an update's permalink); back, forward: a circular arrow round −1 or +1 (a span back or on in the animation); pause, play: two bars or a triangle (pause the gantry animation or play it on); github: the GitHub mark (link to the repo); map: a folded map (the Map section); news: a page of text (the Trackside section)
   let { kind = "panel" } = $props();
 </script>
 
@@ -73,6 +73,11 @@
     <circle cx="9" cy="9" r="7.25" />
     <line x1="9" y1="8" x2="9" y2="12.75" />
     <circle cx="9" cy="5.25" r="0.6" fill="currentColor" />
+  {:else if kind === "question"}
+    <!-- a question mark in a circle -->
+    <circle cx="9" cy="9" r="7.25" />
+    <path d="M7 7a2 2 0 1 1 2.75 1.85c-.5.2-.75.6-.75 1.15v.5" stroke-linejoin="round" />
+    <circle cx="9" cy="12.75" r="0.6" fill="currentColor" />
   {:else if kind === "minus" || kind === "plus"}
     <line x1="4.5" y1="9" x2="13.5" y2="9" />
     {#if kind === "plus"}<line x1="9" y1="4.5" x2="9" y2="13.5" />{/if}

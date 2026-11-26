@@ -206,7 +206,7 @@
     </div>
     <!-- the footer links, side by side and kept small: About and the source code, each with its mark -->
     <p class="fine-print mt-auto flex gap-4 pt-8">
-      <a class={LINK} href="{import.meta.env.BASE_URL}about/"><Icon kind="info" />About</a>
+      <a class={LINK} href="{import.meta.env.BASE_URL}about/"><Icon kind="question" />About</a>
       <a class={LINK} href="https://github.com/molund/omc5"
         ><svg viewBox="0 0 16 16" aria-hidden="true"
           ><path
