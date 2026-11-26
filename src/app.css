@@ -171,10 +171,10 @@ body::before {
   }
   /* small spaced-out capitals in grey: the page and card titles; the size is set where it's used */
   .eyebrow {
-    @apply m-0 font-bold tracking-[0.3em] text-(--mute) uppercase;
+    @apply m-0 font-bold tracking-[0.2em] text-(--mute) uppercase;
   }
   .page-header-title {
-    @apply m-0 font-bold tracking-[0.3em] text-(--mute) uppercase;
+    @apply m-0 font-bold tracking-[0.2em] text-(--mute) uppercase;
   }
   .eyebrow span,
   .page-header-title {
