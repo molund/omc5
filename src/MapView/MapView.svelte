@@ -37,7 +37,8 @@
   import { applyAddress } from "../lib/appState/hash.svelte.js";
   import ProgressCard from "../ProgressCard.svelte";
   import Caption from "./Caption.svelte";
-  import { CAPTION_PAUSE, captionNow, clearCaptions, onOpeningHold } from "./captions.js";
+  import SpeedPanel from "./SpeedPanel.svelte";
+  import { CAPTION_PAUSE, captionNow, captionPace, clearCaptions, onOpeningHold } from "./captions.js";
   import { hideArrow, showArrow } from "./captionArrow.js";
   import { track, trackOnce } from "../lib/track.js";
 
@@ -80,11 +81,12 @@
           if (now.text !== caption) now.point ? showArrow(els.svg, now.point) : hideArrow();
           showCaptionLayer(now.layer);
           caption = now.text;
-          // a caption worth stopping for holds the gantry for CAPTION_PAUSE, as the Pause button does (its time is left
-          // out of the clock, so the caption stays up as long as ever); not if the Pause button holds it by then
+          // a caption worth stopping for holds the gantry for CAPTION_PAUSE (shorter at the speed panel's ×1.5 to ×5), as the
+          // Pause button does (its time is left out of the clock, so the caption stays up as long as ever); not if the
+          // Pause button holds it by then
           if (now.pause && !ui.gantryPaused) {
             holdGantry(els.svg);
-            setTimeout(() => !ui.gantryPaused && resumeGantry(), CAPTION_PAUSE * 1000);
+            setTimeout(() => !ui.gantryPaused && resumeGantry(), (CAPTION_PAUSE * 1000) / captionPace());
           }
         }, 250);
       ui.animationTime = 0;
@@ -687,4 +689,6 @@
   {/if}
   <Caption text={caption} />
   <ProgressCard />
+  <!-- the speed panel, only while the gantry animates -->
+  {#if ui.gantry && ui.gantryPlaying}<SpeedPanel />{/if}
 </div>

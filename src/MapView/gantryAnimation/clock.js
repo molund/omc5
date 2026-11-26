@@ -23,8 +23,15 @@ let speedIndex = 0,
   captionSlow = false,
   filling = false;
 
-/** The speed it should play at now: the fill's, a caption's, or the cycle's. */
-const wanted = () => (filling ? FILL_SPEED : captionSlow ? CAPTION_SPEED : SPEEDS[speedIndex]);
+/** The speed panel's choice (SpeedPanel.svelte): 0.5, 1, 1.5, 2, 3, 4 or 5 times every speed above, for the rest of the visit. */
+let multiplier = 1;
+
+/**
+ * The speed it should play at now: the fill's, a caption's, or the cycle's, times the speed panel's choice. From ×1.5 to
+ * ×5 a caption doesn't slow it down: the captions hurry along instead (captions.js).
+ */
+const wanted = () =>
+  (filling ? FILL_SPEED : captionSlow && multiplier <= 1 ? CAPTION_SPEED : SPEEDS[speedIndex]) * multiplier;
 
 /**
  * The animation's time as written (milliseconds of the steps' own times, before SPEED divides them), the time held by the
@@ -72,6 +79,15 @@ function applySpeed() {
 /** Sets how fast the moves play: SPEEDS[i] (unless a caption is up). */
 export const setSpeed = (i) => {
   speedIndex = i;
+  applySpeed();
+};
+
+/** The speed panel's choice now (see `multiplier`). */
+export const speedMultiplier = () => multiplier;
+
+/** Plays everything `m` times as fast as it would otherwise (the speed panel), the moves under way included. */
+export const setMultiplier = (m) => {
+  multiplier = m;
   applySpeed();
 };
 

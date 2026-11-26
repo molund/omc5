@@ -47,6 +47,11 @@
   /* which way the progress card's spans per week went: a muted green and red, to sit with the slate, gold and purple */
   --up: light-dark(#4f8a6b, #7fbf9a);
   --down: light-dark(#b0564f, #e0928b);
+  /* the speed panel over the aerial (MapView/SpeedPanel.svelte): a see-through dark shade with white on it, and the
+     chosen speed's dark text on white; the same in light and dark mode, as the aerial doesn't change */
+  --map-shade: #0f141a;
+  --on-map: #ffffff;
+  --on-map-ink: #1f2933;
 }
 :root[data-theme="light"] {
   color-scheme: light;

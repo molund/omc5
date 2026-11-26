@@ -22,7 +22,7 @@
 
 import CAPTIONS from "../../captions.json";
 import { onStep } from "../lib/animationMark.js";
-import { SPEED, clock, playClock, setCaptionSlow } from "./gantryAnimation/clock.js";
+import { SPEED, clock, playClock, setCaptionSlow, speedMultiplier } from "./gantryAnimation/clock.js";
 
 /** How long a caption with `pause` holds the gantry, in seconds (the same for every caption). */
 export const CAPTION_PAUSE = 1.5;
@@ -35,10 +35,15 @@ const READ_CPS = 17,
   READ_FIRST_MIN = 7000,
   READ_MIN = 5000;
 
+/** How much faster the captions go: the speed panel's ×1.5 to ×5 (they don't slow the animation down then, clock.js); at
+ * ×1 and ×0.5, as written. */
+export const captionPace = () => Math.max(1, speedMultiplier());
+
 /** How long a part shows, in milliseconds: its reading time, or `seconds` when the caption gives it; `first` for a
- * caption's first part. */
+ * caption's first part; shorter at the speed panel's ×1.5 to ×5 (captionPace()). */
 const readTime = (text, seconds, first) =>
-  seconds ? seconds * 1000 : Math.max(first ? READ_FIRST_MIN : READ_MIN, (text.length / READ_CPS) * 1000);
+  (seconds ? seconds * 1000 : Math.max(first ? READ_FIRST_MIN : READ_MIN, (text.length / READ_CPS) * 1000)) /
+  captionPace();
 
 /** Captions waiting for their time (`due` on playClock(), the steps' own time), and the parts of the one showing, each
  * with its own time (`from` to `until` on clock(): read at the reader's pace). */
@@ -65,13 +70,13 @@ export function onOpeningHold(fn) {
 
 /** Holds the gantry and times caption `c`'s parts from SETTLE on. */
 function open(c) {
-  let from = performance.now() + SETTLE,
+  let from = performance.now() + SETTLE / captionPace(),
     held = from;
   const parts = c.parts.map((text, i) => {
     const until = from + readTime(text, c.seconds, i === 0),
       part = { text, point: c.point ?? null, layer: c.layer ?? null, from, until };
     // the hold lasts CAPTION_PAUSE once the caption comes up, however long it shows
-    if (i === 0) held = from + CAPTION_PAUSE * 1000;
+    if (i === 0) held = from + (CAPTION_PAUSE * 1000) / captionPace();
     from = until;
     return part;
   });
