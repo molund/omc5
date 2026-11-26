@@ -251,7 +251,7 @@
     class="absolute top-3 right-3 z-5 w-60 max-w-[calc(100%_-_var(--spacing)*6)] rounded-lg border border-(--line) bg-(--panel) px-3.5 pt-3 pb-3.5 text-(--ink) shadow-card"
   >
     <!-- the title: the Clayton Clipper logo with "Progress" beside it, small and spaced out, as in Trackside's header -->
-    <div class="eyebrow flex items-center gap-2 pr-6 text-xs">
+    <div class="eyebrow flex items-center gap-1.25 pr-6 text-xs">
       <img
         class="h-7.5 w-auto logo"
         src="{import.meta.env.BASE_URL}images/logo.png"

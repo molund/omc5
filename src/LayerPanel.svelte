@@ -74,7 +74,7 @@
       <div class="mb-2 flex items-center justify-between gap-2">
         <!-- the title: the Clayton Clipper logo, which the Map row below says where you are under; not a heading, since the
            page's one h1 is the hidden text in index.html -->
-        <p class="eyebrow flex items-center gap-2.5 text-xs">
+        <p class="eyebrow flex items-center gap-1.75 text-xs">
           <img
             class="h-9 w-auto logo"
             src="{import.meta.env.BASE_URL}images/logo.png"
