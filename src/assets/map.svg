@@ -1590,6 +1590,9 @@
            12.6 across. Drawn in units of 0.188, from the tip of the eastbound arrow, where a → at 26.6 from the east end of
            the span ends (7.5 past its centre); the shafts are 1.13 wide, as thick as the → text. Hidden with the other
            arrows by the Direction arrows switch (g.switch-arrow, layerSwitches.js) -->
+      <!-- 2026-11-26: the switch arrowheads drawn open, like the → glyph's (were filled triangles 26 long and 30 across): arms
+           22 back and 15 out from the tip (the size of the ← and → on an iPhone), as thick as the shafts, which now run to the tip. Lines
+           4.2 wide, 0.79 on the map (were 6, 1.13), as thick as the ← and → on an iPhone -->
       <!-- Span 34 and 33 exit ramp direction arrows (eastbound train direction), placed as the span 35 ramp arrow was: 26.6
            from the east end of the span, across the ramp girder as that one was, turned to the girder -->
       <text
@@ -1614,26 +1617,26 @@
       </text>
       <!-- Span 35: the ramp leaves the eastbound track -->
       <g class="guideway switch-arrow" aria-hidden="true" transform="translate(-929.04 -254.59) rotate(33.8) scale(0.188)">
-        <path d="M-186 0 H-26" fill="none" stroke="#eeeeee" stroke-width="6" />
-        <polygon points="0,0 -26,15 -26,-15" fill="#eeeeee" />
+        <path d="M-186 0 H-5" fill="none" stroke="#eeeeee" stroke-width="4.2" />
+        <path d="M-27 -15 L-5 0 L-27 15" fill="none" stroke="#eeeeee" stroke-width="4.2" stroke-miterlimit="10" />
         <path
-          d="M-156 0 H-146 C-101 0 -91 67 -46 67 H-26"
+          d="M-156 0 H-146 C-101 0 -91 67 -46 67 H-5"
           fill="none"
           stroke="#eeeeee"
-          stroke-width="6"
+          stroke-width="4.2"
           stroke-dasharray="11 8"
         />
-        <polygon points="0,67 -26,82 -26,52" fill="#eeeeee" />
+        <path d="M-27 52 L-5 67 L-27 82" fill="none" stroke="#eeeeee" stroke-width="4.2" stroke-miterlimit="10" />
       </g>
       <!-- Span 39: the ramp joins the eastbound track; white like the finished arrows, even while the ramp or the eastbound girder is unfinished (there will be a time when the eastbound girder is finished and the ramp is not) -->
       <g class="guideway switch-arrow" aria-hidden="true" transform="translate(-1315.99 -513.17) rotate(33.8) scale(0.188)">
-        <path d="M-156 0 H-26" fill="none" stroke="#eeeeee" stroke-width="6" />
-        <polygon points="0,0 -26,15 -26,-15" fill="#eeeeee" />
+        <path d="M-156 0 H-5" fill="none" stroke="#eeeeee" stroke-width="4.2" />
+        <path d="M-27 -15 L-5 0 L-27 15" fill="none" stroke="#eeeeee" stroke-width="4.2" stroke-miterlimit="10" />
         <path
           d="M-156 67 H-146 C-101 67 -91 0 -46 0"
           fill="none"
           stroke="#eeeeee"
-          stroke-width="6"
+          stroke-width="4.2"
           stroke-dasharray="11 8"
         />
       </g>
