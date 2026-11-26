@@ -242,7 +242,13 @@ export function layerCss(state) {
       else if (k === "arrows") r += on ? "" : "text.n.guideway,g.switch-arrow{display:none !important}";
       else if (k === "gantry") r += "";
       else if (k === "supports") r += on ? "" : 'rect.g,circle[fill="#D7D7D7"]{display:none !important}';
-      else if (k === "unfinished") r += ".guideway.unfinished{display:" + (on ? "inline" : "none") + " !important}";
+      else if (k === "unfinished")
+        r +=
+          ".guideway.unfinished{display:" +
+          (on ? "inline" : "none") +
+          " !important}" +
+          // the span 39 switch arrow goes with them, until its eastbound girder or ramp girder is drawn finished
+          (on ? "" : "#map:not(:has(.span-39-girder:not(.unfinished))) g.span-39-switch{display:none !important}");
       // finished spans, concrete and steel alike
       else if (k === "guideway") r += ".guideway{display:" + (on ? "inline" : "none") + " !important}";
       else if (k === "yard") r += ".yard{display:" + (on ? "inline" : "none") + " !important}";
