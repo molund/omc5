@@ -5,6 +5,12 @@ updated: 2026-11-26T20:00-07:00
 span: 42
 # whether all that span's segments are hung. The map draws it hung; the progress card counts the span either way.
 hung: true
+# the progress card's text, written by the Leash Log (the summary of the update or addendum just posted, or a position's
+# own words): shown through the end of card-text-until (BC time); card-text-from is the slug of the update whose comments
+# the card opens (none: the Trackside button)
+card-text: "There are still zero signs of night work tonight. Although the notice did say 9 p.m."
+card-text-until: 2026-11-26
+card-text-from: construction-update-for-thursday-nov-26-2026
 # the Clayton Clipper's velocity in spans per week, a copy of gantry-cycles.yaml's (where its earlier values are), written by the
 # Leash Log on every push
 spans-per-week: 1.11

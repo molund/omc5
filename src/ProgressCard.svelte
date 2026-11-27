@@ -22,14 +22,14 @@
 
   // "today" or "yesterday" on the card (Trackside keeps full dates)
   const when = asOf(status.updated, true);
-  // the newest update's latest word: its newest follow-up if it has any, else its note. It shows until midnight BC time at
-  // the end of the day it was posted, by the visitor's clock (a later position check-in doesn't hide it, and a follow-up
-  // the next day starts a new day); after that the card has no text and a Trackside button instead of Comments. The page
-  // has to be loaded again to see it go.
-  const newest = status.latest;
-  const word = status.followUps[0] ?? newest;
-  const current = !!word && dayOf(word.time) === dayOf(new Date());
-  const note = current ? status.followUps[0]?.summary || status.note : "";
+  // the card's text: `card-text:` in status.yaml, as the Leash Log writes it (the summary of the update or addendum just
+  // posted, or a position's own words). It shows until midnight BC time at the end of its `card-text-until:` day, by the
+  // visitor's clock; after that the card has no text and a Trackside button instead of Comments. The page has to be loaded
+  // again to see it go.
+  const note = status.cardText && status.cardTextUntil >= dayOf(new Date()) ? status.cardText : "";
+  // the update it came from (`card-text-from:`, its slug), whose comments the card opens; none for a position's words
+  const newest = note ? (status.history.find((n) => n.slug === status.cardTextFrom) ?? null) : null;
+  const current = !!newest;
   // a link in the note: an address on this site that's only `?…` was written for Trackside, so it goes there from the map
   const noteLink = (href) => (href.startsWith("?") ? `${import.meta.env.BASE_URL}trackside/${href}` : href);
   // the Comments button opens the newest update's own page on Trackside at its comments (#comments), and shows its
@@ -43,7 +43,7 @@
   // a tap or click on the note goes where the Comments button goes (a cmd-, ctrl- or shift-click opens it in a new tab), but
   // not from a link in the note or after selecting some of its text; keyboard users have the Comments button itself
   function openComments(e) {
-    if (e.target.closest("a") || getSelection()?.toString()) return;
+    if (!newest || e.target.closest("a") || getSelection()?.toString()) return;
     track("open_comments", { where: "card_note", slug: newest.slug });
     if (e.metaKey || e.ctrlKey || e.shiftKey) window.open(COMMENTS, "_blank");
     else location.href = COMMENTS;
@@ -325,19 +325,19 @@
       {#if tip === "pace"}{@render tipBox("-mt-1")}{/if}{/if}
     {#if when}<div class="mt-2 text-xs text-(--mute)">As of {when}</div>{/if}
     {#if note}<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
-      <div class="card-note mt-2" onclick={openComments}>
+      <div class={["card-note mt-2", newest && "cursor-pointer"]} onclick={openComments}>
         {#each inline(note) as p}{#if p.href}<a class="text-(--link)" href={noteLink(p.href)}
               >{#if p.bold}<strong>{p.text}</strong>{:else}{p.text}{/if}</a
             >{:else if p.bold}<strong>{p.text}</strong>{:else}{p.text}{/if}{/each}
       </div>{/if}
-    {#if newest && (!current || commentsOff || !commentCount)}
+    {#if !newest || commentsOff || !commentCount}
       <a
         class="btn mt-2.5 flex min-h-8 justify-center gap-1.5 border-(--button-line) bg-(--button-bg) px-2.5 text-sm font-semibold text-(--button-ink) hover:bg-(--bg)"
         href={TRACKSIDE}
         onclick={() => track("open_trackside", { where: "card" })}
         ><span>Trackside</span><span aria-hidden="true">→</span></a
       >
-    {:else if newest}
+    {:else}
       <a
         class="btn mt-2.5 flex min-h-8 gap-1.5 border-(--line) bg-(--panel) px-2.5 text-sm font-normal text-(--ink) hover:bg-(--bg)"
         href={COMMENTS}
@@ -358,7 +358,7 @@
 
   /* the note on the card: tapping it opens the comments, like the Comments button under it */
   .card-note {
-    @apply cursor-pointer text-sm;
+    @apply text-sm;
   }
 
   /* the idle Play pill: as wide as the Pause and Reset buttons are together (2 + 0.5 + 2 rem), with an accent border so it
