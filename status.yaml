@@ -8,7 +8,7 @@ hung: true
 # the progress card's text, written by the Leash Log (the summary of the update or addendum just posted, or a position's
 # own words): shown through the end of card-text-until (BC time); card-text-from is the slug of the update whose comments
 # the card opens (none: the Trackside button)
-card-text: "Apparently, my prediction of the Hwy 15 crossing starting yesterday was completely wrong. Today maybe?"
+card-text: "My prediction of the Hwy 15 crossing starting yesterday was completely wrong. Today maybe?"
 card-text-until: 2026-11-27
 # the Clayton Clipper's velocity in spans per week, a copy of gantry-cycles.yaml's (where its earlier values are), written by the
 # Leash Log on every push
