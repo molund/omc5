@@ -1,6 +1,6 @@
 # Clayton Clipper status. The site reads it (src/lib/status.js); running the deploy workflow by hand or through the API updates
 # it (see .github/workflows/deploy.yml). Times are BC time (UTC−7), rounded to the nearest quarter hour.
-updated: 2026-11-26T09:00-07:00
+updated: 2026-11-26T18:15-07:00
 # the span the gantry is working on (Clayton Clipper span numbers, 3-104)
 span: 42
 # whether all that span's segments are hung. The map draws it hung; the progress card counts the span either way.
@@ -33,6 +33,9 @@ notes:
     block:
       - "The Clayton Clipper must carry itself across spans 43–47, including the steel girders crossing Highway 15 (it will always be 176 Street to me), before reaching span 48 on the west side of the intersection. The notice is for eight nights, from Nov. 26 to Dec. 3."
       - "Push the [play](https://clayton-clipper.olund.ca/play/?span=42) button on the map to see an animation of what it might look like. Five spans in eight days will definitely put a spike in my velocity chart."
+    follow-up:
+      - 2026-11-26T18:15-07:00:
+          summary: "There seemed to be zero progress during the day today. Hopefully we’ll see something at night."
   - 2026-11-25T16:00-07:00: "Clayton Clipper construction update for Wednesday, Nov. 25, 2026"
     summary: "A three-tower temporary support is going up for the longer span 50. It matches the one at span 29, which had 16 segments, so my guess is 16 again."
     block:
