@@ -26,7 +26,7 @@ spans-per-week: 1.11
 #   No other markdown: anything else shows as typed.
 # Notes to self, and the steps of the gantry's cycle seen at each time stamp, are in gantry-cycles.yaml, not here.
 notes:
-  - 2026-11-26T06:30-07:00: "8-night Pacific Highway crossing begins today"
+  - 2026-11-26T06:30-07:00: "8-night Pacific Highway crossing begins tonight?"
     slug: construction-update-for-thursday-nov-26-2026
     summary: "Tonight's [overnight turn restrictions](https://surreylangleyskytrain.gov.bc.ca/app/uploads/sites/938/2026/11/SLS-20261123-Traffic-Update-at-Fraser-Highway-and-Highway-15.pdf) should signal the start of the crawl over Highway 15."
     featured: true
