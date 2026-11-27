@@ -1,7 +1,6 @@
 // Run after the client build (npm run build): writes Trackside as finished pages, with the text, title, description and
 // Open Graph tags in the HTML, for search engines and link previews:
-//   dist/trackside/index.html            the featured updates: the newest 10 (the older featured ones load as the reader
-//                                        scrolls)
+//   dist/trackside/index.html            the featured updates: the newest 10, then the older featured ones
 //   dist/trackside/page/1/index.html …   every update, 10 a page
 //   dist/trackside/<slug>/index.html     each update on its own page (in the sitemap, not linked from the site)
 // dist/sitemap.xml, every page for search engines, so status.yaml is read in one place (lib/status.js). And

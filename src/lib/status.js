@@ -14,8 +14,8 @@
 // its comments, `on` when left out: `off` has no Comments button; `readonly` keeps the button, but shows the comments as they
 // were when the site was built (trackside/prerender.js), with no way to add one:
 //     comments: readonly
-// whether it's featured on Trackside: /trackside/ shows the newest 10 updates whatever this says, then, as the reader
-// scrolls, only the older featured ones; every update is on its page of updates (/trackside/page/N/) either way. Left
+// whether it's featured on Trackside: /trackside/ shows the newest 10 updates whatever this says, then only the older
+// featured ones; every update is on its page of updates (/trackside/page/N/) either way. Left
 // out, a status update isn't featured and a blog post is:
 //     featured: true
 //     featured: false
