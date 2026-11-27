@@ -66,6 +66,7 @@ notes:
       caption: "The Langley Launcher in the Willowbrook Mall parking lot."
   - 2026-11-20T09:00-07:00: "Clayton Clipper construction update for Friday, Nov. 20, 2026"
     summary: "The Clayton Clipper is almost across the gap to span 42. This is the last span it has to build before crossing Hwy 15."
+    comments: off
     block:
       - "The gantry should reach the support within the hour. Semi trucks are waiting with segments for the span."
       - photo:
@@ -101,10 +102,12 @@ notes:
           caption: "8:30 p.m."
   - 2026-11-19T08:15-07:00: "Clayton Clipper construction update for Thursday, Nov. 19, 2026"
     summary: "The Clayton Clipper’s velocity is holding at 1.87—for now."
+    comments: off
     block:
       - "The code won’t change it until the crew begins the next gantry-cycle stage. Moving the gantry to the next position counts as a single stage. I’m expecting a significant drop before work starts on span 42."
   - 2026-11-18T07:30-07:00: "The Surrey Langley SkyTrain thread is back"
     summary: "The famous [Surrey Langley SkyTrain thread](https://skyscraperpage.com/forum/threads/surrey-langley-skytrain-expo-line-extension-u-c.265544/), dating back to 2008, is finally back online on SkyscraperPage."
+    comments: off
     featured: true
     block:
       - "The site had been down since about October 21, after a PHP shell exploit forced an upgrade from the version of vBulletin 3 it had been running, un-upgraded, for the last 15 years."
@@ -114,6 +117,7 @@ notes:
       - "I’ve been playing Towers of Hanoi with the gantry animation, and there are too many variables to even bother fixing it at this point."
   - 2026-11-16T09:00-07:00: "Clayton Clipper construction update for Monday, Nov. 16, 2026"
     summary: "Last night’s lightning storm cost the Clayton Clipper a night shift."
+    comments: readonly
     block:
       - "That put a major dent in the velocity, on top of my weekend bug fix that had already knocked it down from 2.82 to 2.53."
     follow-up:
@@ -121,6 +125,7 @@ notes:
           summary: "There’s no night work again tonight. And this time there’s no thunderstorm I can blame."
   - 2026-11-14T09:15-07:00: "Clayton Clipper construction update for Saturday, Nov. 14, 2026"
     summary: "The Clayton Clipper is closing in on Hwy 15, which could change my lunch plans next week."
+    comments: off
     featured: true
     block:
       - "The Clayton Clipper is at span 41, just two spans from the Highway 15 section. Piper and I might be eating a lot of Budapest Langos from the food truck at the Honeybee Centre next week so I can watch the gantry cross the five-span double-girder section."
