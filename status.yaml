@@ -33,7 +33,7 @@ spans-per-week: 0.68
 # Notes to self, and the steps of the gantry's cycle seen at each time stamp, are in gantry-cycles.yaml, not here.
 notes:
   - 2026-11-28T08:45-07:00: "Clayton Clipper construction update for Saturday, Nov. 28, 2026"
-    summary: "The Clayton Clipper is moving its supports, but not in the order I predicted with Claude."
+    summary: "The Clayton Clipper is moving its supports, but not in the order I predicted in my animation."
     block:
       - "A long support now sits at the west end of span 42, with a short support sideways behind it. I'm questioning my four-support leapfrog theory: three supports might be enough, and the short one may not do the job I'd imagined. The engineers clearly know more about the gantry's weight distribution than I do."
       - "I'll update the animation once the leapfrog sequence actually starts. Every time I think I've figured out these movements, the gantry does something different. It's not raining today, and I have better things to do than sit in front of a computer making guesses."
