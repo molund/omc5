@@ -13,11 +13,15 @@
 # the week up to the latest step reported (the weekly shutdown allowed for). calculated-chart-data is the figure at each
 # step of the past 96 hours, newest first, the first being spans-per-week itself; the site's build draws it as the progress
 # card's chart. status.yaml has a copy of spans-per-week
-spans-per-week: 0.77
+spans-per-week: 0.68
 calculated-chart-data:
+  - 2026-11-27T17:30-07:00: 0.68
   - 2026-11-27T13:15-07:00: 0.77
   - 2026-11-27T09:15-07:00: 0.73
 entries:
+  - 2026-11-27T17:30-07:00:
+      span: 42
+      stage: supports started
   - 2026-11-27T13:15-07:00:
       span: 42
       stage: hangers down
